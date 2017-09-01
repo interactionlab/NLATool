@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/TeBe-Hauptprojekt.iml" filepath="$PROJECT_DIR$/.idea/TeBe-Hauptprojekt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/NLA-Projekt.iml" filepath="$PROJECT_DIR$/.idea/NLA-Projekt.iml" />
+      
     </modules>
   </component>
 </project>
