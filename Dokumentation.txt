@@ -1,0 +1,38 @@
+Erstellung/Hauptstruktur:
+
+Basis = Node.js -> Express Framework ~4.15.2
+Template = EJS ~2.5.6
+packages:
+	"request": "^2.81.0"
+	"bootstrap": "^3.3.7"
+	
+Hauptwebsites (aka Routes):
+-index (= Startseite, Einloggen || Text hochladen)
+-Profil
+	-Einloggen/Registrieren
+	-Profil-/Dokumentübersicht
+	-(Einstellungen)
+-Analyse
+	-Hauptanalyse
+	-(Speichern)
+	-...?
+...?
+
+27.08.2017-Eric:
+-Erstellung des Proj.
+-Hinzufügen von 
+	-analyse.js
+	-signIn.js 
+	-profile.js
+ in routes und app.js
+
+-npm install bootstrap --save  
+-npm install request --save
+(nicht -g verwenden, weil sonst nicht die package.json entsprechend angepasst wird. 
+-g wäre dann wenn ihr dieses package auch für andere Projekte auf eurem PC verwenden wollt)
+
+-Hinzufügen von
+	-analyse.ejs
+	-profile.ejs
+	-signIn.ejs
+	
