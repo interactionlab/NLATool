@@ -1,0 +1,50 @@
+Node.js:
+
+
+Webstorm:
+
+
+Packages:
+-EJS: 
+	https://github.com/tj/ejs
+	http://ejs.co/
+	https://www.npmjs.com/package/ejs
+-request:
+	https://www.npmjs.com/package/request
+	
+-bootstrap
+	https://www.npmjs.com/package/bootstrap
+	https://www.w3schools.com/bootstrap/bootstrap_grid_basic.asp
+	
+(-jquery 
+	https://www.npmjs.com/package/jquery)
+
+Special:
+
+
+
+CoreNLP / Java
+
+
+
+Datenbank: 
+MySQL:
+	https://www.npmjs.com/package/mysql
+	https://www.w3schools.com/nodejs/nodejs_mysql.asp
+	https://www.youtube.com/watch?v=hGZX_SA7lYg
+	http://localhost/phpmyadmin/
+Xampp:	
+	https://www.apachefriends.org/de/index.html?ModPagespeed=noscript
+	https://www.microsoft.com/de-de/download/details.aspx?id=2092
+MongoDB:
+	
+
+
+
+
+
+
+
+
+
+
