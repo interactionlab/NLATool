@@ -24,6 +24,8 @@ var dbNutzerdatenUserCol = 'username ';  //unique
 var dbNutzerdatenEmailCol = 'email ';    //unique
 var dbNutzerdatenPassCol = 'password ';
 
+var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+
 /**
  * Generiert String des SQL-Select Befehls.
  * Falls keine Spalten spezifiziert, wird alles zurückgegeben.
@@ -49,6 +51,7 @@ function createSelectCommand(collums, table) {
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
+    console.log(notMedia + Tag + 'Select Command Creation failed!');
     return null;
 }
 
@@ -75,8 +78,45 @@ function createInsertCommand(collums, table, values, query) {
         if (query != null) {
             commandString = commandString + ' WHERE ' + query;
         }
+        console.log(notMedia + Tag + commandString);
         return commandString;
     }
+    console.log(notMedia + Tag + 'Insert Command Creation failed!');
+    return null;
+}
+
+/**
+ * Generiert String des SQL-Update Befehls.
+ * Dieser ändert einer Spalte alle Werte die den query erfüllen.
+ * @param collum
+ * @param table
+ * @param value
+ * @param query
+ * @returns {*}
+ */
+function createUpdateCommand(collum, table, value, query) {
+    var commandString = 'UPDATE ';
+    if (table != null && collum != null && value != null) {
+        commandString = commandString + table + ' SET ' + collum + ' = ' + value;
+        if (query != null) {
+            commandString = commandString + query;
+            console.log(notMedia + Tag + commandString);
+            return commandString;
+        }
+    }
+    console.log(notMedia + Tag + 'Update Command Creation failed!');
+    return null;
+}
+
+function createDeleteCommand(collum, table, value, query) {
+    var commandString = 'DELETE FROM ';
+    if (table != null && collum != null && value != null && query != null) {
+        var operator = [queryOperators[0]];
+        commandString = commandString + table + createWhereQuery(collum, table, operator);
+        console.log(notMedia + Tag + commandString);
+        return commandString;
+    }
+    console.log(notMedia + Tag + 'Delete Command Creation failed!');
     return null;
 }
 
@@ -84,7 +124,19 @@ function createInsertCommand(collums, table, values, query) {
  * Generiert String für SQL Abfragen bzw. Auswahlbedingungen mit dem WHERE Operator.
  * Dabei kommt ein Ergebnis dieser Struktur heraus:
  * "WHERE spalte1 = wert1 AND spalte2 <> wert2
- * Der Operator
+ * Der Operator muss die SQL-Richtlinien einhalten d.h. operatoren sind:
+ * Operator     Beschreibung
+ * =            Gleichheit
+ * <>          (manche Dialekte auch !=)Ungleichheit
+ * >            Größerals
+ * <            Kleinerals
+ * >=           Größeroder Gleich
+ * <=           Kleineroder Gleich
+ * BETWEEN      Innerhalbeines Bereichs(oft unterschiedlich interpretiert von DB zu DB) --!! Wird noch nicht richtig unterstützt
+ * LIKE         Suchenach Mustern mit % und _ als Wildcards
+ * IN           Ergebnisraumbeschränkenauf bestimmteWerte
+ *
+ * mit dem Array queryo
  * @param collums
  * @param values
  * @param operators
@@ -97,10 +149,11 @@ function createWhereQuery(collums, values, operators) {
         for (var i = 1; i < collums.length; i++) {
             queryString = queryString + ' AND ' + collums[i] + ' ' + operators[i] + ' ' + values[i];
         }
+        console.log(notMedia + Tag + queryString);
         return queryString;
     }
+    console.log(notMedia + Tag + 'Where Query Creation failed!');
     return null;
-
 }
 
 //--------------------------------------------------------
@@ -115,7 +168,6 @@ var connection = db.createConnection({
     host: "localhost",
     user: "guest",
     password: "ichbingasthier"
-    //1. Versuch sich mit db zu Verbinden
 });
 
 connection.connect(function (err) {

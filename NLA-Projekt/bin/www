@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('tebe-hauptprojekt:server');
+var debug = require('debug')('NLA-Projekt:server');
 var http = require('http');
 
 /**
