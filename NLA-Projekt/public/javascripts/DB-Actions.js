@@ -172,9 +172,9 @@ var connection = db.createConnection({
 
 connection.connect(function (err) {
     if (err) {
-        console.log(notMedia + Tag + 'connection to Database failed.')
+        console.log(notMedia + Tag + 'connection to Database failed.');
     }
-    ;
+
     console.log(notMedia + Tag + 'DB Connected');
     connection.query("", function (err, result) {
         if (err) throw err;
