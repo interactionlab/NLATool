@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="bin\www" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" path-to-js-file="$PROJECT_DIR$/../NLA-Projekt/bin/www" working-dir="$PROJECT_DIR$/../NLA-Projekt">
     <envs>
-      <env name="DEBUG" value="TeBe-Hauptprojekt:*" />
+      <env name="DEBUG" value="NLA-Projekt:*" />
     </envs>
     <browser url="http://localhost:3000/" />
     <EXTENSION ID="com.jetbrains.nodejs.run.NodeJSStartBrowserRunConfigurationExtension">
