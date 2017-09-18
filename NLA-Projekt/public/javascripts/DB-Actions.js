@@ -1,6 +1,5 @@
 //TODO: DB-Actions ist kein router!!, muss geändert werden
-var express = require('express');
-var router = express.Router();
+
 
 //--------------------------------------------------------
 /**
@@ -16,6 +15,7 @@ var Tag = 'DB-Actions.js: ';
  * Datenbank Tabellennamen & andere öfter genutzte Namen
  */
 var dbName = 'nla-alpha';
+
 
 //Nutzerdaten Tabelle
 var dbNutzerdatentable = 'nutzerdaten ';
@@ -185,4 +185,3 @@ connection.connect(function (err) {
 });
 
 
-module.exports = router;
