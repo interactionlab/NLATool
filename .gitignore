@@ -61,3 +61,4 @@ typings/
 NLATool/.idea
 NLATool-Projekt/.idea
 .xampp
+/NLATool-Projekt/.idea/workspace.xml
