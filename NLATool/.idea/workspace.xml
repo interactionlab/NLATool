@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="18872ba0-c9c3-4225-a19c-0dcf18401061" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.idea/workspace.xml" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../NLATool-Projekt/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../NLATool-Projekt/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="18872ba0-c9c3-4225-a19c-0dcf18401061" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -285,12 +282,12 @@
       <workItem from="1505118543012" duration="2439000" />
       <workItem from="1505723051049" duration="39000" />
       <workItem from="1505723199656" duration="1074000" />
-      <workItem from="1506074838600" duration="298000" />
+      <workItem from="1506074838600" duration="604000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32747000" />
+    <option name="totallyTimeSpent" value="33053000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
