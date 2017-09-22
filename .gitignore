@@ -58,4 +58,6 @@ typings/
 .env
 
 /.idea
-xampp/
+NLATool/.idea
+NLATool-Projekt/.idea
+.xampp
