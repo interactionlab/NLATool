@@ -3,7 +3,7 @@ var router = express.Router();
 
 //--------------------------------------------------------
 /**
- * Tag für Konsolen Fehlersuche:
+ * Tags for console Errors::
  * @type {string}
  */
 var desktop = 'desktop Version: ';
