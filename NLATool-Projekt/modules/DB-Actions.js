@@ -26,6 +26,39 @@ var dbNutzerdatenPassCol = 'password ';
 
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
+function createDB() {
+    var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
+        "`userID` INT NOT NULL AUTO_INCREMENT , " +
+        "`email` VARCHAR(255) NOT NULL UNIQUE, " +
+        "`username` VARCHAR(255) NOT NULL , " +
+        "`password` INT NOT NULL , " +
+        "PRIMARY KEY (`userID`)) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin;";
+
+    var createDocTable = "CREATE TABLE `nla-alpha`.`Document` ( " +
+        "`docID` INT NOT NULL AUTO_INCREMENT , " +
+        "`userID` INT NOT NULL , " +
+        "`title` VARCHAR(255) NOT NULL , " +
+        "`author` VARCHAR(255) NOT NULL , " +
+        "`year` YEAR NOT NULL , " +
+        "PRIMARY KEY (`docID`) USING HASH) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
+        "COMMENT = 'Dokument := tokenisierter Text + Notizen+Suchergebnisse+....';";
+
+    var createSearchResultTable = "CREATE TABLE `nla-alpha`.`SearchResult` ( " +
+        "`resultID` INT NOT NULL AUTO_INCREMENT , " +
+        "`url` VARCHAR(255) NOT NULL , " +
+        "`imagePath` VARCHAR(1024) NOT NULL , " +
+        "`shortDiscription` TEXT NOT NULL , " +
+        "`longDiscription` MEDIUMTEXT NOT NULL , " +
+        "`docID` INT NOT NULL , " +
+        "PRIMARY KEY (`resultID`), " +
+        "UNIQUE (`url`)) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
+        "COMMENT = 'evtl. Bilder hier dirckt in LongBlobs speichern';";
+
+}
+
 /**
  * Generiert String des SQL-Select Befehls.
  * Falls keine Spalten spezifiziert, wird alles zurückgegeben.
