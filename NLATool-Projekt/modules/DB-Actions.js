@@ -28,7 +28,9 @@ var dbNutzerdatenPassCol = 'password ';
 
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
-function createDB() {
+exports.createDB = function() {
+    
+
     var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
         "`userID` INT NOT NULL AUTO_INCREMENT , " +
         "`email` VARCHAR(255) NOT NULL UNIQUE, " +
@@ -70,7 +72,7 @@ function createDB() {
  * @param table
  * @returns {*}
  */
-function createSelectCommand(columns, table) {
+exports.createSelectCommant = function(columns, table) {
     var commandString = 'SELECT ';
     if (table != null) {
         if (columns == null) {
@@ -91,19 +93,19 @@ function createSelectCommand(columns, table) {
 
 /**
  *  Generates the query for the SQL Command INSERT INTO.
- *  If table, collumns, values are empty (==null) the function returnes null.
+ *  If table, columns, values are empty (==null) the function returnes null.
  *
- * @param collumns
+ * @param columns
  * @param table
  * @param values
  * @param query
  */
-function createInsertCommand(collumns, table, values, query) {
+exports.createInsertCommand = function (columns, table, values, query) {
     var commandString = 'INSERT INTO ';
-    if (table != null && collumns != null && values != null) {
-        commandString = commandString + table + ' ' + collumns[0];
-        for (var i = 1; i < collumns - 1; i++) {
-            commandString = commandString + ',' + collumns[i];
+    if (table != null && columns != null && values != null) {
+        commandString = commandString + table + ' ' + columns[0];
+        for (var i = 1; i < columns - 1; i++) {
+            commandString = commandString + ',' + columns[i];
         }
         commandString = commandString + ' VALUES ';
         for (var j = 1; j < values.length - 1; j++) {
@@ -127,7 +129,7 @@ function createInsertCommand(collumns, table, values, query) {
  * @param query
  * @returns {*}
  */
-function createUpdateCommand(column, table, value, query) {
+exports.createUpdateCommand = function (column, table, value, query) {
     var commandString = 'UPDATE ';
     if (table != null && column != null && value != null) {
         commandString = commandString + table + ' SET ' + column + ' = ' + value;
@@ -149,7 +151,7 @@ function createUpdateCommand(column, table, value, query) {
  * @param query
  * @returns {*}
  */
-function createDeleteCommand(collum, table, value, query) {
+exports.createDeleteCommand = function (collum, table, value, query) {
     var commandString = 'DELETE FROM ';
     if (table != null && collum != null && value != null && query != null) {
         var operator = [queryOperators[0]];
@@ -183,7 +185,7 @@ function createDeleteCommand(collum, table, value, query) {
  * @param operators
  * @returns {*}
  */
-function createWhereQuery(columns, values, operators) {
+exports.createWhereQuery = function (columns, values, operators) {
     var queryString = 'WHERE ';
     if (columns != null && values != null && operators != null) {
         queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
