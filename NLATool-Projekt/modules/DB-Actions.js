@@ -72,7 +72,7 @@ exports.createDB = function() {
  * @param table
  * @returns {*}
  */
-exports.createSelectCommant = function(columns, table) {
+exports.createSelectCommand = function(columns, table) {
     var commandString = 'SELECT ';
     if (table != null) {
         if (columns == null) {
@@ -225,5 +225,5 @@ connection.connect(function (err) {
     });
 
 
-}
+});
 
