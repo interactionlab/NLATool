@@ -3,7 +3,7 @@
 
 //--------------------------------------------------------
 /**
- * Tag für Konsolen Fehlersuche:
+ * Tags for console Errors:
  * @type {string}
  */
 
@@ -11,9 +11,10 @@ var notMedia = 'Not Media-Related Part: ';
 var Tag = 'DB-Actions.js: ';
 
 //--------------------------------------------------------
-/**
- * Datenbank Tabellennamen & andere öfter genutzte Namen
- */
+/*
+/!**
+ *
+ *!/
 var dbName = 'nla-alpha';
 
 
@@ -23,6 +24,7 @@ var dbNutzerdatenIDCol = 'id ';          //primary
 var dbNutzerdatenUserCol = 'username ';  //unique
 var dbNutzerdatenEmailCol = 'email ';    //unique
 var dbNutzerdatenPassCol = 'password ';
+*/
 
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
@@ -60,24 +62,23 @@ function createDB() {
 }
 
 /**
- * Generiert String des SQL-Select Befehls.
- * Falls keine Spalten spezifiziert, wird alles zurückgegeben.
- * Falls kein Tabellenname spezifiziert, wird null zurückgegeben,
- * da der SQL-Befehl sonst nicht gültig ist.
- * collums soll ein Array von Strings, also der Spaltennamen darstellen.
- * @param collums
+ * generates String for SQL Command SELECT
+ * If no columns are specified, everything will be selected and returned.
+ * If no table name is specified the sql query is not valid thus the returned value will be null.
+ *
+ * @param columns represents an array or something similar.
  * @param table
  * @returns {*}
  */
-function createSelectCommand(collums, table) {
+function createSelectCommand(columns, table) {
     var commandString = 'SELECT ';
     if (table != null) {
-        if (collums == null) {
+        if (columns == null) {
             commandString = '* FROM ' + table;
         } else {
-            commandString = commandString + collums[0];
-            for (var i = 1; i < collums.length - 1; i++) {
-                commandString = commandString + ',' + collums[i];
+            commandString = commandString + columns[0];
+            for (var i = 1; i < columns.length - 1; i++) {
+                commandString = commandString + ',' + columns[i];
             }
             commandString = commandString + ' FROM ' + table;
         }
@@ -89,20 +90,20 @@ function createSelectCommand(collums, table) {
 }
 
 /**
- *  Generiert String des SQL-Insert Befehls.
- *  Wenn table, collums, values leer sind wird null zurückgegeben.
- *  query sind suchoptionen nach dem SQL Befehl WHERE.
- * @param collums
+ *  Generates the query for the SQL Command INSERT INTO.
+ *  If table, collumns, values are empty (==null) the function returnes null.
+ *
+ * @param collumns
  * @param table
  * @param values
  * @param query
  */
-function createInsertCommand(collums, table, values, query) {
+function createInsertCommand(collumns, table, values, query) {
     var commandString = 'INSERT INTO ';
-    if (table != null && collums != null && values != null) {
-        commandString = commandString + table + ' ' + collums[0];
-        for (var i = 1; i < collums - 1; i++) {
-            commandString = commandString + ',' + collums[i];
+    if (table != null && collumns != null && values != null) {
+        commandString = commandString + table + ' ' + collumns[0];
+        for (var i = 1; i < collumns - 1; i++) {
+            commandString = commandString + ',' + collumns[i];
         }
         commandString = commandString + ' VALUES ';
         for (var j = 1; j < values.length - 1; j++) {
@@ -119,18 +120,17 @@ function createInsertCommand(collums, table, values, query) {
 }
 
 /**
- * Generiert String des SQL-Update Befehls.
- * Dieser ändert einer Spalte alle Werte die den query erfüllen.
- * @param collum
+ * Generates the query for the SQL Command UPDATE.
+ * @param column
  * @param table
  * @param value
  * @param query
  * @returns {*}
  */
-function createUpdateCommand(collum, table, value, query) {
+function createUpdateCommand(column, table, value, query) {
     var commandString = 'UPDATE ';
-    if (table != null && collum != null && value != null) {
-        commandString = commandString + table + ' SET ' + collum + ' = ' + value;
+    if (table != null && column != null && value != null) {
+        commandString = commandString + table + ' SET ' + column + ' = ' + value;
         if (query != null) {
             commandString = commandString + query;
             console.log(notMedia + Tag + commandString);
@@ -141,6 +141,14 @@ function createUpdateCommand(collum, table, value, query) {
     return null;
 }
 
+/**
+ * Generates the query for the SQL Command DELETE FROM.
+ * @param collum
+ * @param table
+ * @param value
+ * @param query
+ * @returns {*}
+ */
 function createDeleteCommand(collum, table, value, query) {
     var commandString = 'DELETE FROM ';
     if (table != null && collum != null && value != null && query != null) {
@@ -154,33 +162,33 @@ function createDeleteCommand(collum, table, value, query) {
 }
 
 /**
- * Generiert String für SQL Abfragen bzw. Auswahlbedingungen mit dem WHERE Operator.
- * Dabei kommt ein Ergebnis dieser Struktur heraus:
- * "WHERE spalte1 = wert1 AND spalte2 <> wert2
+ * Generates the query for the SQL Command-extension WHERE.
+ * The Result follows the structure below:
+ * "WHERE column1 = value1 AND column2 <> value2
  * Der Operator muss die SQL-Richtlinien einhalten d.h. operatoren sind:
- * Operator     Beschreibung
- * =            Gleichheit
- * <>          (manche Dialekte auch !=)Ungleichheit
- * >            Größerals
- * <            Kleinerals
- * >=           Größeroder Gleich
- * <=           Kleineroder Gleich
- * BETWEEN      Innerhalbeines Bereichs(oft unterschiedlich interpretiert von DB zu DB) --!! Wird noch nicht richtig unterstützt
- * LIKE         Suchenach Mustern mit % und _ als Wildcards
- * IN           Ergebnisraumbeschränkenauf bestimmteWerte
+ * Operator     Discription
+ * =            Equals
+ * <>           imparity, inequality (sometimes: !=)
+ * >            greater than
+ * <            smaller than
+ * >=           greater than or equals
+ * <=           greater than or equals
+ * BETWEEN      In a specified Area of values(differently interpreted from different Databases) --!! Is not yet supported
+ * LIKE         Search with % and _ as Wildcards
+ * IN           Result space restriction for specific values
  *
- * mit dem Array queryo
- * @param collums
+ * mit dem Array query
+ * @param columns
  * @param values
  * @param operators
  * @returns {*}
  */
-function createWhereQuery(collums, values, operators) {
+function createWhereQuery(columns, values, operators) {
     var queryString = 'WHERE ';
-    if (collums != null && values != null && operators != null) {
-        queryString = queryString + collums[0] + ' ' + operators[0] + ' ' + values[0];
-        for (var i = 1; i < collums.length; i++) {
-            queryString = queryString + ' AND ' + collums[i] + ' ' + operators[i] + ' ' + values[i];
+    if (columns != null && values != null && operators != null) {
+        queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
+        for (var i = 1; i < columns.length; i++) {
+            queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
         }
         console.log(notMedia + Tag + queryString);
         return queryString;
@@ -215,6 +223,5 @@ connection.connect(function (err) {
     });
 
 
-});
-
+}
 
