@@ -1,6 +1,6 @@
 {
-  "name": "nlatool-projekt",
-  "version": "0.0.0",
+  "name": "NALTool",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
@@ -15,8 +15,21 @@
     "java": "^0.8.0",
     "morgan": "~1.8.1",
     "mysql": "^2.14.1",
+    "node-gyp": "^3.6.2",
     "python": "0.0.4",
     "request": "^2.82.0",
     "serve-favicon": "~2.4.2"
-  }
+  },
+  "description": "Natural Language Analysis Tool",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/interactionlab/NLATool.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/interactionlab/NLATool/issues"
+  },
+  "homepage": "https://github.com/interactionlab/NLATool#readme"
 }
