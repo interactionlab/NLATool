@@ -10,6 +10,7 @@ var analyse = require('./routes/analyse');
 var profile = require('./routes/profile');
 var signIn = require('./routes/signIn');
 var signUp = require('./routes/signUp');
+var test = require('./routes/test');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/analyse', analyse);
 app.use('/signIn', signIn);
 app.use('/profile', profile);
 app.use('/signUp', signUp);
+app.use('/test', test);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
