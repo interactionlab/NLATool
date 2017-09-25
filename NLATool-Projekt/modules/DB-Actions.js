@@ -61,7 +61,7 @@ exports.createDB = function() {
         "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
         "COMMENT = 'evtl. Bilder hier dirckt in LongBlobs speichern';";
 
-}
+};
 
 /**
  * generates String for SQL Command SELECT
@@ -89,7 +89,7 @@ exports.createSelectCommand = function(columns, table) {
     }
     console.log(notMedia + Tag + 'Select Command Creation failed!');
     return null;
-}
+};
 
 /**
  *  Generates the query for the SQL Command INSERT INTO.
@@ -119,7 +119,7 @@ exports.createInsertCommand = function (columns, table, values, query) {
     }
     console.log(notMedia + Tag + 'Insert Command Creation failed!');
     return null;
-}
+};
 
 /**
  * Generates the query for the SQL Command UPDATE.
@@ -161,7 +161,7 @@ exports.createDeleteCommand = function (collum, table, value, query) {
     }
     console.log(notMedia + Tag + 'Delete Command Creation failed!');
     return null;
-}
+};
 
 /**
  * Generates the query for the SQL Command-extension WHERE.
@@ -197,7 +197,7 @@ exports.createWhereQuery = function (columns, values, operators) {
     }
     console.log(notMedia + Tag + 'Where Query Creation failed!');
     return null;
-}
+};
 
 //--------------------------------------------------------
 /**
