@@ -16,6 +16,8 @@ router.get('/test', function (req, res, next) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool'});
 });
 
+
+
 router.post('/test/theFunction', function(req, res){
     var testingFunction= req.testfunction;
     DB-Actions.createSelectCommand('nutzer', 'nla-beta');
