@@ -12,17 +12,23 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'test.js: ';
 
-router.get('/test', function (req, res, next) {
-    res.render('./Desktop/index', {title: 'NLA - Natural Language Analyse Tool'});
+//--------------------------------------------------------
+/**
+ * Special required modules/files:
+ */
+var dbAction = require('../modules/DB-Actions');
+router.get('/', function (req, res, next) {
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool' ,result: '' });
 });
 
 
 
 
-router.post('/test/theFunction', function(req, res){
+router.post('/theFunction', function(req, res){
     var testingFunction= req.testfunction;
-    DB-Actions.createSelectCommand('nutzer', 'nla-beta');
-
+    var nutzer = ['eins', 'zwei','drei','vier'];
+    var resultOfSQL = dbAction.createInsertCommand(nutzer, 'nla-beta');
+    res.render('./testview',{title: 'NLA - Natural Language Analyse Tool',result: resultOfSQL});
 });
 
 
