@@ -79,7 +79,7 @@ exports.createSelectCommand = function(columns, table) {
             commandString = '* FROM ' + table;
         } else {
             commandString = commandString + columns[0];
-            for (var i = 1; i < columns.length - 1; i++) {
+            for (var i = 1; i < columns.length; i++) {
                 commandString = commandString + ',' + columns[i];
             }
             commandString = commandString + ' FROM ' + table;
@@ -98,9 +98,9 @@ exports.createSelectCommand = function(columns, table) {
  * @param columns
  * @param table
  * @param values
- * @param query
+ * @param operators
  */
-exports.createInsertCommand = function (columns, table, values, query) {
+exports.createInsertCommand = function (columns, table, values, operators) {
     var commandString = 'INSERT INTO ';
     if (table != null && columns != null && values != null) {
         commandString = commandString + table + ' ' + columns[0];
@@ -111,8 +111,8 @@ exports.createInsertCommand = function (columns, table, values, query) {
         for (var j = 1; j < values.length - 1; j++) {
             commandString = commandString + ',' + values[j];
         }
-        if (query != null) {
-            commandString = commandString + ' WHERE ' + query;
+        if (operators != null) {
+            commandString = commandString + ' WHERE ' + operators;
         }
         console.log(notMedia + Tag + commandString);
         return commandString;
@@ -145,17 +145,17 @@ exports.createUpdateCommand = function (column, table, value, query) {
 
 /**
  * Generates the query for the SQL Command DELETE FROM.
- * @param collum
+ * @param column
  * @param table
  * @param value
  * @param query
  * @returns {*}
  */
-exports.createDeleteCommand = function (collum, table, value, query) {
+exports.createDeleteCommand = function (column, table, value, query) {
     var commandString = 'DELETE FROM ';
-    if (table != null && collum != null && value != null && query != null) {
+    if (table != null && column != null && value != null && query != null) {
         var operator = [queryOperators[0]];
-        commandString = commandString + table + createWhereQuery(collum, table, operator);
+        commandString = commandString + table + createWhereQuery(column, table, operator);
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
@@ -200,30 +200,4 @@ exports.createWhereQuery = function (columns, values, operators) {
 };
 
 //--------------------------------------------------------
-/**
- * Datenbank konfigurierung
- * Es kann gut sein, dass Teile davon in app.js gehören.
- * Gerade CREATE DATABASE sollte nicht jedes mal ausgeführt werden wenn man auf index.js geht.
- */
-var db = require('mysql');
-
-var connection = db.createConnection({
-    host: "localhost",
-    user: "guest",
-    password: "ichbingasthier"
-});
-
-connection.connect(function (err) {
-    if (err) {
-        console.log(notMedia + Tag + 'connection to Database failed.');
-    }
-
-    console.log(notMedia + Tag + 'DB Connected');
-    connection.query("", function (err, result) {
-        if (err) throw err;
-        console.log(notMedia + Tag + 'DB created.');
-    });
-
-
-});
 
