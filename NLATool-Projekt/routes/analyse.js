@@ -12,5 +12,7 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'analyse.js: ';
 
-
+router.get('/analyse', function (req, res, next) {
+    res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool'});
+});
 module.exports = router;
