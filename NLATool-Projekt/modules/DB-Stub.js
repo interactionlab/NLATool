@@ -1,7 +1,6 @@
 /**
- * Datenbank konfigurierung
- * Es kann gut sein, dass Teile davon in app.js gehören.
- * Gerade CREATE DATABASE sollte nicht jedes mal ausgeführt werden wenn man auf index.js geht.
+ * Database Configuration
+ * There is a great possibility that parts of this will be moved into the app.js
  */
 var db = require('mysql');
 
