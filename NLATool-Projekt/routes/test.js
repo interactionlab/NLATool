@@ -13,8 +13,9 @@ var notMedia = 'Not Media-Related Part: ';
 var Tag = 'test.js: ';
 
 router.get('/test', function (req, res, next) {
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool'});
+    res.render('./Desktop/index', {title: 'NLA - Natural Language Analyse Tool'});
 });
+
 
 
 
@@ -23,5 +24,6 @@ router.post('/test/theFunction', function(req, res){
     DB-Actions.createSelectCommand('nutzer', 'nla-beta');
 
 });
+
 
 module.exports = router;
