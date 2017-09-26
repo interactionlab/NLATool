@@ -72,7 +72,7 @@ exports.createDB = function () {
  * @param table
  * @returns {*}
  */
-exports.createSelectCommand = function (columns, table) {
+exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
     var commandString = 'SELECT ';
     if (table != null) {
         if (columns == null) {
@@ -84,6 +84,7 @@ exports.createSelectCommand = function (columns, table) {
             }
             commandString = commandString + ' FROM ' + table;
         }
+        commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
@@ -164,7 +165,7 @@ exports.createDeleteCommand = function (table, column, value, valueToCompare) {
     var commandString = 'DELETE FROM ';
     if (table != null && column != null && value != null) {
         var operator = [queryOperators[0]];
-        commandString = commandString + table + createWhereQuery(column,valueToCompare, operator);
+        commandString = commandString + table + ' ' + createWhereQuery(column, valueToCompare, operator);
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
@@ -198,7 +199,7 @@ createWhereQuery = function (columns, values, operators) {
     var queryString = 'WHERE ';
     if (columns != null && values != null && operators != null) {
         queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
-        for (var i = 1; i < values.length; i++) {
+        for (var i = 1; i < operators.length; i++) {
             queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
         }
         console.log(notMedia + Tag + queryString);
