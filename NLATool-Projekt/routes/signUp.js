@@ -12,8 +12,8 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'signUp.js: ';
 
-router.post('/signUp', function(req,res, next){
-
+router.get('/', function (req, res, next) {
+    res.render('./Desktop/signUp', {title: 'NLA - Natural Language Analyse Tool'});
 });
 
 module.exports = router;
