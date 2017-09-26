@@ -12,6 +12,8 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'profile.js: ';
 
-
+router.get('/', function (req, res, next) {
+    res.render('./Desktop/profile', {title: 'NLA - Natural Language Analyse Tool'});
+});
 
 module.exports = router;

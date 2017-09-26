@@ -12,5 +12,7 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'signIn.js: ';
 
-
+router.get('/', function (req, res, next) {
+    res.render('./Desktop/signIn', {title: 'NLA - Natural Language Analyse Tool'});
+});
 module.exports = router;
