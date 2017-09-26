@@ -18,17 +18,18 @@ var Tag = 'test.js: ';
  */
 var dbAction = require('../modules/DB-Actions');
 router.get('/', function (req, res, next) {
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool' ,result: '' });
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
 
-
-
-router.post('/theFunction', function(req, res){
-    var testingFunction= req.testfunction;
-    var nutzer = ['eins', 'zwei','drei','vier'];
-    var resultOfSQL = dbAction.createInsertCommand(nutzer, 'nla-beta');
-    res.render('./testview',{title: 'NLA - Natural Language Analyse Tool',result: resultOfSQL});
+router.post('/theFunction', function (req, res) {
+    var testingFunction = req.testfunction;
+    var colums = ['id', 'email', 'username', 'pass']
+    var values = ['eins', 'zwei', 'drei', 'vier'];
+    var valuesToCompare = ['zwei', 'vier', 'fünf'];
+    var oper = ['=', '=', '='];
+    var resultOfSQL = dbAction.createDeleteCommand('nla-beta', colums, values, valuesToCompare);
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
 

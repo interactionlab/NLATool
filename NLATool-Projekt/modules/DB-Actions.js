@@ -28,7 +28,7 @@ var dbNutzerdatenPassCol = 'password ';
 
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
-exports.createDB = function() {
+exports.createDB = function () {
 
 
     var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
@@ -72,7 +72,7 @@ exports.createDB = function() {
  * @param table
  * @returns {*}
  */
-exports.createSelectCommand = function(columns, table) {
+exports.createSelectCommand = function (columns, table) {
     var commandString = 'SELECT ';
     if (table != null) {
         if (columns == null) {
@@ -100,19 +100,25 @@ exports.createSelectCommand = function(columns, table) {
  * @param values
  * @param operators
  */
-exports.createInsertCommand = function (columns, table, values, operators) {
+exports.createInsertCommand = function (table, columns, values, valuesToCompare, operators) {
     var commandString = 'INSERT INTO ';
-    if (table != null && columns != null && values != null) {
-        commandString = commandString + table + ' ' + columns[0];
-        for (var i = 1; i < columns - 1; i++) {
-            commandString = commandString + ',' + columns[i];
+    if (table != null && values != null) {
+        if (columns == null) {
+            commandString = commandString + table + ' VALUES (' + values[0];
         }
-        commandString = commandString + ' VALUES ';
+        else {
+            commandString = commandString + table + ' (' + columns[0];
+            for (var i = 1; i < columns.length - 1; i++) {
+                commandString = commandString + ',' + columns[i];
+            }
+            commandString = commandString + ') VALUES (' + values[0];
+        }
         for (var j = 1; j < values.length - 1; j++) {
             commandString = commandString + ',' + values[j];
         }
-        if (operators != null) {
-            commandString = commandString + ' WHERE ' + operators;
+        commandString = commandString + ') ';
+        if (valuesToCompare != null && operators != null) {
+            commandString = commandString + createWhereQuery(columns, valuesToCompare, operators);
         }
         console.log(notMedia + Tag + commandString);
         return commandString;
@@ -129,15 +135,18 @@ exports.createInsertCommand = function (columns, table, values, operators) {
  * @param query
  * @returns {*}
  */
-exports.createUpdateCommand = function (column, table, value, query) {
+exports.createUpdateCommand = function (table, columns, values, valuesToCompare, operators) {
     var commandString = 'UPDATE ';
-    if (table != null && column != null && value != null) {
-        commandString = commandString + table + ' SET ' + column + ' = ' + value;
-        if (query != null) {
-            commandString = commandString + query;
-            console.log(notMedia + Tag + commandString);
-            return commandString;
+    if (table != null && columns != null && values != null) {
+        commandString = commandString + table + ' SET ' + columns[0] + ' = ' + values[0];
+        for (var i = 1; i < values.length; i++) {
+            commandString = commandString + ', ' + columns[i] + ' = ' + values[i];
         }
+        if (valuesToCompare != null, operators != null) {
+            commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
+        }
+        console.log(notMedia + Tag + commandString);
+        return commandString;
     }
     console.log(notMedia + Tag + 'Update Command Creation failed!');
     return null;
@@ -151,11 +160,11 @@ exports.createUpdateCommand = function (column, table, value, query) {
  * @param query
  * @returns {*}
  */
-exports.createDeleteCommand = function (column, table, value, query) {
+exports.createDeleteCommand = function (table, column, value, valueToCompare) {
     var commandString = 'DELETE FROM ';
-    if (table != null && column != null && value != null && query != null) {
+    if (table != null && column != null && value != null) {
         var operator = [queryOperators[0]];
-        commandString = commandString + table + createWhereQuery(column, table, operator);
+        commandString = commandString + table + createWhereQuery(column,valueToCompare, operator);
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
@@ -185,18 +194,18 @@ exports.createDeleteCommand = function (column, table, value, query) {
  * @param operators
  * @returns {*}
  */
-exports.createWhereQuery = function (columns, values, operators) {
+createWhereQuery = function (columns, values, operators) {
     var queryString = 'WHERE ';
     if (columns != null && values != null && operators != null) {
         queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
-        for (var i = 1; i < columns.length; i++) {
+        for (var i = 1; i < values.length; i++) {
             queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
         }
         console.log(notMedia + Tag + queryString);
         return queryString;
     }
     console.log(notMedia + Tag + 'Where Query Creation failed!');
-    return null;
+    return '';
 };
 
 //--------------------------------------------------------
