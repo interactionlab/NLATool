@@ -33,47 +33,47 @@ var dbconfig = './modules/dbconfig.json';
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+/**
+ *
+ */
 exports.setupDB = function () {
-    var jsonObj;
+
     jsonconfigurator.readFile(dbconfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + err);
         } else {
-            jsonObj = obj;
+
         }
     });
-
-    var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
-        "`userID` INT NOT NULL AUTO_INCREMENT , " +
-        "`email` VARCHAR(255) NOT NULL UNIQUE, " +
-        "`username` VARCHAR(255) NOT NULL , " +
-        "`password` INT NOT NULL , " +
-        "PRIMARY KEY (`userID`)) " +
-        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin;";
-
-    var createDocTable = "CREATE TABLE `nla-alpha`.`Document` ( " +
-        "`docID` INT NOT NULL AUTO_INCREMENT , " +
-        "`userID` INT NOT NULL , " +
-        "`title` VARCHAR(255) NOT NULL , " +
-        "`author` VARCHAR(255) NOT NULL , " +
-        "`year` YEAR NOT NULL , " +
-        "PRIMARY KEY (`docID`) USING HASH) " +
-        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
-        "COMMENT = 'Dokument := tokenisierter Text + Notizen+Suchergebnisse+....';";
-
-    var createSearchResultTable = "CREATE TABLE `nla-alpha`.`SearchResult` ( " +
-        "`resultID` INT NOT NULL AUTO_INCREMENT , " +
-        "`url` VARCHAR(255) NOT NULL , " +
-        "`imagePath` VARCHAR(1024) NOT NULL , " +
-        "`shortDiscription` TEXT NOT NULL , " +
-        "`longDiscription` MEDIUMTEXT NOT NULL , " +
-        "`docID` INT NOT NULL , " +
-        "PRIMARY KEY (`resultID`), " +
-        "UNIQUE (`url`)) " +
-        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
-        "COMMENT = 'evtl. Bilder hier dirckt in LongBlobs speichern';";
-
 };
+/**
+ * generates String for SQL Command CREATE
+ * name is either the name of the database -> CREATE DATABASE name
+ * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
+ * @param name
+ * @param columns
+ */
+exports.createCreateCommand = function (dbName, table, columns) {
+    var commandString = '';
+    if (dbName != null) {
+        if (table != null && columns != null) {
+            commandString = 'CREATE TABLE ' + dbName + ' . ' + table + ' (' + columns[0];
+            for (var i = 1; i < columns.length; i++) {
+                commandString = commandString + ', ';
+            }
+            commandString = commandString + ')';
+            console.log(notMedia + Tag + commandString);
+            return commandString;
+        } else {
+            commandString = 'CREATE DATABASE ' + dbName;
+            console.log(notMedia + Tag + commandString);
+            return commandString;
+        }
+    } else {
+        console.log(notMedia + Tag + 'couldnt create Database/table because name of Database is missing');
+        return commandString;
+    }
+}
 
 /**
  * generates String for SQL Command SELECT
@@ -223,3 +223,34 @@ createWhereQuery = function (columns, values, operators) {
 
 //--------------------------------------------------------
 
+/*
+ var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
+        "`userID` INT NOT NULL AUTO_INCREMENT , " +
+        "`email` VARCHAR(255) NOT NULL UNIQUE, " +
+        "`username` VARCHAR(255) NOT NULL , " +
+        "`password` INT NOT NULL , " +
+        "PRIMARY KEY (`userID`)) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin;";
+
+    var createDocTable = "CREATE TABLE `nla-alpha`.`Document` ( " +
+        "`docID` INT NOT NULL AUTO_INCREMENT , " +
+        "`userID` INT NOT NULL , " +
+        "`title` VARCHAR(255) NOT NULL , " +
+        "`author` VARCHAR(255) NOT NULL , " +
+        "`year` YEAR NOT NULL , " +
+        "PRIMARY KEY (`docID`) USING HASH) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
+        "COMMENT = 'Dokument := tokenisierter Text + Notizen+Suchergebnisse+....';";
+
+    var createSearchResultTable = "CREATE TABLE `nla-alpha`.`SearchResult` ( " +
+        "`resultID` INT NOT NULL AUTO_INCREMENT , " +
+        "`url` VARCHAR(255) NOT NULL , " +
+        "`imagePath` VARCHAR(1024) NOT NULL , " +
+        "`shortDiscription` TEXT NOT NULL , " +
+        "`longDiscription` MEDIUMTEXT NOT NULL , " +
+        "`docID` INT NOT NULL , " +
+        "PRIMARY KEY (`resultID`), " +
+        "UNIQUE (`url`)) " +
+        "ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_bin " +
+        "COMMENT = 'evtl. Bilder hier dirckt in LongBlobs speichern';";
+ */
