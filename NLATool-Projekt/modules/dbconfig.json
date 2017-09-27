@@ -16,60 +16,77 @@
   },
   "table0": {
     "name":"accountData",
-    "id": {
+    "column1": {
       "name": "userID",
       "type": "INT",
       "primary": "true",
       "AI": "true"
     },
-    "email": {
+    "column2": {
       "name": "email",
       "unique": "true"
     },
-    "username": {
+    "column3": {
       "name": "username"
     },
-    "password": {
+    "column4": {
       "name": "password"
     }
   },
   "table1": {
     "name":"documents",
-    "id": {
+    "column1": {
       "name": "docID",
       "type": "INT",
       "AI": "true"
     },
-    "userID": {
+    "column2": {
       "name": "userID",
       "type": "INT"
     },
-    "title": {
+    "column3": {
       "name": "title"
     },
-    "author": {
+    "column4": {
       "name": "author"
     },
-    "year": {
+    "column5": {
       "name": "year",
       "type": "YEAR"
     }
   },
   "table2": {
     "name": "searchResults",
-    "id":{
+    "column1":{
       "name": "resultID",
       "type": "INT",
       "primary": "true",
       "AI": "true"
     },
-    "url":{
+    "column2":{
       "name":"url"
-
+    },
+    "column3":{
+      "name": "imagepath",
+      "type": "VARCHAR",
+      "length": "1024"
+    },
+    "column4":{
+      "name": "shortdescription",
+      "type": "TEXT"
+    },
+    "column5":{
+      "name": "longdescription",
+      "type": "MEDIUMTEXT",
+    },
+    "column6":{
+      "name": "docID",
+      "type": "INT"
     }
   },
   "table3": {
     "name": "notes"
+
   },
   "table4": {
     "name":"text"
