@@ -17,6 +17,7 @@ var Tag = 'test.js: ';
 var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
 
+//TODO: automatically read dbconfig file for these info
 var host = 'localhost';
 var user = 'guest';
 var password = 'ichbingasthier';
