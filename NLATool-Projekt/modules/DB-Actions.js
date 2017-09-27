@@ -25,11 +25,26 @@ var dbNutzerdatenUserCol = 'username ';  //unique
 var dbNutzerdatenEmailCol = 'email ';    //unique
 var dbNutzerdatenPassCol = 'password ';
 */
+/**
+ * Setup Configuration file Requirements:
+ */
+var jsonconfigurator = require('jsonfile');
+var dbconfig = './dbconfig.json';
 
+/**
+ * Compare Operations for Where-Query of SQL:
+ * @type {[string,string,string,string,string,string,string,string,string]}
+ */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
-
 exports.setupDB = function () {
-
+    var jsonObj;
+    jsonconfigurator.readFile(dbconfig, function (err, obj) {
+        if (err) {
+            console.log(notMedia + Tag + err);
+        } else {
+            jsonObj = obj;
+        }
+    });
 
     var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
         "`userID` INT NOT NULL AUTO_INCREMENT , " +
