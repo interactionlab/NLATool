@@ -1,9 +1,10 @@
 {
   "Database": {
     "name": "nla-alpha",
-    "host": "localhost",
-    "user": "guest",
-    "password": "ichbingasthier"
+    "host": "turcan.de",
+    "user": "nlatool",
+    "password": "1EcH1pHr1VHhdknm",
+    "port": "3306"
   },
   "Default":{
     "type": "VARCHAR",
@@ -77,7 +78,7 @@
     },
     "column5":{
       "name": "longdescription",
-      "type": "MEDIUMTEXT",
+      "type": "MEDIUMTEXT"
     },
     "column6":{
       "name": "docID",
@@ -85,14 +86,53 @@
     }
   },
   "table3": {
-    "name": "notes"
-
+    "name": "notes",
+    "column1": {
+      "name": "noteID",
+      "type": "INT",
+      "primary": "true"
+    },
+    "column2": {
+      "name": "docID",
+      "type": "INT",
+      "unique": "true"
+    },
+    "column3": {
+      "name": "tags",
+      "type": "TEXT"
+    },
+    "column4":{
+      "name": "content",
+      "type": "MEDIUMTEXT"
+    }
   },
   "table4": {
-    "name":"text"
+    "name":"text",
+    "column1":{
+      "name": "textID",
+      "type": "INT",
+      "primary": "true",
+      "AI": "true"
+    },
+    "column": {
+      "name": "docID",
+      "type": "INT",
+      "unique": "true"
+    }
+
   },
   "table5": {
-    "name":"word"
+    "name":"word",
+    "column1": {
+      "name": "wordID",
+      "type": "INT",
+      "primary": "true",
+      "AI": "true"
+    },
+    "column2":{
+      "name": "content",
+      "type": "TINYTEXT"
+    }
   },
   "table6": {
     "name":"statistics"

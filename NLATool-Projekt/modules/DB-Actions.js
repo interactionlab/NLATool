@@ -1,6 +1,3 @@
-//TODO: DB-Actions ist kein router!!, muss geändert werden
-
-
 //--------------------------------------------------------
 /**
  * Tags for console Errors:
@@ -29,7 +26,7 @@ var dbNutzerdatenPassCol = 'password ';
  * Setup Configuration file Requirements:
  */
 var jsonconfigurator = require('jsonfile');
-var dbconfig = './dbconfig.json';
+var dbconfig = './modules/dbconfig.json';
 
 /**
  * Compare Operations for Where-Query of SQL:

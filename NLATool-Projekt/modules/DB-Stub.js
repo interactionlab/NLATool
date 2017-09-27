@@ -11,35 +11,53 @@ var desktop = 'desktop Version: ';
 var mobile = 'Mobile Version: ';
 var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
-var Tag = 'test.js: ';
+var Tag = 'DB-Stub.js: ';
 
 //--------------------------------------------------------
 var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
 
-//TODO: automatically read dbconfig file for these info
-var host = 'localhost';
-var user = 'guest';
-var password = 'ichbingasthier';
-var db = 'nla-alpha';
+var dbName = null, host = null, port = null, user = null, password = null;
+/**
+ * Reading Configuration file requirements:
+ */
+var jsonconfigurator = require('jsonfile');
+var dbconfig = './modules/dbconfig.json';
+
+/**
+ * Reading config file to get the connection data of the Database Server.
+ */
+jsonconfigurator.readFile(dbconfig, function (err, obj) {
+    if (err) {
+        console.log(notMedia + Tag + err);
+        //TODO: Create a possibility for the user to configure this config file for his own Database
+    } else {
+        dbName = obj.Database.name;
+        host = obj.Database.host;
+        port = obj.Database.port;
+        user = obj.Database.user;
+        password = obj.Database.password;
+    }
+});
+
 
 var pool = mysql.createPool({
     host: host,
     user: user,
     password: password,
-    database: db
+    database: dbName
 });
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     pool.getConnection(function (err, connection) {
         // dbAction.createInsertCommand(table, columns, values, valuesToCompare, operators)
         connection.query('SELECT * FROM accountdata', function (error, results, fields) {
-                if (error) throw error;
-                else {
-                    for (var i = 0; i < results; i++) {
-                        console.log(notMedia + Tag + results[i]);
-                    }
+            if (error) throw error;
+            else {
+                for (var i = 0; i < results; i++) {
+                    console.log(notMedia + Tag + results[i]);
                 }
-            });
+            }
+        });
     });
 }
 var connection = mysql.createConnection({
