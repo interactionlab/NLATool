@@ -1,0 +1,83 @@
+{
+  "Database": {
+    "name": "nla-alpha",
+    "host": "localhost",
+    "user": "guest",
+    "password": "ichbingasthier"
+  },
+  "Default":{
+    "type": "VARCHAR",
+    "length": "255",
+    "AI": "false",
+    "primary": "false",
+    "unique": "false",
+    "null": "NOT NULL"
+
+  },
+  "table0": {
+    "name":"accountData",
+    "id": {
+      "name": "userID",
+      "type": "INT",
+      "primary": "true",
+      "AI": "true"
+    },
+    "email": {
+      "name": "email",
+      "unique": "true"
+    },
+    "username": {
+      "name": "username"
+    },
+    "password": {
+      "name": "password"
+    }
+  },
+  "table1": {
+    "name":"documents",
+    "id": {
+      "name": "docID",
+      "type": "INT",
+      "AI": "true"
+    },
+    "userID": {
+      "name": "userID",
+      "type": "INT"
+    },
+    "title": {
+      "name": "title"
+    },
+    "author": {
+      "name": "author"
+    },
+    "year": {
+      "name": "year",
+      "type": "YEAR"
+    }
+  },
+  "table2": {
+    "name": "searchResults",
+    "id":{
+      "name": "resultID",
+      "type": "INT",
+      "primary": "true",
+      "AI": "true"
+    },
+    "url":{
+      "name":"url"
+
+    }
+  },
+  "table3": {
+    "name": "notes"
+  },
+  "table4": {
+    "name":"text"
+  },
+  "table5": {
+    "name":"word"
+  },
+  "table6": {
+    "name":"statistics"
+  }
+}
