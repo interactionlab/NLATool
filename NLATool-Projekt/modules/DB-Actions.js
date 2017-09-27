@@ -28,7 +28,7 @@ var dbNutzerdatenPassCol = 'password ';
 
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
-exports.createDB = function () {
+exports.setupDB = function () {
 
 
     var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
