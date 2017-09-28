@@ -37,6 +37,7 @@ jsonconfigurator.readFile(dbconfig, function (err, obj) {
         port = obj.database.port;
         user = obj.database.user;
         password = obj.database.password;
+        console.log(notMedia + Tag + dbName + ' ' + host + ' ' + port + ' ' + user + ' ' + password);
     }
 });
 
@@ -49,7 +50,7 @@ var pool = mysql.createPool({
 });
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     pool.getConnection(function (err, connection) {
-        if(err) throw err;
+        if (err) throw err;
         // dbAction.createInsertCommand(table, columns, values, valuesToCompare, operators)
         connection.query('SELECT * FROM accountdata', function (error, results, fields) {
             if (error) throw error;
