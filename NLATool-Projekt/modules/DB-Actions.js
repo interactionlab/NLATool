@@ -42,11 +42,16 @@ exports.setupDB = function () {
         if (err) {
             console.log(notMedia + Tag + err);
         } else {
-            for(var entity in obj){
-                if(!entity.isTable){
+            //get all default properties
+            var defaultArray = Object.keys(obj.default);
+            //get all table options and column options
+            for (var entity in obj) {
+                if (entity.isTable) {
+                    for (var table in entity) {
+                        var tableName = table.name;
+                        for (var column in table) {
 
-                }else{
-                    for(var table in entity){
+                        }
 
                     }
                 }
@@ -83,6 +88,46 @@ exports.createCreateCommand = function (dbName, table, columns) {
     }
 }
 
+/**
+ * create a whole line of options for a column so that
+ * you can just add them to the CREATE TABLE query
+ */
+transformColumnToSQL = function (column, options) {
+    options = synchColumnWithDefault(options);
+    if (options != null) {
+
+        var properties = Object.keys(options);
+        var transformString = column + ' ' + properties[0];
+
+        for (var i = 1; i < properties.length; i++) {
+            if (typeof properties[i] == "number") {
+                transformString = transformString + ' (' + properties[i] + ')'
+            }
+            transformString = transformString + ' ' + properties[i];
+        }
+    }
+}
+/**
+ * synchronise default configuration with the special configuration of a column.
+ */
+exports.synchColumnWithDefault = function (options) {
+
+    jsonconfigurator.readFile(dbconfig, function (err, obj) {
+        if (err) {
+            console.log(notMedia + Tag + 'Coulndt load standard db configuration! ' + err);
+            return null;
+        }
+        for (var key in obj.default) {
+            console.log(notMedia + Tag + 'key1: ' + key);
+            for (var key2 in options) {
+                console.log(notMedia + Tag + 'key2: ' + key2);
+                if (key != key2) {
+
+                }
+            }
+        }
+    });
+}
 /**
  * generates String for SQL Command SELECT
  * If no columns are specified, everything will be selected and returned.
