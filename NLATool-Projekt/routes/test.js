@@ -32,7 +32,7 @@ router.post('/theFunction', function (req, res) {
     var oper = ['=', '=', '='];
     var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
 
-    var jsonOptions = {"column": {"name": "first", "type": "INT"}}
+    var jsonOptions = {"name": "first", "type": "INT"}
 
     dbAction.synchColumnWithDefault(jsonOptions);
     dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
