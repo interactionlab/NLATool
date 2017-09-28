@@ -16,105 +16,105 @@
     "unique": "false",
     "null": "NOT NULL"
   },
-  "table0": {
+  "table": {
     "isTable": true,
     "name":"accountData",
-    "column1": {
+    "column": {
       "name": "userID",
       "type": "INT",
       "primary": "true",
       "AI": "true"
     },
-    "column2": {
+    "column": {
       "name": "email",
       "unique": "true"
     },
-    "column3": {
+    "column": {
       "name": "username"
     },
-    "column4": {
+    "column": {
       "name": "password"
     }
   },
-  "table1": {
+  "table": {
     "isTable": true,
     "name":"documents",
-    "column1": {
+    "column": {
       "name": "docID",
       "type": "INT",
       "AI": "true"
     },
-    "column2": {
+    "column": {
       "name": "userID",
       "type": "INT"
     },
-    "column3": {
+    "column": {
       "name": "title"
     },
-    "column4": {
+    "column": {
       "name": "author"
     },
-    "column5": {
+    "column": {
       "name": "year",
       "type": "YEAR"
     }
   },
-  "table2": {
+  "table": {
     "isTable": true,
     "name": "searchResults",
-    "column1":{
+    "column":{
       "name": "resultID",
       "type": "INT",
       "primary": "true",
       "AI": "true"
     },
-    "column2":{
+    "column":{
       "name":"url"
     },
-    "column3":{
+    "column":{
       "name": "imageUrl",
       "type": "VARCHAR",
       "length": "1024"
     },
-    "column4":{
+    "column":{
       "name": "shortdescription",
       "type": "TEXT"
     },
-    "column5":{
+    "column":{
       "name": "longdescription",
       "type": "MEDIUMTEXT"
     },
-    "column6":{
+    "column":{
       "name": "docID",
       "type": "INT"
     }
   },
-  "table3": {
+  "table": {
     "isTable": true,
     "name": "notes",
-    "column1": {
+    "column": {
       "name": "noteID",
       "type": "INT",
       "primary": "true"
     },
-    "column2": {
+    "column": {
       "name": "docID",
       "type": "INT",
       "unique": "true"
     },
-    "column3": {
+    "column": {
       "name": "tags",
       "type": "TEXT"
     },
-    "column4":{
+    "column":{
       "name": "content",
       "type": "MEDIUMTEXT"
     }
   },
-  "table4": {
+  "table": {
     "isTable": true,
     "name":"text",
-    "column1":{
+    "column":{
       "name": "textID",
       "type": "INT",
       "primary": "true",
@@ -127,21 +127,21 @@
     }
 
   },
-  "table5": {
+  "table": {
     "isTable": true,
     "name":"word",
-    "column1": {
+    "column": {
       "name": "wordID",
       "type": "INT",
       "primary": "true",
       "AI": "true"
     },
-    "column2":{
+    "column":{
       "name": "content",
       "type": "TINYTEXT"
     }
   },
-  "table6": {
+  "table": {
     "isTable": true,
     "name":"statistics"
   }
