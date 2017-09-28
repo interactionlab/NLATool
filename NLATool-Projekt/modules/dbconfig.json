@@ -1,21 +1,23 @@
 {
-  "Database": {
+  "database": {
+    "isTable": false,
     "name": "nla-alpha",
     "host": "turcan.de",
     "user": "nlatool",
     "password": "1EcH1pHr1VHhdknm",
     "port": "3306"
   },
-  "Default":{
+  "default":{
+    "isTable": false,
     "type": "VARCHAR",
     "length": "255",
     "AI": "false",
     "primary": "false",
     "unique": "false",
     "null": "NOT NULL"
-
   },
   "table0": {
+    "isTable": true,
     "name":"accountData",
     "column1": {
       "name": "userID",
@@ -35,6 +37,7 @@
     }
   },
   "table1": {
+    "isTable": true,
     "name":"documents",
     "column1": {
       "name": "docID",
@@ -57,6 +60,7 @@
     }
   },
   "table2": {
+    "isTable": true,
     "name": "searchResults",
     "column1":{
       "name": "resultID",
@@ -68,7 +72,7 @@
       "name":"url"
     },
     "column3":{
-      "name": "imagepath",
+      "name": "imageUrl",
       "type": "VARCHAR",
       "length": "1024"
     },
@@ -86,6 +90,7 @@
     }
   },
   "table3": {
+    "isTable": true,
     "name": "notes",
     "column1": {
       "name": "noteID",
@@ -107,6 +112,7 @@
     }
   },
   "table4": {
+    "isTable": true,
     "name":"text",
     "column1":{
       "name": "textID",
@@ -122,6 +128,7 @@
 
   },
   "table5": {
+    "isTable": true,
     "name":"word",
     "column1": {
       "name": "wordID",
@@ -135,6 +142,7 @@
     }
   },
   "table6": {
+    "isTable": true,
     "name":"statistics"
   }
 }
