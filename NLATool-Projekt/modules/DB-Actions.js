@@ -114,7 +114,7 @@ exports.synchColumnWithDefault = function (options) {
 
     jsonconfigurator.readFile(dbconfig, function (err, obj) {
         if (err) {
-            console.log(notMedia + Tag + 'Coulndt load standard db configuration! ' + err);
+            console.log(notMedia + Tag + 'Couldnt load standard db configuration! ' + err);
             return null;
         }
         for (var key in obj.default) {
@@ -122,7 +122,7 @@ exports.synchColumnWithDefault = function (options) {
             for (var key2 in options) {
                 console.log(notMedia + Tag + 'key2: ' + key2);
                 if (key != key2) {
-                    
+
                 }
             }
         }
