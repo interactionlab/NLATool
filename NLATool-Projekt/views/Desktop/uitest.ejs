@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="author" content="Emine Turcan">
+    <meta name="date" content="2017-09-28">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="css/summernote.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-autocolumns.css" />
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/summernote.js"></script>
+
+    <script> <!-- ButtonFunction for open and close the result field-->
+    function expand() {
+        button = document.getElementById('switch');
+        rightDiv = document.getElementById('right-column');
+        if (button.value == 'v') {
+            button.value = '^';
+            rightDiv.style.display = 'inline';
+        } else {
+            button.value = 'v';
+            rightDiv.style.display = 'none';
+        }
+    }
+    </script>
+
+    <title>%= title %</title>
+</head>
+<body>
+<div class="container">
+    <div class="row" style="padding: 0px 0px 32px 0px"> <!--Logo and Account row-->
+        <div class="col-sm-8">NLATool-Logo</div>
+        <div class="col-sm-4" style="text-align: right"><input type="submit" value="Konto" /></div>
+    </div>
+
+    <div class="row" style="padding: 0px 0px 8px 0px"> <!-- Features-row -->
+        <div class="row bordered">
+            <div class="col-sm-2 bordered"><input type="submit" value="Feature1" />&nbsp;<input type="submit" value="Feature2" />&nbsp;<input type="submit" value="Feature3" />&nbsp;<input type="submit" value="Feature3" /></div>
+        </div>
+    </div>
+
+    <div class="row"> <!-- additional row for results-->
+        <div class="col-sm-12" style="text-align: right;"><input type="submit" id="switch" value="v" onclick="expand();"/></div>
+</div>
+
+
+<div class="row">
+    <div class="col-xs-auto"><!--automatically adjust columns-->
+
+        <div class="row bordered">
+            <div class="col-sm-12 bordered"><input type="submit" value="Textfeld leeren" /></div> <!--clear textfield-->
+        </div>
+        <div class="row bordered">
+            <div class="col-sm-12 bordered"><textarea class="form-control" style="width: 500px;">Enter Text here</textarea></div>
+        </div>
+
+    </div>
+    <div class="col-xs-auto-right" style="display: none;" id="right-column"> <!-- by default solution area is closed-->
+
+        <div class="row bordered">
+            <div class="col-sm-12 bordered"><input type="submit" value="NER (name, place, etc)" /></div>
+        </div>
+
+        <div class="row bordered"> <!-- Buttons for results-->
+            <div class="col-sm-12 bordered"><input type="submit" value="button1" />&nbsp;<input type="submit" value="button2" />&nbsp;<input type="submit" value="button3" />&nbsp;<input type="submit" value="button4" /></div>
+        </div>
+
+        <div class="row bordered">
+            <div class="col-sm-12 bordered"> Placeholder for results (images, desciptions, etc) .......</div>
+        </div>
+
+    </div>
+</div>
+</div>
+</body>
+</html>
