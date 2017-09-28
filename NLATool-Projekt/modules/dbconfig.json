@@ -1,7 +1,7 @@
 {
   "database": {
     "isTable": false,
-    "name": "nla-alpha",
+    "name": "nlatool",
     "host": "turcan.de",
     "user": "nlatool",
     "password": "1EcH1pHr1VHhdknm",
