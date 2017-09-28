@@ -42,7 +42,15 @@ exports.setupDB = function () {
         if (err) {
             console.log(notMedia + Tag + err);
         } else {
+            for(var entity in obj){
+                if(!entity.isTable){
 
+                }else{
+                    for(var table in entity){
+
+                    }
+                }
+            }
         }
     });
 };
