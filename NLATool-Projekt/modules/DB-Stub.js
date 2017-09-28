@@ -32,11 +32,11 @@ jsonconfigurator.readFile(dbconfig, function (err, obj) {
         console.log(notMedia + Tag + err);
         //TODO: Create a possibility for the user to configure this config file for his own Database
     } else {
-        dbName = obj.Database.name;
-        host = obj.Database.host;
-        port = obj.Database.port;
-        user = obj.Database.user;
-        password = obj.Database.password;
+        dbName = obj.database.name;
+        host = obj.database.host;
+        port = obj.database.port;
+        user = obj.database.user;
+        password = obj.database.password;
     }
 });
 
@@ -49,6 +49,7 @@ var pool = mysql.createPool({
 });
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     pool.getConnection(function (err, connection) {
+        if(err) throw err;
         // dbAction.createInsertCommand(table, columns, values, valuesToCompare, operators)
         connection.query('SELECT * FROM accountdata', function (error, results, fields) {
             if (error) throw error;
