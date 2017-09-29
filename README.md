@@ -2,9 +2,16 @@
 Natural Language Analysis Tool
 
 
-## Dependencies
+## Setup NLATool
+Setp-by-setp instructions:
+* `$ npm install -g nodemon`
+* `$ npm config set python python2.7`
+* `$ npm install`
+* `$ npm start`
 
-To install node-gyp you have to install Python 2.7 (v3.x.x is not supported), and run `npm config set python python2.7` before you run `npm install`.
+Hint: To install node-gyp you have to install Python 2.7 (v3.x.x is not supported), and run `npm config set python python2.7` before you run `npm install`.
+
+
 
 
 ## MYSQL Server for external access
