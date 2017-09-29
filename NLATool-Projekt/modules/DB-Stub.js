@@ -63,7 +63,7 @@ exports.testDBConnection = function (table, columns, values, valuesToCompare, op
             }
         });
     });
-}
+};
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'guest',
