@@ -78,14 +78,14 @@ exports.createCreateCommand = function (dbName, table, columns) {
         console.log(notMedia + Tag + 'couldnt create Database/table because name of Database is missing');
         return commandString;
     }
-}
+};
 
 /**
  * create a whole line of options for a column so that
  * you can just add them to the CREATE TABLE query
  */
 transformColumnToSQL = function (column, options) {
-    options = synchColumnWithDefault(options);
+    options = syncColumnWithDefault(options);
     if (options !== null) {
 
         var properties = Object.keys(options);
@@ -102,7 +102,7 @@ transformColumnToSQL = function (column, options) {
 /**
  * synchronise default configuration with the special configuration of a column.
  */
-exports.synchColumnWithDefault = function (options) {
+exports.syncColumnWithDefault = function (options) {
 
     jsonconfigurator.readFile(dbconfig, function (err, obj) {
         if (err) {
