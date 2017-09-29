@@ -54,13 +54,14 @@ exports.setupDB = function () {
  * generates String for SQL Command CREATE
  * name is either the name of the database -> CREATE DATABASE name
  * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
- * @param name
+ * @param dbName
+ * @param table
  * @param columns
  */
 exports.createCreateCommand = function (dbName, table, columns) {
     var commandString = '';
-    if (dbName != null) {
-        if (table != null && columns != null) {
+    if (dbName !== null) {
+        if (table !== null && columns !== null) {
             commandString = 'CREATE TABLE ' + dbName + ' . ' + table + ' (' + columns[0];
             for (var i = 1; i < columns.length; i++) {
                 commandString = commandString + ', ';
@@ -85,19 +86,19 @@ exports.createCreateCommand = function (dbName, table, columns) {
  */
 transformColumnToSQL = function (column, options) {
     options = synchColumnWithDefault(options);
-    if (options != null) {
+    if (options !== null) {
 
         var properties = Object.keys(options);
         var transformString = column + ' ' + properties[0];
 
         for (var i = 1; i < properties.length; i++) {
-            if (typeof properties[i] == "number") {
+            if (typeof properties[i] === "number") {
                 transformString = transformString + ' (' + properties[i] + ')'
             }
             transformString = transformString + ' ' + properties[i];
         }
     }
-}
+};
 /**
  * synchronise default configuration with the special configuration of a column.
  */
@@ -113,7 +114,7 @@ exports.synchColumnWithDefault = function (options) {
             for (var key2 in options) {
                 console.log(notMedia + Tag + 'key2: ' + key2);
 
-                if (key != key2) {
+                if (key !== key2) {
                     options[key2] = options[key];
                 } else{
                     break;
@@ -122,7 +123,8 @@ exports.synchColumnWithDefault = function (options) {
         }
         console.log(notMedia + Tag + JSON.stringify(options));
     });
-}
+};
+
 /**
  * generates String for SQL Command SELECT
  * If no columns are specified, everything will be selected and returned.
@@ -130,12 +132,14 @@ exports.synchColumnWithDefault = function (options) {
  *
  * @param columns represents an array or something similar.
  * @param table
+ * @param valuesToCompare
+ * @param operators
  * @returns {*}
  */
 exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
     var commandString = 'SELECT ';
-    if (table != null) {
-        if (columns == null) {
+    if (table !== null) {
+        if (columns === null) {
             commandString = '* FROM ' + table;
         } else {
             commandString = commandString + columns[0];
@@ -159,12 +163,13 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
  * @param columns
  * @param table
  * @param values
+ * @param valuesToCompare
  * @param operators
  */
 exports.createInsertCommand = function (table, columns, values, valuesToCompare, operators) {
     var commandString = 'INSERT INTO ';
-    if (table != null && values != null) {
-        if (columns == null) {
+    if (table !== null && values !== null) {
+        if (columns === null) {
             commandString = commandString + table + ' VALUES (' + values[0];
         }
         else {
@@ -178,7 +183,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
             commandString = commandString + ',' + values[j];
         }
         commandString = commandString + ') ';
-        if (valuesToCompare != null && operators != null) {
+        if (valuesToCompare !== null && operators !== null) {
             commandString = commandString + createWhereQuery(columns, valuesToCompare, operators);
         }
         console.log(notMedia + Tag + commandString);
@@ -190,20 +195,21 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
 
 /**
  * Generates the query for the SQL Command UPDATE.
- * @param column
  * @param table
- * @param value
- * @param query
+ * @param columns
+ * @param values
+ * @param valuesToCompare
+ * @param operators
  * @returns {*}
  */
 exports.createUpdateCommand = function (table, columns, values, valuesToCompare, operators) {
     var commandString = 'UPDATE ';
-    if (table != null && columns != null && values != null) {
+    if (table !== null && columns !== null && values !== null) {
         commandString = commandString + table + ' SET ' + columns[0] + ' = ' + values[0];
         for (var i = 1; i < values.length; i++) {
             commandString = commandString + ', ' + columns[i] + ' = ' + values[i];
         }
-        if (valuesToCompare != null, operators != null) {
+        if (valuesToCompare !== null && operators !== null) {
             commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         }
         console.log(notMedia + Tag + commandString);
@@ -211,19 +217,19 @@ exports.createUpdateCommand = function (table, columns, values, valuesToCompare,
     }
     console.log(notMedia + Tag + 'Update Command Creation failed!');
     return null;
-}
+};
 
 /**
  * Generates the query for the SQL Command DELETE FROM.
  * @param column
  * @param table
  * @param value
- * @param query
+ * @param valueToCompare
  * @returns {*}
  */
 exports.createDeleteCommand = function (table, column, value, valueToCompare) {
     var commandString = 'DELETE FROM ';
-    if (table != null && column != null && value != null) {
+    if (table !== null && column !== null && value !== null) {
         var operator = [queryOperators[0]];
         commandString = commandString + table + ' ' + createWhereQuery(column, valueToCompare, operator);
         console.log(notMedia + Tag + commandString);
@@ -237,7 +243,6 @@ exports.createDeleteCommand = function (table, column, value, valueToCompare) {
  * Generates the query for the SQL Command-extension WHERE.
  * The Result follows the structure below:
  * "WHERE column1 = value1 AND column2 <> value2
- * Der Operator muss die SQL-Richtlinien einhalten d.h. operatoren sind:
  * Operator     Discription
  * =            Equals
  * <>           imparity, inequality (sometimes: !=)
@@ -257,7 +262,7 @@ exports.createDeleteCommand = function (table, column, value, valueToCompare) {
  */
 createWhereQuery = function (columns, values, operators) {
     var queryString = 'WHERE ';
-    if (columns != null && values != null && operators != null) {
+    if (columns !== null && values !== null && operators !== null) {
         queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
         for (var i = 1; i < operators.length; i++) {
             queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
