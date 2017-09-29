@@ -18,6 +18,8 @@ var Tag = 'test.js: ';
  */
 var dbAction = require('../modules/DB-Actions');
 var dbStub = require('../modules/DB-Stub');
+const corenlp = require("corenlp-request-wrapper");
+
 router.get('/', function (req, res, next) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
@@ -39,5 +41,14 @@ router.post('/theFunction', function (req, res) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
+router.post('/nlp', function (req, res) {
+
+    corenlp.parse(
+        "Lincoln and Germany fall on the floor. I like that.", 9000, "pos,lemma,ner", "json", function (err, parsedText) {
+            console.log(JSON.stringify(JSON.parse(parsedText), null, 2))
+            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result:JSON.stringify(JSON.parse(parsedText))})
+        });
+
+});
 
 module.exports = router;
