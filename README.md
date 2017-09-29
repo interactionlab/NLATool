@@ -3,7 +3,7 @@ Natural Language Analysis Tool
 
 
 ## Setup NLATool
-Setp-by-setp instructions:
+Step-by-step instructions:
 * `$ npm install -g nodemon`
 * `$ npm config set python python2.7`
 * `$ npm install`
