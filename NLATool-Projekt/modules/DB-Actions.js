@@ -122,10 +122,11 @@ exports.synchColumnWithDefault = function (options) {
             for (var key2 in options) {
                 console.log(notMedia + Tag + 'key2: ' + key2);
                 if (key != key2) {
-
+                    options[key2] = options[key];
                 }
             }
         }
+        console.log(notMedia + Tag + JSON.stringify(options));
     });
 }
 /**
