@@ -12,15 +12,6 @@ var Tag = 'DB-Actions.js: ';
 /!**
  *
  *!/
-var dbName = 'nla-alpha';
-
-
-//Nutzerdaten Tabelle
-var dbNutzerdatentable = 'nutzerdaten ';
-var dbNutzerdatenIDCol = 'id ';          //primary
-var dbNutzerdatenUserCol = 'username ';  //unique
-var dbNutzerdatenEmailCol = 'email ';    //unique
-var dbNutzerdatenPassCol = 'password ';
 */
 /**
  * Setup Configuration file Requirements:
