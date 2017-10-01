@@ -115,7 +115,7 @@ exports.syncColumnWithDefault = function (options) {
                 console.log(notMedia + Tag + 'key2: ' + key2);
 
                 if (key !== key2) {
-                    options[key2] = options[key];
+                    options[key] = obj.default[key].code;
                 } else{
                     break;
                 }
