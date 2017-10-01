@@ -2,17 +2,64 @@
 <html>
 <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
 </head>
+
 <body>
 <h1><%= title %></h1>
 
 <form action="/loadtext/nlp2" method="post">
     <p>Text eingeben oder kopieren:<p>
-        <textarea type="text" name="testFunction" id="textInput"></textarea><br>
+        <textarea name="testFunction" id="textInput"></textarea><br>
         <br>
         <input type="submit">
 </form>
+
+<article>
+
+    <div id="holder" style="height: 200px; width: 200px; border: double black"></div>
+    <p id="status">File API & FileReader API not supported</p>
+
+</article>
+
+<script>
+    //source: http://jsfiddle.net/jimschubert/DqcUg/
+    // modified from http://html5demos.com/file-api
+    var holder = document.getElementById('holder'),
+        state = document.getElementById('status');
+
+    if (typeof window.FileReader === 'undefined') {
+        state.className = 'fail';
+    } else {
+        state.className = 'success';
+        state.innerHTML = 'File API & FileReader available';
+    }
+
+    holder.ondragover = function() {
+        this.className = 'hover';
+        return false;
+    };
+    holder.ondragend = function() {
+        this.className = '';
+        return false;
+    };
+    holder.ondrop = function(e) {
+        this.className = '';
+        e.preventDefault();
+
+        var file = e.dataTransfer.files[0],
+            reader = new FileReader();
+        reader.onload = function(event) {
+            console.log(event.target);
+            holder.innerText = event.target.result;
+        };
+        console.log(file);
+        reader.readAsText(file);
+
+        return false;
+    };
+</script>
+
 <p><%= result %></p>
 
 </body>
