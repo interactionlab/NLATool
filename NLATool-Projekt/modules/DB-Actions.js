@@ -112,7 +112,6 @@ exports.transformColumnToSQL = function (column, options) {
 */
     async.waterfall([
         syncColumnWithDefault(options),
-
         function (options, callback) {
             console.log(options);
             if (options !== null && column !== null) {
@@ -141,6 +140,8 @@ exports.transformColumnToSQL = function (column, options) {
  */
 syncColumnWithDefault = function (options, callback) {
 
+
+
     jsonConfigurator.readFile(dbConfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt load standard db configuration! ' + err);
@@ -158,8 +159,7 @@ syncColumnWithDefault = function (options, callback) {
             console.log('before: ' + options);
             //callback(null, options);
         }
-    }, callback);
-    callback(null, options);
+    });
 };
 
 isKeyInObject = function (key, obj) {
