@@ -26,18 +26,21 @@ router.get('/', function (req, res, next) {
 
 
 router.post('/theFunction', function (req, res) {
+/*
     var testingFunction = req.testfunction;
     var table = 'accountdata';
     var columns = ['id', 'email', 'username', 'pass'];
     var values = ['eins', 'zwei', 'drei', 'vier'];
-    var valuesToCompare = ['zwei', 'vier', 'fünf'];
+f    var valuesToCompare = ['zwei', 'vier', 'fünf'];
     var oper = ['=', '=', '='];
     var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
+*/
+    var jsonOptions = {name: "first", type: "INT"};
+    var columnName = 'Irgendwas';
+    var resultOfSQL = '';
+    dbAction.transformColumnToSQL(columnName, jsonOptions);
+//    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
 
-    var jsonOptions = {"name": "first", "type": "INT"};
-
-    dbAction.syncColumnWithDefault(jsonOptions);
-    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
@@ -46,7 +49,10 @@ router.post('/nlp', function (req, res) {
     corenlp.parse(
         "Lincoln and Germany fall on the floor. I like that.", 9000, "pos,lemma,ner", "json", function (err, parsedText) {
             console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
-            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result:JSON.stringify(JSON.parse(parsedText))})
+            res.render('./testview', {
+                title: 'NLA - Natural Language Analyse Tool',
+                result: JSON.stringify(JSON.parse(parsedText))
+            })
         });
 
 });
