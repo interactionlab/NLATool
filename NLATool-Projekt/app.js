@@ -11,6 +11,7 @@ var profile = require('./routes/profile');
 var signIn = require('./routes/signIn');
 var signUp = require('./routes/signUp');
 var test = require('./routes/test');
+var loadtext = require('./routes/loadtext');
 
 var app = express();
 
@@ -22,7 +23,7 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -32,28 +33,29 @@ app.use('/signIn', signIn);
 app.use('/profile', profile);
 app.use('/signUp', signUp);
 app.use('/test', test);
+app.use('/loadtext', loadtext);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 
 // error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(function (err, req, res, next) {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 app.set('port', process.env.PORT || 3000);
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+var server = app.listen(app.get('port'), function () {
+    console.log('Express server listening on port ' + server.address().port);
 });
 
 module.exports = app;
