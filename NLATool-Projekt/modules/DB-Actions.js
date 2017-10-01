@@ -87,8 +87,29 @@ exports.createCreateCommand = function (dbName, table, columns) {
  *
  */
 exports.transformColumnToSQL = function (column, options) {
-
-
+    /*
+    async.waterfall([
+            function (callback) {
+                var a = 1;
+                console.log(a);
+                callback(null, a);
+            }, function (a, callback) {
+                a++;
+                console.log(a);
+                callback(null, a);
+            }
+    ]);
+    function a(a) {
+        console.log('rhgerg'+a);
+        return a;
+    }
+    function b(b){
+        b++;
+        console.log('fgdrg'+b);
+        return b;
+    }
+    b(a(1));
+*/
     async.waterfall([
         syncColumnWithDefault(options),
 
@@ -113,7 +134,6 @@ exports.transformColumnToSQL = function (column, options) {
             }
         }
     ]);
-
 }
 ;
 /**
@@ -124,7 +144,7 @@ syncColumnWithDefault = function (options, callback) {
     jsonConfigurator.readFile(dbConfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt load standard db configuration! ' + err);
-
+            //callback(null, null);
         } else {
             for (var key in obj.default) {
                 //console.log('Current Key ' + key);
@@ -136,14 +156,11 @@ syncColumnWithDefault = function (options, callback) {
             }
             //console.log(notMedia + Tag + JSON.stringify(options));
             console.log('before: ' + options);
-
+            //callback(null, options);
         }
-    });
-}
-
-
-}
-;
+    }, callback);
+    callback(null, options);
+};
 
 isKeyInObject = function (key, obj) {
 
