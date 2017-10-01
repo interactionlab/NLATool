@@ -18,7 +18,7 @@ var Tag = 'DB-Actions.js: ';
  */
 var jsonconfigurator = require('jsonfile');
 var dbconfig = './modules/dbconfig.json';
-
+var async = require('async');
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
@@ -83,48 +83,75 @@ exports.createCreateCommand = function (dbName, table, columns) {
 /**
  * create a whole line of options for a column so that
  * you can just add them to the CREATE TABLE query
+ *
  */
-transformColumnToSQL = function (column, options) {
-    options = syncColumnWithDefault(options);
-    if (options !== null) {
+exports.transformColumnToSQL = function (column, options) {
 
-        var properties = Object.keys(options);
-        var transformString = column + ' ' + properties[0];
+    async.waterfall([
+       //syncColumnWithDefault(options,callback),
+        function (callback) {
+            callback(null, null);
+        },
+        function (options, callback) {
+            console.log(options);
+            if (options !== null && column !== null) {
+                var transformString = column + ' ';
+                console.log(typeof options);
 
-        for (var i = 1; i < properties.length; i++) {
-            if (typeof properties[i] === "number") {
-                transformString = transformString + ' (' + properties[i] + ')'
+                for (var key in options) {
+                    console.log('Got In' + options[key]);
+                    if (!isNaN(options[key])) {
+                        transformString = transformString + ' (' + options[key] + ')'
+                    }
+                    transformString = transformString + ' ' + options[key];
+                }
+
+                console.log('Result of SQL String: ' + transformString);
+                callback(null, transformString);
+            } else {
+                callback(null, '');
             }
-            transformString = transformString + ' ' + properties[i];
         }
-    }
-};
+    ]);
+}
+;
 /**
  * synchronise default configuration with the special configuration of a column.
  */
-exports.syncColumnWithDefault = function (options) {
+syncColumnWithDefault = function (options, callback) {
 
     jsonconfigurator.readFile(dbconfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt load standard db configuration! ' + err);
-            return null;
-        }
-        for (var key in obj.default) {
-            console.log(notMedia + Tag + 'key1: ' + key);
-            for (var key2 in options) {
-                console.log(notMedia + Tag + 'key2: ' + key2);
-
-                if (key !== key2) {
-                    options[key] = obj.default[key].code;
-                } else{
-                    break;
+            return callback(null,null);
+        } else {
+            for (var key in obj.default) {
+                //console.log('Current Key ' + key);
+                if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
+                    if (!isKeyInObject(key, options)) {
+                        options[key] = obj.default[key];
+                    }
                 }
             }
+            //console.log(notMedia + Tag + JSON.stringify(options));
+            console.log('before: ' + options);
+            return callback(null, options);
         }
-        console.log(notMedia + Tag + JSON.stringify(options));
     });
 };
 
+isKeyInObject = function (key, obj) {
+
+    for (var otherKey in obj) {
+        //console.log('isKeyInObject: ' + key + ' =? '+  otherKey);
+        if (key === otherKey) {
+            //  console.log('true');
+            return true;
+        }
+    }
+    //console.log('false');
+    return false;
+};
 /**
  * generates String for SQL Command SELECT
  * If no columns are specified, everything will be selected and returned.

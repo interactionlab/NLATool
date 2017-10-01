@@ -37,7 +37,7 @@ jsonconfigurator.readFile(dbconfig, function (err, obj) {
         port = obj.database.port;
         user = obj.database.user;
         password = obj.database.password;
-        console.log(notMedia + Tag + dbName + ' ' + host + ' ' + port + ' ' + user + ' ' + password);
+       // console.log(notMedia + Tag + dbName + ' ' + host + ' ' + port + ' ' + user + ' ' + password);
     }
 });
 
