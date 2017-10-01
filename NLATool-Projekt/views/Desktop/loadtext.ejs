@@ -6,6 +6,14 @@
 </head>
 <body>
 <h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+
+<form action="/loadtext/nlp2" method="post">
+    <p>Text eingeben oder kopieren:<p>
+        <textarea type="text" name="testFunction" id="textInput"></textarea><br>
+        <br>
+        <input type="submit">
+</form>
+<p><%= result %></p>
+
 </body>
 </html>
