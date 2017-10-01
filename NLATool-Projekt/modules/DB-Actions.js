@@ -16,9 +16,10 @@ var Tag = 'DB-Actions.js: ';
 /**
  * Setup Configuration file Requirements:
  */
-var jsonconfigurator = require('jsonfile');
-var dbconfig = './modules/dbconfig.json';
-var async = require('async');
+var jsonConfigurator = require('jsonfile');
+var async = require("async");
+var dbConfig = './modules/dbConfig.json';
+//var async = require('async');
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
@@ -29,7 +30,7 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
  */
 exports.setupDB = function () {
 
-    jsonconfigurator.readFile(dbconfig, function (err, obj) {
+    jsonConfigurator.readFile(dbConfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + err);
         } else {
@@ -87,11 +88,10 @@ exports.createCreateCommand = function (dbName, table, columns) {
  */
 exports.transformColumnToSQL = function (column, options) {
 
+
     async.waterfall([
-       //syncColumnWithDefault(options,callback),
-        function (callback) {
-            callback(null, null);
-        },
+        syncColumnWithDefault(options),
+
         function (options, callback) {
             console.log(options);
             if (options !== null && column !== null) {
@@ -101,7 +101,7 @@ exports.transformColumnToSQL = function (column, options) {
                 for (var key in options) {
                     console.log('Got In' + options[key]);
                     if (!isNaN(options[key])) {
-                        transformString = transformString + ' (' + options[key] + ')'
+                        transformString = transformString + ' (' + options[key] + ')';
                     }
                     transformString = transformString + ' ' + options[key];
                 }
@@ -109,10 +109,11 @@ exports.transformColumnToSQL = function (column, options) {
                 console.log('Result of SQL String: ' + transformString);
                 callback(null, transformString);
             } else {
-                callback(null, '');
+                callback(null, null);
             }
         }
     ]);
+
 }
 ;
 /**
@@ -120,10 +121,10 @@ exports.transformColumnToSQL = function (column, options) {
  */
 syncColumnWithDefault = function (options, callback) {
 
-    jsonconfigurator.readFile(dbconfig, function (err, obj) {
+    jsonConfigurator.readFile(dbConfig, function (err, obj) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt load standard db configuration! ' + err);
-            return callback(null,null);
+
         } else {
             for (var key in obj.default) {
                 //console.log('Current Key ' + key);
@@ -135,10 +136,14 @@ syncColumnWithDefault = function (options, callback) {
             }
             //console.log(notMedia + Tag + JSON.stringify(options));
             console.log('before: ' + options);
-            return callback(null, options);
+
         }
     });
-};
+}
+
+
+}
+;
 
 isKeyInObject = function (key, obj) {
 
