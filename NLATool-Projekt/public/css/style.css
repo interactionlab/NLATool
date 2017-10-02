@@ -1,0 +1,29 @@
+
+.featurecell2 {
+    padding: 0px 8px 8px 0px;
+}
+
+.featurecell3 {
+    padding: 0px 0px 8px 8px;
+}
+
+.bordered {
+    border: 1px solid #000;
+}
+
+.bordere {
+    border: double #000;
+
+}
+
+.holder1{
+    height: 200px; width: 200px;
+
+}
+#holder {
+    border: dashed #00B788;
+    width: 300px;
+    height: 300px;
+    margin: 20px auto;
+}
+
