@@ -55,6 +55,7 @@ exports.setupDB = function () {
  * generates String for SQL Command CREATE
  * name is either the name of the database -> CREATE DATABASE name
  * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
+ * Version1
  * @param dbName
  * @param table
  * @param columns
@@ -81,6 +82,41 @@ exports.createCreateCommand = function (dbName, table, columns) {
     }
 };
 
+exports.createTableCommand = function (table) {
+    async.waterfall([
+        async.apply(jsonConfigurator.readFile, dbConfig),
+        function (obj, callback) {
+            callback(null, obj, table);
+        }
+
+
+    ]);
+};
+
+generateStartOfCreateCommand = function (json, tableName, callback) {
+    var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
+    for (var table in json){
+        if(table.name === tableName){
+            var i = 1;
+            for(var column in table){
+                if(!Object.hasOwnProperty(column)){
+
+                }
+                i++;
+            }
+        }
+    }
+    callback(null, json, commandString)
+};
+
+getOptionsOfColumn = function( table, columnNumber){
+    var column = 'column' + columnNumber;
+    var options = {};
+    for(var option in table[column]){
+
+    }
+};
+
 /**
  * create a whole line of options for a column so that
  * you can just add them to the CREATE TABLE query
@@ -99,11 +135,11 @@ transformColumnToSQL = function (column, options) {
                 var transformString = column + ' ';
 
                 for (var key in options) {
-                    if (!isNaN(options[key])&& !(typeof options[key] === "boolean")) {
+                    if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
                         transformString = transformString + ' (' + options[key] + ')';
-                    } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key]===true) {
+                    } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key] === true) {
                         transformString = transformString + ' ' + key;
-                    } else if (!(typeof options[key] === "boolean")){
+                    } else if (!(typeof options[key] === "boolean")) {
                         transformString = transformString + ' ' + options[key];
                     }
                 }
