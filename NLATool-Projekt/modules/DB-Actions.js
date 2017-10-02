@@ -89,45 +89,49 @@ exports.createCreateCommand = function (dbName, table, columns) {
 exports.transformColumnToSQL = function (column, options) {
 
     async.waterfall([
-            function (callback) {
-                var a = 1;
-                console.log(a);
-                callback(null, a);
-            }, function (a, callback) {
-                a++;
-                console.log(a);
-                callback(null, a);
-            }
+        function (callback) {
+            var a = 1;
+            console.log(a);
+            callback(null, a);
+        }, function (a, callback) {
+            a++;
+            console.log(a);
+            callback(null, a);
+        }
     ]);
     async.waterfall([
-       async.apply(a, 1),
-       async.asyncify(b)
+        async.apply(a, 1),
+        async.asyncify(b)
     ]);
+
     function a(a, callback) {
-        console.log('rhgerrgrg'+a);
+        console.log('rhgerrgrg' + a);
         callback(null, a);
     }
-    function b(b){
+
+    function b(b) {
         b++;
-        console.log('fgdrergeg'+b);
+        console.log('fgdrergeg' + b);
         return b;
     }
 
     async.waterfall([
         async.apply(jsonConfigurator.readFile, dbConfig),
-        async.asyncify(syncColumnWithDefault),
+        function (obj, callback) {
+            callback(null, obj, options);
+        },
+        syncColumnWithDefault,
         function (options, callback) {
-           //console.log(options);
+            //console.log(options);
             if (options !== null && column !== null) {
                 var transformString = column + ' ';
-                console.log(typeof options);
 
                 for (var key in options) {
-                    console.log('Got In' + options[key]);
                     if (!isNaN(options[key])) {
                         transformString = transformString + ' (' + options[key] + ')';
+                    } else {
+                        transformString = transformString + ' ' + options[key];
                     }
-                    transformString = transformString + ' ' + options[key];
                 }
 
                 console.log('Result of SQL String: ' + transformString);
@@ -143,8 +147,8 @@ exports.transformColumnToSQL = function (column, options) {
 /**
  * synchronise default configuration with the special configuration of a column.
  */
-syncColumnWithDefault = function (obj, options) {
-    console('Bofore sync: ' +obj.default);
+syncColumnWithDefault = function (obj, options, callback) {
+    console.log('Before sync: ' + JSON.stringify(obj.default));
     for (var key in obj.default) {
         //console.log('Current Key ' + key);
         if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
@@ -155,7 +159,7 @@ syncColumnWithDefault = function (obj, options) {
     }
     //console.log(notMedia + Tag + JSON.stringify(options));
     console.log('before: ' + options);
-    return options;
+    callback(null, options);
 };
 
 isKeyInObject = function (key, obj) {
