@@ -87,7 +87,7 @@ exports.createCreateCommand = function (dbName, table, columns) {
  *
  */
 exports.transformColumnToSQL = function (column, options) {
-    /*
+
     async.waterfall([
             function (callback) {
                 var a = 1;
@@ -99,21 +99,25 @@ exports.transformColumnToSQL = function (column, options) {
                 callback(null, a);
             }
     ]);
-    function a(a) {
-        console.log('rhgerg'+a);
-        return a;
+    async.waterfall([
+       async.apply(a, 1),
+       async.asyncify(b)
+    ]);
+    function a(a, callback) {
+        console.log('rhgerrgrg'+a);
+        callback(null, a);
     }
     function b(b){
         b++;
-        console.log('fgdrg'+b);
+        console.log('fgdrergeg'+b);
         return b;
     }
-    b(a(1));
-*/
+
     async.waterfall([
-        jsonConfigurator.readFile(dbConfig),
+        async.apply(jsonConfigurator.readFile, dbConfig),
+        async.asyncify(syncColumnWithDefault),
         function (options, callback) {
-            console.log(options);
+           //console.log(options);
             if (options !== null && column !== null) {
                 var transformString = column + ' ';
                 console.log(typeof options);
@@ -133,25 +137,25 @@ exports.transformColumnToSQL = function (column, options) {
             }
         }
     ]);
-}
-;
+
+};
+
 /**
  * synchronise default configuration with the special configuration of a column.
  */
-syncColumnWithDefault = function (obj, options, callback) {
-
-            for (var key in obj.default) {
-                //console.log('Current Key ' + key);
-                if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
-                    if (!isKeyInObject(key, options)) {
-                        options[key] = obj.default[key];
-                    }
-                }
+syncColumnWithDefault = function (obj, options) {
+    console('Bofore sync: ' +obj.default);
+    for (var key in obj.default) {
+        //console.log('Current Key ' + key);
+        if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
+            if (!isKeyInObject(key, options)) {
+                options[key] = obj.default[key];
             }
-            //console.log(notMedia + Tag + JSON.stringify(options));
-            console.log('before: ' + options);
-            callback(null, options);
-
+        }
+    }
+    //console.log(notMedia + Tag + JSON.stringify(options));
+    console.log('before: ' + options);
+    return options;
 };
 
 isKeyInObject = function (key, obj) {
