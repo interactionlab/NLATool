@@ -2,12 +2,22 @@
   "database": {
     "isTable": false,
     "name": "nlatool",
-    "host": "turcan.de",
-    "user": "nlatool",
-    "password": "1EcH1pHr1VHhdknm",
-    "port": "3306"
+    "connections": {
+      "connection1": {
+        "host": "turcan.de",
+        "user": "nlatool",
+        "password": "1EcH1pHr1VHhdknm",
+        "port": "3306"
+      },
+      "connection2":{
+        "host": "localhost",
+        "port": "???",
+        "password": "???",
+        "user": "???"
+      }
+    }
   },
-  "default":{
+  "default": {
     "isTable": false,
     "type": "VARCHAR",
     "length": "255",
@@ -18,7 +28,7 @@
   },
   "table0": {
     "isTable": true,
-    "name":"accountData",
+    "name": "accountData",
     "column1": {
       "name": "userID",
       "type": "INT",
@@ -38,7 +48,7 @@
   },
   "table1": {
     "isTable": true,
-    "name":"documents",
+    "name": "documents",
     "column1": {
       "name": "docID",
       "type": "INT",
@@ -62,29 +72,29 @@
   "table2": {
     "isTable": true,
     "name": "searchResults",
-    "column1":{
+    "column1": {
       "name": "resultID",
       "type": "INT",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
-    "column2":{
-      "name":"url"
+    "column2": {
+      "name": "url"
     },
-    "column3":{
+    "column3": {
       "name": "imageUrl",
       "type": "VARCHAR",
       "length": "1024"
     },
-    "column4":{
+    "column4": {
       "name": "shortdescription",
       "type": "TEXT"
     },
-    "column5":{
+    "column5": {
       "name": "longdescription",
       "type": "MEDIUMTEXT"
     },
-    "column6":{
+    "column6": {
       "name": "docID",
       "type": "INT"
     }
@@ -106,15 +116,15 @@
       "name": "tags",
       "type": "TEXT"
     },
-    "column4":{
+    "column4": {
       "name": "content",
       "type": "MEDIUMTEXT"
     }
   },
   "table4": {
     "isTable": true,
-    "name":"text",
-    "column1":{
+    "name": "text",
+    "column1": {
       "name": "textID",
       "type": "INT",
       "PRIMARY": true,
@@ -125,9 +135,9 @@
       "type": "INT",
       "UNIQUE": true
     },
-    "column3":{
+    "column3": {
       "name": "Counter",
-      "type":"INT"
+      "type": "INT"
     },
     "column4": {
       "name": "wordID",
@@ -136,18 +146,17 @@
     "column": {
       "name": "semanticClass"
     }
-
   },
   "table5": {
     "isTable": true,
-    "name":"word",
+    "name": "word",
     "column1": {
       "name": "wordID",
       "type": "INT",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
-    "column2":{
+    "column2": {
       "name": "content",
       "type": "TINYTEXT"
     },
@@ -158,6 +167,6 @@
   },
   "table6": {
     "isTable": true,
-    "name":"statistics"
+    "name": "statistics"
   }
 }
