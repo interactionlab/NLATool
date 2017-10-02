@@ -56,7 +56,8 @@ router.post('/nlp2', function (req, res) {
     server.once('listening', function () {
         server.close();
         setTimeout(console.log("Nein"),5000);
-        //TODO: handle "server not online" event
+        res.render('Desktop/loadtext',{title: 'NLA - Natural Language Analyse Tool', result: "Error 501: CoreNLP Server konnte nicht gefunden werden"},null);
+
     });
 });
 
