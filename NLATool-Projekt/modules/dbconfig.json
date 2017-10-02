@@ -11,9 +11,9 @@
     "isTable": false,
     "type": "VARCHAR",
     "length": "255",
-    "AI": false,
-    "primary": false,
-    "unique": false,
+    "AUTO_INCREMENT": false,
+    "PRIMARY": false,
+    "UNIQUE": false,
     "null": "NOT NULL"
   },
   "table0": {
@@ -22,12 +22,12 @@
     "column1": {
       "name": "userID",
       "type": "INT",
-      "primary": true,
-      "AI": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "email",
-      "unique": true
+      "UNIQUE": true
     },
     "column3": {
       "name": "username"
@@ -42,7 +42,7 @@
     "column1": {
       "name": "docID",
       "type": "INT",
-      "AI": true
+      "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "userID",
@@ -65,8 +65,8 @@
     "column1":{
       "name": "resultID",
       "type": "INT",
-      "primary": true,
-      "AI": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column2":{
       "name":"url"
@@ -95,12 +95,12 @@
     "column1": {
       "name": "noteID",
       "type": "INT",
-      "primary": true
+      "PRIMARY": true
     },
     "column2": {
       "name": "docID",
       "type": "INT",
-      "unique": true
+      "UNIQUE": true
     },
     "column3": {
       "name": "tags",
@@ -117,13 +117,13 @@
     "column1":{
       "name": "textID",
       "type": "INT",
-      "primary": true,
-      "AI": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "docID",
       "type": "INT",
-      "unique": true
+      "UNIQUE": true
     },
     "column3":{
       "name": "Counter",
@@ -144,8 +144,8 @@
     "column1": {
       "name": "wordID",
       "type": "INT",
-      "primary": true,
-      "AI": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column2":{
       "name": "content",

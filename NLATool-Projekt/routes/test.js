@@ -39,7 +39,7 @@ f    var valuesToCompare = ['zwei', 'vier', 'fünf'];
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
     var resultOfSQL = '';
-    dbAction.transformColumnToSQL(columnName, jsonOptions);
+//    dbAction.transformColumnToSQL(columnName, jsonOptions);
 //    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
 
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
