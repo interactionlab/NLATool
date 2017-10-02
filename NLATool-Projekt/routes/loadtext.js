@@ -28,8 +28,7 @@ router.post('/nlp2', function (req, res) {
 
     server.once('error', function (err) {
 
-        //setTimeout(callback,15000);
-
+    //if online
         if(err.code === 'EADDRINUSE'){
            //port is currently in use
             console.log("Ja");
@@ -53,12 +52,13 @@ router.post('/nlp2', function (req, res) {
        }
     });
 
+    //if Core NLP is offline:
     server.once('listening', function () {
         server.close();
+        setTimeout(console.log("Nein"),5000);
+        //TODO: handle "server not online" event
     });
 });
-
-
 
 
 module.exports = router;
