@@ -32,7 +32,7 @@ router.post('/theFunction', function (req, res) {
     var table = 'accountdata';
     var columns = ['id', 'email', 'username', 'pass'];
     var values = ['eins', 'zwei', 'drei', 'vier'];
-f    var valuesToCompare = ['zwei', 'vier', 'fünf'];
+    var valuesToCompare = ['zwei', 'vier', 'fünf'];
     var oper = ['=', '=', '='];
     var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
 */
