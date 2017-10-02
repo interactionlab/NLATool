@@ -86,35 +86,7 @@ exports.createCreateCommand = function (dbName, table, columns) {
  * you can just add them to the CREATE TABLE query
  *
  */
-exports.transformColumnToSQL = function (column, options) {
-
-    async.waterfall([
-        function (callback) {
-            var a = 1;
-            console.log(a);
-            callback(null, a);
-        }, function (a, callback) {
-            a++;
-            console.log(a);
-            callback(null, a);
-        }
-    ]);
-    async.waterfall([
-        async.apply(a, 1),
-        async.asyncify(b)
-    ]);
-
-    function a(a, callback) {
-        console.log('rhgerrgrg' + a);
-        callback(null, a);
-    }
-
-    function b(b) {
-        b++;
-        console.log('fgdrergeg' + b);
-        return b;
-    }
-
+transformColumnToSQL = function (column, options) {
     async.waterfall([
         async.apply(jsonConfigurator.readFile, dbConfig),
         function (obj, callback) {
@@ -127,13 +99,14 @@ exports.transformColumnToSQL = function (column, options) {
                 var transformString = column + ' ';
 
                 for (var key in options) {
-                    if (!isNaN(options[key])) {
+                    if (!isNaN(options[key])&& !(typeof options[key] === "boolean")) {
                         transformString = transformString + ' (' + options[key] + ')';
-                    } else {
+                    } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key]===true) {
+                        transformString = transformString + ' ' + key;
+                    } else if (!(typeof options[key] === "boolean")){
                         transformString = transformString + ' ' + options[key];
                     }
                 }
-
                 console.log('Result of SQL String: ' + transformString);
                 callback(null, transformString);
             } else {
@@ -141,7 +114,6 @@ exports.transformColumnToSQL = function (column, options) {
             }
         }
     ]);
-
 };
 
 /**
@@ -150,28 +122,21 @@ exports.transformColumnToSQL = function (column, options) {
 syncColumnWithDefault = function (obj, options, callback) {
     console.log('Before sync: ' + JSON.stringify(obj.default));
     for (var key in obj.default) {
-        //console.log('Current Key ' + key);
         if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
             if (!isKeyInObject(key, options)) {
                 options[key] = obj.default[key];
             }
         }
     }
-    //console.log(notMedia + Tag + JSON.stringify(options));
-    console.log('before: ' + options);
     callback(null, options);
 };
 
 isKeyInObject = function (key, obj) {
-
     for (var otherKey in obj) {
-        //console.log('isKeyInObject: ' + key + ' =? '+  otherKey);
         if (key === otherKey) {
-            //  console.log('true');
             return true;
         }
     }
-    //console.log('false');
     return false;
 };
 /**
