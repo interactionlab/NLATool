@@ -1,7 +1,7 @@
 var express = require('express');
 var corenlp = require("corenlp-request-wrapper");
 var router = express.Router();
-
+var nlpPort = 4000;
 //--------------------------------------------------------
 /**
  * Tags for console Errors::
@@ -12,6 +12,8 @@ var mobile = 'Mobile Version: ';
 var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'index.js: ';
+var net = require('net');
+var server = net.createServer();
 
 
 /* GET home page. */
@@ -21,25 +23,41 @@ router.get('/', function (req, res, next) {
 
 router.post('/nlp2', function (req, res) {
 
-    var input = req.body.testFunction;
-    console.log(input);
+    //check if CoreNLP server is online
+    server.listen(nlpPort);
 
-    //TODO: check if CoreNLP server is online
+    server.once('error', function (err) {
 
-    //start server with command
-    //java -mx1g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 9000 -timeout 15000
-    //where -mx_g is the number of GBs of RAM you want to allocate
+        //setTimeout(callback,15000);
 
-    corenlp.parse(
-        input, 4000, "pos,lemma,ner", "json", function (err, parsedText) {
-            console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
-            res.render('Desktop/loadtext', {
-                title: 'NLA - Natural Language Analyse Tool',
-                result: JSON.stringify(JSON.parse(parsedText))
-            })
-        });
+        if(err.code === 'EADDRINUSE'){
+           //port is currently in use
+            console.log("Ja");
 
+            var input = req.body.testFunction;
+            console.log(input);
+
+            //start server with command
+            //java -mx1g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 4000 -timeout 15000
+            //where -mx_g is the number of GBs of RAM you want to allocate
+
+            corenlp.parse(
+                input, nlpPort, "pos,lemma,ner", "json", function (err, parsedText) {
+                    console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
+                    res.render('Desktop/loadtext', {
+                        title: 'NLA - Natural Language Analyse Tool',
+                        result: JSON.stringify(JSON.parse(parsedText))
+                    })
+            });
+
+       }
+    });
+
+    server.once('listening', function () {
+        server.close();
+    });
 });
+
 
 
 
