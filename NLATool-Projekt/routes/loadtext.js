@@ -31,7 +31,7 @@ router.post('/nlp2', function (req, res) {
     //where -mx_g is the number of GBs of RAM you want to allocate
 
     corenlp.parse(
-        input, 9000, "pos,lemma,ner", "json", function (err, parsedText) {
+        input, 4000, "pos,lemma,ner", "json", function (err, parsedText) {
             console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
             res.render('Desktop/loadtext', {
                 title: 'NLA - Natural Language Analyse Tool',
