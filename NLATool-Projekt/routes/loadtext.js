@@ -36,10 +36,6 @@ router.post('/nlp2', function (req, res) {
             var input = req.body.testFunction;
             console.log(input);
 
-            //start server with command
-            //java -mx1g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLPServer -port 4000 -timeout 15000
-            //where -mx_g is the number of GBs of RAM you want to allocate
-
             corenlp.parse(
                 input, nlpPort, "pos,lemma,ner", "json", function (err, parsedText) {
                     console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
