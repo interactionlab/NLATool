@@ -2,13 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap-autocolumns.css" />
-
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-autocolumns.css" />
 </head>
 
 <body>
 <h1><%= title %></h1>
+
+<!--TODO UI Formats, Drap&Drop in Textarea etc... -->
 
 <form action="/loadtext/nlp2" method="post">
     <p>Text eingeben oder kopieren:<p>
@@ -17,16 +18,17 @@
         <input type="submit">
 </form>
 
+
+<style> /*TODO CSS*/
+    #holder { border: 10px dashed #ccc; width: 300px; height: 300px; margin: 20px auto;}
+    #holder.hover { border: 10px dashed #333; }
+</style>
 <article>
-
-    <div class="col-sm-12 holder1; bordere"></div>
+    <div id="holder"></div>
     <p id="status">File API & FileReader API not supported</p>
-
+    <p>Drag a text file from your desktop on to the drop zone above to see the browser read the contents of the file - without uploading the file to any servers.</p>
 </article>
-
 <script>
-    //source: http://jsfiddle.net/jimschubert/DqcUg/
-    // modified from http://html5demos.com/file-api
     var holder = document.getElementById('holder'),
         state = document.getElementById('status');
 
@@ -37,11 +39,11 @@
         state.innerHTML = 'File API & FileReader available';
     }
 
-    /*holder.ondragover = function() {
+    holder.ondragover = function () {
         this.className = 'hover';
         return false;
-    };*/
-    holder.ondragend = function() {
+    };
+    holder.ondragend = function () {
         this.className = '';
         return false;
     };

@@ -11,12 +11,12 @@
     border: 1px solid #000;
 }
 
-.bordere {
+.doubleBorder {
     border: double #000;
 
 }
 
-.holder1{
+.holder{
     height: 200px; width: 200px;
 
 }
