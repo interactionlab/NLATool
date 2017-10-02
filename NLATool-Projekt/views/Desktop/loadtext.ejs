@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' type="text/css"  href='/css/style.css'/>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap-autocolumns.css" />
+
 </head>
 
 <body>
@@ -17,7 +19,7 @@
 
 <article>
 
-    <div id="holder" style="height: 200px; width: 200px; border: double black"></div>
+    <div class="col-sm-12 holder1; bordere"></div>
     <p id="status">File API & FileReader API not supported</p>
 
 </article>
@@ -35,10 +37,10 @@
         state.innerHTML = 'File API & FileReader available';
     }
 
-    holder.ondragover = function() {
+    /*holder.ondragover = function() {
         this.className = 'hover';
         return false;
-    };
+    };*/
     holder.ondragend = function() {
         this.className = '';
         return false;
