@@ -120,10 +120,21 @@
       "primary": "true",
       "AI": "true"
     },
-    "column": {
+    "column2": {
       "name": "docID",
       "type": "INT",
       "unique": "true"
+    },
+    "column3":{
+      "name": "Counter",
+      "type":"INT"
+    },
+    "column4": {
+      "name": "wordID",
+      "type": "INT"
+    },
+    "column": {
+      "name": "semanticClass"
     }
 
   },
@@ -139,6 +150,10 @@
     "column2":{
       "name": "content",
       "type": "TINYTEXT"
+    },
+    "column3": {
+      "name": "isSpecial",
+      "type": "BOOLEAN"
     }
   },
   "table6": {
