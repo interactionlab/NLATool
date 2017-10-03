@@ -18,7 +18,7 @@ var Tag = 'DB-Actions.js: ';
  */
 var jsonConfigurator = require('jsonfile');
 var async = require("async");
-var wait = require('wait.for-es6');
+var wait = require('wait.for');
 var dbConfig = './modules/dbConfig.json';
 //var async = require('async');
 /**
@@ -84,25 +84,29 @@ exports.createCreateCommand = function (dbName, table, columns) {
 };
 
 exports.createTableCommand = function (table) {
+
+    wait.launchFiber(generateCreateCommand)
+
+
+    /*
     async.waterfall([
         async.apply(jsonConfigurator.readFile, dbConfig),
         function (obj, callback) {
             callback(null, obj, table);
         },
         generateCreateCommand
-
-
-    ]);
+    ]);*/
 };
 
-generateCreateCommand = function (json, tableName, callback) {
+exports.generateCreateCommand = function (json, tableName, callback) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
         if (table.name === tableName) {
             var i = 1;
             for (var column in table) {
                 if (!Object.hasOwnProperty(column)) {
-                    var tempCommandString = wait.for(transformColumnToSQL, column, getOptionsOfColumn(table, i));
+                    var tempCommandString = wait.forMethod(transformColumnToSQL, column, getOptionsOfColumn(table, i));
+                    console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
                     commandString = commandString + tempCommandString + ', '
                 }
                 i++;
@@ -110,7 +114,7 @@ generateCreateCommand = function (json, tableName, callback) {
         }
     }
     commandString = commandString + ')';
-    callback(null, json, commandString)
+    callback(null,  commandString)
 };
 
 getOptionsOfColumn = function (table, columnNumber) {
@@ -119,6 +123,7 @@ getOptionsOfColumn = function (table, columnNumber) {
     for (var option in table[column]) {
         options[option] = table[column][option];
     }
+    console.log(notMedia + Tag + 'getOptionsOfColumn: ' + JSON.stringify(options));
     return options;
 };
 
