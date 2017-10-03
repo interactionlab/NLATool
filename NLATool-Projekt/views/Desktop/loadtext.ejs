@@ -2,14 +2,14 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap-autocolumns.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-autocolumns.css" />
 </head>
 
 <body>
 <h1><%= title %></h1>
 
-<!--TODO UI Formats, Drap&Drop in Textarea etc... -->
+<!--TODO UI Formats, Drag&Drop in Textarea etc... -->
 
 <form action="/loadtext/nlp2" method="post">
     <p>Text eingeben oder kopieren:<p>
@@ -19,10 +19,6 @@
 </form>
 
 
-<style> /*TODO CSS*/
-    #holder { border: 10px dashed #ccc; width: 300px; height: 300px; margin: 20px auto;}
-    #holder.hover { border: 10px dashed #333; }
-</style>
 <article>
     <div id="holder"></div>
     <p id="status">File API & FileReader API not supported</p>
