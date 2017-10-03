@@ -19,31 +19,44 @@ var Tag = 'test.js: ';
 var dbAction = require('../modules/DB-Actions');
 var dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
-
+var jsonconfigurator = require('jsonfile');
+var dbconfig = './modules/dbconfig.json';
+var wait = require('wait.for');
 router.get('/', function (req, res, next) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
 
-
 router.post('/theFunction', function (req, res) {
-/*
-    var testingFunction = req.testfunction;
-    var table = 'accountdata';
-    var columns = ['id', 'email', 'username', 'pass'];
-    var values = ['eins', 'zwei', 'drei', 'vier'];
-    var valuesToCompare = ['zwei', 'vier', 'fünf'];
-    var oper = ['=', '=', '='];
-    var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
-*/
+    /*
+        var testingFunction = req.testfunction;
+        var table = 'accountdata';
+        var columns = ['id', 'email', 'username', 'pass'];
+        var values = ['eins', 'zwei', 'drei', 'vier'];
+        var valuesToCompare = ['zwei', 'vier', 'fünf'];
+        var oper = ['=', '=', '='];
+        var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
+    */
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
+    wait.launchFiber(testGeneration, req, res);
+
+
+
+
     var resultOfSQL = '';
 //    dbAction.transformColumnToSQL(columnName, jsonOptions);
 //    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
 
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
+//    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
+
+function testGeneration(req, res) {
+    var json = wait.for(jsonconfigurator.readFile, dbconfig);
+    var resultingString = wait.for(dbAction.generateCreateCommand, json, 'accountData');
+    console.log(notMedia + Tag + 'Result of generateCreateCommand:' + JSON.stringify(resultingString));
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultingString});
+}
 
 router.post('/nlp', function (req, res) {
 
