@@ -101,24 +101,26 @@ exports.createTableCommand = function (table) {
 exports.generateCreateCommand = function (json, tableName, callback) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
-        if (table.name === tableName) {
+        if (json[table].name === tableName) {
             var i = 1;
-            for (var column in table) {
-                if (!Object.hasOwnProperty(column)) {
-                    var tempCommandString = wait.forMethod(transformColumnToSQL, column, getOptionsOfColumn(table, i));
-                    console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
-                    commandString = commandString + tempCommandString + ', '
-                }
+            for (var column in json[table]) {
+                var options = getOptionsOfColumn(json[table], i);
+                var tempCommandString = transformColumnToSQL(json, json[table][column], options);
+                console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
+                commandString = commandString + tempCommandString + ', ';
+
                 i++;
+
             }
         }
     }
     commandString = commandString + ')';
-    callback(null,  commandString)
+    callback(null, commandString)
 };
 
 getOptionsOfColumn = function (table, columnNumber) {
     var column = 'column' + columnNumber;
+    console.log(column);
     var options = {};
     for (var option in table[column]) {
         options[option] = table[column][option];
@@ -132,41 +134,35 @@ getOptionsOfColumn = function (table, columnNumber) {
  * you can just add them to the CREATE TABLE query
  *
  */
-transformColumnToSQL = function (column, options) {
-    async.waterfall([
-        async.apply(jsonConfigurator.readFile, dbConfig),
-        function (obj, callback) {
-            callback(null, obj, options);
-        },
-        syncColumnWithDefault,
-        function (options, callback) {
-            //console.log(options);
-            if (options !== null && column !== null) {
-                var transformString = column + ' ';
+transformColumnToSQL = function (json, column, options) {
+    options = syncColumnWithDefault(json, options);
+//TODO: filter out non column related info in column e.g. isTable
+    if (options !== null && column !== null) {
+        var transformString = column[name] + ' ';
 
-                for (var key in options) {
-                    if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
-                        transformString = transformString + ' (' + options[key] + ')';
-                    } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key] === true) {
-                        transformString = transformString + ' ' + key;
-                    } else if (!(typeof options[key] === "boolean")) {
-                        transformString = transformString + ' ' + options[key];
-                    }
-                }
-                console.log('Result of SQL String: ' + transformString);
-                callback(null, transformString);
-            } else {
-                callback(null, null);
+        for (var key in options) {
+            if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
+                transformString = transformString + ' (' + options[key] + ')';
+            } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key] === true) {
+                transformString = transformString + ' ' + key;
+            } else if (!(typeof options[key] === "boolean")) {
+                transformString = transformString + ' ' + options[key];
             }
         }
-    ]);
+        console.log(notMedia + Tag + 'Result of transform SQL String: ' + transformString);
+        return transformString;
+    } else {
+        return null;
+    }
+
+
 };
 
 /**
  * synchronise default configuration with the special configuration of a column.
  */
-syncColumnWithDefault = function (obj, options, callback) {
-    console.log('Before sync: ' + JSON.stringify(obj.default));
+syncColumnWithDefault = function (obj, options) {
+    //console.log('Before sync: ' + JSON.stringify(obj.default));
     for (var key in obj.default) {
         if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
             if (!isKeyInObject(key, options)) {
@@ -174,7 +170,7 @@ syncColumnWithDefault = function (obj, options, callback) {
             }
         }
     }
-    callback(null, options);
+    return options;
 };
 
 isKeyInObject = function (key, obj) {
