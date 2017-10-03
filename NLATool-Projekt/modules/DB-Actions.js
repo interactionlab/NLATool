@@ -18,6 +18,7 @@ var Tag = 'DB-Actions.js: ';
  */
 var jsonConfigurator = require('jsonfile');
 var async = require("async");
+var wait = require('wait.for-es6');
 var dbConfig = './modules/dbConfig.json';
 //var async = require('async');
 /**
@@ -87,34 +88,38 @@ exports.createTableCommand = function (table) {
         async.apply(jsonConfigurator.readFile, dbConfig),
         function (obj, callback) {
             callback(null, obj, table);
-        }
+        },
+        generateCreateCommand
 
 
     ]);
 };
 
-generateStartOfCreateCommand = function (json, tableName, callback) {
+generateCreateCommand = function (json, tableName, callback) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
-    for (var table in json){
-        if(table.name === tableName){
+    for (var table in json) {
+        if (table.name === tableName) {
             var i = 1;
-            for(var column in table){
-                if(!Object.hasOwnProperty(column)){
-
+            for (var column in table) {
+                if (!Object.hasOwnProperty(column)) {
+                    var tempCommandString = wait.for(transformColumnToSQL, column, getOptionsOfColumn(table, i));
+                    commandString = commandString + tempCommandString + ', '
                 }
                 i++;
             }
         }
     }
+    commandString = commandString + ')';
     callback(null, json, commandString)
 };
 
-getOptionsOfColumn = function( table, columnNumber){
+getOptionsOfColumn = function (table, columnNumber) {
     var column = 'column' + columnNumber;
     var options = {};
-    for(var option in table[column]){
-
+    for (var option in table[column]) {
+        options[option] = table[column][option];
     }
+    return options;
 };
 
 /**
