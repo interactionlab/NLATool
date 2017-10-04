@@ -19,7 +19,7 @@ var Tag = 'test.js: ';
 var dbAction = require('../modules/DB-Actions');
 var dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
-var jsonconfigurator = require('jsonfile');
+var jsonConfigurator = require('jsonfile');
 var dbconfig = './modules/dbconfig.json';
 var wait = require('wait.for');
 router.get('/', function (req, res, next) {
@@ -52,7 +52,7 @@ router.post('/theFunction', function (req, res) {
 });
 
 function testGeneration(req, res) {
-    var json = wait.for(jsonconfigurator.readFile, dbconfig);
+    var json = wait.for(jsonConfigurator.readFile, dbconfig);
     var resultingString = wait.for(dbAction.generateCreateCommand, json, 'accountData');
     console.log(notMedia + Tag + 'Result of generateCreateCommand:' + JSON.stringify(resultingString));
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultingString});
