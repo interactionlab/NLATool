@@ -20,13 +20,17 @@ var dbAction = require('./DB-Actions');
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
+
+exports.setupDB = function (connection) {
+    wait.launchFiber(setupDBs(connection));
+};
 /**
  * This Method should setup a new Database with the given connection to a
  * mysql Server.
  * @param connection - of type mysql.connection
  */
-exports.setupDB = function (connection) {
-    wait.launchFiber(dbAction.setupDB);
+setupDBs = function (connection) {
+
     var json = dbAction.getJsonConfiguration;
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
