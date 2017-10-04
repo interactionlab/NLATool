@@ -16,6 +16,8 @@ var Tag = 'DB-Stub.js: ';
 //--------------------------------------------------------
 var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
+var dbStub = require('./DB-Stub');
+var wait = require('wait.for');
 
 var dbName = null, host = null, port = null, user = null, password = null;
 /**
@@ -27,12 +29,35 @@ var dbconfig = './modules/dbconfig.json';
 /**
  * Reading config file to get the connection data of the Database Server.
  */
-exports.establishConnection = function () {
-    var json = dbAction.getJsonConfiguration();
+exports.fiberEstablishConnection = function () {
+    wait.launchFiber(establishConnection);
+};
+establishConnection = function () {
 
+    var json = dbAction.getJsonConfiguration();
+    var connectSettings;
+    for (var connect in json.database.connections) {
+        connectSettings = getConnectionSettings(json.database.connections[connect]);
+        var pool = mysql.createPool(connectSettings);
+        pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(notMedia + Tag + 'connection to db failed: '+ err);
+            } else {
+                console.log(notMedia + Tag + 'connection to db succeeded.');
+                dbAction.setupDB(connection);
+
+            }
+        });
+    }
 };
 
-
+getConnectionSettings = function (connect) {
+    var settings = {};
+    for (var setting in connect) {
+        settings[setting] = connect[setting];
+    }
+    return settings;
+};
 
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     //TODO: Solve this Quickrepair in more efficient way
