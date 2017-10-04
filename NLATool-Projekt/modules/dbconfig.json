@@ -12,7 +12,7 @@
       "connection2":{
         "host": "localhost",
         "port": "???",
-        "password": "???",
+        "password": "3306",
         "user": "???"
       }
     }
