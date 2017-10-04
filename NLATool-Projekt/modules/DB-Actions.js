@@ -29,73 +29,15 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 /**
  *
  */
-exports.setupDB = function () {
+exports.setupDB = function (connection) {
 
-    jsonConfigurator.readFile(dbConfig, function (err, obj) {
-        if (err) {
-            console.log(notMedia + Tag + err);
-        } else {
-            //get all default properties
-            var defaultArray = Object.keys(obj.default);
-            //get all table options and column options
-            for (var entity in obj) {
-                if (entity.isTable) {
-                    for (var table in entity) {
-                        var tableName = table.name;
-                        for (var column in table) {
-
-                        }
-
-                    }
-                }
-            }
-        }
-    });
-};
-/**
- * generates String for SQL Command CREATE
- * name is either the name of the database -> CREATE DATABASE name
- * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
- * Version1
- * @param dbName
- * @param table
- * @param columns
- */
-exports.createCreateCommand = function (dbName, table, columns) {
-    var commandString = '';
-    if (dbName !== null) {
-        if (table !== null && columns !== null) {
-            commandString = 'CREATE TABLE ' + dbName + ' . ' + table + ' (' + columns[0];
-            for (var i = 1; i < columns.length; i++) {
-                commandString = commandString + ', ';
-            }
-            commandString = commandString + ')';
-            console.log(notMedia + Tag + commandString);
-            return commandString;
-        } else {
-            commandString = 'CREATE DATABASE ' + dbName;
-            console.log(notMedia + Tag + commandString);
-            return commandString;
-        }
-    } else {
-        console.log(notMedia + Tag + 'couldnt create Database/table because name of Database is missing');
-        return commandString;
-    }
 };
 
-exports.createTableCommand = function (table) {
 
-    wait.launchFiber(generateCreateCommand)
-
-
-    /*
-    async.waterfall([
-        async.apply(jsonConfigurator.readFile, dbConfig),
-        function (obj, callback) {
-            callback(null, obj, table);
-        },
-        generateCreateCommand
-    ]);*/
+createTableCommand = function (table) {
+    var json = wait.for(jsonConfigurator.readFile, dbconfig);
+    var resultingString = wait.for(generateCreateCommand, json, table);
+    return resultingString;
 };
 
 exports.generateCreateCommand = function (json, tableName, callback) {
@@ -104,19 +46,28 @@ exports.generateCreateCommand = function (json, tableName, callback) {
         if (json[table].name === tableName) {
             var i = 1;
             for (var column in json[table]) {
-                var options = getOptionsOfColumn(json[table], i);
-                var tempCommandString = transformColumnToSQL(json, json[table][column], options);
-                console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
-                commandString = commandString + tempCommandString + ', ';
 
-                i++;
+                if (column !== 'isTable' && column !== 'name') {
+                    console.log(notMedia + Tag + 'the current parameter for column: ' + JSON.stringify(json[table][column]));
+                    var options = getOptionsOfColumn(json[table], i);
 
+                    var tempCommandString = transformColumnToSQL(json, json[table][column], options);
+                    console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
+                    commandString = commandString + tempCommandString + ', ';
+
+                    i++;
+                }
             }
         }
     }
-    commandString = commandString + ')';
+    commandString = setCharAt(commandString, commandString.length - 2, ')');
     callback(null, commandString)
 };
+
+function setCharAt(str, index, chr) {
+    if (index > str.length - 1) return str;
+    return str.substr(0, index) + chr + str.substr(index + 1);
+}
 
 getOptionsOfColumn = function (table, columnNumber) {
     var column = 'column' + columnNumber;
@@ -136,9 +87,9 @@ getOptionsOfColumn = function (table, columnNumber) {
  */
 transformColumnToSQL = function (json, column, options) {
     options = syncColumnWithDefault(json, options);
-//TODO: filter out non column related info in column e.g. isTable
+
     if (options !== null && column !== null) {
-        var transformString = column[name] + ' ';
+        var transformString = '';
 
         for (var key in options) {
             if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
@@ -330,8 +281,42 @@ createWhereQuery = function (columns, values, operators) {
     return '';
 };
 
+
+
 //--------------------------------------------------------
 
+/**
+ * generates String for SQL Command CREATE
+ * name is either the name of the database -> CREATE DATABASE name
+ * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
+ * Version1
+ * @param dbName
+ * @param table
+ * @param columns
+ */
+/*
+exports.createCreateCommand = function (dbName, table, columns) {
+    var commandString = '';
+    if (dbName !== null) {
+        if (table !== null && columns !== null) {
+            commandString = 'CREATE TABLE ' + dbName + ' . ' + table + ' (' + columns[0];
+            for (var i = 1; i < columns.length; i++) {
+                commandString = commandString + ', ';
+            }
+            commandString = commandString + ')';
+            console.log(notMedia + Tag + commandString);
+            return commandString;
+        } else {
+            commandString = 'CREATE DATABASE ' + dbName;
+            console.log(notMedia + Tag + commandString);
+            return commandString;
+        }
+    } else {
+        console.log(notMedia + Tag + 'couldnt create Database/table because name of Database is missing');
+        return commandString;
+    }
+};
+*/
 /*
  var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
         "`userID` INT NOT NULL AUTO_INCREMENT , " +
