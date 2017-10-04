@@ -32,13 +32,18 @@ router.post('/nlp2', function (req, res) {
            //port is currently in use, so...
             console.log("Server online");
 
+                    /**
+                     *  TODO: get Elements from JSON
+                     *  sentences -> index, tokens
+                     *  tokens -> index, word, pos, ner, before, after
+                     */
+                    
             var input = req.body.testFunction;
 
             corenlp.parse(
                input, nlpPort, "pos,lemma,ner", "json", function (err, parsedText) {
                     //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
 
-                    //TODO: get Elements from JSON
                     var json = JSON.parse(parsedText);
                     //output: undefined
                     console.log(json.index);
