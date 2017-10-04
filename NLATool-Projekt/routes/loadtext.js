@@ -28,22 +28,28 @@ router.post('/nlp2', function (req, res) {
 
     server.once('error', function (err) {
 
-    //if online
         if(err.code === 'EADDRINUSE'){
-           //port is currently in use
-            console.log("Ja");
+           //port is currently in use, so...
+            console.log("Server online");
 
             var input = req.body.testFunction;
-            console.log(input);
 
             corenlp.parse(
-                input, nlpPort, "pos,lemma,ner", "json", function (err, parsedText) {
-                    console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
+               input, nlpPort, "pos,lemma,ner", "json", function (err, parsedText) {
+                    //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
+
+                    //TODO: get Elements from JSON
+                    var json = JSON.parse(parsedText);
+                    //output: undefined
+                    console.log(json.index);
+                    //output: letter at position i
+                    console.log(parsedText[0]);
+
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
                         result: JSON.stringify(JSON.parse(parsedText))
                     })
-            });
+            })
 
        }
     });
@@ -51,8 +57,8 @@ router.post('/nlp2', function (req, res) {
     //if Core NLP is offline:
     server.once('listening', function () {
         server.close();
-        setTimeout(console.log("Nein"),5000);
-        res.render('Desktop/loadtext',{title: 'NLA - Natural Language Analyse Tool', result: "Error 501: CoreNLP Server konnte nicht gefunden werden"},null);
+        setTimeout(console.log("Server offline"),5000);
+        res.render('Desktop/loadtext',{title: 'NLA - Natural Language Analyse Tool', result: "Error 501: CoreNLP Server is offline"},null);
 
     });
 });
