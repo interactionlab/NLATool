@@ -3,65 +3,65 @@
  * Tags for console Errors:
  * @type {string}
  */
-
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'DB-Actions.js: ';
 
 //--------------------------------------------------------
-/*
-/!**
- *
- *!/
-*/
 /**
  * Setup Configuration file Requirements:
  */
 var jsonConfigurator = require('jsonfile');
-var async = require("async");
 var wait = require('wait.for');
 var dbConfig = './modules/dbConfig.json';
-var dbAction = require('DB-Actions');
-//var async = require('async');
-var mysql = require('mysql');
+var dbAction = require('./DB-Actions');
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+
 /**
- *
+ * This Method should setup a new Database with the given connection to a
+ * mysql Server.
+ * @param connection - of type mysql.connection
  */
 exports.setupDB = function (connection) {
     wait.launchFiber(dbAction.setupDB);
-    var json = getJsonConfiguration;
+    var json = dbAction.getJsonConfiguration;
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
-        if (err) throw err;
+        if (err) console.log(notMedia + Tag + 'Couldnt Create Database');
         else {
             console.log(notMedia + Tag + 'Database created');
             var i = 0;
-            for(var table in json){
-                
+            for (var table in json) {
+                if (json[table].isTable) {
+                    connection.query(createTableCommand(json, json[table].name), function (err) {
+                        if (err) console.log(notMedia + Tag + 'couldnt create Table: '+ table + err);
+                    });
+                }
                 i++;
             }
-
-
-
-
         }
     });
 };
+/**
+ * Creates the query String for the SQL Command CREATE DATABASE (database Name)
+ * @param json
+ * @returns {string}
+ */
 createDatabaseCommand = function (json) {
     return 'CREATE DATABASE ' + json.database.name;
 };
-getJsonConfiguration = function () {
-    return wait.for(jsonConfigurator.readFile, dbConfig);
-};
-createTableCommand = function (json, table) {
-    return wait.for(generateCreateCommand, json, table);
-};
 
-generateCreateCommand = function (json, tableName, callback) {
+/**
+ * Creates the command String for the SQL Command CREATE TABLE.
+ * Needs the json of the dbconfig.json and the name of the table you want to create.
+ * @param json
+ * @param tableName
+ * @returns {string}
+ */
+createTableCommand = function (json, tableName) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
         if (json[table].name === tableName) {
@@ -82,14 +82,16 @@ generateCreateCommand = function (json, tableName, callback) {
         }
     }
     commandString = setCharAt(commandString, commandString.length - 2, ')');
-    callback(null, commandString)
+    return commandString;
 };
 
-function setCharAt(str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substr(0, index) + chr + str.substr(index + 1);
-}
-
+/**
+ * Retrieves all settings (key: value) of a given table (json)
+ * Only works with the structure of dbconfig.json
+ * @param table
+ * @param columnNumber
+ * @returns {{}}
+ */
 getOptionsOfColumn = function (table, columnNumber) {
     var column = 'column' + columnNumber;
     console.log(column);
@@ -104,14 +106,15 @@ getOptionsOfColumn = function (table, columnNumber) {
 /**
  * create a whole line of options for a column so that
  * you can just add them to the CREATE TABLE query
- *
+ * @param json
+ * @param column
+ * @param options
+ * @returns {*}
  */
 transformColumnToSQL = function (json, column, options) {
     options = syncColumnWithDefault(json, options);
-
     if (options !== null && column !== null) {
         var transformString = '';
-
         for (var key in options) {
             if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
                 transformString = transformString + ' (' + options[key] + ')';
@@ -126,12 +129,13 @@ transformColumnToSQL = function (json, column, options) {
     } else {
         return null;
     }
-
-
 };
 
 /**
- * synchronise default configuration with the special configuration of a column.
+ * Synchronises the default settings for a column with the specified ones.
+ * @param obj
+ * @param options
+ * @returns {*}
  */
 syncColumnWithDefault = function (obj, options) {
     //console.log('Before sync: ' + JSON.stringify(obj.default));
@@ -145,6 +149,12 @@ syncColumnWithDefault = function (obj, options) {
     return options;
 };
 
+/**
+ * A Method to check if a key is in a json-object.
+ * @param key
+ * @param obj
+ * @returns {boolean}
+ */
 isKeyInObject = function (key, obj) {
     for (var otherKey in obj) {
         if (key === otherKey) {
@@ -153,6 +163,7 @@ isKeyInObject = function (key, obj) {
     }
     return false;
 };
+
 /**
  * generates String for SQL Command SELECT
  * If no columns are specified, everything will be selected and returned.
@@ -302,8 +313,25 @@ createWhereQuery = function (columns, values, operators) {
     return '';
 };
 
-
-
+/**
+ * Reads the database Configuration and returns an json Object.
+ * @returns {*}
+ */
+exports.getJsonConfiguration = function () {
+    return wait.for(jsonConfigurator.readFile, dbConfig);
+};
+/**
+ * Replaces a character in a String(str) on a specified position (index)
+ * with a new one (chr)
+ * @param str
+ * @param index
+ * @param chr
+ * @returns {*}
+ */
+setCharAt = function (str, index, chr) {
+    if (index > str.length - 1) return str;
+    return str.substr(0, index) + chr + str.substr(index + 1);
+}
 //--------------------------------------------------------
 
 /**

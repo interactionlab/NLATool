@@ -27,19 +27,10 @@ var dbconfig = './modules/dbconfig.json';
 /**
  * Reading config file to get the connection data of the Database Server.
  */
-jsonconfigurator.readFile(dbconfig, function (err, obj) {
-    if (err) {
-        console.log(notMedia + Tag + err);
-        //TODO: Create a possibility for the user to configure this config file for his own Database
-    } else {
-        dbName = obj.database.name;
-        host = obj.database.host;
-        port = obj.database.port;
-        user = obj.database.user;
-        password = obj.database.password;
-       // console.log(notMedia + Tag + dbName + ' ' + host + ' ' + port + ' ' + user + ' ' + password);
-    }
-});
+exports.establishConnection = function () {
+    var json = dbAction.getJsonConfiguration();
+
+};
 
 
 
