@@ -41,7 +41,7 @@ router.post('/theFunction', function (req, res) {
     var columnName = 'Irgendwas';
 
 
-
+    dbStub.fiberEstablishConnection();
 
 
     var resultOfSQL = '';
