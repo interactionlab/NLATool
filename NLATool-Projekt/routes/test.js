@@ -39,7 +39,7 @@ router.post('/theFunction', function (req, res) {
     */
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
-    wait.launchFiber(testGeneration, req, res);
+
 
 
 
@@ -48,15 +48,9 @@ router.post('/theFunction', function (req, res) {
 //    dbAction.transformColumnToSQL(columnName, jsonOptions);
 //    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
 
-//    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
-function testGeneration(req, res) {
-    var json = wait.for(jsonConfigurator.readFile, dbconfig);
-    var resultingString = wait.for(dbAction.generateCreateCommand, json, 'accountData');
-    console.log(notMedia + Tag + 'Result of generateCreateCommand:' + JSON.stringify(resultingString));
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultingString});
-}
 
 router.post('/nlp', function (req, res) {
 
