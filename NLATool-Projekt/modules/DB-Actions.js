@@ -20,7 +20,9 @@ var jsonConfigurator = require('jsonfile');
 var async = require("async");
 var wait = require('wait.for');
 var dbConfig = './modules/dbConfig.json';
+var dbAction = require('DB-Actions');
 //var async = require('async');
+var mysql = require('mysql');
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
@@ -30,17 +32,36 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
  *
  */
 exports.setupDB = function (connection) {
+    wait.launchFiber(dbAction.setupDB);
+    var json = getJsonConfiguration;
+    var createDB = createDatabaseCommand(json);
+    connection.query(createDB, function (err) {
+        if (err) throw err;
+        else {
+            console.log(notMedia + Tag + 'Database created');
+            var i = 0;
+            for(var table in json){
+                
+                i++;
+            }
 
+
+
+
+        }
+    });
+};
+createDatabaseCommand = function (json) {
+    return 'CREATE DATABASE ' + json.database.name;
+};
+getJsonConfiguration = function () {
+    return wait.for(jsonConfigurator.readFile, dbConfig);
+};
+createTableCommand = function (json, table) {
+    return wait.for(generateCreateCommand, json, table);
 };
 
-
-createTableCommand = function (table) {
-    var json = wait.for(jsonConfigurator.readFile, dbconfig);
-    var resultingString = wait.for(generateCreateCommand, json, table);
-    return resultingString;
-};
-
-exports.generateCreateCommand = function (json, tableName, callback) {
+generateCreateCommand = function (json, tableName, callback) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
         if (json[table].name === tableName) {
