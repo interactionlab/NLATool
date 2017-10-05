@@ -41,8 +41,13 @@ router.post('/nlp2', function (req, res) {
                     //Object -> Json -> String
                     var json = JSON.parse(parsedText);
 
-                    console.log(json["sentences"][0]["tokens"][0].word);
+                    //console.log(json["sentences"][0]["tokens"][0].word);
 
+                    for(var i = 0; i <= json["sentences"].length -1; i++) {
+                        for (var j = 0; j <= json["sentences"][i]["tokens"].length -1; j++) {
+                            console.log(json["sentences"][i]["tokens"][j].ner);
+                        }
+                    }
 
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
