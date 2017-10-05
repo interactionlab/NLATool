@@ -34,7 +34,7 @@ exports.fiberEstablishConnection = function () {
 };
 establishConnection = function () {
     var json = dbAction.getJsonConfiguration();
-    console.log(notMedia+Tag+ 'establich Connection json: '+ json);
+    //console.log(notMedia+Tag+ 'establish Connection json: '+ json);
     json = JSON.parse(json);
     var connectSettings;
     for (var connect in json.database.connections) {
@@ -42,6 +42,7 @@ establishConnection = function () {
         var pool = mysql.createPool(connectSettings);
         if (wait.for(databaseCreated, pool)) {
             console.log(notMedia + Tag + 'Setup of DB complete.');
+            break;
         }
     }
 };
@@ -61,7 +62,7 @@ databaseCreated = function (pool, callback) {
         } else {
             console.log(notMedia + Tag + 'connection to db succeeded.');
             dbAction.setupDB(connection);
-            connection.query(dbAction.createSelectCommand('word'), function (err) {
+            connection.query(dbAction.createSelectCommand('word', null, null, null), function (err) {
                 if (err) {
                     console.log(notMedia + Tag + 'setup of DB failed: ' + err);
                     callback(null, false);

@@ -23,7 +23,7 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
 
 exports.setupDB = function (connection) {
-    wait.launchFiber(setupDBs(connection));
+    wait.launchFiber(setupDBs, connection);
 };
 /**
  * This Method should setup a new Database with the given connection to a
@@ -33,7 +33,7 @@ exports.setupDB = function (connection) {
 setupDBs = function (connection) {
 
     var json = dbAction.getJsonConfiguration();
-    console.log(notMedia + Tag + 'json outside before parse: ' + json);
+    //console.log(notMedia + Tag + 'json outside before parse: ' + json);
     json = JSON.parse(json);
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
@@ -60,7 +60,7 @@ setupDBs = function (connection) {
  * @returns {string}
  */
 createDatabaseCommand = function (json) {
-    console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database));
+    //console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database.name));
     return 'CREATE DATABASE ' + json.database.name;
 };
 
@@ -188,14 +188,14 @@ isKeyInObject = function (key, obj) {
 exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
     var commandString = 'SELECT ';
     if (table !== null) {
-        if (columns === null) {
-            commandString = '* FROM ' + table;
-        } else {
+        if (columns !== null ) {
             commandString = commandString + columns[0];
             for (var i = 1; i < columns.length; i++) {
                 commandString = commandString + ',' + columns[i];
             }
             commandString = commandString + ' FROM ' + table;
+        } else {
+            commandString = commandString + '* FROM ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         console.log(notMedia + Tag + commandString);
@@ -334,7 +334,7 @@ exports.createDropDBCommand = function () {
 exports.getJsonConfiguration = function () {
     var json = wait.for(jsonConfigurator.readFile, dbConfig);
     json = JSON.stringify(json);
-    console.log(notMedia + Tag + 'json: ' + json);
+    //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 };
 /**
