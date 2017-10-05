@@ -40,9 +40,6 @@ router.post('/nlp2', function (req, res) {
 
                     //Object -> Json -> String
                     var json = JSON.parse(parsedText);
-
-                    //console.log(json["sentences"][0]["tokens"][0].word);
-
                     var words = {};
                     var classes = {};
                     var person = {};
@@ -55,15 +52,22 @@ router.post('/nlp2', function (req, res) {
                                 classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
                                 words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
                                 if(words[j] !== undefined){
-
-                                        if ( classes[j] === '"PERSON"'){
-                                            person[words[j]]= person[words[j]]["person"];
+                                        if (classes[j] === '"PERSON"'){
+                                            //person[words[j]]= person[words[j]]["person"];
+                                            person[0] = words[j];
+                                       } else if (classes[j] === '"LOCATION"'){
+                                            loc[words[j]] = loc[words[j]]["location"];
+                                        } else if(classes[j] === '"ORGANIZATION"'){
+                                           orga[words[j]] = orga[words[j]]["organization"];
                                         }
 
                                 }
                             }
                         }
                     }
+
+
+
 
 
                     res.render('Desktop/loadtext', {
