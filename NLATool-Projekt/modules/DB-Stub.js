@@ -34,6 +34,8 @@ exports.fiberEstablishConnection = function () {
 };
 establishConnection = function () {
     var json = dbAction.getJsonConfiguration();
+    console.log(notMedia+Tag+ 'establich Connection json: '+ json);
+    json = JSON.parse(json);
     var connectSettings;
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
