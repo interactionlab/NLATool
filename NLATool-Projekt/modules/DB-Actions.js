@@ -32,6 +32,7 @@ exports.setupDB = function (connection) {
 setupDBs = function (connection) {
 
     var json = dbAction.getJsonConfiguration;
+    console.log(notMedia + Tag + 'json outside: ' + json);
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
         if (err) {
@@ -57,6 +58,7 @@ setupDBs = function (connection) {
  * @returns {string}
  */
 createDatabaseCommand = function (json) {
+    console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database));
     return 'CREATE DATABASE ' + json.database.name;
 };
 
@@ -328,7 +330,11 @@ exports.createDropDBCommand = function () {
  * @returns {*}
  */
 exports.getJsonConfiguration = function () {
-    return wait.for(jsonConfigurator.readFile, dbConfig);
+    var json = wait.for(jsonConfigurator.readFile, dbConfig);
+    json = JSON.stringify(json);
+    json = JSON.parse(json);
+    //console.log(notMedia + Tag + 'json: ' + JSON.stringify(json));
+    return json;
 };
 /**
  * Replaces a character in a String(str) on a specified position (index)
