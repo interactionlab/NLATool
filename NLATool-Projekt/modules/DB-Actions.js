@@ -34,14 +34,16 @@ setupDBs = function (connection) {
     var json = dbAction.getJsonConfiguration;
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
-        if (err) console.log(notMedia + Tag + 'Couldnt Create Database');
+        if (err) {
+            console.log(notMedia + Tag + 'Couldnt Create Database' + err);
+        }
         else {
             console.log(notMedia + Tag + 'Database created');
             var i = 0;
             for (var table in json) {
                 if (json[table].isTable) {
                     connection.query(createTableCommand(json, json[table].name), function (err) {
-                        if (err) console.log(notMedia + Tag + 'couldnt create Table: '+ table + err);
+                        if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + table + err);
                     });
                 }
                 i++;
@@ -316,7 +318,11 @@ createWhereQuery = function (columns, values, operators) {
     console.log(notMedia + Tag + 'Where Query Creation failed!');
     return '';
 };
+exports.createDropDBCommand = function () {
+    var json = dbAction.getJsonConfiguration();
+    return 'DROP DATABASE ' + json.database.name + ' IF EXISTS';
 
+};
 /**
  * Reads the database Configuration and returns an json Object.
  * @returns {*}
