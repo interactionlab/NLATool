@@ -33,21 +33,14 @@ exports.fiberEstablishConnection = function () {
     wait.launchFiber(establishConnection);
 };
 establishConnection = function () {
-
     var json = dbAction.getJsonConfiguration();
     var connectSettings;
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
         var pool = mysql.createPool(connectSettings);
-        pool.getConnection(function (err, connection) {
-            if (err) {
-                console.log(notMedia + Tag + 'connection to db failed: '+ err);
-            } else {
-                console.log(notMedia + Tag + 'connection to db succeeded.');
-                dbAction.setupDB(connection);
-
-            }
-        });
+        if (wait.for(databaseCreated, pool)) {
+            console.log(notMedia + Tag + 'Setup of DB complete.');
+        }
     }
 };
 
@@ -59,6 +52,23 @@ getConnectionSettings = function (connect) {
     return settings;
 };
 
+databaseCreated = function (pool, callback) {
+    pool.getConnection(function (err, connection) {
+        if (err) {
+            console.log(notMedia + Tag + 'connection to db failed: ' + err);
+        } else {
+            console.log(notMedia + Tag + 'connection to db succeeded.');
+            dbAction.setupDB(connection);
+            connection.query(dbAction.createSelectCommand('word'), function (err) {
+                if (err) {
+                    console.log(notMedia + Tag + 'setup of DB failed: ' + err);
+                    callback(null, false);
+                }
+            });
+        }
+    });
+    callback(null, true);
+};
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     //TODO: Solve this Quickrepair in more efficient way
     var pool = mysql.createPool({
