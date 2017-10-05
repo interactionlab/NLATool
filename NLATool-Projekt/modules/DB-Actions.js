@@ -14,6 +14,7 @@ var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
 var dbConfig = './modules/dbConfig.json';
 var dbAction = require('./DB-Actions');
+var dbStub = require('./DB-Stub');
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
@@ -31,8 +32,9 @@ exports.setupDB = function (connection) {
  */
 setupDBs = function (connection) {
 
-    var json = dbAction.getJsonConfiguration;
-    console.log(notMedia + Tag + 'json outside: ' + json);
+    var json = dbAction.getJsonConfiguration();
+    console.log(notMedia + Tag + 'json outside before parse: ' + json);
+    json = JSON.parse(json);
     var createDB = createDatabaseCommand(json);
     connection.query(createDB, function (err) {
         if (err) {
@@ -332,8 +334,7 @@ exports.createDropDBCommand = function () {
 exports.getJsonConfiguration = function () {
     var json = wait.for(jsonConfigurator.readFile, dbConfig);
     json = JSON.stringify(json);
-    json = JSON.parse(json);
-    //console.log(notMedia + Tag + 'json: ' + JSON.stringify(json));
+    console.log(notMedia + Tag + 'json: ' + json);
     return json;
 };
 /**
@@ -347,7 +348,7 @@ exports.getJsonConfiguration = function () {
 setCharAt = function (str, index, chr) {
     if (index > str.length - 1) return str;
     return str.substr(0, index) + chr + str.substr(index + 1);
-}
+};
 //--------------------------------------------------------
 
 /**
