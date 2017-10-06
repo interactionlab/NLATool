@@ -39,6 +39,7 @@ establishConnection = function () {
     var connectSettings;
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
+        console.log(notMedia + Tag + 'connection Settings: '+ JSON.stringify(connectSettings));
         var pool = mysql.createPool(connectSettings);
         if (wait.for(databaseCreated, pool)) {
             console.log(notMedia + Tag + 'Setup of DB complete.');
