@@ -42,7 +42,7 @@ router.post('/theFunction', function (req, res) {
 
 
     dbStub.fiberEstablishConnection();
-
+   // dbAction.testIfJsonIsThere();
 
     var resultOfSQL = '';
 //    dbAction.transformColumnToSQL(columnName, jsonOptions);
