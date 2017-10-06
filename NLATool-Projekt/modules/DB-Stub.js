@@ -19,7 +19,7 @@ var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var wait = require('wait.for');
 
-var dbName = null, host = null, port = null, user = null, password = null;
+var dbName = null, host = null, port = null, user = null, password = null, res = null;
 /**
  * Reading Configuration file requirements:
  */
@@ -56,22 +56,23 @@ getConnectionSettings = function (connect) {
 };
 
 databaseCreated = function (pool, callback) {
+    var created = false;
     pool.getConnection(function (err, connection) {
         if (err) {
             console.log(notMedia + Tag + 'connection to db failed: ' + err);
+
         } else {
             console.log(notMedia + Tag + 'connection to db succeeded.');
+
             dbAction.setupDB(connection);
-            connection.query(dbAction.createSelectCommand('word', null, null, null), function (err) {
-                if (err) {
-                    console.log(notMedia + Tag + 'setup of DB failed: ' + err);
-                    callback(null, false);
-                }
-            });
+            res = connection.query(dbAction.createSelectCommand('word', null, null, null));
+            console.log(notMedia + Tag + 'Result of Select in databaseCreated: ' + res.id);
+            created = true;
         }
     });
-    callback(null, true);
+    callback(null, created);
 };
+
 exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
     //TODO: Solve this Quickrepair in more efficient way
     var pool = mysql.createPool({
