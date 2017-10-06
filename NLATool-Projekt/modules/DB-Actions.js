@@ -20,6 +20,17 @@ var dbStub = require('./DB-Stub');
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+/**
+ * Loads the Database Configuration at the beginning of the of this file so
+ * that it is available for every function here.
+ */
+var json;
+wait.launchFiber(getJSONConfig);
+
+function getJSONConfig() {
+    json = getJsonConfiguration();
+    json = JSON.parse(json);
+}
 
 
 exports.setupDB = function (connection) {
@@ -31,11 +42,12 @@ exports.setupDB = function (connection) {
  * @param connection - of type mysql.connection
  */
 setupDBs = function (connection) {
-
-    var json = dbAction.getJsonConfiguration();
-    //console.log(notMedia + Tag + 'json outside before parse: ' + json);
-    json = JSON.parse(json);
-    var createDB = createDatabaseCommand(json);
+    /*
+        var json = dbAction.getJsonConfiguration();
+        //console.log(notMedia + Tag + 'json outside before parse: ' + json);
+        json = JSON.parse(json);
+        */
+    var createDB = createDatabaseCommand();
     connection.query(createDB, function (err) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt Create Database' + err);
@@ -45,7 +57,7 @@ setupDBs = function (connection) {
             var i = 0;
             for (var table in json) {
                 if (json[table].isTable) {
-                    connection.query(createTableCommand(json, json[table].name), function (err) {
+                    connection.query(createTableCommand(json[table].name), function (err) {
                         if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + table + err);
                     });
                 }
@@ -59,7 +71,7 @@ setupDBs = function (connection) {
  * @param json
  * @returns {string}
  */
-createDatabaseCommand = function (json) {
+createDatabaseCommand = function () {
     //console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database.name));
     return 'CREATE DATABASE ' + json.database.name;
 };
@@ -71,7 +83,7 @@ createDatabaseCommand = function (json) {
  * @param tableName
  * @returns {string}
  */
-createTableCommand = function (json, tableName) {
+createTableCommand = function (tableName) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
         if (json[table].name === tableName) {
@@ -82,7 +94,7 @@ createTableCommand = function (json, tableName) {
                     console.log(notMedia + Tag + 'the current parameter for column: ' + JSON.stringify(json[table][column]));
                     var options = getOptionsOfColumn(json[table], i);
 
-                    var tempCommandString = transformColumnToSQL(json, json[table][column], options);
+                    var tempCommandString = transformColumnToSQL(json[table][column], options);
                     console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
                     commandString = commandString + tempCommandString + ', ';
 
@@ -121,7 +133,7 @@ getOptionsOfColumn = function (table, columnNumber) {
  * @param options
  * @returns {*}
  */
-transformColumnToSQL = function (json, column, options) {
+transformColumnToSQL = function (column, options) {
     options = syncColumnWithDefault(json, options);
     if (options !== null && column !== null) {
         var transformString = '';
@@ -147,12 +159,12 @@ transformColumnToSQL = function (json, column, options) {
  * @param options
  * @returns {*}
  */
-syncColumnWithDefault = function (obj, options) {
+syncColumnWithDefault = function (options) {
     //console.log('Before sync: ' + JSON.stringify(obj.default));
-    for (var key in obj.default) {
-        if (obj.default.hasOwnProperty(key) && key !== 'isTable') {
+    for (var key in json.default) {
+        if (json.default.hasOwnProperty(key) && key !== 'isTable') {
             if (!isKeyInObject(key, options)) {
-                options[key] = obj.default[key];
+                options[key] = json.default[key];
             }
         }
     }
@@ -188,14 +200,14 @@ isKeyInObject = function (key, obj) {
 exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
     var commandString = 'SELECT ';
     if (table !== null) {
-        if (columns !== null ) {
+        if (columns !== null) {
             commandString = commandString + columns[0];
             for (var i = 1; i < columns.length; i++) {
                 commandString = commandString + ',' + columns[i];
             }
-            commandString = commandString + ' FROM ' + table;
+            commandString = commandString + ' FROM ' + json.database.name + ' . ' + table;
         } else {
-            commandString = commandString + '* FROM ' + table;
+            commandString = commandString + '* FROM '+ json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         console.log(notMedia + Tag + commandString);
@@ -337,6 +349,14 @@ exports.getJsonConfiguration = function () {
     //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 };
+
+function getJsonConfiguration() {
+    var json = wait.for(jsonConfigurator.readFile, dbConfig);
+    json = JSON.stringify(json);
+    //console.log(notMedia + Tag + 'json: ' + json);
+    return json;
+}
+
 /**
  * Replaces a character in a String(str) on a specified position (index)
  * with a new one (chr)
