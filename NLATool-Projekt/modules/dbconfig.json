@@ -1,7 +1,7 @@
 {
   "database": {
     "isTable": false,
-    "name": "nlatooltest",
+    "name": "nlatool",
     "connections": {
       "connection1": {
         "host": "turcan.de",
@@ -164,9 +164,5 @@
       "name": "isSpecial",
       "type": "BOOLEAN"
     }
-  },
-  "table6": {
-    "isTable": true,
-    "name": "statistics"
   }
 }
