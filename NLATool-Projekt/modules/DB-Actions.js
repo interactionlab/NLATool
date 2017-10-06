@@ -51,24 +51,27 @@ setupDBs = function (connection) {
     connection.query(createDB, function (err) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt Create Database' + err);
+            createAllTables(connection);
         }
         else {
             console.log(notMedia + Tag + 'Database created');
-            var i = 0;
-            for (var table in json) {
-                if (json[table].isTable) {
-                    connection.query(createTableCommand(json[table].name), function (err) {
-                        if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + table + err);
-                    });
-                }
-                i++;
-            }
+            createAllTables(connection);
         }
     });
 };
+createAllTables = function (connection) {
+    var i = 0;
+    for (var table in json) {
+        if (json[table].isTable) {
+            connection.query(createTableCommand(json[table].name), function (err) {
+                if (err) console.log(notMedia + Tag + 'couldnt create Table: ' +': '+ err);
+            });
+        }
+        i++;
+    }
+};
 /**
  * Creates the query String for the SQL Command CREATE DATABASE (database Name)
- * @param json
  * @returns {string}
  */
 createDatabaseCommand = function () {
@@ -79,7 +82,6 @@ createDatabaseCommand = function () {
 /**
  * Creates the command String for the SQL Command CREATE TABLE.
  * Needs the json of the dbconfig.json and the name of the table you want to create.
- * @param json
  * @param tableName
  * @returns {string}
  */
@@ -89,21 +91,25 @@ createTableCommand = function (tableName) {
         if (json[table].name === tableName) {
             var i = 1;
             for (var column in json[table]) {
-
                 if (column !== 'isTable' && column !== 'name') {
-                    console.log(notMedia + Tag + 'the current parameter for column: ' + JSON.stringify(json[table][column]));
+                    //console.log(notMedia + Tag + 'the current parameter for column: ' + JSON.stringify(json[table][column]));
                     var options = getOptionsOfColumn(json[table], i);
 
                     var tempCommandString = transformColumnToSQL(json[table][column], options);
-                    console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
-                    commandString = commandString + tempCommandString + ', ';
+
+                    //console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
+                    commandString = commandString + tempCommandString + ',';
 
                     i++;
                 }
             }
+            commandString = commandString + addKeySettingsToSQLCommand(json[table]);
+            break;
         }
     }
-    commandString = setCharAt(commandString, commandString.length - 2, ')');
+
+    //commandString = setCharAt(commandString, commandString.length - 1, ')');
+    console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
     return commandString;
 };
 
@@ -116,46 +122,82 @@ createTableCommand = function (tableName) {
  */
 getOptionsOfColumn = function (table, columnNumber) {
     var column = 'column' + columnNumber;
-    console.log(column);
+    //console.log(column);
     var options = {};
     for (var option in table[column]) {
         options[option] = table[column][option];
     }
-    console.log(notMedia + Tag + 'getOptionsOfColumn: ' + JSON.stringify(options));
+    //console.log(notMedia + Tag + 'getOptionsOfColumn: ' + JSON.stringify(options));
     return options;
 };
 
 /**
  * create a whole line of options for a column so that
  * you can just add them to the CREATE TABLE query
- * @param json
  * @param column
  * @param options
  * @returns {*}
  */
 transformColumnToSQL = function (column, options) {
-    options = syncColumnWithDefault(json, options);
+    options = syncColumnWithDefault(options);
     if (options !== null && column !== null) {
         var transformString = '';
+        var tempKey = '';
+        var specialSetting = null;
         for (var key in options) {
-            if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
+            //console.log(key +  ': ' + options[key] +' last:'+ tempKey);
+            if (!isNaN(options[key]) && !(typeof options[key] === "boolean") && options[tempKey] === 'VARCHAR') {
                 transformString = transformString + ' (' + options[key] + ')';
-            } else if ((key === 'PRIMARY' || key === 'UNIQUE' || key === 'AUTO_INCREMENT') && options[key] === true) {
-                transformString = transformString + ' ' + key;
-            } else if (!(typeof options[key] === "boolean")) {
+            } else if (!(typeof options[key] === "boolean") && isNaN(options[key])) {
                 transformString = transformString + ' ' + options[key];
+            } else if (key === 'AUTO_INCREMENT' && options[key] === true) {
+                transformString = transformString + ' ' + key;
             }
+            tempKey = key;
         }
-        console.log(notMedia + Tag + 'Result of transform SQL String: ' + transformString);
+        /*if (specialSetting === 'UNIQUE' || specialSetting === 'PRIMARY KEY' || specialSetting === 'FOREIGN KEY') {
+            transformString = transformString + addKeySettingToSQLCommand(specialSetting, options.name);
+        }*/
+        //console.log(notMedia + Tag + 'Result of transform SQL String: ' + transformString);
         return transformString;
     } else {
         return null;
     }
 };
+addKeySettingToSQLCommand = function (key, name) {
+    return ' ' + key + '(' + name + ')';
+};
+addKeySettingsToSQLCommand = function (table) {
+    var keySettings = findKeyColumns(table);
 
+    var keySQLString = '';
+    for (var column in keySettings) {
+        keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
+    }
+    keySQLString = setCharAt(keySQLString, keySQLString.length - 2, ');');
+    return keySQLString;
+};
+findKeyColumns = function (table) {
+    var keySettings = {};
+    //console.log('The table in findKeyColumns: ' + JSON.stringify(table));
+    for (var column in table) {
+        if (column !== 'isTable' && column !== 'name') {
+            for (var key in table[column]) {
+                if (table[column].PRIMARY === true) {
+                    keySettings[table[column].name] = 'PRIMARY KEY';
+                } else if (table[column].UNIQUE === true) {
+                    keySettings[table[column].name] = 'UNIQUE';
+                } else if (table[column].FOREIGN === true) {
+                    keySettings[table[column].name] = 'FOREIGN KEY';
+                }
+            }
+        }
+    }
+    //console.log(notMedia + Tag + 'Columns with Key Settings: ' + JSON.stringify(keySettings));
+    return keySettings;
+};
 /**
  * Synchronises the default settings for a column with the specified ones.
- * @param obj
  * @param options
  * @returns {*}
  */
@@ -207,7 +249,7 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
             }
             commandString = commandString + ' FROM ' + json.database.name + ' . ' + table;
         } else {
-            commandString = commandString + '* FROM '+ json.database.name + ' . ' + table;
+            commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         console.log(notMedia + Tag + commandString);
