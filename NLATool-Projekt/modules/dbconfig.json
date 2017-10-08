@@ -7,13 +7,15 @@
         "host": "turcan.de",
         "user": "nlatool",
         "password": "1EcH1pHr1VHhdknm",
-        "port": "3306"
+        "port": "3306",
+        "priority": "1"
       },
       "connection2":{
         "host": "localhost",
-        "port": "???",
-        "password": "3306",
-        "user": "???"
+        "port": "2206",
+        "password": "ichbingastheir",
+        "user": "guest",
+        "priority": "2"
       }
     }
   },
