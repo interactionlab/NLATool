@@ -13,6 +13,7 @@ var signUp = require('./routes/signUp');
 var test = require('./routes/test');
 var loadtext = require('./routes/loadtext');
 var uitest = require('./routes/uitest');
+var setupDB = require('./routes/setupDB');
 
 
 var app = express();
@@ -38,6 +39,8 @@ app.use('/signUp', signUp);
 app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/uitest', uitest);
+app.use('/setupDB', setupDB);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');

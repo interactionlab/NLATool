@@ -76,33 +76,33 @@ databaseCreated = function (pool, callback) {
     callback(null, created);
 };
 
-exports.testDBConnection = function (table, columns, values, valuesToCompare, operators) {
-    //TODO: Solve this Quickrepair in more efficient way
-    var pool = mysql.createPool({
-        host: host,
-        user: user,
-        password: password,
-        database: dbName
-    });
-    pool.getConnection(function (err, connection) {
-        if (err) throw err;
-        // dbAction.createInsertCommand(table, columns, values, valuesToCompare, operators)
-        connection.query('', function (error, results, fields) {
-            if (error) throw error;
-            else {
-                for (var i = 0; i < results; i++) {
-                    console.log(notMedia + Tag + results[i]);
-                }
+exports.createConnection = function (connectionSettings, callback) {
+    var connection = mysql.createConnection(connectionSettings);
+    return connection;
+};
+
+exports.createPool = function (connectionSettings) {
+    var pool = mysql.createPool(connectionSettings);
+    return pool;
+};
+
+exports.testConnection = function (connection, callback) {
+    try {
+        connection.ping(function (err, res) {
+            if (err) {
+                console.log(notMedia + Tag + 'Server didnt respond!');
+                throw err;
+            } else {
+                console.log(notMedia + Tag + 'Server responded');
+                return res;
             }
         });
-    });
+    }
+    catch (err) {
+        callback(err, null);
+    }
+    callback(null, res);
 };
-var connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'guest',
-    password: 'ichbingasthier',
-    database: 'nla-alpha'
-});
 
 /*
 connection.connect(function (err) {
