@@ -164,9 +164,7 @@ transformColumnToSQL = function (column, options) {
         return null;
     }
 };
-addKeySettingToSQLCommand = function (key, name) {
-    return ' ' + key + '(' + name + ')';
-};
+
 addKeySettingsToSQLCommand = function (table) {
     var keySettings = findKeyColumns(table);
 
