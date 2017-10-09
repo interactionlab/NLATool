@@ -16,6 +16,8 @@ var wait = require('wait.for');
 var dbConfig = './modules/dbconfig.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
+
+//var json = test.json;
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
@@ -25,9 +27,9 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
  * Loads the Database Configuration at the beginning of the of this file so
  * that it is available for every function here.
  */
-var json;
-wait.launchFiber(getJSONConfig);
 
+var json = null;
+wait.launchFiber(getJSONConfig);
 function getJSONConfig() {
     json = getJsonConfiguration();
     json = JSON.parse(json);
@@ -43,11 +45,9 @@ exports.setupDB = function (connection) {
  * @param connection - of type mysql.connection
  */
 setupDBs = function (connection) {
-    /*
-        var json = dbAction.getJsonConfiguration();
-        //console.log(notMedia + Tag + 'json outside before parse: ' + json);
-        json = JSON.parse(json);
-        */
+
+
+
     var createDB = createDatabaseCommand();
     connection.query(createDB, function (err) {
         if (err) {
@@ -388,11 +388,13 @@ exports.createDropDBCommand = function () {
  * Reads the database Configuration and returns an json Object.
  * @returns {*}
  */
+
+
 exports.getJsonConfiguration = function () {
-    var json = wait.for(jsonConfigurator.readFile, dbConfig);
-    json = JSON.stringify(json);
-    //console.log(notMedia + Tag + 'json: ' + json);
-    return json;
+    var json2 = wait.for(jsonConfigurator.readFile, dbConfig);
+    json2 = JSON.stringify(json2);
+    //console.log(notMedia + Tag + 'json2: ' + json2);
+    return json2;
 };
 
 function getJsonConfiguration() {
@@ -401,7 +403,8 @@ function getJsonConfiguration() {
     //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 }
-
+exports.json = json;
+//module.exports.getJsonConfiguration = json;
 /**
  * Replaces a character in a String(str) on a specified position (index)
  * with a new one (chr)
