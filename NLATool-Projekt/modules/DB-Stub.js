@@ -46,6 +46,7 @@ establishConnection = function () {
             break;
         }
     }
+
 };
 
 getConnectionSettings = function (connect) {
@@ -76,7 +77,7 @@ databaseCreated = function (pool, callback) {
     callback(null, created);
 };
 
-exports.createConnection = function (connectionSettings, callback) {
+exports.createConnection = function (connectionSettings) {
     var connection = mysql.createConnection(connectionSettings);
     return connection;
 };

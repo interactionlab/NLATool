@@ -15,7 +15,7 @@ var Tag = 'index.js: ';
 var net = require('net');
 var server = net.createServer();
 var dbAction = require('../modules/DB-Actions.js');
-//var dbStub = require('./modules/DB-Stub.js');
+var dbStub = require('../modules/DB-Stub.js');
 var mySQL = require('mysql');
 var wait = require('wait.for');
 
@@ -31,7 +31,7 @@ function getJSONConfig() {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result:''});
+    res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
 router.post('/nlp2', function (req, res) {
@@ -41,14 +41,14 @@ router.post('/nlp2', function (req, res) {
 
     server.once('error', function (err) {
 
-        if(err.code === 'EADDRINUSE'){
-           //port is currently in use, so...
+        if (err.code === 'EADDRINUSE') {
+            //port is currently in use, so...
             console.log("Server online");
 
             var input = req.body.testFunction;
 
             corenlp.parse(
-               input, nlpPort, "ner", "json", function (err, parsedText) {
+                input, nlpPort, "ner", "json", function (err, parsedText) {
                     //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
 
                     //Object -> Json -> String
@@ -59,18 +59,25 @@ router.post('/nlp2', function (req, res) {
                     var loc = {};
                     var orga = {};
 
-                    var bla = dbAction.createInsertCommand('word', 'content', 1, null, null);
-                    var connection = mySQL.createConnection(json2.database.connections.connection1);
+                    var connectionSettings = {
+                        database: "nlatool",
+                        host: "turcan.de",
+                        user: "nlatool",
+                        password: "1EcH1pHr1VHhdknm",
+                        port: "3306"
+                    };
+                    var bla = dbAction.createInsertCommand('word', ['content'],[1], null, null);
+                    var connection = dbStub.createConnection(connectionSettings);
                     connection.query(bla);
 
-                    for(var i = 0; i <= json["sentences"].length -1; i++) {
-                        for (var j = 0; j <= json["sentences"][i]["tokens"].length -1; j++) {
-                            if(json["sentences"][i]["tokens"][j].ner !== "O"){
+                    for (var i = 0; i <= json["sentences"].length - 1; i++) {
+                        for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
+                            if (json["sentences"][i]["tokens"][j].ner !== "O") {
                                 classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
                                 words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
-                                if(words[j] !== undefined){
+                                if (words[j] !== undefined) {
 
-                                    for(var k = 0; k <= j; k++ ) {
+                                    for (var k = 0; k <= j; k++) {
                                         if (classes[j] === '"PERSON"') {
                                             //person[words[j]]= person[words[j]]["person"];
                                             person[person.length] = words[j];
@@ -90,16 +97,19 @@ router.post('/nlp2', function (req, res) {
                         title: 'NLA - Natural Language Analyse Tool',
                         result: JSON.stringify(JSON.parse(parsedText))
                     })
-            })
+                })
 
-       }
+        }
     });
 
     //if Core NLP is offline:
     server.once('listening', function () {
         server.close();
-        setTimeout(console.log("Server offline"),5000);
-        res.render('Desktop/loadtext',{title: 'NLA - Natural Language Analyse Tool', result: "Error 501: CoreNLP Server is offline"},null);
+        setTimeout(function(){console.log("Server offline")}, 5000);
+        res.render('Desktop/loadtext', {
+            title: 'NLA - Natural Language Analyse Tool',
+            result: "Error 501: CoreNLP Server is offline"
+        }, null);
 
     });
 });
