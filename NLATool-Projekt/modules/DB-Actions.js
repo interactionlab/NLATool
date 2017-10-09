@@ -12,7 +12,7 @@ var Tag = 'DB-Actions.js: ';
  */
 var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
-var dbConfig = './modules/dbConfig.json';
+var dbConfig = './modules/dbconfig.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 /**
