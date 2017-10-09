@@ -5,19 +5,22 @@
     <meta name="author" content="Emine Turcan">
     <meta name="date" content="2017-09-28">
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/summernote.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-autocolumns.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/summernote.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="/public/css/bootstrap-autocolumns.css" />
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/summernote.js"></script>
 
-    <script> <!-- ButtonFunction for open and close the result field-->
-    function expand() {
+    <script>
+
+        // ButtonFunction for open and close the result field
+
+        function expand() {
         button = document.getElementById('switch');
         rightDiv = document.getElementById('right-column');
-        if (button.value == 'v') {
+        if (button.value === 'v') {
             button.value = '^';
             rightDiv.style.display = 'inline';
         } else {
