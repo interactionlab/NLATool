@@ -152,9 +152,6 @@
     "column4": {
       "name": "wordID",
       "type": "INT"
-    },
-    "column5": {
-      "name": "semanticClass"
     }
   },
   "table5": {
@@ -173,6 +170,9 @@
     "column3": {
       "name": "isSpecial",
       "type": "BOOLEAN"
+    },
+    "column4": {
+      "name": "semanticClass"
     }
   }
 }
