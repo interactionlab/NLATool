@@ -66,9 +66,6 @@ router.post('/nlp2', function (req, res) {
                         password: "1EcH1pHr1VHhdknm",
                         port: "3306"
                     };
-                    var bla = dbAction.createInsertCommand('word', ['content'],[1], null, null);
-                    var connection = dbStub.createConnection(connectionSettings);
-                    connection.query(bla);
 
                     for (var i = 0; i <= json["sentences"].length - 1; i++) {
                         for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
@@ -92,6 +89,10 @@ router.post('/nlp2', function (req, res) {
                             }
                         }
                     }
+
+                    var bla = dbAction.createInsertCommand('word', ['content'],[words[0]], null, null);
+                    var connection = dbStub.createConnection(connectionSettings);
+                    connection.query(bla);
 
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
