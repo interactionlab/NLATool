@@ -19,16 +19,20 @@ var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var wait = require('wait.for');
 
-var dbName = null, host = null, port = null, user = null, password = null, res = null;
-/**
- * Reading Configuration file requirements:
- */
-var jsonconfigurator = require('jsonfile');
-var dbconfig = './modules/dbconfig.json';
+var connection = null;
+var dbStatus = {
+    connected: false,
+    error: null,
+    isCorrect: false
+};
 
+establishConnection();
 /**
  * Reading config file to get the connection data of the Database Server.
  */
+
+
+
 exports.fiberEstablishConnection = function () {
     wait.launchFiber(establishConnection);
 };
@@ -37,16 +41,30 @@ establishConnection = function () {
     //console.log(notMedia+Tag+ 'establish Connection json: '+ json);
     json = JSON.parse(json);
     var connectSettings;
+
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
-        console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
-        var pool = mysql.createPool(connectSettings);
-        if (wait.for(databaseCreated, pool)) {
+        //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
+        connection = createConnection(connectSettings);
+        if (wait.for(databaseCreated, connection)) {
             console.log(notMedia + Tag + 'Setup of DB complete.');
             break;
         }
     }
 
+};
+
+databaseCreated = function () {
+
+    dbAction.setupDB(connection);
+    var res = makeSQLRequest(dbAction.createSelectCommand('word', null, null, null));
+    console.log(notMedia + Tag + 'Result of Select in databaseCreated: ' + res.id);
+
+
+};
+
+makeSQLRequest = function (query) {
+    return wait.for(connection.query(query));
 };
 
 getConnectionSettings = function (connect) {
@@ -59,27 +77,41 @@ getConnectionSettings = function (connect) {
     return settings;
 };
 
-databaseCreated = function (pool, callback) {
-    var created = false;
-    pool.getConnection(function (err, connection) {
-        if (err) {
-            console.log(notMedia + Tag + 'connection to db failed: ' + err);
+testDatabase = function () {
 
-        } else {
-            console.log(notMedia + Tag + 'connection to db succeeded.');
-
-            dbAction.setupDB(connection);
-            res = connection.query(dbAction.createSelectCommand('word', null, null, null));
-            console.log(notMedia + Tag + 'Result of Select in databaseCreated: ' + res.id);
-            created = true;
-        }
-    });
-    callback(null, created);
 };
 
-exports.createConnection = function (connectionSettings) {
+createConnection = function (connectionSettings) {
     var connection = mysql.createConnection(connectionSettings);
-    return connection;
+    testConnection(connection);
+    if (dbStatus.connected === true) {
+        return connection;
+    } else if (dbStatus.error !== null) {
+        return dbStatus.error;
+    } else {
+        return null;
+    }
+};
+
+
+
+testConnection = function (connection) {
+    for (var i = 0; i < 4; i++) {
+        if (dbStatus.connected !== true || dbStatus.error === null) {
+            setTimeout(connection.ping(function (err) {
+                if (err) {
+                    console.log(notMedia + Tag + 'Server didnt respond!');
+                    dbStatus.connected = false;
+                    dbStatus.error = err;
+
+                } else {
+                    console.log(notMedia + Tag + 'Server responded');
+                    dbStatus.connected = true;
+                    dbStatus.error = null;
+                }
+            }), 3000);
+        }
+    }
 };
 
 exports.createPool = function (connectionSettings) {
@@ -87,23 +119,8 @@ exports.createPool = function (connectionSettings) {
     return pool;
 };
 
-exports.testConnection = function (connection, callback) {
-
-
-    try {
-        connection.ping(function (err) {
-            if (err) {
-                console.log(notMedia + Tag + 'Server didnt respond!');
-                throw err;
-            } else {
-                console.log(notMedia + Tag + 'Server responded');
-            }
-        });
-    }
-    catch (err) {
-        callback(err, null);
-    }
-    callback(null, res);
+exports.getDBStatus = function () {
+    return dbStatus;
 };
 
 /*
