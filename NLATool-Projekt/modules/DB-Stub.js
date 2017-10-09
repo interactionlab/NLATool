@@ -87,14 +87,15 @@ exports.createPool = function (connectionSettings) {
 };
 
 exports.testConnection = function (connection, callback) {
+
+
     try {
-        connection.ping(function (err, res) {
+        connection.ping(function (err) {
             if (err) {
                 console.log(notMedia + Tag + 'Server didnt respond!');
                 throw err;
             } else {
                 console.log(notMedia + Tag + 'Server responded');
-                return res;
             }
         });
     }
