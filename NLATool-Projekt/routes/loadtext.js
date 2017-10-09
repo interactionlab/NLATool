@@ -19,6 +19,14 @@ var dbStub = require('../modules/DB-Stub.js');
 var mySQL = require('mysql');
 var wait = require('wait.for');
 
+var connectionSettings = {
+    database: "nlatool",
+    host: "turcan.de",
+    user: "nlatool",
+    password: "1EcH1pHr1VHhdknm",
+    port: "3306"
+};
+
 var json2;
 wait.launchFiber(getJSONConfig);
 
@@ -59,13 +67,9 @@ router.post('/nlp2', function (req, res) {
                     var loc = {};
                     var orga = {};
 
-                    var connectionSettings = {
-                        database: "nlatool",
-                        host: "turcan.de",
-                        user: "nlatool",
-                        password: "1EcH1pHr1VHhdknm",
-                        port: "3306"
-                    };
+                    var personSize = 0,
+                        locSize = 0,
+                        orgaSize = 0;
 
                     for (var i = 0; i <= json["sentences"].length - 1; i++) {
                         for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
@@ -76,12 +80,14 @@ router.post('/nlp2', function (req, res) {
 
                                     for (var k = 0; k <= j; k++) {
                                         if (classes[j] === '"PERSON"') {
-                                            //person[words[j]]= person[words[j]]["person"];
-                                            person[person.length] = words[j];
+                                            person[personSize] = words[j];
+                                            personSize++;
                                         } else if (classes[j] === '"LOCATION"') {
-                                            loc[loc.length] = words[j];
+                                            loc[locSize] = words[j];
+                                            locSize++;
                                         } else if (classes[j] === '"ORGANIZATION"') {
-                                            orga[orga.length] = words[j];
+                                            orga[orgaSize] = words[j];
+                                            orgaSize++;
                                         }
                                     }
 
@@ -90,9 +96,18 @@ router.post('/nlp2', function (req, res) {
                         }
                     }
 
+                    console.log(person);
+                    console.log(loc);
+                    console.log(orga);
+
+
+                    /**
+                     * write to database
+                     *
                     var bla = dbAction.createInsertCommand('word', ['content'],[words[0]], null, null);
                     var connection = dbStub.createConnection(connectionSettings);
                     connection.query(bla);
+                     */
 
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
