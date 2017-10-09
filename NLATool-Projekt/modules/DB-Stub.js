@@ -18,7 +18,10 @@ var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var wait = require('wait.for');
+//var test = require('../modules/test');
 
+
+var json = dbAction.json;
 var connection = null;
 var dbStatus = {
     connected: false,
@@ -26,22 +29,20 @@ var dbStatus = {
     isCorrect: false
 };
 
-establishConnection();
 /**
  * Reading config file to get the connection data of the Database Server.
  */
-
-
-
 exports.fiberEstablishConnection = function () {
     wait.launchFiber(establishConnection);
 };
-establishConnection = function () {
-    var json = dbAction.getJsonConfiguration();
-    //console.log(notMedia+Tag+ 'establish Connection json: '+ json);
-    json = JSON.parse(json);
-    var connectSettings;
 
+function establishConnection() {
+    var connectSettings;
+    console.log(notMedia + Tag + 'json outside before parse: ' + json);
+    /*var json = dbAction.getJsonConfiguration();
+
+    json = JSON.parse(json);*/
+    console.log(json);
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
@@ -52,7 +53,7 @@ establishConnection = function () {
         }
     }
 
-};
+}
 
 databaseCreated = function () {
 
@@ -92,7 +93,6 @@ createConnection = function (connectionSettings) {
         return null;
     }
 };
-
 
 
 testConnection = function (connection) {
