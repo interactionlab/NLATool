@@ -60,7 +60,7 @@ router.post('/setNewConnection', function (req, res) {
     console.log(connections[newConnection]);
 
     var connection = dbStub.createConnection(connections[newConnection]);
-    dbStub.testConnection(connection, function (err, result) {
+    dbStub.testConnection(connection, function (err) {
         if (err) {
             res.render('./Desktop/setupDB', {
                 title: 'NLA - Natural Language Analyse Tool',
