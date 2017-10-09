@@ -5,6 +5,7 @@
  */
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'DB-Actions.js: ';
+var sql = 'The resulting SQL Command is:';
 
 //--------------------------------------------------------
 /**
@@ -64,7 +65,7 @@ createAllTables = function (connection) {
     for (var table in json) {
         if (json[table].isTable) {
             connection.query(createTableCommand(json[table].name), function (err) {
-                if (err) console.log(notMedia + Tag + 'couldnt create Table: ' +': '+ err);
+                if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + ': ' + err);
             });
         }
         i++;
@@ -250,11 +251,15 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
             commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
-        console.log(notMedia + Tag + commandString);
+        console.log(notMedia + Tag + sql + commandString);
+        return commandString;
+    } else {
+        commandString = commandString + json.database.name;
+        console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
-    console.log(notMedia + Tag + 'Select Command Creation failed!');
-    return null;
+
+
 };
 
 /**
