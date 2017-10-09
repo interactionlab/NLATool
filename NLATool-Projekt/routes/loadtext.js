@@ -14,6 +14,19 @@ var notMedia = 'Not Media-Related Part: ';
 var Tag = 'index.js: ';
 var net = require('net');
 var server = net.createServer();
+var dbAction = require('../modules/DB-Actions.js');
+//var dbStub = require('./modules/DB-Stub.js');
+var mySQL = require('mysql');
+var wait = require('wait.for');
+
+var json2;
+wait.launchFiber(getJSONConfig);
+
+
+function getJSONConfig() {
+    json2 = dbAction.getJsonConfiguration();
+    json2 = JSON.parse(json2);
+}
 
 
 /* GET home page. */
@@ -46,29 +59,32 @@ router.post('/nlp2', function (req, res) {
                     var loc = {};
                     var orga = {};
 
+                    var bla = dbAction.createInsertCommand('word', 'content', 1, null, null);
+                    var connection = mySQL.createConnection(json2.database.connections.connection1);
+                    connection.query(bla);
+
                     for(var i = 0; i <= json["sentences"].length -1; i++) {
                         for (var j = 0; j <= json["sentences"][i]["tokens"].length -1; j++) {
                             if(json["sentences"][i]["tokens"][j].ner !== "O"){
                                 classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
                                 words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
                                 if(words[j] !== undefined){
-                                        if (classes[j] === '"PERSON"'){
+
+                                    for(var k = 0; k <= j; k++ ) {
+                                        if (classes[j] === '"PERSON"') {
                                             //person[words[j]]= person[words[j]]["person"];
-                                            person[0] = words[j];
-                                       } else if (classes[j] === '"LOCATION"'){
-                                            loc[words[j]] = loc[words[j]]["location"];
-                                        } else if(classes[j] === '"ORGANIZATION"'){
-                                           orga[words[j]] = orga[words[j]]["organization"];
+                                            person[person.length] = words[j];
+                                        } else if (classes[j] === '"LOCATION"') {
+                                            loc[loc.length] = words[j];
+                                        } else if (classes[j] === '"ORGANIZATION"') {
+                                            orga[orga.length] = words[j];
                                         }
+                                    }
 
                                 }
                             }
                         }
                     }
-
-
-
-
 
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
