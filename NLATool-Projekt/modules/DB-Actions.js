@@ -403,7 +403,6 @@ function getJsonConfiguration() {
     //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 }
-exports.json = json;
 //module.exports.getJsonConfiguration = json;
 /**
  * Replaces a character in a String(str) on a specified position (index)
