@@ -21,8 +21,9 @@ var wait = require('wait.for');
 //var test = require('../modules/test');
 
 
-var json = dbAction.json;
+var json = null;
 var connection = null;
+console.log(notMedia + Tag + 'connection Status1'+ connection + typeof connection);
 var dbStatus = {
     connected: false,
     error: null,
@@ -33,33 +34,50 @@ var dbStatus = {
  * Reading config file to get the connection data of the Database Server.
  */
 exports.fiberEstablishConnection = function () {
+
     wait.launchFiber(establishConnection);
 };
 
 function establishConnection() {
     var connectSettings;
-    console.log(notMedia + Tag + 'json outside before parse: ' + json);
-    /*var json = dbAction.getJsonConfiguration();
+    json = dbAction.getJsonConfiguration();
+    json = JSON.parse(json);
+    //console.log(notMedia + Tag + 'json outside before parse: ' + json);
 
-    json = JSON.parse(json);*/
-    console.log(json);
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
+        console.log(notMedia + Tag + 'connection Status2'+ connection + typeof connection);
         connection = createConnection(connectSettings);
-        if (wait.for(databaseCreated, connection)) {
-            console.log(notMedia + Tag + 'Setup of DB complete.');
-            break;
-        }
+        console.log(notMedia + Tag + 'connection Status3'+ connection + typeof connection);
+        break;
+    }
+    if (wait.for(databaseCreated, 4)) {
+        console.log('finished');
     }
 
 }
 
-databaseCreated = function () {
+databaseCreated = function (times) {
+    console.log('Still ' + times + ' trys');
+    if (times === 0) {
+        console.log(notMedia + Tag + 'Not connected to Database!');
+        return false;
+    }
 
-    dbAction.setupDB(connection);
-    var res = makeSQLRequest(dbAction.createSelectCommand('word', null, null, null));
-    console.log(notMedia + Tag + 'Result of Select in databaseCreated: ' + res.id);
+    if (dbStatus.connected === false ||(typeof connection ==="undefined")) {
+        console.log(notMedia + Tag + 'Not yet connected to Database!'+ connection + typeof connection);
+        setTimeout(function () {
+            return databaseCreated(times - 1);
+        }, 1000);
+    } else {
+        console.log(notMedia+ Tag +'Hier: '+ JSON.stringify(dbStatus));
+        dbAction.setupDB(connection);
+        console.log(notMedia + Tag + 'Setup of DB complete.');
+        var res = makeSQLRequest(dbAction.createSelectCommand('word', null, null, null));
+        console.log(notMedia + Tag + 'Result of Select in databaseCreated: ' + res.id);
+        return true;
+    }
 
 
 };
@@ -80,38 +98,43 @@ getConnectionSettings = function (connect) {
 
 testDatabase = function () {
 
+
 };
 
 createConnection = function (connectionSettings) {
-    var connection = mysql.createConnection(connectionSettings);
-    testConnection(connection);
-    if (dbStatus.connected === true) {
-        return connection;
-    } else if (dbStatus.error !== null) {
-        return dbStatus.error;
-    } else {
-        return null;
-    }
+    connection = mysql.createConnection(connectionSettings);
+    console.log(notMedia + Tag + 'connection Status4'+ connection + typeof connection);
+    wait.launchFiber(testConnection, connection);
+    setTimeout(function () {
+        if (dbStatus.connected === true) {
+            console.log(notMedia + Tag + 'connection Status5'+ connection + typeof connection);
+            return connection;
+        } else if (dbStatus.error !== null) {
+            console.log('got here2');
+            return null;
+        } else {
+            console.log('got here3: ' + JSON.stringify(dbStatus));
+            return null;
+        }
+    }, 100);
 };
 
-
-testConnection = function (connection) {
-    for (var i = 0; i < 4; i++) {
-        if (dbStatus.connected !== true || dbStatus.error === null) {
-            setTimeout(connection.ping(function (err) {
-                if (err) {
-                    console.log(notMedia + Tag + 'Server didnt respond!');
-                    dbStatus.connected = false;
-                    dbStatus.error = err;
-
-                } else {
-                    console.log(notMedia + Tag + 'Server responded');
-                    dbStatus.connected = true;
-                    dbStatus.error = null;
-                }
-            }), 3000);
+function testConnection(connection) {
+    console.log(notMedia + Tag + 'connection Status6'+ connection + typeof connection);
+    if (dbStatus.connected !== true || dbStatus.error === null) {
+        try {
+            var res = wait.forMethod(connection, "ping");
+            console.log(notMedia + Tag + 'connection Status7'+ connection + typeof connection);
+            console.log(notMedia + Tag + 'result of ping: ' + JSON.stringify(res));
+            dbStatus.connected = true;
+            dbStatus.error = null;
+        } catch (err) {
+            dbStatus.connected = false;
+            dbStatus.error = err;
+            console.log(notMedia + Tag + 'ping threw error: ' + dbStatus.error);
         }
     }
+    console.log(JSON.stringify(dbStatus));
 };
 
 exports.createPool = function (connectionSettings) {
