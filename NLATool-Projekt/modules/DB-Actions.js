@@ -110,7 +110,7 @@ createTableCommand = function (tableName) {
     }
 
     //commandString = setCharAt(commandString, commandString.length - 1, ')');
-    console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
+    //console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
     return commandString;
 };
 
