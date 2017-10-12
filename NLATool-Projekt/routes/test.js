@@ -39,8 +39,8 @@ router.post('/theFunction', function (req, res) {
     */
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
-    columnName = setCharAt(columnName, columnName.length-1, 'A');
-    console.log(notMedia + Tag + 'geänderter String:'+ columnName);
+    /*columnName = setCharAt(columnName, columnName.length-1, 'A');
+    console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
     dbStub.fiberEstablishConnection();
    // dbAction.testIfJsonIsThere();
 
