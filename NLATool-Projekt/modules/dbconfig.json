@@ -12,7 +12,7 @@
       },
       "connection2":{
         "host": "localhost",
-        "port": "2206",
+        "port": "3306",
         "password": "ichbingastheir",
         "user": "guest",
         "priority": "2"
