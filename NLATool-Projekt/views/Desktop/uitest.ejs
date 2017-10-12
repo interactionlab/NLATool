@@ -44,8 +44,6 @@
 </head>
 <body>
 <!--material.io beginning -->
-
-
     <div class = "mdl-grid"> <!--Row 1 for features -->
         <div class = "mdl-cell mdl-cell--2-col graybox">
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
@@ -66,23 +64,26 @@
     <div class = "mdl-cell mdl-cell--6-col graybox">2</div>
 </div>
 
-<table>
-    <tr><td>Multiline Text Field</td>
-    </tr>
-    <tr>
-        <td>
-            <form action = "#">
-                <div class = "mdl-textfield mdl-js-textfield">
-                     <textarea class = "mdl-textfield__input" type = "text" rows =  "3"
-                               id = "textbox" ></textarea>
-                    <label class = "mdl-textfield__label" for = "textbox">Enter text here ...</label>
-                </div>
-            </form>
-        </td>
-    </tr>
-</table>
+<div class = "mdl-grid"> <!-- clear button -->
+    <div><td><button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <i class = "mdc-button">Leeren</i></button></td>
+    </div>
+</div>
 
-
+<div class = "mdl-grid"> <!-- Resizable Textfield-->
+    <div>
+        <form action = "#">
+            <div class = "mdl-textfield mdl-js-textfield">
+                <textarea class = "mdl-textfield__input" type = "text"
+                          rows =  "3"
+                          id = "textbox" ></textarea>
+                <label class = "mdl-textfield__label"
+                       for = "textbox">Enter text here ...
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
 
 <!--material.io ending -->
 
