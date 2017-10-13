@@ -41,7 +41,7 @@ app.use('/loadtext', loadtext);
 app.use('/uitest', uitest);
 app.use('/setup', setup);
 
-// catch 404 and forward to error handler
+// catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
@@ -49,13 +49,13 @@ app.use(function (req, res, next) {
 });
 
 
-// error handler
+// connectionError handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
+    // set locals, only providing connectionError in development
     res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    res.locals.connectionError = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
+    // render the connectionError page
     res.status(err.status || 500);
     res.render('error');
 });

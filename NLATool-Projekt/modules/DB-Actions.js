@@ -30,6 +30,7 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 
 var json = null;
 wait.launchFiber(getJSONConfig);
+
 function getJSONConfig() {
     json = getJsonConfiguration();
     json = JSON.parse(json);
@@ -39,13 +40,13 @@ function getJSONConfig() {
 exports.setupDB = function (connection) {
     wait.launchFiber(setupDBs, connection);
 };
+
 /**
  * This Method should setup a new Database with the given connection to a
  * mysql Server.
  * @param connection - of type mysql.connection
  */
 setupDBs = function (connection) {
-
 
 
     var createDB = createDatabaseCommand();
@@ -60,6 +61,7 @@ setupDBs = function (connection) {
         }
     });
 };
+
 createAllTables = function (connection) {
     var i = 0;
     for (var table in json) {
@@ -71,6 +73,7 @@ createAllTables = function (connection) {
         i++;
     }
 };
+
 /**
  * Creates the query String for the SQL Command CREATE DATABASE (database Name)
  * @returns {string}
@@ -176,6 +179,7 @@ addKeySettingsToSQLCommand = function (table) {
     keySQLString = setCharAt(keySQLString, keySQLString.length - 2, ');');
     return keySQLString;
 };
+
 findKeyColumns = function (table) {
     var keySettings = {};
     //console.log('The table in findKeyColumns: ' + JSON.stringify(table));
@@ -195,6 +199,7 @@ findKeyColumns = function (table) {
     //console.log(notMedia + Tag + 'Columns with Key Settings: ' + JSON.stringify(keySettings));
     return keySettings;
 };
+
 /**
  * Synchronises the default settings for a column with the specified ones.
  * @param options
@@ -379,17 +384,17 @@ createWhereQuery = function (columns, values, operators) {
     console.log(notMedia + Tag + 'Where Query Creation failed!');
     return '';
 };
+
 exports.createDropDBCommand = function () {
     var json = dbAction.getJsonConfiguration();
     return 'DROP DATABASE ' + json.database.name + ' IF EXISTS';
 
 };
+
 /**
  * Reads the database Configuration and returns an json Object.
  * @returns {*}
  */
-
-
 exports.getJsonConfiguration = function () {
     var json2 = wait.for(jsonConfigurator.readFile, dbConfig);
     json2 = JSON.stringify(json2);
@@ -403,7 +408,7 @@ function getJsonConfiguration() {
     //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 }
-//module.exports.getJsonConfiguration = json;
+
 /**
  * Replaces a character in a String(str) on a specified position (index)
  * with a new one (chr)
@@ -416,40 +421,34 @@ setCharAt = function (str, index, chr) {
     if (index > str.length - 1) return str;
     return str.substr(0, index) + chr + str.substr(index + 1);
 };
-//--------------------------------------------------------
 
-/**
- * generates String for SQL Command CREATE
- * name is either the name of the database -> CREATE DATABASE name
- * or the name of the table -> CREATE TABLE name (column1 options, column2 options,..)
- * Version1
- * @param dbName
- * @param table
- * @param columns
- */
-/*
-exports.createCreateCommand = function (dbName, table, columns) {
-    var commandString = '';
-    if (dbName !== null) {
-        if (table !== null && columns !== null) {
-            commandString = 'CREATE TABLE ' + dbName + ' . ' + table + ' (' + columns[0];
-            for (var i = 1; i < columns.length; i++) {
-                commandString = commandString + ', ';
-            }
-            commandString = commandString + ')';
-            console.log(notMedia + Tag + commandString);
-            return commandString;
-        } else {
-            commandString = 'CREATE DATABASE ' + dbName;
-            console.log(notMedia + Tag + commandString);
-            return commandString;
+exports.getTableListFromJson = function () {
+    var tableList = [];
+    for (var table in json) {
+        if (json[table].isTable) {
+            tableList.push(json[table].name);
         }
-    } else {
-        console.log(notMedia + Tag + 'couldnt create Database/table because name of Database is missing');
-        return commandString;
     }
+    return tableList;
 };
-*/
+
+exports.getColumnsOfOneTable = function (table) {
+    var columns = {};
+    for (var entity in json) {
+        if (json[entity].isTable && json[entity].name === table) {
+            for (var column in json[entity]) {
+                if (column !== 'isTable' || column !== 'name') {
+                    columns[column] = json[entity][column];
+                    columns = syncColumnWithDefault(columns);
+                }
+            }
+        }
+    }
+    columns = JSON.stringify(columns);
+    console.log(notMedia + Tag + 'getColumns Result:' + columns);
+    return columns;
+};
+//--------------------------------------------------------
 /*
  var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +
         "`userID` INT NOT NULL AUTO_INCREMENT , " +
