@@ -37,6 +37,9 @@ var queryStatus = {
     result: null
 }
 
+
+/**establishConnection();*/
+
 /**
  * Reading config file to get the connection data of the Database Server.
  */
