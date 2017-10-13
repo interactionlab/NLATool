@@ -29,7 +29,8 @@ var dbStatus = {
     connectionError: null,
     exists: false,
     isCorrect: false,
-    connection: null
+    connection: null,
+    error: null
 };
 var queryStatus = {
     error: null,
@@ -81,11 +82,12 @@ checkDatabase = function () {
         console.log(notMedia + Tag + 'Setup of DB complete.');
         try {
             var res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
-            console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res.id);
+            res = JSON.parse(res);
+            console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
             dbStatus.exists = true;
             dbStatus.isCorrect = true;
             return true;
-        }catch (err){
+        } catch (err) {
             dbStatus.isCorrect = false;
         }
     } else if (!dbStatus.isCorrect) {
@@ -93,7 +95,14 @@ checkDatabase = function () {
     }
 
 };
-
+/**
+ * It sends a given MySQL Command/query (as string) to the database.
+ * Can be used with the callback paradigm or within a try/catch when using wait.for.
+ * (dont forget to use JSON.parse since its callback sends a stringified version of the result.
+ * It also updates the queryStatus for further control.
+ * @param query
+ * @param callback
+ */
 makeSQLRequest = function (query, callback) {
     connection.query(query, function (err, result) {
         if (err) {
@@ -108,18 +117,7 @@ makeSQLRequest = function (query, callback) {
             queryStatus.executed = true;
             callback(null, JSON.stringify(result));
         }
-    })
-
-    /*
-    try {
-        var res = connection.query(query);
-        console.log(notMedia + Tag + 'Result of the SQL Request: ' + res._results);
-        console.log(notMedia + Tag + 'Object.keys of the SQL Request: ' + Object.keys(res));
-        return res;
-    } catch (err) {
-        console.connectionError(notMedia + Tag + 'The SQL Requet failed: ' + err);
-        return null;
-    }*/
+    });
 };
 
 getConnectionSettings = function (connect) {
@@ -132,9 +130,9 @@ getConnectionSettings = function (connect) {
     return settings;
 };
 
-testDatabase = function () {
-    try {
-        var dbSelected = wait.for(makeSQLRequest, 'USE nlatool');
+/*
+try {
+        var dbSelected = wait.for(makeSQLRequest, 'SELECT DATABASE()');
         dbSelected = JSON.parse(dbSelected);
         console.log(notMedia + Tag + 'Result of dbSelected: ' + JSON.stringify(dbSelected));
     }
@@ -142,22 +140,36 @@ testDatabase = function () {
         console.connectionError(notMedia + Tag + 'catched a Error with the SQL Request: ' + err);
 
     }
+* */
 
-    if (dbSelected === json.database.name) {
+testDatabase = function () {
+    useDatabase(json.database.name);
+    if (dbStatus.exists === true) {
         var jsonList = dbAction.getTableListFromJson();
         console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
-        var tablesOnDB = makeSQLRequest('SHOW TABLES');
+        try {
+            var tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
+            tablesOnDB = JSON.parse(tablesOnDB);
+        } catch (err) {
+            dbStatus.isCorrect = false;
+            dbStatus.error = err;
+            return false;
+        }
         var dbList = [];
-        for (var table in tablesOnDB) {
-            dbList.push(table);
+        for (var i = 0; i < tablesOnDB.length; i++) {
+            dbList.push(tablesOnDB[i]['Tables_in_' + json.database.name]);
         }
         console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
             for (var table in jsonList) {
                 var jsonColumns = dbAction.getColumnsOfOneTable(table);
                 console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
-                var dbColumns = makeSQLRequest('DESCRIBE ' + table);
-                console.log(notMedia + Tag + 'Columns of the Database: ' + dbColumns);
+                try {
+                    var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + table);
+                    console.log(notMedia + Tag + 'Columns of the Database: ' + dbColumns);
+                } catch (err) {
+
+                }
 
             }
         } else {
@@ -169,19 +181,24 @@ testDatabase = function () {
     }
 };
 
+
 isArrayTheSame = function (array1, array2) {
-    var istheSame = false;
-    for (var index in array1) {
-        if (array2.indexOf(index) > -1) {
-            istheSame = true;
-        } else {
-            istheSame = false;
-            break;
+    var isTheSame = false;
+    if (array1.length !== array2.length) {
+        isTheSame = false;
+    } else {
+        for (var i = 0;i < array1.length; i++) {
+            if (array2.indexOf(array1[i]) > -1) {
+                isTheSame = true;
+            } else {
+                isTheSame = false;
+                break;
+            }
         }
     }
-    return istheSame;
+    //console.log(notMedia + Tag + 'isArrayTheSame Result is: ' + isTheSame);
+    return isTheSame;
 };
-
 
 createConnection = function (connectionSettings) {
     connection = mysql.createConnection(connectionSettings);
@@ -212,10 +229,21 @@ function resetDbStatus() {
     dbStatus.connected = false;
 }
 
-function restQueryStatus() {
+function resetQueryStatus() {
     queryStatus.error = null;
     queryStatus.executed = false;
     queryStatus.result = null;
+}
+
+function useDatabase(name) {
+    try {
+        wait.for(makeSQLRequest, 'USE ' + name);
+        dbStatus.exists = true;
+    } catch (err) {
+        dbStatus.exists = false;
+        dbStatus.error = err;
+    }
+    resetQueryStatus();
 }
 
 exports.createPool = function (connectionSettings) {
@@ -225,4 +253,8 @@ exports.createPool = function (connectionSettings) {
 
 exports.getDBStatus = function () {
     return dbStatus;
+};
+
+exports.getQueryStatus = function () {
+    return queryStatus;
 };
