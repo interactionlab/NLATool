@@ -112,7 +112,7 @@ makeSQLRequest = function (query, callback) {
             callback(err, null);
         }
         else {
-            console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
+            //console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
             queryStatus.result = result;
             queryStatus.executed = true;
             callback(null, JSON.stringify(result));
@@ -161,12 +161,14 @@ testDatabase = function () {
         }
         console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
-            for (var i = 0; i<jsonList.length; i++) {
+            for (var i = 0; i < jsonList.length; i++) {
                 var jsonColumns = dbAction.getColumnsOfOneTable(jsonList[i]);
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
                     var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
-                    console.log(notMedia + Tag + 'Columns of the Database: ' + dbColumns);
+                    console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
+                    dbColumns = JSON.parse(dbColumns);
+                    makeColumnDescriptionComparableToJson(dbColumns);
                 } catch (err) {
                     console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
                 }
@@ -180,10 +182,45 @@ testDatabase = function () {
         dbStatus.exists = false;
     }
 };
-makeDbDescriptionComparableToJson = function (sqlResult) {
-    for(var i = 0; i<sqlResult.length; i++){
-        for(var setting in sqlResult[i]){
-            
+makeColumnDescriptionComparableToJson = function (sqlResult) {
+    var columns = {};
+    var column = 'column';
+    for (var i = 0; i < sqlResult.length; i++) {
+        column = column + (i + 1);
+        for (var setting in sqlResult[i]) {
+            if (setting === 'Field') {
+                columns[column]['name'] = sqlResult[i][setting];
+            } else if (setting === 'Type') {
+                var type = sqlResult[i][setting];
+                var length = null;
+                var index = type.indexOf('(');
+                type = type.substr(0,index-1);
+                length = type.substr(index);
+                console.log(notMedia + Tag + 'type: ' + type + ' length: ' +length);
+                columns[column]['type'] = type;
+                columns[column]['length'] = length;
+            } else if (setting === 'Null') {
+                if (sqlResult[i].Null === 'NO') {
+                    columns[column]['null'] = 'NOT NULL';
+                } else {
+                    columns[column]['null'] = 'NULL';
+                }
+            } else if (setting === 'Key') {
+                if (sqlResult[i][setting] === 'PRI') {
+                    columns[column]['PRIMARY'] = true;
+                    columns[column]['UNIQUE'] = false;
+
+                } else if (sqlResult[i][setting] === 'UNI') {
+                    columns[column]['PRIMARY'] = false;
+                    columns[column]['UNIQUE'] = true;
+                }
+            } else if(setting === 'Extra'){
+                if(sqlResult[i][setting]=== 'auto_increment'){
+                    columns[column]['AUTO_INCREMENT'] = true;
+                } else {
+                    columns[column]['AUTO_INCREMENT'] = false;
+                }
+            }
         }
     }
 };
@@ -193,7 +230,7 @@ isArrayTheSame = function (array1, array2) {
     if (array1.length !== array2.length) {
         isTheSame = false;
     } else {
-        for (var i = 0;i < array1.length; i++) {
+        for (var i = 0; i < array1.length; i++) {
             if (array2.indexOf(array1[i]) > -1) {
                 isTheSame = true;
             } else {
