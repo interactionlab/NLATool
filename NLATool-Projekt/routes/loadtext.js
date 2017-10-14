@@ -111,7 +111,8 @@ router.post('/nlp2', function (req, res) {
 
                     res.render('Desktop/loadtext', {
                         title: 'NLA - Natural Language Analyse Tool',
-                        result: JSON.stringify(JSON.parse(parsedText))
+                        //result: highlight("test",input)
+                        result: input
                     })
                 })
 
@@ -129,6 +130,17 @@ router.post('/nlp2', function (req, res) {
 
     });
 });
+
+
+function highlight(string, inputText){
+
+    var index = inputText.indexOf(string);
+    if ( index >= 0 )
+    {
+        inputText = inputText.substring(0,index) + "<span class='highlight'>" + inputText.substring(index,index+string.length) + "</span>" + inputText.substring(index + string.length);
+    }
+    return inputText;
+}
 
 
 module.exports = router;
