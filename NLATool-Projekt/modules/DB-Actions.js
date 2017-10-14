@@ -437,7 +437,7 @@ exports.getColumnsOfOneTable = function (table) {
     for (var entity in json) {
         if (json[entity].isTable && json[entity].name === table) {
             for (var column in json[entity]) {
-                if (column !== 'isTable' || column !== 'name') {
+                if (column !== 'isTable' && column !== 'name') {
                     columns[column] = json[entity][column];
                     columns = syncColumnWithDefault(columns);
                 }
@@ -445,7 +445,7 @@ exports.getColumnsOfOneTable = function (table) {
         }
     }
     columns = JSON.stringify(columns);
-    console.log(notMedia + Tag + 'getColumns Result:' + columns);
+    //console.log(notMedia + Tag + 'getColumns Result:' + columns);
     return columns;
 };
 //--------------------------------------------------------

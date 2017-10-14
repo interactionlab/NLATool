@@ -161,14 +161,14 @@ testDatabase = function () {
         }
         console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
-            for (var table in jsonList) {
-                var jsonColumns = dbAction.getColumnsOfOneTable(table);
-                console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
+            for (var i = 0; i<jsonList.length; i++) {
+                var jsonColumns = dbAction.getColumnsOfOneTable(jsonList[i]);
+                //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
-                    var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + table);
+                    var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
                     console.log(notMedia + Tag + 'Columns of the Database: ' + dbColumns);
                 } catch (err) {
-
+                    console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
                 }
 
             }
@@ -180,7 +180,13 @@ testDatabase = function () {
         dbStatus.exists = false;
     }
 };
-
+makeDbDescriptionComparableToJson = function (sqlResult) {
+    for(var i = 0; i<sqlResult.length; i++){
+        for(var setting in sqlResult[i]){
+            
+        }
+    }
+};
 
 isArrayTheSame = function (array1, array2) {
     var isTheSame = false;
