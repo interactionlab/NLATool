@@ -37,19 +37,21 @@ var queryStatus = {
     error: null,
     executed: false,
     result: null
-}
-
-
-/**establishConnection();*/
+};
 
 /**
- * Reading config file to get the connection data of the Database Server.
+ * Starting the Fiber for establish Connection for the use of wait.for
  */
 exports.fiberEstablishConnection = function () {
 
     wait.launchFiber(establishConnection);
 };
 
+/**
+ * sets up the whole connection Process, checking the database, setting up the database,
+ * synchronises all the Settings made in the dbconfig.json with those on the DB itself.
+ *
+ */
 function establishConnection() {
     var connectSettings;
     json = dbAction.getJsonConfiguration();
@@ -77,7 +79,12 @@ function establishConnection() {
 
 }
 
-checkDatabase = function () {
+/**
+ * On the basis of dbStatus, this method will change/create the Database to match the settings in the dbconfig.json.
+ * After that is tests if the Database matches the settings.
+ * @returns {boolean}
+ */
+syncDatabase = function () {
     if (!dbStatus.exists) {
         dbAction.setupDB(connection);
         console.log(notMedia + Tag + 'Setup of DB complete.');
@@ -121,6 +128,11 @@ makeSQLRequest = function (query, callback) {
     });
 };
 
+/**
+ * This function will extract all the important values you need to create a connection or pool.
+ * @param connect
+ * @returns {{}}
+ */
 getConnectionSettings = function (connect) {
     var settings = {};
     for (var setting in connect) {
@@ -142,7 +154,10 @@ try {
 
     }
 * */
-
+/**
+ * Checks if the Database matches the dbconfig Settings.
+ * @returns {boolean}
+ */
 testDatabase = function () {
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
@@ -167,7 +182,7 @@ testDatabase = function () {
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
                     var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
-                    console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
+                    //console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
                     dbColumns = JSON.parse(dbColumns);
                     dbColumns = makeColumnDescriptionComparableToJson(dbColumns);
                     dbColumns = JSON.parse(dbColumns);
@@ -185,17 +200,29 @@ testDatabase = function () {
         dbStatus.exists = false;
     }
 };
-
+/**
+ * Compares the Columns of 2 sources on the basis of json in the structure of
+ * the dbconfig.json.
+ * @param columns1
+ * @param columns2
+ */
 compareColumns = function (columns1, columns2) {
-  for(var column1 in columns1){
-      for(var column2 in columns2){
-          if(columns1[column1].name === columns2[column2].name){
+    var isTheSame = false;
+    for (var column1 in columns1) {
+        for (var column2 in columns2) {
+            if (columns1[column1].name === columns2[column2].name) {
 
-          }
-      }
-  }
+            }
+        }
+    }
 };
 
+/**
+ * MySql has a wierd output for their Table Descriptions, thus this function
+ * should translate the Output in a way that it can be compared with the structure
+ * of the dbconfig.json
+ * @param sqlResult
+ */
 makeColumnDescriptionComparableToJson = function (sqlResult) {
     var type;
     var columns = {};
@@ -248,6 +275,12 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
     return JSON.stringify(columns);
 };
 
+/**
+ * Checks whether or not 2 Arrays of Strings are the same.
+ * @param array1
+ * @param array2
+ * @returns {boolean}
+ */
 isArrayTheSame = function (array1, array2) {
     var isTheSame = false;
     if (array1.length !== array2.length) {
@@ -266,11 +299,22 @@ isArrayTheSame = function (array1, array2) {
     return isTheSame;
 };
 
+/**
+ * Establishes a Connection to the MySql Database Server.
+ * It needs an Object that specifies the host, port, user and password
+ * to work. You can also specify the database you want to connect to.
+ * @param connectionSettings
+ */
 createConnection = function (connectionSettings) {
     connection = mysql.createConnection(connectionSettings);
     testConnection(connection);
 };
 
+/**
+ * Tests if if the connection works. It uses the Ping method
+ * and needs to be used in a wait.for Fiber to work.
+ * @param connection
+ */
 function testConnection(connection) {
     if (dbStatus.connected !== true || dbStatus.connectionError === null) {
         try {
@@ -287,6 +331,9 @@ function testConnection(connection) {
     }
 }
 
+/**
+ * Resets the dbStatus to its default values.
+ */
 function resetDbStatus() {
     dbStatus.isCorrect = false;
     dbStatus.connection = null;
@@ -295,12 +342,19 @@ function resetDbStatus() {
     dbStatus.connected = false;
 }
 
+/**
+ * Resets the queryStatus to its default values.
+ */
 function resetQueryStatus() {
     queryStatus.error = null;
     queryStatus.executed = false;
     queryStatus.result = null;
 }
 
+/**
+ * Selects/uses a specified Database.
+ * @param name
+ */
 function useDatabase(name) {
     try {
         wait.for(makeSQLRequest, 'USE ' + name);
@@ -312,15 +366,29 @@ function useDatabase(name) {
     resetQueryStatus();
 }
 
+/**
+ * Create a Pool of Connections to the database.
+ * TODO: Test the pool afterwards.
+ * @param connectionSettings
+ * @returns {Pool}
+ */
 exports.createPool = function (connectionSettings) {
     var pool = mysql.createPool(connectionSettings);
     return pool;
 };
 
+/**
+ * Returns the Status of the DB.
+ * @returns {{connected: boolean, connectionError: null, exists: boolean, isCorrect: boolean, connection: null, error: null}}
+ */
 exports.getDBStatus = function () {
     return dbStatus;
 };
 
+/**
+ * Returns the Status of the current Query.
+ * @returns {{error: null, executed: boolean, result: null}}
+ */
 exports.getQueryStatus = function () {
     return queryStatus;
 };
