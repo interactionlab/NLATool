@@ -56,3 +56,16 @@ function getJsonConfiguration() {
     //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 }
+
+/**
+ * Replaces a character in a String(str) on a specified position (index)
+ * with a new one (chr)
+ * @param str
+ * @param index
+ * @param chr
+ * @returns {*}
+ */
+exports.setCharAt = function (str, index, chr) {
+    if (index > str.length - 1) return str;
+    return str.substr(0, index) + chr + str.substr(index + 1);
+};
