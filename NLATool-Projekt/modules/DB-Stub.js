@@ -173,6 +173,7 @@ testDatabase = function () {
                     dbColumns = JSON.parse(dbColumns);
                 } catch (err) {
                     console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
+                    dbStatus.isCorrect = false;
                 }
 
             }
@@ -184,6 +185,17 @@ testDatabase = function () {
         dbStatus.exists = false;
     }
 };
+
+compareColumns = function (columns1, columns2) {
+  for(var column1 in columns1){
+      for(var column2 in columns2){
+          if(columns1[column1].name === columns2[column2].name){
+
+          }
+      }
+  }
+};
+
 makeColumnDescriptionComparableToJson = function (sqlResult) {
     var type;
     var columns = {};
