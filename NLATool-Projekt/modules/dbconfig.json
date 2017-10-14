@@ -169,7 +169,8 @@
     },
     "column3": {
       "name": "isSpecial",
-      "type": "BOOLEAN"
+      "type": "TINYINT",
+      "length": "1"
     },
     "column4": {
       "name": "semanticClass"
