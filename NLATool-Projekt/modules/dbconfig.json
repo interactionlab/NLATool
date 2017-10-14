@@ -26,8 +26,7 @@
     "AUTO_INCREMENT": false,
     "PRIMARY": false,
     "UNIQUE": false,
-    "null": "NOT NULL",
-    "FOREIGN": false
+    "null": "NOT NULL"
   },
   "table0": {
     "isTable": true,
