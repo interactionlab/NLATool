@@ -18,6 +18,7 @@ var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var wait = require('wait.for');
+var jsonAction = require('./jsonActions');
 //var test = require('../modules/test');
 
 
@@ -168,7 +169,8 @@ testDatabase = function () {
                     var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
                     console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
                     dbColumns = JSON.parse(dbColumns);
-                    makeColumnDescriptionComparableToJson(dbColumns);
+                    dbColumns = makeColumnDescriptionComparableToJson(dbColumns);
+                    dbColumns = JSON.parse(dbColumns);
                 } catch (err) {
                     console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
                 }
@@ -183,22 +185,28 @@ testDatabase = function () {
     }
 };
 makeColumnDescriptionComparableToJson = function (sqlResult) {
+    var type;
     var columns = {};
     var column = 'column';
     for (var i = 0; i < sqlResult.length; i++) {
         column = column + (i + 1);
+        columns[column] = {};
         for (var setting in sqlResult[i]) {
             if (setting === 'Field') {
                 columns[column]['name'] = sqlResult[i][setting];
             } else if (setting === 'Type') {
-                var type = sqlResult[i][setting];
+                var tempType = sqlResult[i][setting];
                 var length = null;
-                var index = type.indexOf('(');
-                type = type.substr(0,index-1);
-                length = type.substr(index);
-                console.log(notMedia + Tag + 'type: ' + type + ' length: ' +length);
-                columns[column]['type'] = type;
-                columns[column]['length'] = length;
+                var index = tempType.indexOf('(');
+                if (index > -1) {
+                    type = tempType.substr(0, index);
+                    length = tempType.substr(index + 1);
+                    length = jsonAction.setCharAt(length, length.length - 1, '');
+                    columns[column]['length'] = length;
+                } else {
+                    type = tempType;
+                }
+                columns[column]['type'] = type.toUpperCase();
             } else if (setting === 'Null') {
                 if (sqlResult[i].Null === 'NO') {
                     columns[column]['null'] = 'NOT NULL';
@@ -214,15 +222,18 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
                     columns[column]['PRIMARY'] = false;
                     columns[column]['UNIQUE'] = true;
                 }
-            } else if(setting === 'Extra'){
-                if(sqlResult[i][setting]=== 'auto_increment'){
+            } else if (setting === 'Extra') {
+                if (sqlResult[i][setting] === 'auto_increment') {
                     columns[column]['AUTO_INCREMENT'] = true;
                 } else {
                     columns[column]['AUTO_INCREMENT'] = false;
                 }
             }
         }
+        column = jsonAction.setCharAt(column, column.length - 1, '');
     }
+    console.log(notMedia + Tag + 'Result of makeColumnDescriptionComparable: ' + JSON.stringify(columns));
+    return JSON.stringify(columns);
 };
 
 isArrayTheSame = function (array1, array2) {
