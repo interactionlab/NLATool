@@ -103,6 +103,7 @@ syncDatabase = function () {
     }
 
 };
+
 /**
  * It sends a given MySQL Command/query (as string) to the database.
  * Can be used with the callback paradigm or within a try/catch when using wait.for.
@@ -128,6 +129,15 @@ makeSQLRequest = function (query, callback) {
     });
 };
 
+/**
+ * It sends a given MySQL Command/query (as string) to the database.
+ * Can be used with the callback paradigm or within a try/catch when using wait.for.
+ * (dont forget to use JSON.parse since its callback sends a stringified version of the result.
+ * It also updates the queryStatus for further control.
+ * This Function requires a positive Result of isDBReadyforQuery()
+ * @param query
+ * @param callback
+ */
 exports.makeSQLRequest = function (query, callback) {
     if (isDBReadyForQuery()) {
         connection.query(query, function (err, result) {
@@ -144,7 +154,7 @@ exports.makeSQLRequest = function (query, callback) {
                 callback(null, JSON.stringify(result));
             }
         });
-    } else{
+    } else {
         var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
             'Please check with "getDbStatus" if there is an error.';
         callback(err, null);
@@ -196,8 +206,8 @@ testDatabase = function () {
             return false;
         }
         var dbList = [];
-        for (var i = 0; i < tablesOnDB.length; i++) {
-            dbList.push(tablesOnDB[i]['Tables_in_' + json.database.name]);
+        for (var j = 0; j < tablesOnDB.length; j++) {
+            dbList.push(tablesOnDB[j]['Tables_in_' + json.database.name]);
         }
         console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
@@ -233,6 +243,7 @@ testDatabase = function () {
         dbStatus.exists = false;
     }
 };
+
 /**
  * Compares the Columns of 2 sources on the basis of json in the structure of
  * the dbconfig.json.
@@ -371,7 +382,7 @@ createConnection = function (connectionSettings) {
 function testConnection(connection) {
     if (dbStatus.connected !== true || dbStatus.connectionError === null) {
         try {
-            var res = wait.forMethod(connection, "ping");
+            wait.forMethod(connection, "ping");
             //console.log(notMedia + Tag + 'result of ping: ' + JSON.stringify(res));
             dbStatus.connected = true;
             dbStatus.connectionError = null;
@@ -395,17 +406,18 @@ function resetDbStatus() {
     dbStatus.connected = false;
 }
 
+/**
+ * Checks dbStatus if the Database is ready for querys that wont create Errors
+ * based on Connection errors or Structural Differences.
+ * @returns {boolean}
+ */
 function isDBReadyForQuery() {
-    if (dbStatus.connected === true
+    return dbStatus.connected === true
         && dbStatus.connection !== null
         && dbStatus.error === null
         && dbStatus.connectionError === null
         && dbStatus.exists === true
-        && dbStatus.isCorrect === true) {
-        return true;
-    } else {
-        return false;
-    }
+        && dbStatus.isCorrect === true;
 }
 
 /**
@@ -458,4 +470,3 @@ exports.getDBStatus = function () {
 exports.getQueryStatus = function () {
     return queryStatus;
 };
-
