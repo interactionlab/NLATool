@@ -450,7 +450,7 @@ exports.getColumnsOfOneTable = function (table) {
             for (var column in json[entity]) {
                 if (column !== 'isTable' && column !== 'name') {
                     columns[column] = json[entity][column];
-                    columns = syncColumnWithDefault(columns);
+                    columns[column] = syncColumnWithDefault(columns[column]);
                 }
             }
         }

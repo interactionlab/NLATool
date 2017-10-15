@@ -43,7 +43,6 @@ var queryStatus = {
  * Starting the Fiber for establish Connection for the use of wait.for
  */
 exports.fiberEstablishConnection = function () {
-
     wait.launchFiber(establishConnection);
 };
 
@@ -68,7 +67,7 @@ function establishConnection() {
     }
     if (dbStatus.connection !== null && dbStatus.connected !== false) {
         testDatabase();
-        if (checkDatabase()) {
+        if (syncDatabase()) {
             console.log('finished');
         } else {
             console.log('failed to create DB.');
@@ -179,18 +178,21 @@ testDatabase = function () {
         if (isArrayTheSame(jsonList, dbList)) {
             for (var i = 0; i < jsonList.length; i++) {
                 var jsonColumns = dbAction.getColumnsOfOneTable(jsonList[i]);
+                //jsonColumns = dbAction.syncWithDeafault
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
                     var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
                     //console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
                     dbColumns = JSON.parse(dbColumns);
                     dbColumns = makeColumnDescriptionComparableToJson(dbColumns);
-                    dbColumns = JSON.parse(dbColumns);
+                    //dbColumns = JSON.parse(dbColumns);
                 } catch (err) {
-                    console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
+                    //console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
                     dbStatus.isCorrect = false;
                 }
-
+                //dbColumns = JSON.stringify(dbColumns);
+                var isTheSame = compareColumns(jsonColumns, dbColumns);
+                console.log(notMedia + Tag + 'is the Same: ' + isTheSame + ': ' + jsonColumns + ' compared to: ' + JSON.stringify(dbColumns));
             }
         } else {
             dbStatus.isCorrect = false;
@@ -207,14 +209,33 @@ testDatabase = function () {
  * @param columns2
  */
 compareColumns = function (columns1, columns2) {
-    var isTheSame = false;
+    columns1 = JSON.parse(columns1);
+    // columns2 = JSON.parse(columns2);
+    var isTheSame = true;
     for (var column1 in columns1) {
-        for (var column2 in columns2) {
-            if (columns1[column1].name === columns2[column2].name) {
-
+        if (isTheSame !== false) {
+            for (var column2 in columns2) {
+                if (columns1[column1].name === columns2[column2].name && isTheSame !== false) {
+                    for (var field in columns1[column1]) {
+                        //console.log('Comparison failed because of1: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
+                        if (columns1[column1][field] !== columns2[column1][field]) {
+                            console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
+                            isTheSame = false;
+                            break;
+                        } else {
+                            //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' === ' + columns2[column1][field]);
+                            isTheSame = true;
+                        }
+                    }
+                } else {
+                    break;
+                    //console.log('Comparison of:' + column1 +' & ' + column2);
+                    //console.log('Comparison failed because of3: ' + columns1[column1].name + ' !== ' + columns2[column2].name);
+                }
             }
         }
     }
+    return isTheSame;
 };
 
 /**
@@ -256,10 +277,12 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
                 if (sqlResult[i][setting] === 'PRI') {
                     columns[column]['PRIMARY'] = true;
                     columns[column]['UNIQUE'] = false;
-
                 } else if (sqlResult[i][setting] === 'UNI') {
                     columns[column]['PRIMARY'] = false;
                     columns[column]['UNIQUE'] = true;
+                } else if (sqlResult[i][setting] !== 'PRI' && sqlResult[i][setting] !== 'UNI') {
+                    columns[column]['PRIMARY'] = false;
+                    columns[column]['UNIQUE'] = false;
                 }
             } else if (setting === 'Extra') {
                 if (sqlResult[i][setting] === 'auto_increment') {
@@ -271,8 +294,8 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
         }
         column = jsonAction.setCharAt(column, column.length - 1, '');
     }
-    console.log(notMedia + Tag + 'Result of makeColumnDescriptionComparable: ' + JSON.stringify(columns));
-    return JSON.stringify(columns);
+    //console.log(notMedia + Tag + 'Result of makeColumnDescriptionComparable: ' + JSON.stringify(columns));
+    return columns;
 };
 
 /**
