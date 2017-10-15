@@ -27,10 +27,8 @@ var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
  * Loads the Database Configuration at the beginning of the of this file so
  * that it is available for every function here.
  */
-
 var json = null;
 wait.launchFiber(getJSONConfig);
-
 function getJSONConfig() {
     json = getJsonConfiguration();
     json = JSON.parse(json);
@@ -169,6 +167,11 @@ transformColumnToSQL = function (column, options) {
     }
 };
 
+/**
+ * If columns with Key Settings are found, those settings will be translated to a part of a MySql Command.
+ * @param table
+ * @returns {string}
+ */
 addKeySettingsToSQLCommand = function (table) {
     var keySettings = findKeyColumns(table);
 
@@ -180,6 +183,11 @@ addKeySettingsToSQLCommand = function (table) {
     return keySQLString;
 };
 
+/**
+ * Looks for all the columns that contain Setting for Primary or Unique Keys.
+ * @param table
+ * @returns {{}}
+ */
 findKeyColumns = function (table) {
     var keySettings = {};
     //console.log('The table in findKeyColumns: ' + JSON.stringify(table));
@@ -190,8 +198,6 @@ findKeyColumns = function (table) {
                     keySettings[table[column].name] = 'PRIMARY KEY';
                 } else if (table[column].UNIQUE === true) {
                     keySettings[table[column].name] = 'UNIQUE';
-                } else if (table[column].FOREIGN === true) {
-                    keySettings[table[column].name] = 'FOREIGN KEY';
                 }
             }
         }
@@ -199,6 +205,11 @@ findKeyColumns = function (table) {
     //console.log(notMedia + Tag + 'Columns with Key Settings: ' + JSON.stringify(keySettings));
     return keySettings;
 };
+
+findAndTranslateForeignKeySettings = function () {
+
+};
+
 
 /**
  * Synchronises the default settings for a column with the specified ones.
@@ -439,7 +450,7 @@ exports.getColumnsOfOneTable = function (table) {
             for (var column in json[entity]) {
                 if (column !== 'isTable' && column !== 'name') {
                     columns[column] = json[entity][column];
-                    columns = syncColumnWithDefault(columns);
+                    columns[column] = syncColumnWithDefault(columns[column]);
                 }
             }
         }
