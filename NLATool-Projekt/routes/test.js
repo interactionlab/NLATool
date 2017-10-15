@@ -40,7 +40,7 @@ router.post('/theFunction', function (req, res) {
     var resultOfSQL = '';
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
-    /*columnName = setCharAt(columnName, columnName.length-1, 'A');
+    /*columnName = jsonAction.setCharAt(columnName, columnName.length-1, 'A');
     console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
     dbStub.fiberEstablishConnection();
     // dbAction.testIfJsonIsThere();
@@ -58,10 +58,7 @@ router.post('/theFunction', function (req, res) {
     //res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
-setCharAt = function (str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substr(0, index) + chr + str.substr(index + 1);
-};
+
 router.post('/nlp', function (req, res) {
 
     var input = req.body.testFunction;
