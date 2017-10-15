@@ -37,18 +37,25 @@ router.post('/theFunction', function (req, res) {
         var oper = ['=', '=', '='];
         var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
     */
+    var resultOfSQL = '';
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
     /*columnName = setCharAt(columnName, columnName.length-1, 'A');
     console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
     dbStub.fiberEstablishConnection();
-   // dbAction.testIfJsonIsThere();
+    // dbAction.testIfJsonIsThere();
+    dbStub.makeSQLRequest('SELECT * FROM word', function (err, result) {
+        if (err) {
+            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: err});
+        } else {
+            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: result});
+        }
+    });
 
-    var resultOfSQL = '';
 //    dbAction.transformColumnToSQL(columnName, jsonOptions);
 //    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
 
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
+    //res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
 });
 
 setCharAt = function (str, index, chr) {
@@ -62,7 +69,7 @@ router.post('/nlp', function (req, res) {
 
     corenlp.parse(
         input, 9000, "pos,lemma,ner", "json", function (err, parsedText) {
-            console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
+            //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
             res.render('./testview', {
                 title: 'NLA - Natural Language Analyse Tool',
                 result: JSON.stringify(JSON.parse(parsedText))
