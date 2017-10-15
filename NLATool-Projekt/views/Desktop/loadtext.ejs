@@ -58,9 +58,20 @@
         //TODO: Parse pdf to text
         return file;
     }
+
+
+    function highlight(word){
+
+        var span = document.createElement('span');
+        span.setAttribute('id', 'spanText');
+        document.getElementById('result').appendChild(span);
+        span.innerHTML = word;
+    }
+
+
 </script>
 
-<p><%= result %></p>
+<p id="result"><%= result %></p>
 
 
 </body>
