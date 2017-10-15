@@ -75,7 +75,6 @@ function establishConnection() {
     } else {
         console.connectionError(notMedia + Tag + 'No Database was available or all connection Settings a wrong!')
     }
-
 }
 
 /**
@@ -97,8 +96,10 @@ syncDatabase = function () {
         } catch (err) {
             dbStatus.isCorrect = false;
         }
-    } else if (!dbStatus.isCorrect) {
+    } else if (dbStatus.isCorrect) {
         return true;
+    } else if (!dbStatus.isCorrect) {
+        //TODO: Corect the Database. Commands like ALTER TABLE will be needed.
     }
 
 };
@@ -125,6 +126,29 @@ makeSQLRequest = function (query, callback) {
             callback(null, JSON.stringify(result));
         }
     });
+};
+
+exports.makeSQLRequest = function (query, callback) {
+    if (isDBReadyForQuery()) {
+        connection.query(query, function (err, result) {
+            if (err) {
+                //console.log(err);
+                queryStatus.executed = false;
+                queryStatus.error = err;
+                callback(err, null);
+            }
+            else {
+                //console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
+                queryStatus.result = result;
+                queryStatus.executed = true;
+                callback(null, JSON.stringify(result));
+            }
+        });
+    } else{
+        var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
+            'Please check with "getDbStatus" if there is an error.';
+        callback(err, null);
+    }
 };
 
 /**
@@ -158,6 +182,7 @@ try {
  * @returns {boolean}
  */
 testDatabase = function () {
+    var isTheSame = true;
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
         var jsonList = dbAction.getTableListFromJson();
@@ -191,9 +216,15 @@ testDatabase = function () {
                     dbStatus.isCorrect = false;
                 }
                 //dbColumns = JSON.stringify(dbColumns);
-                var isTheSame = compareColumns(jsonColumns, dbColumns);
-                console.log(notMedia + Tag + 'is the Same: ' + isTheSame + ': ' + jsonColumns + ' compared to: ' + JSON.stringify(dbColumns));
+                if (!compareColumns(jsonColumns, dbColumns)) {
+                    console.error(notMedia + Tag + 'One Table has different Settings as described in dbconfig.json: ' + jsonList[i]);
+                    console.error(notMedia + Tag + 'Here are the settings vof Both Tables: ');
+                    console.error(notMedia + Tag + +jsonList[i] + ': ' + jsonColumns);
+                    console.error(notMedia + Tag + +jsonList[i] + ': ' + dbColumns);
+                    isTheSame = false;
+                }
             }
+            dbStatus.isCorrect = isTheSame;
         } else {
             dbStatus.isCorrect = false;
         }
@@ -217,9 +248,8 @@ compareColumns = function (columns1, columns2) {
             for (var column2 in columns2) {
                 if (columns1[column1].name === columns2[column2].name && isTheSame !== false) {
                     for (var field in columns1[column1]) {
-                        //console.log('Comparison failed because of1: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
                         if (columns1[column1][field] !== columns2[column1][field]) {
-                            console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
+                            //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
                             isTheSame = false;
                             break;
                         } else {
@@ -229,10 +259,10 @@ compareColumns = function (columns1, columns2) {
                     }
                 } else {
                     break;
-                    //console.log('Comparison of:' + column1 +' & ' + column2);
-                    //console.log('Comparison failed because of3: ' + columns1[column1].name + ' !== ' + columns2[column2].name);
                 }
             }
+        } else {
+            break;
         }
     }
     return isTheSame;
@@ -365,6 +395,19 @@ function resetDbStatus() {
     dbStatus.connected = false;
 }
 
+function isDBReadyForQuery() {
+    if (dbStatus.connected === true
+        && dbStatus.connection !== null
+        && dbStatus.error === null
+        && dbStatus.connectionError === null
+        && dbStatus.exists === true
+        && dbStatus.isCorrect === true) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 /**
  * Resets the queryStatus to its default values.
  */
@@ -415,3 +458,4 @@ exports.getDBStatus = function () {
 exports.getQueryStatus = function () {
     return queryStatus;
 };
+
