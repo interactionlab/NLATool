@@ -17,7 +17,7 @@
             background-color:#ddd;
         }
         .mdl-textfield{
-            width:750px; /*hard coded atm. later I'll find a better solution*/ 
+            width:550px; /*hard coded atm. later I'll find a better solution*/
         }
     </style>
 
@@ -43,7 +43,7 @@
     }
     </script>
 
-    <title>%= title %</title>
+    <title>NLATool</title>
 </head>
 <body>
 <!--material.io beginning -->
@@ -62,31 +62,37 @@
                 <i class = "mdc-button">Feature 4</i></button></div>
     </div>
 
-<div class = "mdl-grid"> <!--just place holder -->
-    <div class = "mdl-cell mdl-cell--6-col graybox">1</div>
-    <div class = "mdl-cell mdl-cell--6-col graybox">2</div>
-</div>
+<div class = "mdl-grid"> <!-- separate window in two-->
+    <!--left grid for text stuff -->
+    <div class = "mdl-cell mdl-cell--6-col graybox">
+        <div class = "mdl-grid"> <!-- clear button -->
+            <div><td><button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <i class = "mdc-button">Leeren</i></button></td>
+            </div>
+        </div>
 
-<div class = "mdl-grid"> <!-- clear button -->
-    <div><td><button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <i class = "mdc-button">Leeren</i></button></td>
-    </div>
-</div>
-
-<div class = "mdl-grid"> <!-- Resizable Textfield-->
-    <div>
-        <form action = "#">
-            <div class = "mdl-textfield mdl-js-textfield extrawide">
+        <div class = "mdl-grid"> <!-- Resizable Textfield-->
+            <div>
+                <form action = "#">
+                    <div class = "mdl-textfield mdl-js-textfield extrawide">
                 <textarea class = "mdl-textfield__input" type = "text"
                           rows =  "3"
                           id = "textbox" ></textarea>
-                <label class = "mdl-textfield__label"
-                       for = "textbox">Enter text here ...
-                </label>
+                        <label class = "mdl-textfield__label"
+                               for = "textbox">Enter text here ...
+                        </label>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+    </div>
+    <!--right grid for result stuff -->
+    <div class = "mdl-cell mdl-cell--6-col graybox">
+        
     </div>
 </div>
+
+
 
 <!--material.io ending -->
 
