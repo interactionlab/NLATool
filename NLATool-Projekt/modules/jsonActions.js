@@ -70,3 +70,29 @@ exports.setCharAt = function (str, index, chr) {
     return str.substr(0, index) + chr + str.substr(index + 1);
 };
 
+exports.getTableListFromJson = function () {
+    var tableList = [];
+    for (var table in json) {
+        if (json[table].isTable) {
+            tableList.push(json[table].name);
+        }
+    }
+    return tableList;
+};
+
+exports.getColumnsOfOneTable = function (table) {
+    var columns = {};
+    for (var entity in json) {
+        if (json[entity].isTable && json[entity].name === table) {
+            for (var column in json[entity]) {
+                if (column !== 'isTable' && column !== 'name') {
+                    columns[column] = json[entity][column];
+                    columns[column] = syncColumnWithDefault(columns[column]);
+                }
+            }
+        }
+    }
+    columns = JSON.stringify(columns);
+    //console.log(notMedia + Tag + 'getColumns Result:' + columns);
+    return columns;
+};

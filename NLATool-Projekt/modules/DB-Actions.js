@@ -16,7 +16,7 @@ var wait = require('wait.for');
 var dbConfig = './modules/dbconfig.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
-
+var jsonAction = require('./jsonActions');
 //var json = test.json;
 /**
  * Compare Operations for Where-Query of SQL:
@@ -179,7 +179,7 @@ addKeySettingsToSQLCommand = function (table) {
     for (var column in keySettings) {
         keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
     }
-    keySQLString = setCharAt(keySQLString, keySQLString.length - 2, ');');
+    keySQLString = jsonAction.setCharAt(keySQLString, keySQLString.length - 2, ');');
     return keySQLString;
 };
 
@@ -420,45 +420,6 @@ function getJsonConfiguration() {
     return json;
 }
 
-/**
- * Replaces a character in a String(str) on a specified position (index)
- * with a new one (chr)
- * @param str
- * @param index
- * @param chr
- * @returns {*}
- */
-setCharAt = function (str, index, chr) {
-    if (index > str.length - 1) return str;
-    return str.substr(0, index) + chr + str.substr(index + 1);
-};
-
-exports.getTableListFromJson = function () {
-    var tableList = [];
-    for (var table in json) {
-        if (json[table].isTable) {
-            tableList.push(json[table].name);
-        }
-    }
-    return tableList;
-};
-
-exports.getColumnsOfOneTable = function (table) {
-    var columns = {};
-    for (var entity in json) {
-        if (json[entity].isTable && json[entity].name === table) {
-            for (var column in json[entity]) {
-                if (column !== 'isTable' && column !== 'name') {
-                    columns[column] = json[entity][column];
-                    columns[column] = syncColumnWithDefault(columns[column]);
-                }
-            }
-        }
-    }
-    columns = JSON.stringify(columns);
-    //console.log(notMedia + Tag + 'getColumns Result:' + columns);
-    return columns;
-};
 //--------------------------------------------------------
 /*
  var createAccountDataTable = "CREATE TABLE `nla-alpha`.`AccountData` ( " +

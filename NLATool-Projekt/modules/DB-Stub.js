@@ -60,7 +60,7 @@ function establishConnection() {
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
-        createConnection(connectSettings);
+        dbStub.createConnection(connectSettings);
         if (dbStatus.connection !== null && dbStatus.connected !== false) {
             break;
         }
@@ -139,7 +139,7 @@ makeSQLRequest = function (query, callback) {
  * @param callback
  */
 exports.makeSQLRequest = function (query, callback) {
-    if (isDBReadyForQuery()) {
+    if (dbStub.isDBReadyForQuery()) {
         connection.query(query, function (err, result) {
             if (err) {
                 //console.log(err);
@@ -195,7 +195,7 @@ testDatabase = function () {
     var isTheSame = true;
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
-        var jsonList = dbAction.getTableListFromJson();
+        var jsonList = jsonAction.getTableListFromJson();
         //console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
         try {
             var tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
@@ -212,7 +212,7 @@ testDatabase = function () {
         //console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
             for (var i = 0; i < jsonList.length; i++) {
-                var jsonColumns = dbAction.getColumnsOfOneTable(jsonList[i]);
+                var jsonColumns = jsonAction.getColumnsOfOneTable(jsonList[i]);
                 //jsonColumns = dbAction.syncWithDeafault
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
@@ -369,7 +369,7 @@ isArrayTheSame = function (array1, array2) {
  * to work. You can also specify the database you want to connect to.
  * @param connectionSettings
  */
-createConnection = function (connectionSettings) {
+exports.createConnection = function (connectionSettings) {
     connection = mysql.createConnection(connectionSettings);
     testConnection(connection);
 };
@@ -411,7 +411,7 @@ function resetDbStatus() {
  * based on Connection errors or Structural Differences.
  * @returns {boolean}
  */
-function isDBReadyForQuery() {
+exports.isDBReadyForQuery = function () {
     return dbStatus.connected === true
         && dbStatus.connection !== null
         && dbStatus.error === null
