@@ -60,31 +60,21 @@ router.post('/setNewConnection', function (req, res) {
     console.log(connections[newConnection]);
 
     var connection = dbStub.createConnection(connections[newConnection]);
-    dbStub.testConnection(connection, function (err) {
-        if (err) {
-            res.render('./Desktop/setupDB', {
-                title: 'NLA - Natural Language Analyse Tool',
-                ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
-            });
-        } else {
-            jsonConfigurator.writeFile(testJson, json, function (err, result) {
-                if (err) {
-                    res.render('./Desktop/setupDB', {
-                        title: 'NLA - Natural Language Analyse Tool',
-                        ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
-                    });
-                } else {
-                    res.render('./Desktop/setupDB', {
-                        title: 'NLA - Natural Language Analyse Tool',
-                        ResultOfSetNewConnection: 'Success!'
-                    });
-                }
-            });
-            /*res.render('./Desktop/setupDB', {
-                title: 'NLA - Natural Language Analyse Tool',
-                ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
-            });*/
-        }
-    });
+    if (dbStub.isDBReadyForQuery()) {
+        jsonConfigurator.writeFile(testJson, json, function (err, result) {
+            if (err) {
+                res.render('./Desktop/setupDB', {
+                    title: 'NLA - Natural Language Analyse Tool',
+                    ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
+                });
+            } else {
+                res.render('./Desktop/setupDB', {
+                    title: 'NLA - Natural Language Analyse Tool',
+                    ResultOfSetNewConnection: 'Success!'
+                });
+            }
+        });
+    }
+
 });
 module.exports = router;
