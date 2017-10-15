@@ -68,9 +68,9 @@ function establishConnection() {
     if (dbStatus.connection !== null && dbStatus.connected !== false) {
         testDatabase();
         if (syncDatabase()) {
-            console.log('finished');
+            console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes is successful');
         } else {
-            console.log('failed to create DB.');
+            console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes failed.');
         }
     } else {
         console.connectionError(notMedia + Tag + 'No Database was available or all connection Settings a wrong!')
@@ -196,7 +196,7 @@ testDatabase = function () {
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
         var jsonList = dbAction.getTableListFromJson();
-        console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
+        //console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
         try {
             var tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
             tablesOnDB = JSON.parse(tablesOnDB);
@@ -209,7 +209,7 @@ testDatabase = function () {
         for (var j = 0; j < tablesOnDB.length; j++) {
             dbList.push(tablesOnDB[j]['Tables_in_' + json.database.name]);
         }
-        console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
+        //console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
             for (var i = 0; i < jsonList.length; i++) {
                 var jsonColumns = dbAction.getColumnsOfOneTable(jsonList[i]);
