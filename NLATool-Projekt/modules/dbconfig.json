@@ -34,6 +34,7 @@
     "column1": {
       "name": "userID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
@@ -60,12 +61,14 @@
     "column1": {
       "name": "docID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "userID",
-      "type": "INT"
+      "type": "INT",
+      "length": "11"
     },
     "column3": {
       "name": "title"
@@ -75,7 +78,8 @@
     },
     "column5": {
       "name": "year",
-      "type": "YEAR"
+      "type": "YEAR",
+      "length": "4"
     }
   },
   "table2": {
@@ -84,6 +88,7 @@
     "column1": {
       "name": "resultID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
@@ -105,7 +110,8 @@
     },
     "column6": {
       "name": "docID",
-      "type": "INT"
+      "type": "INT",
+      "length": "11"
     }
   },
   "table3": {
@@ -114,11 +120,13 @@
     "column1": {
       "name": "noteID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true
     },
     "column2": {
       "name": "docID",
       "type": "INT",
+      "length": "11",
       "UNIQUE": true
     },
     "column3": {
@@ -136,21 +144,25 @@
     "column1": {
       "name": "textID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "docID",
       "type": "INT",
+      "length": "11",
       "UNIQUE": true
     },
     "column3": {
       "name": "Counter",
-      "type": "INT"
+      "type": "INT",
+      "length": "11"
     },
     "column4": {
       "name": "wordID",
-      "type": "INT"
+      "type": "INT",
+      "length": "11"
     }
   },
   "table5": {
@@ -159,6 +171,7 @@
     "column1": {
       "name": "wordID",
       "type": "INT",
+      "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
     },
