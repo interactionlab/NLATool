@@ -27,6 +27,7 @@ var connectionSettings = {
     port: "3306"
 };
 
+
 var json2;
 wait.launchFiber(getJSONConfig);
 
@@ -35,7 +36,6 @@ function getJSONConfig() {
     json2 = dbAction.getJsonConfiguration();
     json2 = JSON.parse(json2);
 }
-
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -95,25 +95,26 @@ router.post('/nlp2', function (req, res) {
                             }
                         }
                     }
+                    
 
-                    console.log(person);
-                    console.log(loc);
-                    console.log(orga);
+                    // write to database
 
 
-                    /**
-                     * write to database
-                     *
-                    var bla = dbAction.createInsertCommand('word', ['content'],[words[0]], null, null);
-                    var connection = dbStub.createConnection(connectionSettings);
-                    connection.query(bla);
-                     */
+                    var word = dbAction.createInsertCommand('word', ['content','isSpecial','semanticClass'],[words[0], 0, 'LOCATION'], null, null);
+                    dbStub.fiberEstablishConnection();
+                    dbStub.makeSQLRequest(word, function (err, result) {
+                        if(err){
+                            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: err});
+                        } else{
+                            res.render('Desktop/loadtext', {
+                            title: 'NLA - Natural Language Analyse Tool',
+                            //result: highlight("test",input)
+                            result: result
+                        })}
+                    });
 
-                    res.render('Desktop/loadtext', {
-                        title: 'NLA - Natural Language Analyse Tool',
-                        //result: highlight("test",input)
-                        result: input
-                    })
+
+
                 })
 
         }
