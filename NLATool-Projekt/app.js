@@ -12,7 +12,6 @@ var signIn = require('./routes/signIn');
 var signUp = require('./routes/signUp');
 var test = require('./routes/test');
 var loadtext = require('./routes/loadtext');
-var uitest = require('./routes/uitest');
 var setup = require('./routes/setup');
 
 
@@ -38,7 +37,6 @@ app.use('/profile', profile);
 app.use('/signUp', signUp);
 app.use('/test', test);
 app.use('/loadtext', loadtext);
-app.use('/uitest', uitest);
 app.use('/setup', setup);
 
 // catch 404 and forward to connectionError handler
