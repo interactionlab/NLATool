@@ -63,52 +63,37 @@ router.post('/nlp2', function (req, res) {
                     var json = JSON.parse(parsedText);
                     var words = {};
                     var classes = {};
-
-                    var personSize = 0,
-                        locSize = 0,
-                        orgaSize = 0;
+                    var pos = {};
 
                     for (var i = 0; i <= json["sentences"].length - 1; i++) {
                         for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
-                            if (json["sentences"][i]["tokens"][j].ner !== "O") {
                                 classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
                                 words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
-                                if (words[j] !== undefined) {
-
-                                    for (var k = 0; k <= j; k++) {
-                                        if (classes[j] === '"PERSON"') {
-                                            personSize++;
-                                        } else if (classes[j] === '"LOCATION"') {
-                                        } else if (classes[j] === '"ORGANIZATION"') {
-                                            orgaSize++;
-                                        }
-                                    }
-
-                                }
-                            }
+                                pos[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].pos));
                         }
                     }
 
-
                     // write to database
 
-
-                    var word = dbAction.createInsertCommand('word', ['content','isSpecial','semanticClass'],[words[0], 0, 'LOCATION'], null, null);
                     dbStub.fiberEstablishConnection();
+
+                    var word = dbAction.createInsertCommand('word', ['content', 'isSpecial', 'semanticClass', 'pos'], [words[k], 0, classes[k], pos[k]]);
+
                     dbStub.makeSQLRequest(word, function (err, result) {
-                        if(err){
-                            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: err});
-                        } else{
+                        if (err) {
+                            res.render('./testview', {
+                                title: 'NLA - Natural Language Analyse Tool',
+                                result: err
+                            });
+                        } else {
                             res.render('Desktop/loadtext', {
-                            title: 'NLA - Natural Language Analyse Tool',
-                            //result: highlight("test",input)
-                            result: result
-                        })}
+                                title: 'NLA - Natural Language Analyse Tool',
+                                result: result
+                            })
+                        }
                     });
 
-
-
-                })
+            })
 
         }
     });
