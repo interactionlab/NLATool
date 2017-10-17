@@ -63,9 +63,6 @@ router.post('/nlp2', function (req, res) {
                     var json = JSON.parse(parsedText);
                     var words = {};
                     var classes = {};
-                    var person = {};
-                    var loc = {};
-                    var orga = {};
 
                     var personSize = 0,
                         locSize = 0,
@@ -80,13 +77,9 @@ router.post('/nlp2', function (req, res) {
 
                                     for (var k = 0; k <= j; k++) {
                                         if (classes[j] === '"PERSON"') {
-                                            person[personSize] = words[j];
                                             personSize++;
                                         } else if (classes[j] === '"LOCATION"') {
-                                            loc[locSize] = words[j];
-                                            locSize++;
                                         } else if (classes[j] === '"ORGANIZATION"') {
-                                            orga[orgaSize] = words[j];
                                             orgaSize++;
                                         }
                                     }
@@ -95,7 +88,7 @@ router.post('/nlp2', function (req, res) {
                             }
                         }
                     }
-                    
+
 
                     // write to database
 
