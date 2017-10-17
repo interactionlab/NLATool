@@ -186,6 +186,9 @@
     },
     "column4": {
       "name": "semanticClass"
+    },
+    "column5":{
+      "name" : "pos"
     }
   }
 }
