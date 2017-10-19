@@ -3,25 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- material.io-->
     <meta name = "viewport" content = "width = device-width, initial-scale = 1">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-
-    <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
     <link rel = "stylesheet" href = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
     <link rel = "stylesheet" href = "https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src = "https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
 
-    <style>
+    <style> /* just to see borders*/
         .graybox {
             background-color:#ddd;
             border: 2px solid blue;
         }
-
     </style>
 
     <script language="javascript">
-
         // ButtonFunction for open and close the result field
         function expand() {
         var button = document.getElementById('switch');
@@ -42,32 +38,36 @@
 
     <title>NLATool</title>
 </head>
+
 <body>
-<!--material.io beginning -->
     <div class = "mdl-grid"> <!--Row 1 for features -->
-        <div class = "mdl-cell mdl-cell--2-col graybox">
+        <div class = "mdl-cell mdl-cell--12-col graybox">
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <b class = "mdc-button">NER</b></button></div>
-        <div class = "mdl-cell mdl-cell--2-col graybox">
+                <b class = "mdc-button">NER</b>
+            </button>
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <b class = "mdc-button">NEC</b></button></div>
-        <div class = "mdl-cell mdl-cell--2-col graybox">
+                <b class = "mdc-button">NEC</b>
+            </button>
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <b class = "mdc-button">NED</b></button></div>
-        <div class = "mdl-cell mdl-cell--2-col graybox">
+                <b class = "mdc-button">NED</b>
+            </button>
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <b class = "mdc-button">Highlighting</b></button></div>
-        <div class = "mdl-cell mdl-cell--2-col graybox">
+                <b class = "mdc-button">Highlighting</b>
+            </button>
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                <b class = "mdc-button">Kommentar</b></button></div>
+                <b class = "mdc-button">Kommentar</b>
+            </button>
+        </div>
     </div>
 
 <div class = "mdl-grid"> <!-- separate window in two-->
     <!--left grid for text stuff -->
     <div class = "mdl-cell mdl-cell--6-col graybox">
         <div class = "mdl-grid"> <!-- clear button -->
-            <div><td><button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                        <b class = "mdc-button">Leeren</b></button></td>
+            <div>
+                <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    <i class="material-icons">delete</i>
+                </button>
             </div>
         </div>
 
@@ -75,12 +75,9 @@
             <div style="width: 100%">
                 <form action = "#">
                     <div class = "mdl-textfield mdl-js-textfield" style="width: 100%">
-                <textarea class = "mdl-textfield__input"
-                          type = "text"
-                          rows =  "3"
-                          id = "textbox" ></textarea>
-                        <label class = "mdl-textfield__label"
-                               for = "textbox">Enter text here ...
+                    <textarea class = "mdl-textfield__input" type = "text"  rows =  "3"id = "textbox" >
+                    </textarea>
+                        <label class = "mdl-textfield__label" for = "textbox">Enter text here ...
                         </label>
                     </div>
                 </form>
@@ -103,32 +100,39 @@
             <!-- display the selected NER-->
             <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
                 <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
-                    <input type="submit" value="NER (name, place, etc)" />
+                    NER (name, place, etc) <!--<input type="submit" value="NER (name, place, etc)" /> -->
                 </div>
             </div>
 
             <!-- Buttons for modify the result-->
             <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
                 <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
-                    <input type="submit" value="button1" />&nbsp;
-                    <input type="submit" value="button2" />&nbsp;
-                    <input type="submit" value="button3" />&nbsp;
-                    <input type="submit" value="button4" />
+                    <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <b class = "mdc-button">Information</b>
+                    </button>
+                    <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <b class = "mdc-button">Karte</b>
+                    </button>
+                    <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <b class = "mdc-button">Statistik</b>
+                    </button>
+                    <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <b class = "mdc-button">Korrektur</b>
+                    </button>
                 </div>
             </div>
 
             <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
-                <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%"> Placeholder for results (images, descriptions, etc) .......
-                </div>
+                <form action = "#">
+                    <div class = "mdl-textfield mdl-js-textfield" style="width: 100%">
+                        <textarea class = "mdl-textfield__input" type = "text"  rows =  "5"id = "textbox" >
+                        </textarea>
+                        <label class = "mdl-textfield__label" for = "textbox">Results will be displayed here.
+                        </label>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
-</div>
-<!--material.io ending -->
-
-<div class="container">
-    <div class="row" style="padding: 0 0 32px 0"> <!--Logo and Account row-->
-        <div class="col-sm-4" style="text-align: right"><input type="submit" value="Konto" /></div>
     </div>
 </div>
 </body>
