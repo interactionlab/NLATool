@@ -141,7 +141,7 @@ getOptionsOfColumn = function (table, columnNumber) {
  * @returns {*}
  */
 transformColumnToSQL = function (column, options) {
-    options = syncColumnWithDefault(options);
+    options = jsonAction.syncColumnWithDefault(options);
     if (options !== null && column !== null) {
         var transformString = '';
         var tempKey = '';
@@ -208,39 +208,6 @@ findKeyColumns = function (table) {
 
 findAndTranslateForeignKeySettings = function () {
 
-};
-
-
-/**
- * Synchronises the default settings for a column with the specified ones.
- * @param options
- * @returns {*}
- */
-syncColumnWithDefault = function (options) {
-    //console.log('Before sync: ' + JSON.stringify(obj.default));
-    for (var key in json.default) {
-        if (json.default.hasOwnProperty(key) && key !== 'isTable') {
-            if (!isKeyInObject(key, options)) {
-                options[key] = json.default[key];
-            }
-        }
-    }
-    return options;
-};
-
-/**
- * A Method to check if a key is in a json-object.
- * @param key
- * @param obj
- * @returns {boolean}
- */
-isKeyInObject = function (key, obj) {
-    for (var otherKey in obj) {
-        if (key === otherKey) {
-            return true;
-        }
-    }
-    return false;
 };
 
 /**

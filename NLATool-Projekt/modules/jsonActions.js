@@ -15,7 +15,7 @@ var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
 var dbConfig = './modules/dbconfig.json';
 var testJson = './modules/test.json';
-
+var jsonAction = require('./jsonActions');
 var json = null;
 wait.launchFiber(getJSONConfig);
 
@@ -87,7 +87,7 @@ exports.getColumnsOfOneTable = function (table) {
             for (var column in json[entity]) {
                 if (column !== 'isTable' && column !== 'name') {
                     columns[column] = json[entity][column];
-                    columns[column] = syncColumnWithDefault(columns[column]);
+                    columns[column] = jsonAction.syncColumnWithDefault(columns[column]);
                 }
             }
         }
@@ -95,4 +95,38 @@ exports.getColumnsOfOneTable = function (table) {
     columns = JSON.stringify(columns);
     //console.log(notMedia + Tag + 'getColumns Result:' + columns);
     return columns;
+};
+
+
+
+/**
+ * Synchronises the default settings for a column with the specified ones.
+ * @param options
+ * @returns {*}
+ */
+exports.syncColumnWithDefault = function (options) {
+    //console.log('Before sync: ' + JSON.stringify(obj.default));
+    for (var key in json.default) {
+        if (json.default.hasOwnProperty(key) && key !== 'isTable') {
+            if (!isKeyInObject(key, options)) {
+                options[key] = json.default[key];
+            }
+        }
+    }
+    return options;
+};
+
+/**
+ * A Method to check if a key is in a json-object.
+ * @param key
+ * @param obj
+ * @returns {boolean}
+ */
+isKeyInObject = function (key, obj) {
+    for (var otherKey in obj) {
+        if (key === otherKey) {
+            return true;
+        }
+    }
+    return false;
 };
