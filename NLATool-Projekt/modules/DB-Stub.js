@@ -29,6 +29,9 @@ var dbStatus = {
     connected: false,
     connectionError: null,
     exists: false,
+    tablesCorrect: false,
+    columnsCorrect: false,
+    settingsCorrect: false,
     isCorrect: false,
     connection: null,
     error: null
@@ -38,6 +41,7 @@ var queryStatus = {
     executed: false,
     result: null
 };
+var differences = {};
 
 /**
  * Starting the Fiber for establish Connection for the use of wait.for
@@ -213,6 +217,7 @@ testDatabase = function () {
         if (isArrayTheSame(jsonList, dbList)) {
             for (var i = 0; i < jsonList.length; i++) {
                 var jsonColumns = jsonAction.getColumnsOfOneTable(jsonList[i]);
+                jsonColumns = JSON.parse(jsonColumns);
                 //jsonColumns = dbAction.syncWithDeafault
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
@@ -226,11 +231,12 @@ testDatabase = function () {
                     dbStatus.isCorrect = false;
                 }
                 //dbColumns = JSON.stringify(dbColumns);
-                if (!compareColumns(jsonColumns, dbColumns)) {
+                if (!analyseColumns(jsonList[i], jsonColumns, dbColumns)) {
                     console.error(notMedia + Tag + 'One Table has different Settings as described in dbconfig.json: ' + jsonList[i]);
-                    console.error(notMedia + Tag + 'Here are the settings vof Both Tables: ');
-                    console.error(notMedia + Tag + +jsonList[i] + ': ' + jsonColumns);
-                    console.error(notMedia + Tag + +jsonList[i] + ': ' + dbColumns);
+                    console.error(notMedia + Tag + 'Here are the settings of Both Tables: ');
+                    console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
+                    console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
+
                     isTheSame = false;
                 }
             }
@@ -247,36 +253,94 @@ testDatabase = function () {
 /**
  * Compares the Columns of 2 sources on the basis of json in the structure of
  * the dbconfig.json.
- * @param columns1
- * @param columns2
+ * @param jsonColumns
+ * @param dbColumns
  */
-compareColumns = function (columns1, columns2) {
-    columns1 = JSON.parse(columns1);
-    // columns2 = JSON.parse(columns2);
-    var isTheSame = true;
-    for (var column1 in columns1) {
-        if (isTheSame !== false) {
-            for (var column2 in columns2) {
-                if (columns1[column1].name === columns2[column2].name && isTheSame !== false) {
-                    for (var field in columns1[column1]) {
-                        if (columns1[column1][field] !== columns2[column1][field]) {
-                            //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
-                            isTheSame = false;
-                            break;
-                        } else {
-                            //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' === ' + columns2[column1][field]);
-                            isTheSame = true;
+analyseColumns = function (table, jsonColumns, dbColumns) {
+    var existingColumns = [];
+    var existingJsonColumns = [];
+    var existingDbColumns = [];
+
+
+    for (var column1 in jsonColumns) {
+        existingJsonColumns.push(jsonColumns[column1].name);
+        for (var column2 in dbColumns) {
+            if (existingColumns.indexOf(column2) < 0) {
+                existingDbColumns.push(dbColumns[column2].name);
+                if (existingColumns.indexOf(column1) < 0) {
+                    console.log('Compare: ' + jsonColumns[column1].name + ' with ' + dbColumns[column2].name);
+                    if (jsonColumns[column1].name === dbColumns[column2].name) {
+
+                        for (var field in jsonColumns[column1]) {
+                            if (jsonColumns[column1][field] !== dbColumns[column1][field]) {
+                                //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
+                                differences[table] = {};
+                                differences[table][column1] = {};
+                                differences[table][column1][field] = jsonColumns[column1][field];
+                            }
                         }
+                        existingColumns.push(column1);
                     }
-                } else {
-                    break;
                 }
             }
-        } else {
-            break;
+        }
+        if (existingColumns.indexOf(column1) < 0) {
+            //column1 does not exist in dbColumns
+            differences[table][column1] = true;
         }
     }
-    return isTheSame;
+    if (Object.keys(differences).length === 0) {
+        dbStatus.columnsCorrect = true;
+        dbStatus.settingsCorrect = true;
+        return true;
+    } else {
+        console.log(notMedia + Tag + 'Differences of Config: ' + JSON.stringify(differences));
+        dbStatus.columnsCorrect = false;
+        dbStatus.settingsCorrect = false;
+        return false;
+    }
+};
+
+matchColumns = function (table, jsonColumns, dbColumns) {
+    var existingJsonColumns = [];
+    var existingDbColumns = [];
+    var matchedCol = [];
+    for (var col1 in jsonColumns) {
+        existingJsonColumns.push(jsonColumns[col1].name);
+    }
+    for (var col2 in dbColumns) {
+        existingDbColumns.push(dbColumns[col2].name);
+    }
+    if (existingDbColumns.length !== existingJsonColumns.length) {
+        dbStatus.columnsCorrect = false;
+    }
+    if (existingDbColumns.indexOf(existingJsonColumns[0]) < 0) {
+        differences[table] = {};
+        differences[table][existingJsonColumns[0]] = true;
+
+    }
+    for (var i = 1; i < existingJsonColumns.length - 1; i++) {
+        if (existingDbColumns.indexOf(existingJsonColumns[i]) < 0) {
+            differences[table][existingJsonColumns[i]] = true;
+        } else {
+            matchedCol.push(existingJsonColumns[i]);
+        }
+    }
+    for(var j = 0; j < existingDbColumns.length;i++){
+        if(matchedCol.indexOf(existingDbColumns[j])<0){
+            if(existingJsonColumns.indexOf(existingDbColumns[j])<0){
+                differences[table][existingDbColumns[j]] = false;
+            }else{
+                matchedCol.push(existingDbColumns[j]);
+            }
+
+        }
+    }
+
+};
+
+matchColumnSettings = function () {
+
 };
 
 /**
@@ -341,26 +405,44 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
 
 /**
  * Checks whether or not 2 Arrays of Strings are the same.
- * @param array1
- * @param array2
+ * @param jsonList
+ * @param dbList
  * @returns {boolean}
  */
-isArrayTheSame = function (array1, array2) {
-    var isTheSame = false;
-    if (array1.length !== array2.length) {
-        isTheSame = false;
-    } else {
-        for (var i = 0; i < array1.length; i++) {
-            if (array2.indexOf(array1[i]) > -1) {
-                isTheSame = true;
-            } else {
-                isTheSame = false;
-                break;
-            }
+isArrayTheSame = function (jsonList, dbList) {
+    for (var i = 0; i < jsonList.length; i++) {
+        //if(table of jsonList doesnt exists in the dbList)
+        if (dbList.indexOf(jsonList[i]) < 0) {
+            differences[jsonList[i]] = true;
+        }
+        //if(table of dbList doesnt exists in jsonList)
+        else if (jsonList.indexOf(dbList[i]) < 0) {
+            differences[dbList[i]] = false;
         }
     }
     //console.log(notMedia + Tag + 'isArrayTheSame Result is: ' + isTheSame);
-    return isTheSame;
+    if (Object.keys(differences).length === 0) {
+        dbStatus.tablesCorrect = true;
+        return true;
+    } else {
+        dbStatus.tablesCorrect = false;
+        return false;
+    }
+};
+
+correctDatabaseSettings = function () {
+    if (!dbStatus.isCorrect) {
+        if (!dbStatus.tablesCorrect) {
+
+        } else if (!dbStatus.columnsCorrect) {
+
+        } else if (!dbStatus.settingsCorrect) {
+
+        }
+    } else {
+        //Everything is correct -> nothing to do
+    }
+    differences = {};
 };
 
 /**
