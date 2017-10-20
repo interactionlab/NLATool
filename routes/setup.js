@@ -19,14 +19,14 @@ var dbAction = require('../modules/DB-Actions');
 var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
 var dbStub = require('../modules/DB-Stub');
-
+var jsonAction = require('../modules/jsonActions');
 var testJson = './modules/test.json';
 
 var json;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
-    json = dbAction.getJsonConfiguration();
+    json = jsonAction.getJsonConfiguration();
     json = JSON.parse(json);
 }
 
