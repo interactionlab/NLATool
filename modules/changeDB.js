@@ -18,6 +18,18 @@ var dbStub = require('./DB-Stub');
 var jsonAction = require('./jsonActions');
 //var json = test.json;
 
+var json = null;
+wait.launchFiber(getJSONConfig);
+
+function getJSONConfig() {
+    json = jsonAction.getJsonConfiguration();
+    json = JSON.parse(json);
+}
+
+/**
+ * General Section for altering tables.
+ * */
+//-----------------------------------------------------------
 var alterDB = {
     tables: {},
     table_options: {
@@ -228,6 +240,14 @@ exports.createAlterTableCommand = function () {
     return alterCommandString;
 };
 
+exports.alterTable = function () {
+    try {
+        dbStub.makeSQLRequest();
+    } catch (err) {
+
+    }
+};
+
 /**
  * Adds Tables to the Alter Command.
  * @param tables
@@ -276,7 +296,30 @@ exports.addAlterSpecificationOperation = function (operation, subOperation, key,
     }
 };
 
+/**
+ * Section for creating specific Command that get stored in alterDB
+ */
+//-----------------------------------------------------------
+/**
+ * Creates the Command for adding a column to the database and stores it into the operationObject
+ * @param table
+ * @param column
+ */
+exports.createAddColumn = function (table, column) {
+    for (var entity in json) {
+        if (json[entity].name === table) {
+            for(var col in json[entity]){
 
+            }
+            break;
+        }
+    }
+};
+
+/**
+ * other supportive functions.
+ */
+//-----------------------------------------------------------
 function resetAlterDB() {
     alterDB.tables = {};
     for (var option in alterDB.table_options) {

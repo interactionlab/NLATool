@@ -16,6 +16,7 @@ var wait = require('wait.for');
 var dbConfig = './modules/dbconfig.json';
 var testJson = './modules/test.json';
 var jsonAction = require('./jsonActions');
+
 var json = null;
 wait.launchFiber(getJSONConfig);
 
@@ -97,7 +98,26 @@ exports.getColumnsOfOneTable = function (table) {
     return columns;
 };
 
-
+exports.getSettingsOfOneColumn = function (table, column) {
+    var settings = {};
+    for (var entity in json) {
+        if (json[entity].isTable) {
+            if (json[entity].name = table) {
+                for (var col in json[entity]) {
+                    console.log(entity + ' : ' + col + ' ' + JSON.stringify(json[entity][col]) + ' :: ' + column + ' =? ' +
+                        json[entity][col].name);
+                    if (json[entity][col].name === column) {
+                        console.log(entity + ' : ' + col + ' ' + JSON.stringify(json[entity][col]));
+                        settings[column] = json[entity][col];
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    console.log(notMedia + Tag + 'Settings of getSettingsOfOneColumn' + JSON.stringify(settings));
+};
 
 /**
  * Synchronises the default settings for a column with the specified ones.
@@ -108,7 +128,7 @@ exports.syncColumnWithDefault = function (options) {
     //console.log('Before sync: ' + JSON.stringify(obj.default));
     for (var key in json.default) {
         if (json.default.hasOwnProperty(key) && key !== 'isTable') {
-            if (!isKeyInObject(key, options)) {
+            if (!jsonAction.isKeyInObject(key, options)) {
                 options[key] = json.default[key];
             }
         }
@@ -122,7 +142,7 @@ exports.syncColumnWithDefault = function (options) {
  * @param obj
  * @returns {boolean}
  */
-isKeyInObject = function (key, obj) {
+exports.isKeyInObject = function (key, obj) {
     for (var otherKey in obj) {
         if (key === otherKey) {
             return true;
