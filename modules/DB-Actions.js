@@ -23,66 +23,7 @@ var jsonAction = require('./jsonActions');
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
-var alterDB = {
-    tables: {},
-    table_options: {
-        AUTO_INCREMENT: null,
-        AVG_ROW_LENGTH: null,
-        CHARACTER_SET: null,
-        CHECKSUM: null,
-        COLLATE: null,
-        COMMENT: null,
-        COMPRESSION: null,
-        CONNECTION: null,
-        DATA_DIRECTORY: null,
-        INDEX_DIRECTORY: null,
-        DELAY_KEY_WRITE: null,
-        ENCRYPTION: null,
-        ENGINE: null,
-        INSERT_METHOD: null,
-        KEY_BLOCK_SIZE: null,
-        MAX_ROWS: null,
-        MIN_ROWS: null,
-        PACK_KEYS: null,
-        PASSWORD: null,
-        ROW_FORMAT: null,
-        STATS_AUTO_RECALC: null,
-        STATS_PERSISTENT: null,
-        STATS_SAMPLE_PAGES: null,
-        TABLESPACE: null,
-        UNION: null
-    },
-    operations: {
-        add: {
-            columns: {},
-            indexes: {},
-            keys: {
-                uniques: {},
-                primarys: {}
-            },
-            constraints: {},
-            foreignKeys: {}
-        },
-        algorithm: {
-            copy: {},
-            inplace: {},
-            default: {}
-        },
-        alterColumns: {},
-        drop: {
-            columns: {},
-            indexes: {},
-            keys: {
-                uniques: {},
-                primarys: {}
-            },
-            constraints: {},
-            foreignKeys: {}
-        },
-        changeColumn: {}
 
-    }
-};
 /**
  * Loads the Database Configuration at the beginning of the of this file so
  * that it is available for every function here.

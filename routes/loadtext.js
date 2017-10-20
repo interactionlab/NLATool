@@ -18,6 +18,7 @@ var dbAction = require('../modules/DB-Actions.js');
 var dbStub = require('../modules/DB-Stub.js');
 var mySQL = require('mysql');
 var wait = require('wait.for');
+var jsonAction = require('../modules/jsonActions');
 
 var connectionSettings = {
     database: "nlatool",
@@ -33,7 +34,7 @@ wait.launchFiber(getJSONConfig);
 
 
 function getJSONConfig() {
-    json2 = dbAction.getJsonConfiguration();
+    json2 = jsonAction.getJsonConfiguration();
     json2 = JSON.parse(json2);
 }
 
