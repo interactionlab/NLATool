@@ -10,7 +10,7 @@
         "port": "3306",
         "priority": "1"
       },
-      "connection2":{
+      "connection2": {
         "host": "localhost",
         "port": "3306",
         "password": "ichbingastheir",
@@ -22,7 +22,6 @@
   "default": {
     "isTable": false,
     "type": "VARCHAR",
-    "length": "255",
     "AUTO_INCREMENT": false,
     "PRIMARY": false,
     "UNIQUE": false,
@@ -41,17 +40,17 @@
     "column2": {
       "name": "email",
       "UNIQUE": true,
-      "type":"VARCHAR",
+      "type": "VARCHAR",
       "length": "20"
     },
     "column3": {
       "name": "username",
-      "type":"VARCHAR",
+      "type": "VARCHAR",
       "length": "20"
     },
     "column4": {
       "name": "password",
-      "type":"VARCHAR",
+      "type": "VARCHAR",
       "length": "20"
     }
   },
@@ -71,10 +70,12 @@
       "length": "11"
     },
     "column3": {
-      "name": "title"
+      "name": "title",
+      "length": "20"
     },
     "column4": {
-      "name": "author"
+      "name": "author",
+      "length": "20"
     },
     "column5": {
       "name": "year",
@@ -93,7 +94,9 @@
       "AUTO_INCREMENT": true
     },
     "column2": {
-      "name": "url"
+      "name": "url",
+      "type": "VARCHAR",
+      "length": "1024"
     },
     "column3": {
       "name": "imageUrl",
@@ -187,8 +190,8 @@
     "column4": {
       "name": "semanticClass"
     },
-    "column5":{
-      "name" : "pos"
+    "column5": {
+      "name": "pos"
     }
   }
 }
