@@ -17,6 +17,7 @@ var Tag = 'test.js: ';
  * Special required modules/files:
  */
 var dbAction = require('../modules/DB-Actions');
+var jsonAction = require('../modules/jsonActions');
 var dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
 var jsonConfigurator = require('jsonfile');
@@ -41,9 +42,8 @@ router.post('/theFunction', function (req, res) {
     var jsonOptions = {name: "first", type: "INT"};
     var columnName = 'Irgendwas';
     /*columnName = jsonAction.setCharAt(columnName, columnName.length-1, 'A');
-    console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
+    console.log(notMedia + Tag + 'geänderter String:'+ columnName);
     dbStub.fiberEstablishConnection();
-    // dbAction.testIfJsonIsThere();
     dbStub.makeSQLRequest('SELECT * FROM word', function (err, result) {
         if (err) {
             res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: err});
@@ -51,6 +51,12 @@ router.post('/theFunction', function (req, res) {
             res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: result});
         }
     });
+    */
+    res.render('./testview', {
+        title: 'NLA - Natural Language Analyse Tool',
+        result: JSON.stringify(jsonAction.getSettingsOfOneColumn('documents', 'docID'))
+    });
+
 
 //    dbAction.transformColumnToSQL(columnName, jsonOptions);
 //    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
