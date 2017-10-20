@@ -83,28 +83,39 @@ function establishConnection() {
 
 /**
  * On the basis of dbStatus, this method will change/create the Database to match the settings in the dbconfig.json.
- * After that is tests if the Database matches the settings.
+ * After that it tests if the Database matches the settings.
  * @returns {boolean}
  */
 syncDatabase = function () {
-    if (!dbStatus.exists) {
-        dbAction.setupDB(connection);
-        console.log(notMedia + Tag + 'Setup of DB complete.');
-        try {
-            var res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
-            res = JSON.parse(res);
-            console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
-            dbStatus.exists = true;
-            dbStatus.isCorrect = true;
-            return true;
-        } catch (err) {
-            dbStatus.isCorrect = false;
+    if (!dbStatus.isCorrect) {
+        //Configuration of DB is not the same, as specified on the Server:
+        if (!dbStatus.exists) {
+            //DB doesnt exist -> create one on the DB Server
+            dbAction.setupDB(connection);
+            console.log(notMedia + Tag + 'Setup of DB complete.');
+            try {
+                var res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
+                res = JSON.parse(res);
+                console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
+                dbStatus.exists = true;
+                dbStatus.isCorrect = true;
+                return true;
+            } catch (err) {
+                dbStatus.isCorrect = false;
+            }
+        } else if (!dbStatus.tablesCorrect) {
+            //The Tables are not correct. (Missing, different name, new table...)
+
+        } else if (!dbStatus.columnsCorrect) {
+            //One or more columns of one or more Tables are wrong
+            //TODO: Correct the Database. Commands like ALTER TABLE will be needed.
+        } else if(!dbStatus.settingsCorrect){
+            //some Setting of a column are wrong.
         }
-    } else if (dbStatus.isCorrect) {
+    } else{
         return true;
-    } else if (!dbStatus.isCorrect) {
-        //TODO: Corect the Database. Commands like ALTER TABLE will be needed.
     }
+
 
 };
 
@@ -245,15 +256,14 @@ testDatabase = function () {
                 //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
                 //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
             }
-            dbStatus.isCorrect = isTheSame;
-        } else {
-            dbStatus.isCorrect = false;
         }
-    } else {
-        dbStatus.isCorrect = false;
-        dbStatus.exists = false;
     }
+    isDbCorrect();
 };
+
+function isDbCorrect() {
+    dbStatus.isCorrect = dbStatus.columnsCorrect && dbStatus.settingsCorrect && dbStatus.tablesCorrect && dbStatus.exists;
+}
 
 /**
  * Compares the Columns of 2 sources on the basis of json in the structure of
@@ -354,39 +364,41 @@ matchColumns = function (table, jsonColumns, dbColumns) {
 matchColumnSettings = function (table, jsonColumns, dbColumns) {
     if (dbStatus.columnsCorrect) {
         for (var col1 in jsonColumns) {
-            for (var col2 in dbColumns) {
-                for (var setting1 in jsonColumns[col1]) {
-                    console.log('1. Comparison Loop: ' + table + ' : ' + col1 + ' : ' + setting1);
-                    if (jsonColumns[col1][setting1] !== dbColumns[col1][setting1]) {
-                        if (typeof differences[table] === "undefined") {
-                            differences[table] = {};
-                        }
-                        if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
-                            differences[table][jsonColumns[col1].name] = {};
-                        }
-                        console.log('1. Comparison Loop: ' + setting1);
-                        console.log('The difference in here from: ' + table + col1 + jsonColumns[col1][setting1] + ' !== ' + dbColumns[col1][setting1]);
-                        differences[table][jsonColumns[col1].name][setting1] = jsonColumns[col1][setting1];
+            for (var setting1 in jsonColumns[col1]) {
+                //console.log('1. Comparison Loop: ' + table + ' : ' + col1 + ' : ' + setting1);
+                if (jsonColumns[col1][setting1] !== dbColumns[col1][setting1]) {
+                    if (typeof differences[table] === "undefined") {
+                        differences[table] = {};
                     }
-                }
-                for (var setting2 in dbColumns[col2]) {
-                    if (jsonColumns[col2][setting2] !== dbColumns[col2][setting2]) {
-                        if (typeof differences[table] === "undefined") {
-                            differences[table] = {};
-                        }
-                        if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
-                            differences[table][jsonColumns[col1].name] = {};
-                        }
-                        console.log('2. Comparison Loop: ' + setting2);
-                        console.log('The difference in here2 from: ' + table + col2 + jsonColumns[col2][setting2] + ' !== ' + dbColumns[col2][setting2]);
-                        differences[table][jsonColumns[col1].name][setting2] = jsonColumns[col2][setting2];
+                    if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
+                        differences[table][jsonColumns[col1].name] = {};
                     }
+                    //console.log('The difference in here from: ' + table + col1 + jsonColumns[col1][setting1] + ' !== ' + dbColumns[col1][setting1]);
+                    differences[table][jsonColumns[col1].name][setting1] = jsonColumns[col1][setting1];
                 }
             }
         }
-
+        for (var col2 in dbColumns) {
+            for (var setting2 in dbColumns[col2]) {
+                if (jsonColumns[col2][setting2] !== dbColumns[col2][setting2]) {
+                    if (typeof differences[table] === "undefined") {
+                        differences[table] = {};
+                    }
+                    if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
+                        differences[table][jsonColumns[col1].name] = {};
+                    }
+                    //console.log('The difference in here2 from: ' + table + col2 + jsonColumns[col2][setting2] + ' !== ' + dbColumns[col2][setting2]);
+                    differences[table][jsonColumns[col1].name][setting2] = jsonColumns[col2][setting2];
+                }
+            }
+        }
+        dbStatus.columnsCorrect = Object.keys(differences[table]).length <= 0;
         //console.log('Differences of the Settings: ' + JSON.stringify(differences));
+    } else {
+        dbStatus.columnsCorrect = false;
+        dbStatus.isCorrect = false;
     }
+
 };
 
 /**
