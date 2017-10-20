@@ -48,6 +48,58 @@ var alterDB = {
         UNION: null
     },
     operations: {
+        ADD_COLUMNS: {},
+        ADD_INDEXES: {},
+        ADD_KEYS: {},
+        ADD_CONSTRAINTS: {},
+        ADD_FULLTEXT_INDEXES: {},
+        ADD_FULLTEXT_KEYS: {},
+        ADD_SPATIAL_INDEXES: {},
+        ADD_SPATIAL_KEY: {},
+        ALGORITHM: null,
+        ALTER: {},
+        ALTER_COLUMNS: {},
+        CHANGE: {},
+        CHANGE_COLUMNS: {},
+        CHARACTER_SET: {},
+        CONVERT_TO_CHARACTER_SET: {},
+        DISABLE_KEYS: {},
+        ENABLE_KEYS: {},
+        DISCARD_TABLESPACE: {},
+        IMPORT_TABLESPACE: {},
+        DROP: {},
+        DROP_COLUMNS: {},
+        DROP_INDEXES: {},
+        DROP_KEYS: {},
+        DROP_PRIMARY_KEYS: {},
+        DROP_FOREIGN_KEY: {},
+        FORCE: {},
+        LOCK: {},
+        MODIFY: {},
+        MODIFY_COLUMN: {},
+        ORDER_BY: {},
+        RENAME_INDEXES: {},
+        RENAME_KEYS: {},
+        RENAME_TO: {},
+        RENAME_AS: {},
+        WITHOUT_VALIDATION: {},
+        WITH_VALIDATION: {},
+        ADD_PARTITIONS: {},
+        DROP_PARTITIONS: {},
+        DISCARD_PARTITIONS: {},
+        IMPORT_PARTITIONS: {},
+        TRUNCATE_PARTITIONS: {},
+        COALESCE_PARTITIONS: {},
+        REORGANIZE_PARTITIONS: {},
+        EXCHANGE_PARTITIONS: {},
+        ANALYZE_PARTITIONS: {},
+        CHECK_PARTITIONS: {},
+        OPTIMIZE_PARTITIONS: {},
+        REBUILD_PARTITIONS: {},
+        REPAIR_PARTITIONS: {},
+        REMOVE_PARTITIONING: {},
+        UPGRADE_PARTITIONING: {}
+        /*
         add: {
             columns: {},
             indexes: {},
@@ -75,9 +127,12 @@ var alterDB = {
             foreignKeys: {}
         },
         changeColumn: {}
-
+        */
     }
 };
+
+var operationObject = {};
+
 /**
  * ALTER TABLE tbl_name
  [alter_specification [, alter_specification] ...]
@@ -167,35 +222,12 @@ var alterDB = {
  partition_options:
  (see CREATE TABLE options)
  */
-exports.createAlterTableCommand = function (table, alterSpecifications) {
-    var alterCommandString = 'ALTER TABLE ' + table + ' ';
+exports.createAlterTableCommand = function () {
+    var alterCommandString = 'ALTER TABLE ';
 
     return alterCommandString;
 };
 
-exports.createAlterTableSpecifications = function () {
-    var alterSpecificationsString = '';
-
-    return alterSpecificationsString;
-};
-
-exports.createAlterTableSpecification = function (tableOption, operation) {
-    var alterSpecificationString = '';
-
-    return alterSpecificationString;
-};
-
-exports.createAlterTableOperation = function (operator, valuesToChange) {
-    var alterOperationString = '';
-
-    return alterOperationString;
-};
-
-exports.createAlterTableOption = function (operator, valuesToChange) {
-    var alterOptionString = '';
-
-    return alterOptionString;
-};
 /**
  * Adds Tables to the Alter Command.
  * @param tables
@@ -210,7 +242,7 @@ exports.addAlterSpecificationTables = function (tables) {
 
 exports.addAlterSpecificationTableOptions = function (optionToAdd, command) {
     if (alterDB.table_options[optionToAdd] === null) {
-        alterDB.table_options[optionToAdd] = Command;
+        alterDB.table_options[optionToAdd] = command;
     }
 };
 
@@ -220,7 +252,7 @@ exports.addAlterSpecificationOperations = function (operation, subOperation, ope
             if (typeof alterDB.operations[operation][subOperation] !== "undefined") {
                 alterDB.operations[operation][subOperation] = operationObject;
             }
-        }else {
+        } else {
             if (typeof alterDB.operations[operation] !== "undefined") {
                 alterDB.operations[operation] = operationObject;
             }
@@ -229,9 +261,36 @@ exports.addAlterSpecificationOperations = function (operation, subOperation, ope
     //TODO: Error Handling if needed. (Invalid Parameter Exceptions)
 };
 
+exports.setOperationObject = function (key, command) {
+    operationObject[key] = command;
+};
+
+
 exports.addAlterSpecificationOperation = function (operation, subOperation, key, command) {
     if (operation !== null && key !== null && command !== null) {
-
+        if (subOperation !== null) {
+            if (typeof alterDB.operations[operation][subOperation] !== "undefined") {
+                alterDB.operations[operation][subOperation][key] = command;
+            }
+        }
     }
 };
 
+
+function resetAlterDB() {
+    alterDB.tables = {};
+    for (var option in alterDB.table_options) {
+        alterDB.table_options[option] = null;
+    }
+    for (var operation in alterDB.operations) {
+        if (operation === 'ALGORITHM') {
+            alterDB.operations[operation] = null;
+        } else {
+            alterDB.operations[operation] = {};
+        }
+    }
+}
+
+function resetOpterationObject() {
+    operationObject = {};
+}
