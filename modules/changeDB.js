@@ -306,14 +306,8 @@ exports.addAlterSpecificationOperation = function (operation, subOperation, key,
  * @param column
  */
 exports.createAddColumn = function (table, column) {
-    for (var entity in json) {
-        if (json[entity].name === table) {
-            for(var col in json[entity]){
-
-            }
-            break;
-        }
-    }
+    var settingsOfColumn = jsonAction.getSettingsOfOneColumn(table, column);
+    
 };
 
 /**

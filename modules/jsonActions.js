@@ -102,13 +102,10 @@ exports.getSettingsOfOneColumn = function (table, column) {
     var settings = {};
     for (var entity in json) {
         if (json[entity].isTable) {
-            if (json[entity].name = table) {
+            if (json[entity].name === table) {
                 for (var col in json[entity]) {
-                    console.log(entity + ' : ' + col + ' ' + JSON.stringify(json[entity][col]) + ' :: ' + column + ' =? ' +
-                        json[entity][col].name);
                     if (json[entity][col].name === column) {
-                        console.log(entity + ' : ' + col + ' ' + JSON.stringify(json[entity][col]));
-                        settings[column] = json[entity][col];
+                        settings = json[entity][col];
                         break;
                     }
                 }
@@ -116,7 +113,6 @@ exports.getSettingsOfOneColumn = function (table, column) {
             }
         }
     }
-    console.log(notMedia + Tag + 'Settings of getSettingsOfOneColumn' + JSON.stringify(settings));
 };
 
 /**
