@@ -231,14 +231,19 @@ testDatabase = function () {
                     dbStatus.isCorrect = false;
                 }
                 //dbColumns = JSON.stringify(dbColumns);
-                if (!analyseColumns(jsonList[i], jsonColumns, dbColumns)) {
-                    console.error(notMedia + Tag + 'One Table has different Settings as described in dbconfig.json: ' + jsonList[i]);
-                    console.error(notMedia + Tag + 'Here are the settings of Both Tables: ');
-                    console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
-                    console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
+                /* if (!matchColumnSettings(jsonList[i], jsonColumns, dbColumns)) {
+                     console.error(notMedia + Tag + 'One Table has different Settings as described in dbconfig.json: ' + jsonList[i]);
+                     console.error(notMedia + Tag + 'Here are the settings of Both Tables: ');
+                     console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
+                     console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
 
-                    isTheSame = false;
-                }
+                     isTheSame = false;
+                 }*/
+                matchColumns(jsonList[i], jsonColumns, dbColumns);
+                matchColumnSettings(jsonList[i], jsonColumns, dbColumns);
+                console.log('The differences at the end: ' + JSON.stringify(differences));
+                //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
+                //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
             }
             dbStatus.isCorrect = isTheSame;
         } else {
@@ -256,7 +261,7 @@ testDatabase = function () {
  * @param jsonColumns
  * @param dbColumns
  */
-analyseColumns = function (table, jsonColumns, dbColumns) {
+matchsColumnSettings = function (table, jsonColumns, dbColumns) {
     var existingColumns = [];
     var existingJsonColumns = [];
     var existingDbColumns = [];
@@ -305,42 +310,83 @@ matchColumns = function (table, jsonColumns, dbColumns) {
     var existingJsonColumns = [];
     var existingDbColumns = [];
     var matchedCol = [];
+
     for (var col1 in jsonColumns) {
         existingJsonColumns.push(jsonColumns[col1].name);
     }
+    //console.log('JsonColumns: ' + existingJsonColumns);
     for (var col2 in dbColumns) {
         existingDbColumns.push(dbColumns[col2].name);
     }
+    //console.log('DBColumns: ' + existingDbColumns);
     if (existingDbColumns.length !== existingJsonColumns.length) {
         dbStatus.columnsCorrect = false;
     }
-    if (existingDbColumns.indexOf(existingJsonColumns[0]) < 0) {
-        differences[table] = {};
-        differences[table][existingJsonColumns[0]] = true;
-
-    }
-    for (var i = 1; i < existingJsonColumns.length - 1; i++) {
+    for (var i = 0; i < existingJsonColumns.length; i++) {
         if (existingDbColumns.indexOf(existingJsonColumns[i]) < 0) {
+            if (typeof differences[table] === "undefined") {
+                differences[table] = {}
+            }
             differences[table][existingJsonColumns[i]] = true;
+
         } else {
             matchedCol.push(existingJsonColumns[i]);
         }
     }
-    for(var j = 0; j < existingDbColumns.length;i++){
-        if(matchedCol.indexOf(existingDbColumns[j])<0){
-            if(existingJsonColumns.indexOf(existingDbColumns[j])<0){
+    for (var j = 0; j < existingDbColumns.length; j++) {
+        if (matchedCol.indexOf(existingDbColumns[j]) < 0) {
+            if (existingJsonColumns.indexOf(existingDbColumns[j]) < 0) {
+                if (typeof differences[table] === "undefined") {
+                    differences[table] = {}
+                }
                 differences[table][existingDbColumns[j]] = false;
-            }else{
+            } else {
                 matchedCol.push(existingDbColumns[j]);
             }
-
         }
     }
-
+    dbStatus.columnsCorrect = (typeof differences[table] === "undefined") || differences[table] === {};
+    //console.log('columnsCorrect here?: ' + dbStatus.columnsCorrect + ' type of differences: ' + typeof differences[table]);
+    //console.log('matched Columns: ' + matchedCol);
+    //console.log('differences of Columns: ' + JSON.stringify(differences));
 };
 
-matchColumnSettings = function () {
+matchColumnSettings = function (table, jsonColumns, dbColumns) {
+    if (dbStatus.columnsCorrect) {
+        for (var col1 in jsonColumns) {
+            for (var col2 in dbColumns) {
+                for (var setting1 in jsonColumns[col1]) {
+                    console.log('1. Comparison Loop: ' + table + ' : ' + col1 + ' : ' + setting1);
+                    if (jsonColumns[col1][setting1] !== dbColumns[col1][setting1]) {
+                        if (typeof differences[table] === "undefined") {
+                            differences[table] = {};
+                        }
+                        if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
+                            differences[table][jsonColumns[col1].name] = {};
+                        }
+                        console.log('1. Comparison Loop: ' + setting1);
+                        console.log('The difference in here from: ' + table + col1 + jsonColumns[col1][setting1] + ' !== ' + dbColumns[col1][setting1]);
+                        differences[table][jsonColumns[col1].name][setting1] = jsonColumns[col1][setting1];
+                    }
+                }
+                for (var setting2 in dbColumns[col2]) {
+                    if (jsonColumns[col2][setting2] !== dbColumns[col2][setting2]) {
+                        if (typeof differences[table] === "undefined") {
+                            differences[table] = {};
+                        }
+                        if (typeof  differences[table][jsonColumns[col1].name] === "undefined") {
+                            differences[table][jsonColumns[col1].name] = {};
+                        }
+                        console.log('2. Comparison Loop: ' + setting2);
+                        console.log('The difference in here2 from: ' + table + col2 + jsonColumns[col2][setting2] + ' !== ' + dbColumns[col2][setting2]);
+                        differences[table][jsonColumns[col1].name][setting2] = jsonColumns[col2][setting2];
+                    }
+                }
+            }
+        }
 
+        //console.log('Differences of the Settings: ' + JSON.stringify(differences));
+    }
 };
 
 /**
