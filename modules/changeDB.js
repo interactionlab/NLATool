@@ -1,4 +1,4 @@
-/--------------------------------------------------------
+//--------------------------------------------------------
 /**
  * Tags for console Errors:
  * @type {string}
@@ -39,7 +39,7 @@ var alterDB = {
         CHARACTER_SET: {},
         CHECKSUM: {},
         COLLATE: {},
-        COMMENT:{},
+        COMMENT: {},
         COMPRESSION: {},
         CONNECTION: {},
         DATA_DIRECTORY: {},
@@ -58,7 +58,7 @@ var alterDB = {
         STATS_PERSISTENT: {},
         STATS_SAMPLE_PAGES: {},
         TABLESPACE: {},
-        UNION:{}
+        UNION: {}
     },
     operations: {
         ADD_COLUMNS: {},
@@ -69,7 +69,7 @@ var alterDB = {
         ADD_FULLTEXT_KEYS: {},
         ADD_SPATIAL_INDEXES: {},
         ADD_SPATIAL_KEY: {},
-        ALGORITHM: null,
+        ALGORITHM: {},
         ALTER: {},
         ALTER_COLUMNS: {},
         CHANGE: {},
@@ -112,35 +112,6 @@ var alterDB = {
         REPAIR_PARTITIONS: {},
         REMOVE_PARTITIONING: {},
         UPGRADE_PARTITIONING: {}
-        /*
-        add: {
-            columns: {},
-            indexes: {},
-            keys: {
-                uniques: {},
-                primarys: {}
-            },
-            constraints: {},
-            foreignKeys: {}
-        },
-        algorithm: {
-            copy: {},
-            inplace: {},
-            default: {}
-        },
-        alterColumns: {},
-        drop: {
-            columns: {},
-            indexes: {},
-            keys: {
-                uniques: {},
-                primarys: {}
-            },
-            constraints: {},
-            foreignKeys: {}
-        },
-        changeColumn: {}
-        */
     }
 };
 
@@ -239,7 +210,7 @@ exports.createAlterTableCommand = function (table) {
     var alterCommandString = 'ALTER TABLE ' + table + ' ';
     //Add all the table_options for the specified table.
     for (var i = 0; i < alterDB.table_options[table].length; i++) {
-        if(alterDB.table_options[table].length === 1){
+        if (alterDB.table_options[table].length === 1) {
             alterCommandString = alterCommandString + alterDB.table_options[table][0];
             break;
         } else {
@@ -247,7 +218,7 @@ exports.createAlterTableCommand = function (table) {
         }
     }
     //Add all the operations for the specified table.
-    
+
     return alterCommandString;
 };
 
@@ -277,7 +248,6 @@ exports.addAlterSpecificationOperations = function (operation, subOperation, ope
     }
     //TODO: Error Handling if needed. (Invalid Parameter Exceptions)
 };
-
 
 
 exports.addAlterSpecificationOperation = function (operation, subOperation, key, command) {
@@ -359,6 +329,7 @@ exports.addChangeColumnOperation = function (table, column) {
  * Functions that read the instructions of alterDB and generates Parts of the
  * final MySql Command.
  */
+
 //-----------------------------------------------------------
 
 /**
@@ -371,11 +342,7 @@ function resetAlterDB() {
         alterDB.table_options[option] = {};
     }
     for (var operation in alterDB.operations) {
-        if (operation === 'ALGORITHM') {
-            alterDB.operations[operation] = null;
-        } else {
-            alterDB.operations[operation] = {};
-        }
+        alterDB.operations[operation] = {};
     }
 }
 
