@@ -57,10 +57,9 @@ exports.fiberEstablishConnection = function () {
  */
 function establishConnection() {
     var connectSettings;
-    json = dbAction.getJsonConfiguration();
+    json = jsonAction.getJsonConfiguration();
     json = JSON.parse(json);
     //console.log(notMedia + Tag + 'json outside before parse: ' + json);
-
     for (var connect in json.database.connections) {
         connectSettings = getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
@@ -109,10 +108,10 @@ syncDatabase = function () {
         } else if (!dbStatus.columnsCorrect) {
             //One or more columns of one or more Tables are wrong
             //TODO: Correct the Database. Commands like ALTER TABLE will be needed.
-        } else if(!dbStatus.settingsCorrect){
+        } else if (!dbStatus.settingsCorrect) {
             //some Setting of a column are wrong.
         }
-    } else{
+    } else {
         return true;
     }
 
@@ -268,6 +267,7 @@ function isDbCorrect() {
 /**
  * Compares the Columns of 2 sources on the basis of json in the structure of
  * the dbconfig.json.
+ * @param table
  * @param jsonColumns
  * @param dbColumns
  */
@@ -392,7 +392,12 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
                 }
             }
         }
-        dbStatus.columnsCorrect = Object.keys(differences[table]).length <= 0;
+        if(typeof differences[table] === "undefined" || Object.keys(differences[table]).length <= 0){
+            dbStatus.columnsCorrect = true;
+        } else {
+            dbStatus.columnsCorrect = false;
+        }
+
         //console.log('Differences of the Settings: ' + JSON.stringify(differences));
     } else {
         dbStatus.columnsCorrect = false;
@@ -558,7 +563,7 @@ exports.isDBReadyForQuery = function () {
         && dbStatus.connectionError === null
         && dbStatus.exists === true
         && dbStatus.isCorrect === true;
-}
+};
 
 /**
  * Resets the queryStatus to its default values.
