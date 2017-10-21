@@ -16,6 +16,7 @@ var dbConfig = './modules/dbconfig.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var jsonAction = require('./jsonActions');
+var changeDB = require('./changeDB');
 //var json = test.json;
 
 var json = null;
@@ -33,31 +34,31 @@ function getJSONConfig() {
 var alterDB = {
     tables: {},
     table_options: {
-        AUTO_INCREMENT: null,
-        AVG_ROW_LENGTH: null,
-        CHARACTER_SET: null,
-        CHECKSUM: null,
-        COLLATE: null,
-        COMMENT: null,
-        COMPRESSION: null,
-        CONNECTION: null,
-        DATA_DIRECTORY: null,
-        INDEX_DIRECTORY: null,
-        DELAY_KEY_WRITE: null,
-        ENCRYPTION: null,
-        ENGINE: null,
-        INSERT_METHOD: null,
-        KEY_BLOCK_SIZE: null,
-        MAX_ROWS: null,
-        MIN_ROWS: null,
-        PACK_KEYS: null,
-        PASSWORD: null,
-        ROW_FORMAT: null,
-        STATS_AUTO_RECALC: null,
-        STATS_PERSISTENT: null,
-        STATS_SAMPLE_PAGES: null,
-        TABLESPACE: null,
-        UNION: null
+        AUTO_INCREMENT: {},
+        AVG_ROW_LENGTH: {},
+        CHARACTER_SET: {},
+        CHECKSUM: {},
+        COLLATE: {},
+        COMMENT:{},
+        COMPRESSION: {},
+        CONNECTION: {},
+        DATA_DIRECTORY: {},
+        INDEX_DIRECTORY: {},
+        DELAY_KEY_WRITE: {},
+        ENCRYPTION: {},
+        ENGINE: {},
+        INSERT_METHOD: {},
+        KEY_BLOCK_SIZE: {},
+        MAX_ROWS: {},
+        MIN_ROWS: {},
+        PACK_KEYS: {},
+        PASSWORD: {},
+        ROW_FORMAT: {},
+        STATS_AUTO_RECALC: {},
+        STATS_PERSISTENT: {},
+        STATS_SAMPLE_PAGES: {},
+        TABLESPACE: {},
+        UNION:{}
     },
     operations: {
         ADD_COLUMNS: {},
@@ -234,13 +235,26 @@ var operationObject = {};
  partition_options:
  (see CREATE TABLE options)
  */
-exports.createAlterTableCommand = function () {
-    var alterCommandString = 'ALTER TABLE ';
-
+exports.createAlterTableCommand = function (table) {
+    var alterCommandString = 'ALTER TABLE ' + table + ' ';
+    //Add all the table_options for the specified table.
+    for (var i = 0; i < alterDB.table_options[table].length; i++) {
+        if(alterDB.table_options[table].length === 1){
+            alterCommandString = alterCommandString + alterDB.table_options[table][0];
+            break;
+        } else {
+            alterCommandString = alterCommandString + alterDB.table_options[table][0] + ', ';
+        }
+    }
+    //Add all the operations for the specified table.
+    
     return alterCommandString;
 };
 
 exports.alterTable = function () {
+    for (var table in alterDB.tables) {
+
+    }
     try {
         dbStub.makeSQLRequest();
     } catch (err) {
@@ -248,23 +262,6 @@ exports.alterTable = function () {
     }
 };
 
-/**
- * Adds Tables to the Alter Command.
- * @param tables
- */
-exports.addAlterSpecificationTables = function (tables) {
-    var table = 'table';
-    for (var i = 0; i < tables.length(); i++) {
-        table = table + i;
-        alterDB.tables[table] = tables[i];
-    }
-};
-
-exports.addAlterSpecificationTableOptions = function (optionToAdd, command) {
-    if (alterDB.table_options[optionToAdd] === null) {
-        alterDB.table_options[optionToAdd] = command;
-    }
-};
 
 exports.addAlterSpecificationOperations = function (operation, subOperation, operationObject) {
     if (operation !== null && operationObject !== null && typeof operationObject === "object") {
@@ -281,9 +278,6 @@ exports.addAlterSpecificationOperations = function (operation, subOperation, ope
     //TODO: Error Handling if needed. (Invalid Parameter Exceptions)
 };
 
-exports.setOperationObject = function (key, command) {
-    operationObject[key] = command;
-};
 
 
 exports.addAlterSpecificationOperation = function (operation, subOperation, key, command) {
@@ -297,7 +291,7 @@ exports.addAlterSpecificationOperation = function (operation, subOperation, key,
 };
 
 /**
- * Section for creating specific Command that get stored in alterDB
+ * Section for creating specific Instructions for each Operation in the ALTEr TABLE Command that get stored in alterDB
  */
 //-----------------------------------------------------------
 /**
@@ -323,13 +317,49 @@ exports.generateColumnDefinition = function (table, column) {
     for (var setting in settingsOfColumn) {
         commandString = commandString + ' ' + settingsOfColumn[setting];
     }
-    if(Array.isArray(alterDB.operations.ADD_COLUMNS[table])){
-        alterDB.operations.ADD_COLUMNS[table].push(commandString);
-    } else{
-        alterDB.operations.ADD_COLUMNS[table] = [];
-        alterDB.operations.ADD_COLUMNS[table].push(commandString);
+    return commandString;
+};
+
+exports.addAlterSpecificationTableOptions = function (table, command) {
+    if (Array.isArray(alterDB.table_options[table])) {
+        alterDB.table_options[table].push(command);
+    } else {
+        alterDB.table_options[table] = [];
+        alterDB.table_options[table].push(command);
     }
 };
+
+exports.addAddColumnOperation = function (table, column) {
+    if (Array.isArray(alterDB.operations.ADD_COLUMNS[table])) {
+        alterDB.operations.ADD_COLUMNS[table].push(changeDB.generateColumnDefinition(table, column));
+    } else {
+        alterDB.operations.ADD_COLUMNS[table] = [];
+        alterDB.operations.ADD_COLUMNS[table].push(changeDB.generateColumnDefinition(table, column));
+    }
+};
+
+exports.addDropColumnOperation = function (table, column) {
+    if (Array.isArray(alterDB.operations.DROP_COLUMNS[table])) {
+        alterDB.operations.DROP_COLUMNS[table].push(column);
+    } else {
+        alterDB.operations.DROP_COLUMNS[table] = [];
+        alterDB.operations.DROP_COLUMNS[table].push(column);
+    }
+};
+
+exports.addChangeColumnOperation = function (table, column) {
+    if (Array.isArray(alterDB.operations.CHANGE_COLUMNS[table])) {
+        alterDB.operations.CHANGE_COLUMNS[table].push(changeDB.generateColumnDefinition(table, column));
+    } else {
+        alterDB.operations.CHANGE_COLUMNS[table] = [];
+        alterDB.operations.CHANGE_COLUMNS[table].push(changeDB.generateColumnDefinition(table, column));
+    }
+};
+/**
+ * Functions that read the instructions of alterDB and generates Parts of the
+ * final MySql Command.
+ */
+//-----------------------------------------------------------
 
 /**
  * other supportive functions.
@@ -338,7 +368,7 @@ exports.generateColumnDefinition = function (table, column) {
 function resetAlterDB() {
     alterDB.tables = {};
     for (var option in alterDB.table_options) {
-        alterDB.table_options[option] = null;
+        alterDB.table_options[option] = {};
     }
     for (var operation in alterDB.operations) {
         if (operation === 'ALGORITHM') {
@@ -355,4 +385,8 @@ function resetOpterationObject() {
 
 exports.getAlterDB = function () {
     return JSON.stringify(alterDB);
+};
+
+exports.setOperationObject = function (key, command) {
+    operationObject[key] = command;
 };
