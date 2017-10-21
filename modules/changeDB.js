@@ -305,9 +305,30 @@ exports.addAlterSpecificationOperation = function (operation, subOperation, key,
  * @param table
  * @param column
  */
-exports.createAddColumn = function (table, column) {
+exports.generateColumnDefinition = function (table, column) {
     var settingsOfColumn = jsonAction.getSettingsOfOneColumn(table, column);
-    
+    var commandString = column + ' ';
+    var i = 0;
+    for (var t in alterDB.tables) {
+        if (alterDB.tables[t] !== table) {
+            if (typeof alterDB.tables[t] === "undefined") {
+                alterDB.tables[i] = table;
+                break;
+            }
+        } else {
+            break;
+        }
+        i++;
+    }
+    for (var setting in settingsOfColumn) {
+        commandString = commandString + ' ' + settingsOfColumn[setting];
+    }
+    if(Array.isArray(alterDB.operations.ADD_COLUMNS[table])){
+        alterDB.operations.ADD_COLUMNS[table].push(commandString);
+    } else{
+        alterDB.operations.ADD_COLUMNS[table] = [];
+        alterDB.operations.ADD_COLUMNS[table].push(commandString);
+    }
 };
 
 /**
@@ -331,3 +352,7 @@ function resetAlterDB() {
 function resetOpterationObject() {
     operationObject = {};
 }
+
+exports.getAlterDB = function () {
+    return JSON.stringify(alterDB);
+};
