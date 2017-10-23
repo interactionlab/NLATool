@@ -153,7 +153,7 @@ makeSQLRequest = function (query, callback) {
  * @param callback
  */
 exports.makeSQLRequest = function (query, callback) {
-    if (dbStub.isDBReadyForQuery()) {
+    //if (dbStub.isDBReadyForQuery()) {
         connection.query(query, function (err, result) {
             if (err) {
                 console.log(err);
@@ -168,11 +168,11 @@ exports.makeSQLRequest = function (query, callback) {
                 callback(null, JSON.stringify(result));
             }
         });
-    } else {
+   /* } else {
         var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
             'Please check with "getDbStatus" if there is an error.';
         callback(err, null);
-    }
+    }*/
 };
 
 /**
