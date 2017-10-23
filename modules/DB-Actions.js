@@ -265,18 +265,19 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
         }
         else {
             commandString = commandString + table + ' (' + columns[0];
-            for (var i = 1; i < columns.length - 1; i++) {
-                commandString = commandString + ',' + columns[i];
+            for (var i = 1; i < columns.length; i++) {
+                commandString = commandString + ', ' + columns[i];
             }
             commandString = commandString + ') VALUES (' + values[0];
         }
-        for (var j = 1; j < values.length - 1; j++) {
-            commandString = commandString + ',' + values[j];
+        for (var j = 1; j < values.length; j++) {
+            commandString = commandString + ', ' + values[j];
         }
-        commandString = commandString + ') ';
+        commandString = commandString + ')';
         if (valuesToCompare !== null && operators !== null) {
-            commandString = commandString + createWhereQuery(columns, valuesToCompare, operators);
+            commandString = commandString + ' '+ createWhereQuery(columns, valuesToCompare, operators);
         }
+        commandString = commandString + ';';
         console.log(notMedia + Tag + commandString);
         return commandString;
     }
