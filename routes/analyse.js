@@ -15,6 +15,8 @@ var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'analyse.js: ';
 
+var results = [];
+
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
@@ -24,16 +26,22 @@ router.post('/inputText', function (req, res, next) {
 
     var text = req.body.textInput;
     var words = text.split(' ');
-    var results = [];
     for (var i = 0; i < words.length; i++) {
         words[i] = '"' + words[i] + '"';
-        try {
-            results.push(wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null))));
-        } catch (err) {
-            results.push(err);
-        }
+        wait.launchFiber(sendSQL, words[i]);
     }
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
     //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
+
+function sendSQL(word) {
+
+    try {
+        var result = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [word, 0], null, null));
+        results.push(result);
+    } catch (err) {
+        results.push(err);
+    }
+}
+
 module.exports = router;
