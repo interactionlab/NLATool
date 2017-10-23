@@ -155,16 +155,13 @@ makeSQLRequest = function (query, callback) {
 exports.makeSQLRequest = function (query, callback) {
     //if (dbStub.isDBReadyForQuery()) {
         connection.query(query, function (err, result) {
-            console.log('got here');
             if (err) {
-                console.log('got here');
                 console.log(err);
                 queryStatus.executed = false;
                 queryStatus.error = err;
                 callback(err, null);
             }
             else {
-                console.log('got here');
                 console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
                 queryStatus.result = result;
                 queryStatus.executed = true;
