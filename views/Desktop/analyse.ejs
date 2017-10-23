@@ -40,6 +40,7 @@
 </head>
 
 <body>
+
     <div class = "mdl-grid"> <!--Row 1 for features -->
         <div class = "mdl-cell mdl-cell--12-col graybox">
             <button class = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
@@ -75,6 +76,7 @@
             <div style="width: 100%">
                 <form action = "/analyse/inputText" method="POST">
                     <div class = "mdl-textfield mdl-js-textfield" style="width: 100%">
+                    <div class = "mdl-textfield mdl-js-textfield" style="width: 100%">
                     <textarea class = "mdl-textfield__input" type = "text"  rows =  "3"id = "textbox" name="textInput">
                     </textarea>
                         <label class = "mdl-textfield__label" for = "textbox">Enter text here ...
@@ -86,8 +88,6 @@
             </div>
         </div>
     </div>
-
-    <!--TODO  Change Buttons-->
 
     <!--right grid for result stuff -->
     <div class = "mdl-cell mdl-cell--6-col graybox">
@@ -135,7 +135,8 @@
                         />
                         <textarea class = "mdl-textfield__input" type = "text"  rows =  "5"id = "textbox" >
                         </textarea>
-                        <label class = "mdl-textfield__label" for = "textbox">Results will be displayed here.
+                        <label class = "mdl-textfield__label" for = "textbox">
+                            Results will be displayed here.
                         </label>
                     </div>
                 </form>
