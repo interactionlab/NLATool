@@ -73,14 +73,16 @@
 
         <div class = "mdl-grid"> <!-- Resizable Textfield-->
             <div style="width: 100%">
-                <form action = "#">
+                <form action = "/analyse/inputText" method="POST">
                     <div class = "mdl-textfield mdl-js-textfield" style="width: 100%">
-                    <textarea class = "mdl-textfield__input" type = "text"  rows =  "3"id = "textbox" >
+                    <textarea class = "mdl-textfield__input" type = "text"  rows =  "3"id = "textbox" name="textInput">
                     </textarea>
                         <label class = "mdl-textfield__label" for = "textbox">Enter text here ...
                         </label>
                     </div>
+                    <input type="submit">
                 </form>
+                <p><%= result %></p>
             </div>
         </div>
     </div>
