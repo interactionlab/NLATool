@@ -9,32 +9,35 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+    <script src="/javascripts/uiFunctions.js"></script>
 
-    <style> /* just to see borders*/
-        .graybox {
-            background-color: #ddd;
-            border: 2px solid blue;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/debugStyle.css">
+    <!--
+       <style> /* just to see borders*/
+           .graybox {
+               background-color: #ddd;
+               border: 2px solid blue;
+           }
+       </style>
 
-    <script language="javascript">
-        // ButtonFunction for open and close the result field
-        function expand() {
-            var button = document.getElementById('switch');
-            var rightDiv = document.getElementById('right-column');
-            if (button.value === 'v') {
-                button.value = '^';
-                rightDiv.style.display = 'inline';
-            } else {
-                button.value = 'v';
-                rightDiv.style.display = 'none';
-            }
+       <script language="javascript">
+           // ButtonFunction for open and close the result field
+           function expand() {
+               var button = document.getElementById('switch');
+               var rightDiv = document.getElementById('right-column');
+               if (button.value === 'v') {
+                   button.value = '^';
+                   rightDiv.style.display = 'inline';
+               } else {
+                   button.value = 'v';
+                   rightDiv.style.display = 'none';
+               }
 
-            function showMessage(value) {
-                document.getElementById("message").innerHTML = value;
-            }
-        }
-    </script>
+               function showMessage(value) {
+                   document.getElementById("message").innerHTML = value;
+               }
+           }
+       </script>-->
 
     <title>NLATool</title>
 </head>
