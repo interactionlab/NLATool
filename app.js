@@ -14,7 +14,6 @@ var test = require('./routes/test');
 var loadtext = require('./routes/loadtext');
 var setup = require('./routes/setup');
 
-
 var app = express();
 
 // view engine setup
@@ -39,6 +38,15 @@ app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 
+const isReachable = require('is-reachable');
+
+isReachable('http://projects.hcilab.org/CoreNLP/').then(reachable => {
+    console.log(reachable);
+if (!reachable) {
+    var err = new Error('CoreNLP not Online');
+    err.status = 501;
+}
+});
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -62,5 +70,6 @@ app.set('port', process.env.PORT || 3000);
 var server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + server.address().port);
 });
+
 
 module.exports = app;
