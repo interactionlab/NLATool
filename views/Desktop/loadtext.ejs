@@ -5,7 +5,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="/public/css/style.css" />
      <link rel="stylesheet" type="text/css" href="/public/css/bootstrap-autocolumns.css" />
      -->
-    <meta charset="UTF-8">
+    <meta cha rset= "UTF -8">
     <meta name="viewport" content="width = device-width, initial-scale = 1">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
@@ -24,19 +24,27 @@
         <h1><%= title %></h1>
     </div>
 </div>
-<div class="mdl-grid">
-    <div class="mdl-layout-spacer"></div>
-    <div class="mdl-cell--middle mdl-cell--6-col graybox">
-        <form action="/loadtext/nlp2" method="post">
-            <div class="mdl-cell--middle mdl-cell--12-col">
-                <textarea placeholder="Type or paste text here..." name="testFunction" id="holder"></textarea>
-            </div>
-            <input type="submit">
 
+
+<div class="mdl-grid"> <!-- Resizable Textfield full size for testing-->
+    <div style="width: 100%">
+        <form action="/loadtext/nlp2" method="post">
+            <div class="mdl-textfield mdl-js-textfield graybox" style="width: 100%">
+                    <textarea class="mdl-textfield__input" type="text" rows="3" id="textbox" name="textInput">
+                    </textarea>
+                <label class="mdl-textfield__label" for="textbox" name="testFunction" id="holder">
+                    Enter text here ...
+                </label>
+            </div>
+            <div>
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    <i class="material-icons">send</i>
+                </button>
+            </div>
         </form>
     </div>
-    <div class="mdl-layout-spacer"></div>
 </div>
+
 <article>
     <!--<p id="status">File API & FileReader API not supported</p>-->
 </article>
