@@ -42,7 +42,7 @@ function getJSONConfig() {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    console.log('got here2');
+    dbStub.fiberEstablishConnection();
     var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
     reached.then(function (reached) {
         console.log(reached);
@@ -62,11 +62,46 @@ router.get('/', function (req, res, next) {
         next(err);
     });
 });
+router.post('/loadDocument', function(req,res){
+   //TODO: Load & parse a loaded Document
+});
+router.post('/loadWrittenText', function (req, res) {
+    if (nlpStatus) {
+        var text = req.body.textInput;
+        if (/\S/.test(text)) {
+            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+        } else {
+            //TODO: Parse Text with corenlp
 
-router.post('/nlp2', function (req, res) {
-    console.log('nlpStatus: ' + req.app.locals.nlpStatus);
-    //check if CoreNLP server is online
-    server.listen(nlpPort);
+            var words = text.split(' ');
+            console.log(text + ' : ' + words.length);
+            for (var i = 0; i < words.length; i++) {
+                words[i] = '"' + words[i] + '"';
+                wait.launchFiber(sendSQL, words[i]);
+            }
+            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
+            //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+        }
+    }
+});
+
+function sendSQL(word) {
+    try {
+        var result = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [word, 0], null, null));
+        results.push(result);
+    } catch (err) {
+        results.push(err);
+    }
+}
+
+/*
+router.post('/inputText', function (req, res, next) {
+
+
+}*/
+
+/*
+server.listen(nlpPort);
 
     server.once('error', function (err) {
 
@@ -131,33 +166,5 @@ router.post('/nlp2', function (req, res) {
         }, null);
 
     });
-});
-/*
-router.post('/inputText', function (req, res, next) {
-
-    var text = req.body.textInput;
-    if (/\S/.test(text)){
-        res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-    } else {
-        var words = text.split(' ');
-        console.log(text + ' : ' + words.length);
-        for (var i = 0; i < words.length; i++) {
-            words[i] = '"' + words[i] + '"';
-            wait.launchFiber(sendSQL, words[i]);
-        }
-        res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
-        //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-    }
-});
-
-function sendSQL(word) {
-    try {
-        var result = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [word, 0], null, null));
-        results.push(result);
-    } catch (err) {
-        results.push(err);
-    }
-}*/
-
-
+ */
 module.exports = router;
