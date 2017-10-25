@@ -38,35 +38,11 @@ app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 
-const isReachable = require('is-reachable');
-//var promise = require('bluebird');
-
-
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
-});
-
-app.use(function (req, res, next) {
-    var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
-    reached.then(function (reached) {
-        console.log(reached);
-        if (reached) {
-            app.set('nlpStatus', true);
-        } else {
-            app.set('nlpStatus', false);
-            var err = new Error('CoreNlp not reachable');
-            err.status = 501;
-            next(err);
-        }
-    }).catch(function (e) {
-        app.set('nlpStatus', false);
-        var err = new Error('CoreNlp not reachable' + e);
-        err.status = 502;
-        next(err);
-    });
 });
 
 // connectionError handler
