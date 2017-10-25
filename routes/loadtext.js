@@ -19,6 +19,7 @@ var dbStub = require('../modules/DB-Stub.js');
 var mySQL = require('mysql');
 var wait = require('wait.for');
 var jsonAction = require('../modules/jsonActions');
+const isReachable = require('is-reachable');
 
 var connectionSettings = {
     database: "nlatool",
@@ -29,22 +30,41 @@ var connectionSettings = {
 };
 var results = [];
 
+var nlpStatus = {reachable: false};
 var json2;
 wait.launchFiber(getJSONConfig);
-
 
 function getJSONConfig() {
     json2 = jsonAction.getJsonConfiguration();
     json2 = JSON.parse(json2);
 }
 
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+    console.log('got here2');
+    var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
+    reached.then(function (reached) {
+        console.log(reached);
+        if (reached) {
+            nlpStatus.reachable = reached;
+            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+        } else {
+            nlpStatus.reachable = reached;
+            var err = new Error('CoreNlp not reachable');
+            err.status = 501;
+            next(err);
+        }
+    }).catch(function (e) {
+        nlpStatus.reachable = reached;
+        var err = new Error('CoreNlp not reachable' + e);
+        err.status = 502;
+        next(err);
+    });
 });
 
 router.post('/nlp2', function (req, res) {
-
+    console.log('nlpStatus: ' + req.app.locals.nlpStatus);
     //check if CoreNLP server is online
     server.listen(nlpPort);
 
@@ -68,9 +88,9 @@ router.post('/nlp2', function (req, res) {
 
                     for (var i = 0; i <= json["sentences"].length - 1; i++) {
                         for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
-                                classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
-                                words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
-                                pos[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].pos));
+                            classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
+                            words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
+                            pos[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].pos));
                         }
                     }
 
@@ -94,7 +114,7 @@ router.post('/nlp2', function (req, res) {
                         }
                     });
 
-            })
+                })
 
         }
     });
@@ -102,7 +122,9 @@ router.post('/nlp2', function (req, res) {
     //if Core NLP is offline:
     server.once('listening', function () {
         server.close();
-        setTimeout(function(){console.log("Server offline")}, 5000);
+        setTimeout(function () {
+            console.log("Server offline")
+        }, 5000);
         res.render('Desktop/loadtext', {
             title: 'NLA - Natural Language Analyse Tool',
             result: "Error 501: CoreNLP Server is offline"
