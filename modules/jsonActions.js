@@ -37,8 +37,7 @@ TODO: get all Table names aka SHOW TABLES
 TODO: get all columns and their Settings aka SHOW COLUMNS FROM db_tablename
 TODO: find & return table/column
 TODO: update/write json file
-
- */
+*/
 
 /**
  * Reads the database Configuration and returns an json Object.

@@ -75,15 +75,5 @@ router.post('/setNewConnection', function (req, res) {
             }
         });
     }
-    dbStub.makeSQLRequest('SELECT * FROM word', function (err, result) {
-       if(err) throw err;
-       console.log(result);
-    });
-    try {
-        var res = wait.for(dbStub.makeSQLRequest, 'SELECT * FROM word');
-    } catch(err){
-        console.error(err);
-    }
-
 });
 module.exports = router;
