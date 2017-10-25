@@ -42,7 +42,6 @@ const isReachable = require('is-reachable');
 //var promise = require('bluebird');
 
 
-
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
     var err = new Error('Not Found');
@@ -50,15 +49,23 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-app.use(function (err, req, res, next) {
-    console.log('got here');
-    var reached = isReachable('http://projects.hcilab.org/CoreNLP');
+app.use(function (req, res, next) {
+    var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
     reached.then(function (reached) {
         console.log(reached);
-
-    }).catch(function(e){
-        err.status = 501;
-        next(new Error('CoreNlp not Reachable!' + e));
+        if (reached) {
+            app.set('nlpStatus', true);
+        } else {
+            app.set('nlpStatus', false);
+            var err = new Error('CoreNlp not reachable');
+            err.status = 501;
+            next(err);
+        }
+    }).catch(function (e) {
+        app.set('nlpStatus', false);
+        var err = new Error('CoreNlp not reachable' + e);
+        err.status = 502;
+        next(err);
     });
 });
 
@@ -69,8 +76,9 @@ app.use(function (err, req, res, next) {
     res.locals.connectionError = req.app.get('env') === 'development' ? err : {};
 
     // render the connectionError page
+    console.log(err);
     res.status(err.status || 500);
-    res.render('error', {
+    res.render('./error', {
         message: err.message,
         error: err
     });
