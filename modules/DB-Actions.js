@@ -13,7 +13,7 @@ var sql = 'The resulting SQL Command is:';
  */
 var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
-var dbConfig = './modules/dbconfig.json';
+var dbConfig = './modules/config.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var jsonAction = require('./jsonActions');
@@ -85,7 +85,7 @@ createDatabaseCommand = function () {
 
 /**
  * Creates the command String for the SQL Command CREATE TABLE.
- * Needs the json of the dbconfig.json and the name of the table you want to create.
+ * Needs the json of the config.json and the name of the table you want to create.
  * @param tableName
  * @returns {string}
  */
@@ -119,7 +119,7 @@ createTableCommand = function (tableName) {
 
 /**
  * Retrieves all settings (key: value) of a given table (json)
- * Only works with the structure of dbconfig.json
+ * Only works with the structure of config.json
  * @param table
  * @param columnNumber
  * @returns {{}}

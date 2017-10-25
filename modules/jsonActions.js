@@ -13,7 +13,7 @@ var sql = 'The resulting SQL Command is:';
  */
 var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
-var dbConfig = './modules/dbconfig.json';
+var dbConfig = './modules/config.json';
 var testJson = './modules/test.json';
 var jsonAction = require('./jsonActions');
 
