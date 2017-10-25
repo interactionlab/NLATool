@@ -19,6 +19,24 @@
       }
     }
   },
+  "corenlp":{
+    "isTable": false,
+    "name": "corenlp",
+    "connections":{
+      "connection1":{
+        "host": "http://projects.hcilab.org/CoreNLP/",
+        "port": ""
+      },
+      "connection2":{
+        "host": "http://projects.hcilab.org:10940/",
+        "port": "10940"
+      },
+      "connection3":{
+        "host": "localhost",
+        "port": "9000"
+      }
+    }
+  },
   "default": {
     "isTable": false,
     "type": "VARCHAR",

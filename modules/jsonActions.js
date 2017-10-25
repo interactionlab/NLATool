@@ -145,3 +145,18 @@ exports.isKeyInObject = function (key, obj) {
     }
     return false;
 };
+
+/**
+ * This function will extract all the important values you need to create a connection or pool.
+ * @param connect
+ * @returns {{}}
+ */
+exports.getConnectionSettings = function (connect) {
+    var settings = {};
+    for (var setting in connect) {
+        if (setting !== 'priority') {
+            settings[setting] = connect[setting];
+        }
+    }
+    return settings;
+};
