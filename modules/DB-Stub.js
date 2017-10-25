@@ -52,7 +52,7 @@ exports.fiberEstablishConnection = function () {
 
 /**
  * sets up the whole connection Process, checking the database, setting up the database,
- * synchronises all the Settings made in the dbconfig.json with those on the DB itself.
+ * synchronises all the Settings made in the config.json with those on the DB itself.
  *
  */
 function establishConnection() {
@@ -81,7 +81,7 @@ function establishConnection() {
 }
 
 /**
- * On the basis of dbStatus, this method will change/create the Database to match the settings in the dbconfig.json.
+ * On the basis of dbStatus, this method will change/create the Database to match the settings in the config.json.
  * After that it tests if the Database matches the settings.
  * @returns {boolean}
  */
@@ -242,7 +242,7 @@ testDatabase = function () {
                 }
                 //dbColumns = JSON.stringify(dbColumns);
                 /* if (!matchColumnSettings(jsonList[i], jsonColumns, dbColumns)) {
-                     console.error(notMedia + Tag + 'One Table has different Settings as described in dbconfig.json: ' + jsonList[i]);
+                     console.error(notMedia + Tag + 'One Table has different Settings as described in config.json: ' + jsonList[i]);
                      console.error(notMedia + Tag + 'Here are the settings of Both Tables: ');
                      console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
                      console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
@@ -266,7 +266,7 @@ function isDbCorrect() {
 
 /**
  * Compares the Columns of 2 sources on the basis of json in the structure of
- * the dbconfig.json.
+ * the config.json.
  * @param table
  * @param jsonColumns
  * @param dbColumns
@@ -409,7 +409,7 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
 /**
  * MySql has a wierd output for their Table Descriptions, thus this function
  * should translate the Output in a way that it can be compared with the structure
- * of the dbconfig.json
+ * of the config.json
  * @param sqlResult
  */
 makeColumnDescriptionComparableToJson = function (sqlResult) {

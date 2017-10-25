@@ -12,7 +12,7 @@ var Tag = 'changeDB.js: ';
  */
 var jsonConfigurator = require('jsonfile');
 var wait = require('wait.for');
-var dbConfig = './modules/dbconfig.json';
+var dbConfig = './modules/config.json';
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
 var jsonAction = require('./jsonActions');
