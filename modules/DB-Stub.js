@@ -61,7 +61,7 @@ function establishConnection() {
     json = JSON.parse(json);
     //console.log(notMedia + Tag + 'json outside before parse: ' + json);
     for (var connect in json.database.connections) {
-        connectSettings = getConnectionSettings(json.database.connections[connect]);
+        connectSettings = jsonAction.getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
         dbStub.createConnection(connectSettings);
         if (dbStatus.connection !== null && dbStatus.connected !== false) {
@@ -173,21 +173,6 @@ exports.makeSQLRequest = function (query, callback) {
             'Please check with "getDbStatus" if there is an error.';
         callback(err, null);
     }*/
-};
-
-/**
- * This function will extract all the important values you need to create a connection or pool.
- * @param connect
- * @returns {{}}
- */
-getConnectionSettings = function (connect) {
-    var settings = {};
-    for (var setting in connect) {
-        if (setting !== 'priority') {
-            settings[setting] = connect[setting];
-        }
-    }
-    return settings;
 };
 
 /*
