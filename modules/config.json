@@ -32,7 +32,7 @@
         "port": "10940"
       },
       "connection3":{
-        "host": "localhost",
+        "host": "localhost:9000",
         "port": "9000"
       }
     }
