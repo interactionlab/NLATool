@@ -87,11 +87,11 @@ exports.getAReachableConnection = function () {
 };
 
 exports.setupCorenlp = function () {
-    /*const connector = new ConnectorServer({ dsn: nlpStatus.host });
+    const connector = new ConnectorServer({ dsn: nlpStatus.host });
     const props = new Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    const pipeline = new Pipeline(props, 'English', connector);*/
+    const pipeline = new Pipeline(props, 'English', connector);
 };
 
 
@@ -99,16 +99,26 @@ exports.setupCorenlp = function () {
 /**
  * Section for managing nlpStatus
  */
+/**
+ * Returns the whole Object Representing the Nlp Server Status
+ * from node.js Server point of view.
+ * @returns {{reachable: boolean, host: null, error: null}}
+ */
 exports.getNlpStatus = function () {
     return nlpStatus;
 };
-
+/**
+ * Resets the nlpStatus Object to its default values.
+ */
 exports.resetNlpStatus = function () {
     nlpStatus.error = null;
     nlpStatus.reachable = false;
     nlpStatus.host = null;
 };
-
+/**
+ * Returns true if all the conditions that are specified to
+ * @returns {boolean}
+ */
 exports.positiveNlpStatus = function () {
     return nlpStatus.host !== null && nlpStatus.reachable === true && nlpStatus.error === null;
 };
