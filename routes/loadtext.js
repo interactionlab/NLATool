@@ -19,7 +19,8 @@ var dbStub = require('../modules/DB-Stub.js');
 var mySQL = require('mysql');
 var wait = require('wait.for');
 var jsonAction = require('../modules/jsonActions');
-const isReachable = require('is-reachable');
+var corenlp = require('../modules/corenlp');
+//const isReachable = require('is-reachable');
 
 var connectionSettings = {
     database: "nlatool",
@@ -43,7 +44,22 @@ function getJSONConfig() {
 /* GET home page. */
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
-    var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
+
+    wait.launchFiber(corenlp.getAReachableConnection);
+    if (corenlp.positiveNlpStatus()) {
+        res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+    } else {
+        var nlpStatus = corenlp.getNlpStatus();
+        if (typeof nlpStatus.error !== "undefined"&& nlpStatus.error !== null  ) {
+            next(nlpStatus.error);
+        } else{
+            var err = new Error('Corenlp failed to find a connection, but didnt throw an error!');
+            next(err);
+        }
+    }
+
+
+    /*var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
     reached.then(function (reached) {
         console.log(reached);
         if (reached) {
@@ -60,10 +76,10 @@ router.get('/', function (req, res, next) {
         var err = new Error('CoreNlp not reachable' + e);
         err.status = 502;
         next(err);
-    });
+    });*/
 });
-router.post('/loadDocument', function(req,res){
-   //TODO: Load & parse a loaded Document
+router.post('/loadDocument', function (req, res) {
+    //TODO: Load & parse a loaded Document
 });
 router.post('/loadWrittenText', function (req, res) {
     if (nlpStatus) {
