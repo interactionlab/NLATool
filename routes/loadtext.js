@@ -1,5 +1,4 @@
 var express = require('express');
-var corenlp = require("corenlp-request-wrapper");
 var router = express.Router();
 var nlpPort = 4000;
 //--------------------------------------------------------
@@ -22,16 +21,8 @@ var jsonAction = require('../modules/jsonActions');
 var corenlp = require('../modules/corenlp');
 //const isReachable = require('is-reachable');
 
-var connectionSettings = {
-    database: "nlatool",
-    host: "turcan.de",
-    user: "nlatool",
-    password: "1EcH1pHr1VHhdknm",
-    port: "3306"
-};
-var results = [];
 
-var nlpStatus = {reachable: false};
+var results = [];
 var json2;
 wait.launchFiber(getJSONConfig);
 

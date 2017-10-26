@@ -87,11 +87,11 @@ exports.getAReachableConnection = function () {
 };
 
 exports.setupCorenlp = function () {
-    const connector = new ConnectorServer({ dsn: nlpStatus.host });
+    /*const connector = new ConnectorServer({ dsn: nlpStatus.host });
     const props = new Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    const pipeline = new Pipeline(props, 'English', connector);
+    const pipeline = new Pipeline(props, 'English', connector);*/
 };
 
 
