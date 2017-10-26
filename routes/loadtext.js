@@ -43,46 +43,17 @@ function getJSONConfig() {
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    dbStub.fiberEstablishConnection();
-
-    wait.launchFiber(corenlp.getAReachableConnection);
-    if (corenlp.positiveNlpStatus()) {
-        res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-    } else {
-        var nlpStatus = corenlp.getNlpStatus();
-        if (typeof nlpStatus.error !== "undefined"&& nlpStatus.error !== null  ) {
-            next(nlpStatus.error);
-        } else{
-            var err = new Error('Corenlp failed to find a connection, but didnt throw an error!');
-            next(err);
-        }
-    }
-
-
-    /*var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
-    reached.then(function (reached) {
-        console.log(reached);
-        if (reached) {
-            nlpStatus.reachable = reached;
-            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-        } else {
-            nlpStatus.reachable = reached;
-            var err = new Error('CoreNlp not reachable');
-            err.status = 501;
-            next(err);
-        }
-    }).catch(function (e) {
-        nlpStatus.reachable = reached;
-        var err = new Error('CoreNlp not reachable' + e);
-        err.status = 502;
-        next(err);
-    });*/
+    wait.launchFiber(getLoadTextRoutine, req, res, next);
 });
+
+
+
 router.post('/loadDocument', function (req, res) {
     //TODO: Load & parse a loaded Document
 });
+
 router.post('/loadWrittenText', function (req, res) {
-    if (nlpStatus) {
+    if (corenlp.positiveNlpStatus()) {
         var text = req.body.textInput;
         if (/\S/.test(text)) {
             res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
@@ -100,6 +71,31 @@ router.post('/loadWrittenText', function (req, res) {
         }
     }
 });
+
+/**
+ * Function that was needed to have the whole get-Routine into one fiber,
+ * to support wait.for statements.
+ * This function will do anything you want to do in router.get when first
+ * addressing this route.
+ * @param req
+ * @param res
+ * @param next
+ */
+function getLoadTextRoutine(req, res, next) {
+    dbStub.fiberEstablishConnection();
+    corenlp.getAReachableConnection();
+    if (corenlp.positiveNlpStatus()) {
+        res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+    } else {
+        var nlpStatus = corenlp.getNlpStatus();
+        if (typeof nlpStatus.error !== "undefined" && nlpStatus.error !== null) {
+            next(nlpStatus.error);
+        } else {
+            var err = new Error('Corenlp failed to find a connection, but didnt throw an error!');
+            next(err);
+        }
+    }
+}
 
 function sendSQL(word) {
     try {
@@ -183,4 +179,23 @@ server.listen(nlpPort);
 
     });
  */
+
+/*var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
+    reached.then(function (reached) {
+        console.log(reached);
+        if (reached) {
+            nlpStatus.reachable = reached;
+            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+        } else {
+            nlpStatus.reachable = reached;
+            var err = new Error('CoreNlp not reachable');
+            err.status = 501;
+            next(err);
+        }
+    }).catch(function (e) {
+        nlpStatus.reachable = reached;
+        var err = new Error('CoreNlp not reachable' + e);
+        err.status = 502;
+        next(err);
+    });*/
 module.exports = router;
