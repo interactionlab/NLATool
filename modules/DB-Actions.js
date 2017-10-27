@@ -23,6 +23,9 @@ var jsonAction = require('./jsonActions');
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
 var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+exports.getQueryOperators = function () {
+    return queryOperators;
+};
 
 /**
  * Loads the Database Configuration at the beginning of the of this file so
@@ -252,8 +255,13 @@ exports.createInnerJoinSelectCommand = function (table1, table2, joinCondition) 
     return commandString;
 };
 
-exports.createInnerJoinCondition = function () {
-
+exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2, operators) {
+    var queryString = 'ON';
+    if (valuesToCompare1.length === valuesToCompare2.length && operators.length === valuesToCompare1.length) {
+        for (var i = 0; i < valuesToCompare1.length; i++) {
+            queryString = queryString + ' ' + valuesToCompare1[i] + ' ' + operators [i] + ' ' + valuesToCompare2[i];
+        }
+    }
 };
 
 /**
