@@ -56,7 +56,7 @@ router.post('/loadWrittenText', function (req, res) {
             for (var i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
                 wait.launchFiber(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-
+                //wait.launchFiber(sendSQL, dbAction.createInsertCommand('text', ['Counter', 'wordID'],[i]));
             }
             res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});

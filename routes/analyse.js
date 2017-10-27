@@ -22,9 +22,10 @@ router.get('/', function (req, res, next) {
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
-router.post('/inputText', function (req, res, next) {
+router.post('/showText', function (req, res, next) {
+    var queryOperators = dbAction.getQueryOperators();
 
-
+    wait.launchFiber(sendSQL, dbAction.createInnerJoinSelectCommand('word', 'text'));
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
