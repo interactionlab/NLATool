@@ -24,24 +24,13 @@ router.get('/', function (req, res, next) {
 
 router.post('/inputText', function (req, res, next) {
 
-    var text = req.body.textInput;
-    if (/\S/.test(text)){
-        res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-    } else {
-        var words = text.split(' ');
-        console.log(text + ' : ' + words.length);
-        for (var i = 0; i < words.length; i++) {
-            words[i] = '"' + words[i] + '"';
-            wait.launchFiber(sendSQL, words[i]);
-        }
-        res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
-        //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-    }
+
+    res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
-function sendSQL(word) {
+function sendSQL(command) {
     try {
-        var result = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [word, 0], null, null));
+        var result = wait.for(dbStub.makeSQLRequest,command);
         results.push(result);
     } catch (err) {
         results.push(err);
