@@ -247,6 +247,15 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
 
 };
 
+exports.createInnerJoinSelectCommand = function (table1, table2, joinCondition) {
+    var commandString = 'SELECT ' + table1 + ' INNER JOIN ' + table2 + ' ' + joinCondition;
+    return commandString;
+};
+
+exports.createInnerJoinCondition = function () {
+
+};
+
 /**
  *  Generates the query for the SQL Command INSERT INTO.
  *  If table, columns, values are empty (==null) the function returnes null.
@@ -275,7 +284,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
         }
         commandString = commandString + ')';
         if (valuesToCompare !== null && operators !== null) {
-            commandString = commandString + ' '+ createWhereQuery(columns, valuesToCompare, operators);
+            commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         }
         commandString = commandString + ';';
         console.log(notMedia + Tag + commandString);
