@@ -46,9 +46,28 @@
         </nav>
     </div>
 
-
-    <main class="mdl-grid center-block">
-            <img src="/images/logo.jpg" alt="Logo">
+    <!-- page content-->
+    <main class="mdl-grid graybox" style="text-align: center">
+        <div style=" width: 100%; text-align: center">
+            <img src="/images/logo.jpg" alt="Logo" class="graybox" style="text-align: center">
+        </div>
+        <div style=" width: 100%;text-align: center">
+            <!--Same post as in loadtext-->
+            <form action="/loadtext/loadWrittenText" method="post">
+                <div class="mdl-textfield mdl-js-textfield graybox" style="width: 100%;text-align: center">
+                    <textarea class="mdl-textfield__input" type="text" rows="3" id="textbox" name="textInput">
+                    </textarea>
+                    <label class="mdl-textfield__label" for="textbox" name="testFunction" id="holder">
+                        Enter text here ...
+                    </label>
+                </div>
+                <div>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <i class="material-icons">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </main>
 </div>
 </body>
