@@ -1,5 +1,4 @@
-
-
+// ButtonFunction (used in analyse.ejs) for open and close the result field
 function expand() {
     var button = document.getElementById('switch');
     var rightDiv = document.getElementById('right-column');
