@@ -55,7 +55,8 @@ router.post('/loadWrittenText', function (req, res) {
             console.log(text + ' : ' + words.length);
             for (var i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
-                wait.launchFiber(sendSQL, words[i]);
+                wait.launchFiber(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
+
             }
             res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
@@ -88,9 +89,9 @@ function getLoadTextRoutine(req, res, next) {
     }
 }
 
-function sendSQL(word) {
+function sendSQL(command) {
     try {
-        var result = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [word, 0], null, null));
+        var result = wait.for(dbStub.makeSQLRequest,command);
         results.push(result);
     } catch (err) {
         results.push(err);
