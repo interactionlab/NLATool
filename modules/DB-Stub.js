@@ -162,7 +162,7 @@ exports.makeSQLRequest = function (query, callback) {
                 callback(err, null);
             }
             else {
-                console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
+                //console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
                 queryStatus.result = result;
                 queryStatus.executed = true;
                 callback(null, JSON.stringify(result));
