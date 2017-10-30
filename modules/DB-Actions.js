@@ -182,7 +182,11 @@ addKeySettingsToSQLCommand = function (table) {
 
     var keySQLString = '';
     for (var column in keySettings) {
-        keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
+        if (keySettings[column] === 'PRIMARY KEY' || keySettings[column] === 'UNIQUE') {
+            keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
+        } else {
+            keySQLString = keySQLString + 'FOREIGN KEY ' + column + ' REFERENCES ' + keySettings[column] + '(' + column + '), ';
+        }
     }
     keySQLString = jsonAction.setCharAt(keySQLString, keySQLString.length - 2, ');');
     return keySQLString;
@@ -203,6 +207,8 @@ findKeyColumns = function (table) {
                     keySettings[table[column].name] = 'PRIMARY KEY';
                 } else if (table[column].UNIQUE === true) {
                     keySettings[table[column].name] = 'UNIQUE';
+                } else if (typeof table[column].FOREIGN !== 'undefined') {
+                    keySettings[table[column].name] = table[column].FOREIGN;
                 }
             }
         }
