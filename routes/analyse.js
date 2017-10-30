@@ -23,11 +23,15 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/showText', function (req, res, next) {
+    wait.launchFiber(postShowText,req,res, next);
+});
+
+function postShowText(req, res, next) {
     var queryOperators = dbAction.getQueryOperators();
 
-    wait.launchFiber(sendSQL, dbAction.createInnerJoinSelectCommand('word', 'text'));
+    wait.for(sendSQL, dbAction.createInnerJoinSelectCommand('word', 'text'));
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-});
+}
 
 function sendSQL(command) {
     try {
