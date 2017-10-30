@@ -86,7 +86,7 @@ function postLoadWrittenText(req, res, next) {
             for (var i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
                 wait.for(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter', 'wordID'],[i]));
+                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter'],[i], null, null));
             }
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
