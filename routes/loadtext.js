@@ -44,24 +44,7 @@ router.post('/loadDocument', function (req, res) {
 });
 
 router.post('/loadWrittenText', function (req, res) {
-    if (corenlp.positiveNlpStatus()) {
-        var text = req.body.textInput;
-        if (/\S/.test(text)) {
-            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-        } else {
-            //TODO: Parse Text with corenlp
-
-            var words = text.split(' ');
-            console.log(text + ' : ' + words.length);
-            for (var i = 0; i < words.length; i++) {
-                words[i] = '"' + words[i] + '"';
-                wait.launchFiber(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-                //wait.launchFiber(sendSQL, dbAction.createInsertCommand('text', ['Counter', 'wordID'],[i]));
-            }
-            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
-            //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-        }
-    }
+    wait.launchFiber(postLoadWrittenText,req,res,req);
 });
 
 /**
@@ -89,6 +72,30 @@ function getLoadTextRoutine(req, res, next) {
     }
 }
 
+
+function postLoadWrittenText(req, res, next) {
+    if (corenlp.positiveNlpStatus()) {
+        var text = req.body.textInput;
+        if (!/\S/.test(text)) {
+            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+        } else {
+            //TODO: Parse Text with corenlp
+
+            var words = text.split(' ');
+            console.log(text + ' : ' + words.length);
+            for (var i = 0; i < words.length; i++) {
+                words[i] = '"' + words[i] + '"';
+                wait.for(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
+                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter', 'wordID'],[i]));
+            }
+            //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
+            //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+            res.redirect('/analyse');
+        }
+    }
+}
+
+
 function sendSQL(command) {
     try {
         var result = wait.for(dbStub.makeSQLRequest,command);
@@ -97,13 +104,6 @@ function sendSQL(command) {
         results.push(err);
     }
 }
-
-/*
-router.post('/inputText', function (req, res, next) {
-
-
-}*/
-
 /*
 server.listen(nlpPort);
 
