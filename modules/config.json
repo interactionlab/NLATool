@@ -176,7 +176,7 @@
       "UNIQUE": true
     },
     "column3": {
-      "name": "Counter",
+      "name": "length",
       "type": "INT",
       "length": "11"
     },
@@ -210,6 +210,27 @@
     },
     "column5": {
       "name": "pos"
+    }
+  },
+  "table6":{
+    "isTable": true,
+    "name": "textWords",
+    "column1":{
+      "name": "wordID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "word"
+    },
+    "column2":{
+      "name": "textID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "text"
+    },
+    "column3":{
+      "name": "counter",
+      "type": "INT",
+      "length": "11"
     }
   }
 }

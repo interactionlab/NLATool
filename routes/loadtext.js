@@ -15,10 +15,11 @@ var net = require('net');
 var server = net.createServer();
 var dbAction = require('../modules/DB-Actions.js');
 var dbStub = require('../modules/DB-Stub.js');
-var mySQL = require('mysql');
+var uword = require('uwords');
 var wait = require('wait.for');
 var jsonAction = require('../modules/jsonActions');
 var corenlp = require('../modules/corenlp');
+
 //const isReachable = require('is-reachable');
 
 
@@ -38,13 +39,12 @@ router.get('/', function (req, res, next) {
 });
 
 
-
 router.post('/loadDocument', function (req, res) {
     //TODO: Load & parse a loaded Document
 });
 
 router.post('/loadWrittenText', function (req, res) {
-    wait.launchFiber(postLoadWrittenText,req,res,req);
+    wait.launchFiber(postLoadWrittenText, req, res, req);
 });
 
 /**
@@ -80,13 +80,14 @@ function postLoadWrittenText(req, res, next) {
             res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
         } else {
             //TODO: Parse Text with corenlp
-
-            var words = text.split(' ');
+            var words = uword(text);
+            console.log('Words are: ' + Array.isArray(words) + words);
+            //var words = text.split(' ');
             console.log(text + ' : ' + words.length);
             for (var i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
-                wait.for(sendSQL,  dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter'],[i], null, null));
+                wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
+                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter'], [i], null, null));
             }
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: results});
             //res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
@@ -98,12 +99,13 @@ function postLoadWrittenText(req, res, next) {
 
 function sendSQL(command) {
     try {
-        var result = wait.for(dbStub.makeSQLRequest,command);
+        var result = wait.for(dbStub.makeSQLRequest, command);
         results.push(result);
     } catch (err) {
         results.push(err);
     }
 }
+
 /*
 server.listen(nlpPort);
 
@@ -172,22 +174,5 @@ server.listen(nlpPort);
     });
  */
 
-/*var reached = isReachable('http://projects.hcilab.org/CoreNLP/');
-    reached.then(function (reached) {
-        console.log(reached);
-        if (reached) {
-            nlpStatus.reachable = reached;
-            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
-        } else {
-            nlpStatus.reachable = reached;
-            var err = new Error('CoreNlp not reachable');
-            err.status = 501;
-            next(err);
-        }
-    }).catch(function (e) {
-        nlpStatus.reachable = reached;
-        var err = new Error('CoreNlp not reachable' + e);
-        err.status = 502;
-        next(err);
-    });*/
+
 module.exports = router;
