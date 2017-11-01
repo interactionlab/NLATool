@@ -86,19 +86,6 @@
       "name": "userID",
       "type": "INT",
       "length": "11"
-    },
-    "column3": {
-      "name": "title",
-      "length": "20"
-    },
-    "column4": {
-      "name": "author",
-      "length": "20"
-    },
-    "column5": {
-      "name": "year",
-      "type": "YEAR",
-      "length": "4"
     }
   },
   "table2": {
@@ -163,27 +150,36 @@
     "isTable": true,
     "name": "text",
     "column1": {
-      "name": "textID",
-      "type": "INT",
-      "length": "11",
-      "PRIMARY": true,
-      "AUTO_INCREMENT": true
-    },
-    "column2": {
       "name": "docID",
       "type": "INT",
       "length": "11",
-      "UNIQUE": true
+      "FOREIGN": "documents",
+      "AUTO_INCREMENT": true
     },
-    "column3": {
+    "column2": {
       "name": "length",
       "type": "INT",
       "length": "11"
     },
-    "column4": {
+    "column3": {
       "name": "wordID",
       "type": "INT",
       "length": "11"
+    },
+    "column4": {
+      "name": "title",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5": {
+      "name": "author",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column6": {
+      "name": "year",
+      "type": "YEAR",
+      "length": "4"
     }
   },
   "table5": {
@@ -206,10 +202,14 @@
       "length": "1"
     },
     "column4": {
-      "name": "semanticClass"
+      "name": "semanticClass",
+      "type": "VARCHAR",
+      "length": "20"
     },
     "column5": {
-      "name": "pos"
+      "name": "pos",
+      "type": "VARCHAR",
+      "length": "20"
     }
   },
   "table6":{
@@ -222,10 +222,10 @@
       "FOREIGN": "word"
     },
     "column2":{
-      "name": "textID",
+      "name": "docID",
       "type": "INT",
       "length": "11",
-      "FOREIGN": "text"
+      "FOREIGN": "documents"
     },
     "column3":{
       "name": "counter",
