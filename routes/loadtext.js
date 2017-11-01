@@ -84,10 +84,22 @@ function postLoadWrittenText(req, res, next) {
             console.log('Words are: ' + Array.isArray(words) + words);
             //var words = text.split(' ');
             console.log(text + ' : ' + words.length);
+            var rand = Math.random();
+
+            wait.for(sendSQL, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
+            var documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
+            console.log('DocumentID is: ' + documentID);
+            /*wait.for(sendSQL, dbAction.createInsertCommand(
+                'text',
+                ['docID', 'length', 'title'],
+                [documentID[0].docID, words.length, rand],
+                null, null));*/
+
+
             for (var i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
                 wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-                wait.for(sendSQL, dbAction.createInsertCommand('text', ['Counter'], [i], null, null));
+                //wait.for(sendSQL, dbAction.createInsertCommand('textWords',['wordID', 'docID', 'counter'], [0,documentID[0].docID, i],null,null))
             }
             res.redirect('/analyse');
         }
