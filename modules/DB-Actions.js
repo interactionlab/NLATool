@@ -69,7 +69,7 @@ createAllTables = function (connection) {
     var i = 0;
     for (var table in json) {
         if (json[table].isTable) {
-            connection.query(createTableCommand(json[table].name), function (err) {
+            connection.query(dbAction.createTableCommand(json[table].name), function (err) {
                 if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + ': ' + err);
             });
         }
@@ -92,7 +92,7 @@ createDatabaseCommand = function () {
  * @param tableName
  * @returns {string}
  */
-createTableCommand = function (tableName) {
+exports.createTableCommand = function (tableName) {
     var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
     for (var table in json) {
         if (json[table].name === tableName) {
@@ -116,7 +116,7 @@ createTableCommand = function (tableName) {
     }
 
     //commandString = setCharAt(commandString, commandString.length - 1, ')');
-    //console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
+    console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
     return commandString;
 };
 
@@ -153,13 +153,15 @@ transformColumnToSQL = function (column, options) {
         var specialSetting = null;
         for (var key in options) {
             //console.log(key +  ': ' + options[key] +' last:'+ tempKey);
-            if (!isNaN(options[key]) && !(typeof options[key] === "boolean") && options[tempKey] === 'VARCHAR') {
+            if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
                 transformString = transformString + ' (' + options[key] + ')';
-            } else if (!(typeof options[key] === "boolean") && isNaN(options[key])) {
+            } else if(key ==='FOREIGN'){}
+            else if (!(typeof options[key] === "boolean") && isNaN(options[key])) {
                 transformString = transformString + ' ' + options[key];
             } else if (key === 'AUTO_INCREMENT' && options[key] === true) {
                 transformString = transformString + ' ' + key;
-            }
+            } else if(key ==='FOREIGN'){}
+
             tempKey = key;
         }
         /*if (specialSetting === 'UNIQUE' || specialSetting === 'PRIMARY KEY' || specialSetting === 'FOREIGN KEY') {
@@ -185,7 +187,7 @@ addKeySettingsToSQLCommand = function (table) {
         if (keySettings[column] === 'PRIMARY KEY' || keySettings[column] === 'UNIQUE') {
             keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
         } else {
-            keySQLString = keySQLString + 'FOREIGN KEY ' + column + ' REFERENCES ' + keySettings[column] + '(' + column + '), ';
+            keySQLString = keySQLString + 'FOREIGN KEY (' + column + ') REFERENCES ' + keySettings[column] + '(' + column + '), ';
         }
     }
     keySQLString = jsonAction.setCharAt(keySQLString, keySQLString.length - 2, ');');

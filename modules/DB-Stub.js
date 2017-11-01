@@ -104,7 +104,13 @@ syncDatabase = function () {
             }
         } else if (!dbStatus.tablesCorrect) {
             //The Tables are not correct. (Missing, different name, new table...)
-
+            for(var table in differences){
+                if(differences[table] === true){
+                    wait.for(makeSQLRequest,dbAction.createTableCommand(table));
+                }
+                //TODO: If on a table is on the DB that isnt in the config. -> drop table.
+            }
+            differences = {};
         } else if (!dbStatus.columnsCorrect) {
             //One or more columns of one or more Tables are wrong
             //TODO: Correct the Database. Commands like ALTER TABLE will be needed.
@@ -242,6 +248,7 @@ testDatabase = function () {
             }
         }
     }
+    console.log('The differences at the end: ' + JSON.stringify(differences));
     isDbCorrect();
 };
 
