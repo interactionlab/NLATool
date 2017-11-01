@@ -104,9 +104,9 @@ syncDatabase = function () {
             }
         } else if (!dbStatus.tablesCorrect) {
             //The Tables are not correct. (Missing, different name, new table...)
-            for(var table in differences){
-                if(differences[table] === true){
-                    wait.for(makeSQLRequest,dbAction.createTableCommand(table));
+            for (var table in differences) {
+                if (differences[table] === true) {
+                    wait.for(makeSQLRequest, dbAction.createTableCommand(table));
                 }
                 //TODO: If on a table is on the DB that isnt in the config. -> drop table.
             }
@@ -160,25 +160,25 @@ makeSQLRequest = function (query, callback) {
  */
 exports.makeSQLRequest = function (query, callback) {
     //if (dbStub.isDBReadyForQuery()) {
-        connection.query(query, function (err, result) {
-            if (err) {
-                console.log(err);
-                queryStatus.executed = false;
-                queryStatus.error = err;
-                callback(err, null);
-            }
-            else {
-                //console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
-                queryStatus.result = result;
-                queryStatus.executed = true;
-                callback(null, JSON.stringify(result));
-            }
-        });
-   /* } else {
-        var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
-            'Please check with "getDbStatus" if there is an error.';
-        callback(err, null);
-    }*/
+    connection.query(query, function (err, result) {
+        if (err) {
+            console.log(err);
+            queryStatus.executed = false;
+            queryStatus.error = err;
+            callback(err, null);
+        }
+        else {
+            //console.log(notMedia + Tag + 'Result of the SQL Request: ' + JSON.stringify(result));
+            queryStatus.result = result;
+            queryStatus.executed = true;
+            callback(null, JSON.stringify(result));
+        }
+    });
+    /* } else {
+         var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
+             'Please check with "getDbStatus" if there is an error.';
+         callback(err, null);
+     }*/
 };
 
 /*
@@ -225,7 +225,8 @@ testDatabase = function () {
                     var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
                     //console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
                     dbColumns = JSON.parse(dbColumns);
-                    dbColumns = makeColumnDescriptionComparableToJson(dbColumns);
+                    //console.log(notMedia + Tag + 'Description of the DB: ' + jsonList[i] + ': ' + JSON.stringify(dbColumns));
+                    dbColumns = makeColumnDescriptionComparableToJson(dbColumns, jsonList[i]);
                     //dbColumns = JSON.parse(dbColumns);
                 } catch (err) {
                     //console.error(notMedia + Tag + 'Describe ' + jsonList[i] + ' has Error: ' + err);
@@ -384,7 +385,7 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
                 }
             }
         }
-        if(typeof differences[table] === "undefined" || Object.keys(differences[table]).length <= 0){
+        if (typeof differences[table] === "undefined" || Object.keys(differences[table]).length <= 0) {
             dbStatus.columnsCorrect = true;
         } else {
             dbStatus.columnsCorrect = false;
@@ -404,7 +405,7 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
  * of the config.json
  * @param sqlResult
  */
-makeColumnDescriptionComparableToJson = function (sqlResult) {
+makeColumnDescriptionComparableToJson = function (sqlResult, table) {
     var type;
     var columns = {};
     var column = 'column';
@@ -434,15 +435,21 @@ makeColumnDescriptionComparableToJson = function (sqlResult) {
                     columns[column]['null'] = 'NULL';
                 }
             } else if (setting === 'Key') {
-                if (sqlResult[i][setting] === 'PRI') {
-                    columns[column]['PRIMARY'] = true;
-                    columns[column]['UNIQUE'] = false;
-                } else if (sqlResult[i][setting] === 'UNI') {
-                    columns[column]['PRIMARY'] = false;
-                    columns[column]['UNIQUE'] = true;
-                } else if (sqlResult[i][setting] !== 'PRI' && sqlResult[i][setting] !== 'UNI') {
+                if (sqlResult[i][setting] !== 'PRI' && sqlResult[i][setting] !== 'UNI' && sqlResult[i][setting] !== 'MUL') {
                     columns[column]['PRIMARY'] = false;
                     columns[column]['UNIQUE'] = false;
+                } else {
+                    if (sqlResult[i][setting] === 'PRI') {
+                        columns[column]['PRIMARY'] = true;
+                        columns[column]['UNIQUE'] = false;
+                    } else if (sqlResult[i][setting] === 'UNI') {
+                        columns[column]['PRIMARY'] = false;
+                        columns[column]['UNIQUE'] = true;
+                    } else if (sqlResult[i][setting] === 'MUL') {
+                        columns[column]['PRIMARY'] = false;
+                        columns[column]['UNIQUE'] = false;
+                        columns[column]['FOREIGN'] = table;
+                    }
                 }
             } else if (setting === 'Extra') {
                 if (sqlResult[i][setting] === 'auto_increment') {

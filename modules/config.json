@@ -86,6 +86,11 @@
       "name": "userID",
       "type": "INT",
       "length": "11"
+    },
+    "column3": {
+      "name": "name",
+      "type": "VARCHAR",
+      "length": "20"
     }
   },
   "table2": {
@@ -158,11 +163,6 @@
     },
     "column2": {
       "name": "length",
-      "type": "INT",
-      "length": "11"
-    },
-    "column3": {
-      "name": "wordID",
       "type": "INT",
       "length": "11"
     },
