@@ -16,7 +16,7 @@ var server = net.createServer();
 var dbAction = require('../modules/DB-Actions.js');
 var dbStub = require('../modules/DB-Stub.js');
 var uword = require('uwords');
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 var jsonAction = require('../modules/jsonActions');
 var corenlp = require('../modules/corenlp');
 

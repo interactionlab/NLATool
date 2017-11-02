@@ -22,7 +22,7 @@ var dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
 var jsonConfigurator = require('jsonfile');
 var dbconfig = './modules/config.json';
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 router.get('/', function (req, res, next) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
