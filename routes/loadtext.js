@@ -77,7 +77,7 @@ function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         var text = req.body.textInput;
         if (!/\S/.test(text)) {
-            res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
         } else {
             //TODO: Parse Text with corenlp
             var words = uword(text);
@@ -86,14 +86,14 @@ function postLoadWrittenText(req, res, next) {
             console.log(text + ' : ' + words.length);
             var rand = Math.random();
 
-            wait.for(sendSQL, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
+            var res = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
             var documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
-            console.log('DocumentID is: ' + documentID);
-            /*wait.for(sendSQL, dbAction.createInsertCommand(
+            console.log('DocumentID is: ' + res +': '+ documentID);
+            wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title'],
-                [documentID[0].docID, words.length, rand],
-                null, null));*/
+                ['LAST_INSERT_ID()', words.length, rand],
+                null, null));
 
 
             for (var i = 0; i < words.length; i++) {
