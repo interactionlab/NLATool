@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var dbStub = require('../modules/DB-Stub');
 var dbAction = require('../modules/DB-Actions');
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 
 //--------------------------------------------------------
 /**
