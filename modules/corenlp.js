@@ -12,7 +12,7 @@ var sql = 'The resulting SQL Command is:';
  * Setup Configuration file Requirements:
  */
 var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 //var corenlp = require('corenlp');
 var jsonAction = require('../modules/jsonActions');
 const isReachable = require('is-reachable');

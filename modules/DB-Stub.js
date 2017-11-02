@@ -17,7 +17,7 @@ var Tag = 'DB-Stub.js: ';
 var mysql = require('mysql');
 var dbAction = require('./DB-Actions');
 var dbStub = require('./DB-Stub');
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 var jsonAction = require('./jsonActions');
 //var test = require('../modules/test');
 

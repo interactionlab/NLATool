@@ -17,7 +17,7 @@ var Tag = 'profile.js: ';
  */
 var dbAction = require('../modules/DB-Actions');
 var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for');
+var wait = require('wait.for-es6');
 var dbStub = require('../modules/DB-Stub');
 var jsonAction = require('../modules/jsonActions');
 var testJson = './modules/test.json';
