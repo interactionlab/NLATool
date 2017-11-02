@@ -13,6 +13,7 @@ var signUp = require('./routes/signUp');
 var test = require('./routes/test');
 var loadtext = require('./routes/loadtext');
 var setup = require('./routes/setup');
+var Comment = require('./routes/Comment');
 
 var app = express();
 
@@ -37,6 +38,7 @@ app.use('/signUp', signUp);
 app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
+app.use('/Comment', Comment);
 
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
