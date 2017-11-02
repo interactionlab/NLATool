@@ -86,9 +86,9 @@ function postLoadWrittenText(req, res, next) {
             console.log(text + ' : ' + words.length);
             var rand = Math.random();
 
-            var res = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
+            var rest = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
             var documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
-            console.log('DocumentID is: ' + res +': '+ documentID);
+            console.log('DocumentID is: ' + rest +': '+ documentID);
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title'],
