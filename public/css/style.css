@@ -32,4 +32,7 @@
     background-color:yellow;
 }
 
-
+/*vue.js*/
+.router-link-active {
+    color: red;
+}
