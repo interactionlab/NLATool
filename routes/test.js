@@ -1,28 +1,30 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 //--------------------------------------------------------
 /**
  * Tags for console Errors:
  * @type {string}
  */
-var desktop = 'desktop Version: ';
-var mobile = 'Mobile Version: ';
-var bigDesktop = 'Big Desktop Version: ';
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'test.js: ';
+let desktop = 'desktop Version: ';
+let mobile = 'Mobile Version: ';
+let bigDesktop = 'Big Desktop Version: ';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'test.js: ';
 
 //--------------------------------------------------------
 /**
  * Special required modules/files:
  */
-var dbAction = require('../modules/DB-Actions');
-var jsonAction = require('../modules/jsonActions');
-var dbStub = require('../modules/DB-Stub');
+const dbAction = require('../modules/DB-Actions');
+const jsonAction = require('../modules/jsonActions');
+const dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
-var jsonConfigurator = require('jsonfile');
-var dbconfig = './modules/config.json';
-var wait = require('wait.for-es6');
+const jsonConfigurator = require('jsonfile');
+const dbconfig = './modules/config.json';
+const wait = require('wait.for-es6');
+
+
 router.get('/', function (req, res, next) {
     res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
@@ -39,9 +41,9 @@ router.post('/theFunction', function (req, res) {
         var oper = ['=', '=', '='];
         var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
     */
-    var resultOfSQL = '';
-    var jsonOptions = {name: "first", type: "INT"};
-    var columnName = 'Irgendwas';
+    let resultOfSQL = '';
+    let jsonOptions = {name: "first", type: "INT"};
+    let columnName = 'Irgendwas';
     /*columnName = jsonAction.setCharAt(columnName, columnName.length-1, 'A');
     console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
     dbStub.fiberEstablishConnection();
@@ -68,7 +70,7 @@ router.post('/theFunction', function (req, res) {
 
 router.post('/nlp', function (req, res) {
 
-    var input = req.body.testFunction;
+    let input = req.body.testFunction;
     console.log(input);
 
     corenlp.parse(

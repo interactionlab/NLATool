@@ -1,28 +1,28 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 //--------------------------------------------------------
 /**
  * Tags for console Errors:
  * @type {string}
  */
-var desktop = 'desktop Version: ';
-var mobile = 'Mobile Version: ';
-var bigDesktop = 'Big Desktop Version: ';
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'profile.js: ';
+let desktop = 'desktop Version: ';
+let mobile = 'Mobile Version: ';
+let bigDesktop = 'Big Desktop Version: ';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'profile.js: ';
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
  */
-var dbAction = require('../modules/DB-Actions');
-var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for-es6');
-var dbStub = require('../modules/DB-Stub');
-var jsonAction = require('../modules/jsonActions');
-var testJson = './modules/test.json';
+const dbAction = require('../modules/DB-Actions');
+const jsonConfigurator = require('jsonfile');
+const wait = require('wait.for');
+const dbStub = require('../modules/DB-Stub');
+const jsonAction = require('../modules/jsonActions');
+const testJson = './modules/test.json';
 
-var json;
+let json;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
@@ -39,10 +39,10 @@ router.get('/', function (req, res, next) {
 
 router.post('/setNewConnection', function (req, res) {
 
-    var newConnection = 'connection';
-    var i = 0;
-    var connections = json.database.connections;
-    for (var connec in connections) {
+    let newConnection = 'connection';
+    let i = 0;
+    let connections = json.database.connections;
+    for (let connec in connections) {
         connections[connec].priority = connections[connec].priority + 1;
         i++;
     }
@@ -59,7 +59,7 @@ router.post('/setNewConnection', function (req, res) {
     };
     console.log(connections[newConnection]);
 
-    var connection = dbStub.createConnection(connections[newConnection]);
+    let connection = dbStub.createConnection(connections[newConnection]);
     if (dbStub.isDBReadyForQuery()) {
         jsonConfigurator.writeFile(testJson, json, function (err, result) {
             if (err) {

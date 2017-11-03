@@ -11,6 +11,12 @@ var mobile = 'Mobile Version: ';
 var bigDesktop = 'Big Desktop Version: ';
 var notMedia = 'Not Media-Related Part: ';
 var Tag = 'profile.js: ';
+//--------------------------------------------------------
+/**
+ * Setup Configuration file Requirements:
+ */
+
+
 
 router.get('/', function (req, res, next) {
     res.render('./Desktop/profile', {title: 'NLA - Natural Language Analyse Tool'});
