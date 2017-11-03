@@ -11,6 +11,7 @@
     "bluebird": "^3.5.1",
     "body-parser": "~1.17.1",
     "bootstrap": "^3.3.7",
+    "client-sessions": "^0.8.0",
     "cookie-parser": "~1.4.3",
     "corenlp": "^1.1.8",
     "corenlp-request-wrapper": "^1.0.3",
