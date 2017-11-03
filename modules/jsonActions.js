@@ -34,7 +34,7 @@ wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
     json = getJsonConfiguration();
-    //json = JSON.parse(json);
+    json = JSON.parse(json);
 }
 
 /**
@@ -44,14 +44,14 @@ function getJSONConfig() {
 exports.getJsonConfiguration = function () {
     let json2 = wait.for(jsonConfigurator.readFile, dbConfig);
     json2 = JSON.stringify(json2);
-    console.log(notMedia + Tag + 'json2: ' + json2);
+    //console.log(notMedia + Tag + 'json2: ' + json2);
     return json2;
 };
 
 function getJsonConfiguration() {
     let json = wait.for(jsonConfigurator.readFile, dbConfig);
     json = JSON.stringify(json);
-    console.log(notMedia + Tag + 'json: ' + json);
+    //console.log(notMedia + Tag + 'json: ' + json);
     return json;
 }
 
