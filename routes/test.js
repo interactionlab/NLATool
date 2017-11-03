@@ -22,7 +22,7 @@ const dbStub = require('../modules/DB-Stub');
 const corenlp = require("corenlp-request-wrapper");
 const jsonConfigurator = require('jsonfile');
 const dbconfig = './modules/config.json';
-const wait = require('wait.for-es6');
+const wait = require('wait.for');
 
 
 router.get('/', function (req, res, next) {
