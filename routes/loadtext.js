@@ -1,30 +1,34 @@
-var express = require('express');
-var router = express.Router();
-var nlpPort = 4000;
+const express = require('express');
+const router = express.Router();
+const nlpPort = 4000;
 //--------------------------------------------------------
 /**
  * Tags for console Errors::
  * @type {string}
  */
-var desktop = 'desktop Version: ';
-var mobile = 'Mobile Version: ';
-var bigDesktop = 'Big Desktop Version: ';
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'index.js: ';
-var net = require('net');
-var server = net.createServer();
-var dbAction = require('../modules/DB-Actions.js');
-var dbStub = require('../modules/DB-Stub.js');
-var uword = require('uwords');
-var wait = require('wait.for-es6');
-var jsonAction = require('../modules/jsonActions');
-var corenlp = require('../modules/corenlp');
+let desktop = 'desktop Version: ';
+let mobile = 'Mobile Version: ';
+let bigDesktop = 'Big Desktop Version: ';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'index.js: ';
+//--------------------------------------------------------
+/**
+ * Setup Configuration file Requirements:
+ */
+const net = require('net');
+const server = net.createServer();
+const dbAction = require('../modules/DB-Actions.js');
+const dbStub = require('../modules/DB-Stub.js');
+const uword = require('uwords');
+const wait = require('wait.for');
+const jsonAction = require('../modules/jsonActions');
+const corenlp = require('../modules/corenlp');
 
 //const isReachable = require('is-reachable');
 
 
-var results = [];
-var json2;
+let results = [];
+let json2;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
