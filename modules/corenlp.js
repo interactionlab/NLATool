@@ -3,27 +3,28 @@
  * Tags for console Errors:
  * @type {string}
  */
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'DB-Actions.js: ';
-var sql = 'The resulting SQL Command is:';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'DB-Actions.js: ';
+let sql = 'The resulting SQL Command is:';
 
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
  */
-var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for-es6');
+let jsonConfigurator = require('jsonfile');
+let wait = require('wait.for');
 //var corenlp = require('corenlp');
-var jsonAction = require('../modules/jsonActions');
+let jsonAction = require('../modules/jsonActions');
 const isReachable = require('is-reachable');
-var coreNLP = require('../modules/corenlp');
+let coreNLP = require('../modules/corenlp');
 //var wait = require('wait.for');
-import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
+//import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
+
 /**
  * Loads the Database Configuration at the beginning of the of this file so
  * that it is available for every function here.
  */
-var json = null;
+let json = null;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
@@ -34,7 +35,7 @@ function getJSONConfig() {
 /**
  * Global Variables for this Document.
  */
-var nlpStatus = {
+let nlpStatus = {
     reachable: false,
     host: null,
     error: null
@@ -45,7 +46,7 @@ var nlpStatus = {
  */
 exports.isReachable = function (host, callback) {
     if (!coreNLP.positiveNlpStatus()) {
-        var reached = isReachable(host);
+        let reached = isReachable(host);
         reached.then(function (reached) {
             console.log(reached);
             if (reached) {
@@ -54,14 +55,14 @@ exports.isReachable = function (host, callback) {
                 callback(null, reached);
             } else {
                 nlpStatus.reachable = reached;
-                var err = new Error('CoreNlp not reachable');
+                let err = new Error('CoreNlp not reachable');
                 err.status = 502;
                 nlpStatus.error = err;
                 callback(err, reached);
             }
         }).catch(function (e) {
             nlpStatus.reachable = reached;
-            var err = new Error('CoreNlp not reachable' + e);
+            let err = new Error('CoreNlp not reachable' + e);
             err.status = 502;
             nlpStatus.error = err;
             callback(err, null);
@@ -72,7 +73,7 @@ exports.isReachable = function (host, callback) {
  * checks all connections specified in config.json if they are reachable.
  */
 exports.getAReachableConnection = function () {
-    for (var connection in json.corenlp.connections) {
+    for (let connection in json.corenlp.connections) {
         console.log(json.corenlp.connections[connection].host);
         if (!coreNLP.positiveNlpStatus()) {
             try {
@@ -87,11 +88,11 @@ exports.getAReachableConnection = function () {
 };
 
 exports.setupCorenlp = function () {
-    /*const connector = new ConnectorServer({ dsn: nlpStatus.host });
+    const connector = new ConnectorServer({ dsn: nlpStatus.host });
     const props = new Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    const pipeline = new Pipeline(props, 'English', connector);*/
+    const pipeline = new Pipeline(props, 'English', connector);
 };
 
 

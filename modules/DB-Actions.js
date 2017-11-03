@@ -3,26 +3,26 @@
  * Tags for console Errors:
  * @type {string}
  */
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'DB-Actions.js: ';
-var sql = 'The resulting SQL Command is:';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'DB-Actions.js: ';
+let sql = 'The resulting SQL Command is:';
 
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
  */
-var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for-es6');
-var dbConfig = './modules/config.json';
-var dbAction = require('./DB-Actions');
-var dbStub = require('./DB-Stub');
-var jsonAction = require('./jsonActions');
+let jsonConfigurator = require('jsonfile');
+let wait = require('wait.for');
+let dbConfig = './modules/config.json';
+let dbAction = require('./DB-Actions');
+let dbStub = require('./DB-Stub');
+let jsonAction = require('./jsonActions');
 //var json = test.json;
 /**
  * Compare Operations for Where-Query of SQL:
  * @type {[string,string,string,string,string,string,string,string,string]}
  */
-var queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
+let queryOperators = ['=', '<>', '>', '<', '>=', '<=', 'BETWEEN', 'LIKE', 'IN'];
 exports.getQueryOperators = function () {
     return queryOperators;
 };
@@ -31,7 +31,7 @@ exports.getQueryOperators = function () {
  * Loads the Database Configuration at the beginning of the of this file so
  * that it is available for every function here.
  */
-var json = null;
+let json = null;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
