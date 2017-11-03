@@ -6,18 +6,18 @@
 let notMedia = 'Not Media-Related Part: ';
 let Tag = 'DB-Actions.js: ';
 let sql = 'The resulting SQL Command is:';
-
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
  */
-let jsonConfigurator = require('jsonfile');
-let wait = require('wait.for');
-//var corenlp = require('corenlp');
-let jsonAction = require('../modules/jsonActions');
+require('babel-polyfill');
+const jsonConfigurator = require('jsonfile');
+const wait = require('wait.for');
+const corenlp = require('corenlp');
+const jsonAction = require('../modules/jsonActions');
 const isReachable = require('is-reachable');
-let coreNLP = require('../modules/corenlp');
-import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
+const coreNLP = require('../modules/corenlp');
+//import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
 
 /**
  * Loads the Database Configuration at the beginning of the of this file so
@@ -38,6 +38,10 @@ let nlpStatus = {
     reachable: false,
     host: null,
     error: null
+};
+
+let nlp = {
+    
 };
 
 /**
