@@ -41,7 +41,7 @@ let nlpStatus = {
 };
 
 let nlp = {
-    
+
 };
 
 /**

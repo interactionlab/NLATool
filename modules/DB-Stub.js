@@ -197,12 +197,13 @@ try {
 testDatabase = function () {
     let dbColumns;
     let isTheSame = true;
+    let tablesOnDB = [];
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
         let jsonList = jsonAction.getTableListFromJson();
         //console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
         try {
-            let tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
+            tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
             tablesOnDB = JSON.parse(tablesOnDB);
         } catch (err) {
             dbStatus.isCorrect = false;
@@ -355,7 +356,7 @@ matchColumns = function (table, jsonColumns, dbColumns) {
 
 matchColumnSettings = function (table, jsonColumns, dbColumns) {
     if (dbStatus.columnsCorrect) {
-        for (let col1 in jsonColumns) {
+        for (var col1 in jsonColumns) {
             for (let setting1 in jsonColumns[col1]) {
                 //console.log('1. Comparison Loop: ' + table + ' : ' + col1 + ' : ' + setting1);
                 if (jsonColumns[col1][setting1] !== dbColumns[col1][setting1]) {
