@@ -7,25 +7,25 @@
  * Tags for console Errors:
  * @type {string}
  */
-var desktop = 'desktop Version: ';
-var mobile = 'Mobile Version: ';
-var bigDesktop = 'Big Desktop Version: ';
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'DB-Stub.js: ';
+let desktop = 'desktop Version: ';
+let mobile = 'Mobile Version: ';
+let bigDesktop = 'Big Desktop Version: ';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'DB-Stub.js: ';
 
 //--------------------------------------------------------
-var mysql = require('mysql');
-var dbAction = require('./DB-Actions');
-var dbStub = require('./DB-Stub');
-var wait = require('wait.for-es6');
-var jsonAction = require('./jsonActions');
+const mysql = require('mysql');
+const dbAction = require('./DB-Actions');
+const dbStub = require('./DB-Stub');
+const wait = require('wait.for');
+const jsonAction = require('./jsonActions');
 //var test = require('../modules/test');
 
 
-var json = null;
-var connection = null;
+let json = null;
+let connection = null;
 //console.log(notMedia + Tag + 'connection Status1' + connection + typeof connection);
-var dbStatus = {
+let dbStatus = {
     connected: false,
     connectionError: null,
     exists: false,
@@ -36,12 +36,12 @@ var dbStatus = {
     connection: null,
     error: null
 };
-var queryStatus = {
+let queryStatus = {
     error: null,
     executed: false,
     result: null
 };
-var differences = {};
+let differences = {};
 
 /**
  * Starting the Fiber for establish Connection for the use of wait.for
@@ -56,11 +56,11 @@ exports.fiberEstablishConnection = function () {
  *
  */
 function establishConnection() {
-    var connectSettings;
+    let connectSettings;
     json = jsonAction.getJsonConfiguration();
     json = JSON.parse(json);
     //console.log(notMedia + Tag + 'json outside before parse: ' + json);
-    for (var connect in json.database.connections) {
+    for (let connect in json.database.connections) {
         connectSettings = jsonAction.getConnectionSettings(json.database.connections[connect]);
         //console.log(notMedia + Tag + 'connection Settings: ' + JSON.stringify(connectSettings));
         dbStub.createConnection(connectSettings);
@@ -93,7 +93,7 @@ syncDatabase = function () {
             dbAction.setupDB(connection);
             console.log(notMedia + Tag + 'Setup of DB complete.');
             try {
-                var res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
+                let res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
                 res = JSON.parse(res);
                 console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
                 dbStatus.exists = true;
@@ -104,14 +104,14 @@ syncDatabase = function () {
             }
         } else if (!dbStatus.tablesCorrect) {
             //The Tables are not correct. (Missing, different name, new table...)
-            for (var table in differences) {
+            for (let table in differences) {
                 if (differences[table] === true) {
                     wait.for(makeSQLRequest, dbAction.createTableCommand(table));
                 }
-                //TODO: If on a table is on the DB that isnt in the config. -> drop table.
+                //TODO: If on a table is on the DB that isnt in the config. -> drop table.letdifferences = {};
             }
-            differences = {};
-        } else if (!dbStatus.columnsCorrect) {
+        }
+        else if (!dbStatus.columnsCorrect) {
             //One or more columns of one or more Tables are wrong
             //TODO: Correct the Database. Commands like ALTER TABLE will be needed.
         } else if (!dbStatus.settingsCorrect) {
@@ -120,8 +120,6 @@ syncDatabase = function () {
     } else {
         return true;
     }
-
-
 };
 
 /**
@@ -197,32 +195,33 @@ try {
  * @returns {boolean}
  */
 testDatabase = function () {
-    var isTheSame = true;
+    let dbColumns;
+    let isTheSame = true;
     useDatabase(json.database.name);
     if (dbStatus.exists === true) {
-        var jsonList = jsonAction.getTableListFromJson();
+        let jsonList = jsonAction.getTableListFromJson();
         //console.log(notMedia + Tag + 'Table List in the json file: ' + jsonList);
         try {
-            var tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
+            let tablesOnDB = wait.for(makeSQLRequest, 'SHOW TABLES');
             tablesOnDB = JSON.parse(tablesOnDB);
         } catch (err) {
             dbStatus.isCorrect = false;
             dbStatus.error = err;
             return false;
         }
-        var dbList = [];
-        for (var j = 0; j < tablesOnDB.length; j++) {
+        let dbList = [];
+        for (let j = 0; j < tablesOnDB.length; j++) {
             dbList.push(tablesOnDB[j]['Tables_in_' + json.database.name]);
         }
         //console.log(notMedia + Tag + 'Table List on the current Database Server: ' + dbList);
         if (isArrayTheSame(jsonList, dbList)) {
-            for (var i = 0; i < jsonList.length; i++) {
-                var jsonColumns = jsonAction.getColumnsOfOneTable(jsonList[i]);
+            for (let i = 0; i < jsonList.length; i++) {
+                let jsonColumns = jsonAction.getColumnsOfOneTable(jsonList[i]);
                 jsonColumns = JSON.parse(jsonColumns);
                 //jsonColumns = dbAction.syncWithDeafault
                 //console.log(notMedia + Tag + 'Columns of the Json: ' + jsonColumns);
                 try {
-                    var dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
+                    dbColumns = wait.for(makeSQLRequest, 'DESCRIBE ' + jsonList[i]);
                     //console.log(notMedia + Tag + 'Column: ' + jsonList[i] + ' of the Database: ' + dbColumns);
                     dbColumns = JSON.parse(dbColumns);
                     //console.log(notMedia + Tag + 'Description of the DB: ' + jsonList[i] + ': ' + JSON.stringify(dbColumns));
@@ -265,21 +264,21 @@ function isDbCorrect() {
  * @param dbColumns
  */
 matchsColumnSettings = function (table, jsonColumns, dbColumns) {
-    var existingColumns = [];
-    var existingJsonColumns = [];
-    var existingDbColumns = [];
+    let existingColumns = [];
+    let existingJsonColumns = [];
+    let existingDbColumns = [];
 
 
-    for (var column1 in jsonColumns) {
+    for (let column1 in jsonColumns) {
         existingJsonColumns.push(jsonColumns[column1].name);
-        for (var column2 in dbColumns) {
+        for (let column2 in dbColumns) {
             if (existingColumns.indexOf(column2) < 0) {
                 existingDbColumns.push(dbColumns[column2].name);
                 if (existingColumns.indexOf(column1) < 0) {
                     console.log('Compare: ' + jsonColumns[column1].name + ' with ' + dbColumns[column2].name);
                     if (jsonColumns[column1].name === dbColumns[column2].name) {
 
-                        for (var field in jsonColumns[column1]) {
+                        for (let field in jsonColumns[column1]) {
                             if (jsonColumns[column1][field] !== dbColumns[column1][field]) {
                                 //console.log('Comparison failed because of2: ' + columns1[column1][field] + ' !== ' + columns2[column1][field]);
                                 differences[table] = {};
@@ -310,22 +309,22 @@ matchsColumnSettings = function (table, jsonColumns, dbColumns) {
 };
 
 matchColumns = function (table, jsonColumns, dbColumns) {
-    var existingJsonColumns = [];
-    var existingDbColumns = [];
-    var matchedCol = [];
+    let existingJsonColumns = [];
+    let existingDbColumns = [];
+    let matchedCol = [];
 
-    for (var col1 in jsonColumns) {
+    for (let col1 in jsonColumns) {
         existingJsonColumns.push(jsonColumns[col1].name);
     }
     //console.log('JsonColumns: ' + existingJsonColumns);
-    for (var col2 in dbColumns) {
+    for (let col2 in dbColumns) {
         existingDbColumns.push(dbColumns[col2].name);
     }
     //console.log('DBColumns: ' + existingDbColumns);
     if (existingDbColumns.length !== existingJsonColumns.length) {
         dbStatus.columnsCorrect = false;
     }
-    for (var i = 0; i < existingJsonColumns.length; i++) {
+    for (let i = 0; i < existingJsonColumns.length; i++) {
         if (existingDbColumns.indexOf(existingJsonColumns[i]) < 0) {
             if (typeof differences[table] === "undefined") {
                 differences[table] = {}
@@ -336,7 +335,7 @@ matchColumns = function (table, jsonColumns, dbColumns) {
             matchedCol.push(existingJsonColumns[i]);
         }
     }
-    for (var j = 0; j < existingDbColumns.length; j++) {
+    for (let j = 0; j < existingDbColumns.length; j++) {
         if (matchedCol.indexOf(existingDbColumns[j]) < 0) {
             if (existingJsonColumns.indexOf(existingDbColumns[j]) < 0) {
                 if (typeof differences[table] === "undefined") {
@@ -356,8 +355,8 @@ matchColumns = function (table, jsonColumns, dbColumns) {
 
 matchColumnSettings = function (table, jsonColumns, dbColumns) {
     if (dbStatus.columnsCorrect) {
-        for (var col1 in jsonColumns) {
-            for (var setting1 in jsonColumns[col1]) {
+        for (let col1 in jsonColumns) {
+            for (let setting1 in jsonColumns[col1]) {
                 //console.log('1. Comparison Loop: ' + table + ' : ' + col1 + ' : ' + setting1);
                 if (jsonColumns[col1][setting1] !== dbColumns[col1][setting1]) {
                     if (typeof differences[table] === "undefined") {
@@ -371,8 +370,8 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
                 }
             }
         }
-        for (var col2 in dbColumns) {
-            for (var setting2 in dbColumns[col2]) {
+        for (let col2 in dbColumns) {
+            for (let setting2 in dbColumns[col2]) {
                 if (jsonColumns[col2][setting2] !== dbColumns[col2][setting2]) {
                     if (typeof differences[table] === "undefined") {
                         differences[table] = {};
@@ -406,19 +405,19 @@ matchColumnSettings = function (table, jsonColumns, dbColumns) {
  * @param sqlResult
  */
 makeColumnDescriptionComparableToJson = function (sqlResult, table) {
-    var type;
-    var columns = {};
-    var column = 'column';
-    for (var i = 0; i < sqlResult.length; i++) {
+    let type;
+    let columns = {};
+    let column = 'column';
+    for (let i = 0; i < sqlResult.length; i++) {
         column = column + (i + 1);
         columns[column] = {};
-        for (var setting in sqlResult[i]) {
+        for (let setting in sqlResult[i]) {
             if (setting === 'Field') {
                 columns[column]['name'] = sqlResult[i][setting];
             } else if (setting === 'Type') {
-                var tempType = sqlResult[i][setting];
-                var length = null;
-                var index = tempType.indexOf('(');
+                let tempType = sqlResult[i][setting];
+                let length = null;
+                let index = tempType.indexOf('(');
                 if (index > -1) {
                     type = tempType.substr(0, index);
                     length = tempType.substr(index + 1);
@@ -472,7 +471,7 @@ makeColumnDescriptionComparableToJson = function (sqlResult, table) {
  * @returns {boolean}
  */
 isArrayTheSame = function (jsonList, dbList) {
-    for (var i = 0; i < jsonList.length; i++) {
+    for (let i = 0; i < jsonList.length; i++) {
         //if(table of jsonList doesnt exists in the dbList)
         if (dbList.indexOf(jsonList[i]) < 0) {
             differences[jsonList[i]] = true;
@@ -595,7 +594,7 @@ function useDatabase(name) {
  * @returns {Pool}
  */
 exports.createPool = function (connectionSettings) {
-    var pool = mysql.createPool(connectionSettings);
+    let pool = mysql.createPool(connectionSettings);
     return pool;
 };
 

@@ -17,7 +17,6 @@ let wait = require('wait.for');
 let jsonAction = require('../modules/jsonActions');
 const isReachable = require('is-reachable');
 let coreNLP = require('../modules/corenlp');
-//var wait = require('wait.for');
 //import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
 
 /**

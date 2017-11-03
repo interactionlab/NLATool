@@ -16,7 +16,7 @@ let Tag = 'analyse.js: ';
  */
 const dbStub = require('../modules/DB-Stub');
 const dbAction = require('../modules/DB-Actions');
-const wait = require('wait.for-es6');
+const wait = require('wait.for');
 
 let results = [];
 
