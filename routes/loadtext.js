@@ -90,20 +90,25 @@ function postLoadWrittenText(req, res, next) {
             console.log(text + ' : ' + words.length);
             let rand = Math.random();
 
-            let rest = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
-            let documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
-            console.log('DocumentID is: ' + rest +': '+ documentID);
+            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
+            documentInsertResult = JSON.parse(documentInsertResult);
+            console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title'],
-                ['LAST_INSERT_ID()', words.length, rand],
+                [documentInsertResult.insertId, words.length, rand],
                 null, null));
 
-
+            let wordInsertResult = null;
             for (let i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
-                wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
-                //wait.for(sendSQL, dbAction.createInsertCommand('textWords',['wordID', 'docID', 'counter'], [0,documentID[0].docID, i],null,null))
+                wordInsertResult = wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
+                wordInsertResult = JSON.parse(wordInsertResult);
+                wait.for(sendSQL, dbAction.createInsertCommand(
+                    'textWords',
+                    ['wordID', 'docID', 'counter'],
+                    [wordInsertResult.insertId, documentInsertResult.insertId, i],
+                    null, null));
             }
             res.redirect('/analyse');
         }
