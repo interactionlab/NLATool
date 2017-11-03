@@ -13,7 +13,7 @@ let notMedia = 'Not Media-Related Part: ';
 let Tag = 'signUp.js: ';
 
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/Comment', {title: 'NLA - Natural Language Analyse Tool'});
+    res.render('./Desktop/comment', {title: 'NLA - Natural Language Analyse Tool'});
 });
 
 module.exports = router;
