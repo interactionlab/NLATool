@@ -69,8 +69,8 @@ exports.setCharAt = function (str, index, chr) {
 };
 
 exports.getTableListFromJson = function () {
-    var tableList = [];
-    for (var table in json) {
+    let tableList = [];
+    for (let table in json) {
         if (json[table].isTable) {
             tableList.push(json[table].name);
         }
@@ -79,10 +79,10 @@ exports.getTableListFromJson = function () {
 };
 
 exports.getColumnsOfOneTable = function (table) {
-    var columns = {};
-    for (var entity in json) {
+    let columns = {};
+    for (let entity in json) {
         if (json[entity].isTable && json[entity].name === table) {
-            for (var column in json[entity]) {
+            for (let column in json[entity]) {
                 if (column !== 'isTable' && column !== 'name') {
                     columns[column] = json[entity][column];
                     columns[column] = jsonAction.syncColumnWithDefault(columns[column]);
@@ -96,11 +96,11 @@ exports.getColumnsOfOneTable = function (table) {
 };
 
 exports.getSettingsOfOneColumn = function (table, column) {
-    var settings = {};
-    for (var entity in json) {
+    let settings = {};
+    for (let entity in json) {
         if (json[entity].isTable) {
             if (json[entity].name === table) {
-                for (var col in json[entity]) {
+                for (let col in json[entity]) {
                     if (json[entity][col].name === column) {
                         settings = json[entity][col];
                         break;
@@ -119,7 +119,7 @@ exports.getSettingsOfOneColumn = function (table, column) {
  */
 exports.syncColumnWithDefault = function (options) {
     //console.log('Before sync: ' + JSON.stringify(obj.default));
-    for (var key in json.default) {
+    for (let key in json.default) {
         if (json.default.hasOwnProperty(key) && key !== 'isTable') {
             if (!jsonAction.isKeyInObject(key, options)) {
                 options[key] = json.default[key];
@@ -136,7 +136,7 @@ exports.syncColumnWithDefault = function (options) {
  * @returns {boolean}
  */
 exports.isKeyInObject = function (key, obj) {
-    for (var otherKey in obj) {
+    for (let otherKey in obj) {
         if (key === otherKey) {
             return true;
         }
@@ -150,8 +150,8 @@ exports.isKeyInObject = function (key, obj) {
  * @returns {{}}
  */
 exports.getConnectionSettings = function (connect) {
-    var settings = {};
-    for (var setting in connect) {
+    let settings = {};
+    for (let setting in connect) {
         if (setting !== 'priority') {
             settings[setting] = connect[setting];
         }

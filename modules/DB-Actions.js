@@ -50,9 +50,7 @@ exports.setupDB = function (connection) {
  * @param connection - of type mysql.connection
  */
 setupDBs = function (connection) {
-
-
-    var createDB = createDatabaseCommand();
+    let createDB = createDatabaseCommand();
     connection.query(createDB, function (err) {
         if (err) {
             console.log(notMedia + Tag + 'Couldnt Create Database' + err);
@@ -66,8 +64,8 @@ setupDBs = function (connection) {
 };
 
 createAllTables = function (connection) {
-    var i = 0;
-    for (var table in json) {
+    let i = 0;
+    for (let table in json) {
         if (json[table].isTable) {
             connection.query(dbAction.createTableCommand(json[table].name), function (err) {
                 if (err) console.log(notMedia + Tag + 'couldnt create Table: ' + ': ' + err);
@@ -93,16 +91,16 @@ createDatabaseCommand = function () {
  * @returns {string}
  */
 exports.createTableCommand = function (tableName) {
-    var commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
-    for (var table in json) {
+    let commandString = 'CREATE TABLE ' + json.database.name + ' . ' + tableName + ' (';
+    for (let table in json) {
         if (json[table].name === tableName) {
-            var i = 1;
-            for (var column in json[table]) {
+            let i = 1;
+            for (let column in json[table]) {
                 if (column !== 'isTable' && column !== 'name') {
                     //console.log(notMedia + Tag + 'the current parameter for column: ' + JSON.stringify(json[table][column]));
-                    var options = getOptionsOfColumn(json[table], i);
+                    let options = getOptionsOfColumn(json[table], i);
 
-                    var tempCommandString = transformColumnToSQL(json[table][column], options);
+                    let tempCommandString = transformColumnToSQL(json[table][column], options);
 
                     //console.log(notMedia + Tag + 'tempCommandString: ' + tempCommandString);
                     commandString = commandString + tempCommandString + ',';
@@ -128,10 +126,10 @@ exports.createTableCommand = function (tableName) {
  * @returns {{}}
  */
 getOptionsOfColumn = function (table, columnNumber) {
-    var column = 'column' + columnNumber;
+    let column = 'column' + columnNumber;
     //console.log(column);
-    var options = {};
-    for (var option in table[column]) {
+    let options = {};
+    for (let option in table[column]) {
         options[option] = table[column][option];
     }
     //console.log(notMedia + Tag + 'getOptionsOfColumn: ' + JSON.stringify(options));
@@ -148,10 +146,10 @@ getOptionsOfColumn = function (table, columnNumber) {
 transformColumnToSQL = function (column, options) {
     options = jsonAction.syncColumnWithDefault(options);
     if (options !== null && column !== null) {
-        var transformString = '';
-        var tempKey = '';
-        var specialSetting = null;
-        for (var key in options) {
+        let transformString = '';
+        let tempKey = '';
+        let specialSetting = null;
+        for (let key in options) {
             //console.log(key +  ': ' + options[key] +' last:'+ tempKey);
             if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
                 transformString = transformString + ' (' + options[key] + ')';
@@ -180,10 +178,10 @@ transformColumnToSQL = function (column, options) {
  * @returns {string}
  */
 addKeySettingsToSQLCommand = function (table) {
-    var keySettings = findKeyColumns(table);
+    let keySettings = findKeyColumns(table);
 
-    var keySQLString = '';
-    for (var column in keySettings) {
+    let keySQLString = '';
+    for (let column in keySettings) {
         if (keySettings[column] === 'PRIMARY KEY' || keySettings[column] === 'UNIQUE') {
             keySQLString = keySQLString + keySettings[column] + '(' + column + '), ';
         } else {
@@ -200,11 +198,11 @@ addKeySettingsToSQLCommand = function (table) {
  * @returns {{}}
  */
 findKeyColumns = function (table) {
-    var keySettings = {};
+    let keySettings = {};
     //console.log('The table in findKeyColumns: ' + JSON.stringify(table));
-    for (var column in table) {
+    for (let column in table) {
         if (column !== 'isTable' && column !== 'name') {
-            for (var key in table[column]) {
+            for (let key in table[column]) {
                 if (table[column].PRIMARY === true) {
                     keySettings[table[column].name] = 'PRIMARY KEY';
                 } else if (table[column].UNIQUE === true) {
@@ -235,11 +233,11 @@ findAndTranslateForeignKeySettings = function () {
  * @returns {*}
  */
 exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
-    var commandString = 'SELECT ';
+    let commandString = 'SELECT ';
     if (table !== null) {
         if (columns !== null) {
             commandString = commandString + columns[0];
-            for (var i = 1; i < columns.length; i++) {
+            for (let i = 1; i < columns.length; i++) {
                 commandString = commandString + ',' + columns[i];
             }
             commandString = commandString + ' FROM ' + json.database.name + ' . ' + table;
@@ -259,14 +257,14 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
 };
 
 exports.createInnerJoinSelectCommand = function (table1, table2, joinCondition) {
-    var commandString = 'SELECT ' + table1 + ' INNER JOIN ' + table2 + ' ' + joinCondition;
+    let commandString = 'SELECT ' + table1 + ' INNER JOIN ' + table2 + ' ' + joinCondition;
     return commandString;
 };
 
 exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2, operators) {
-    var queryString = 'ON';
+    let queryString = 'ON';
     if (valuesToCompare1.length === valuesToCompare2.length && operators.length === valuesToCompare1.length) {
-        for (var i = 0; i < valuesToCompare1.length; i++) {
+        for (let i = 0; i < valuesToCompare1.length; i++) {
             queryString = queryString + ' ' + valuesToCompare1[i] + ' ' + operators [i] + ' ' + valuesToCompare2[i];
         }
     }
@@ -283,19 +281,19 @@ exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2,
  * @param operators
  */
 exports.createInsertCommand = function (table, columns, values, valuesToCompare, operators) {
-    var commandString = 'INSERT INTO ';
+    let commandString = 'INSERT INTO ';
     if (table !== null && values !== null) {
         if (columns === null) {
             commandString = commandString + table + ' VALUES (' + values[0];
         }
         else {
             commandString = commandString + table + ' (' + columns[0];
-            for (var i = 1; i < columns.length; i++) {
+            for (let i = 1; i < columns.length; i++) {
                 commandString = commandString + ', ' + columns[i];
             }
             commandString = commandString + ') VALUES (' + values[0];
         }
-        for (var j = 1; j < values.length; j++) {
+        for (let j = 1; j < values.length; j++) {
             commandString = commandString + ', ' + values[j];
         }
         commandString = commandString + ')';
@@ -320,10 +318,10 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
  * @returns {*}
  */
 exports.createUpdateCommand = function (table, columns, values, valuesToCompare, operators) {
-    var commandString = 'UPDATE ';
+    let commandString = 'UPDATE ';
     if (table !== null && columns !== null && values !== null) {
         commandString = commandString + table + ' SET ' + columns[0] + ' = ' + values[0];
-        for (var i = 1; i < values.length; i++) {
+        for (let i = 1; i < values.length; i++) {
             commandString = commandString + ', ' + columns[i] + ' = ' + values[i];
         }
         if (valuesToCompare !== null && operators !== null) {
@@ -345,9 +343,9 @@ exports.createUpdateCommand = function (table, columns, values, valuesToCompare,
  * @returns {*}
  */
 exports.createDeleteCommand = function (table, column, value, valueToCompare) {
-    var commandString = 'DELETE FROM ';
+    let commandString = 'DELETE FROM ';
     if (table !== null && column !== null && value !== null) {
-        var operator = [queryOperators[0]];
+        let operator = [queryOperators[0]];
         commandString = commandString + table + ' ' + createWhereQuery(column, valueToCompare, operator);
         console.log(notMedia + Tag + commandString);
         return commandString;
@@ -378,10 +376,10 @@ exports.createDeleteCommand = function (table, column, value, valueToCompare) {
  * @returns {*}
  */
 createWhereQuery = function (columns, values, operators) {
-    var queryString = 'WHERE ';
+    let queryString = 'WHERE ';
     if (columns !== null && values !== null && operators !== null) {
         queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
-        for (var i = 1; i < operators.length; i++) {
+        for (let i = 1; i < operators.length; i++) {
             queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
         }
         console.log(notMedia + Tag + queryString);
@@ -392,7 +390,7 @@ createWhereQuery = function (columns, values, operators) {
 };
 
 exports.createDropDBCommand = function () {
-    var json = jsonAction.getJsonConfiguration();
+    let json = jsonAction.getJsonConfiguration();
     return 'DROP DATABASE ' + json.database.name + ' IF EXISTS';
 
 };
