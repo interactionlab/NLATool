@@ -3,23 +3,23 @@
  * Tags for console Errors:
  * @type {string}
  */
-var notMedia = 'Not Media-Related Part: ';
-var Tag = 'changeDB.js: ';
+let notMedia = 'Not Media-Related Part: ';
+let Tag = 'changeDB.js: ';
 
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
  */
-var jsonConfigurator = require('jsonfile');
-var wait = require('wait.for');
-var dbConfig = './modules/config.json';
-var dbAction = require('./DB-Actions');
-var dbStub = require('./DB-Stub');
-var jsonAction = require('./jsonActions');
-var changeDB = require('./changeDB');
+const jsonConfigurator = require('jsonfile');
+const wait = require('wait.for');
+const dbConfig = './modules/config.json';
+const dbAction = require('./DB-Actions');
+const dbStub = require('./DB-Stub');
+const jsonAction = require('./jsonActions');
+const changeDB = require('./changeDB');
 //var json = test.json;
 
-var json = null;
+let json = null;
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
@@ -30,8 +30,7 @@ function getJSONConfig() {
 /**
  * General Section for altering tables.
  * */
-//-----------------------------------------------------------
-var alterDB = {
+let alterDB = {
     tables: {},
     table_options: {
         AUTO_INCREMENT: {},
@@ -115,7 +114,7 @@ var alterDB = {
     }
 };
 
-var operationObject = {};
+let operationObject = {};
 
 /**
  * ALTER TABLE tbl_name
@@ -207,9 +206,9 @@ var operationObject = {};
  (see CREATE TABLE options)
  */
 exports.createAlterTableCommand = function (table) {
-    var alterCommandString = 'ALTER TABLE ' + table + ' ';
+    let alterCommandString = 'ALTER TABLE ' + table + ' ';
     //Add all the table_options for the specified table.
-    for (var i = 0; i < alterDB.table_options[table].length; i++) {
+    for (let i = 0; i < alterDB.table_options[table].length; i++) {
         if (alterDB.table_options[table].length === 1) {
             alterCommandString = alterCommandString + alterDB.table_options[table][0];
             break;
@@ -223,7 +222,7 @@ exports.createAlterTableCommand = function (table) {
 };
 
 exports.alterTable = function () {
-    for (var table in alterDB.tables) {
+    for (let table in alterDB.tables) {
 
     }
     try {
@@ -270,10 +269,10 @@ exports.addAlterSpecificationOperation = function (operation, subOperation, key,
  * @param column
  */
 exports.generateColumnDefinition = function (table, column) {
-    var settingsOfColumn = jsonAction.getSettingsOfOneColumn(table, column);
-    var commandString = column + ' ';
-    var i = 0;
-    for (var t in alterDB.tables) {
+    let settingsOfColumn = jsonAction.getSettingsOfOneColumn(table, column);
+    let commandString = column + ' ';
+    let i = 0;
+    for (let t in alterDB.tables) {
         if (alterDB.tables[t] !== table) {
             if (typeof alterDB.tables[t] === "undefined") {
                 alterDB.tables[i] = table;
@@ -284,7 +283,7 @@ exports.generateColumnDefinition = function (table, column) {
         }
         i++;
     }
-    for (var setting in settingsOfColumn) {
+    for (let setting in settingsOfColumn) {
         commandString = commandString + ' ' + settingsOfColumn[setting];
     }
     return commandString;
@@ -338,10 +337,10 @@ exports.addChangeColumnOperation = function (table, column) {
 //-----------------------------------------------------------
 function resetAlterDB() {
     alterDB.tables = {};
-    for (var option in alterDB.table_options) {
+    for (let option in alterDB.table_options) {
         alterDB.table_options[option] = {};
     }
-    for (var operation in alterDB.operations) {
+    for (let operation in alterDB.operations) {
         alterDB.operations[operation] = {};
     }
 }
