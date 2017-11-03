@@ -4,6 +4,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const session = require('client-sessions');
 
 const index = require('./routes/index');
 const analyse = require('./routes/analyse');
@@ -29,7 +30,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/', index);
 app.use('/analyse', analyse);
 app.use('/signIn', signIn);
@@ -39,6 +39,13 @@ app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 app.use('/Comment', comment);
+
+app.use(session({
+    cookieName: 'session',
+    secret: 'jierjfijeifjiedffakopkerrtjfswf0j',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+}));
 
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
