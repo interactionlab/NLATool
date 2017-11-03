@@ -17,7 +17,7 @@ let wait = require('wait.for');
 let jsonAction = require('../modules/jsonActions');
 const isReachable = require('is-reachable');
 let coreNLP = require('../modules/corenlp');
-//import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
+import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
 
 /**
  * Loads the Database Configuration at the beginning of the of this file so

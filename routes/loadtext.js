@@ -16,7 +16,7 @@ let Tag = 'index.js: ';
  * Setup Configuration file Requirements:
  */
 const net = require('net');
-const server = net.createServer();
+//const server = net.createServer();
 const dbAction = require('../modules/DB-Actions.js');
 const dbStub = require('../modules/DB-Stub.js');
 const uword = require('uwords');
@@ -66,11 +66,11 @@ function getLoadTextRoutine(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
     } else {
-        var nlpStatus = corenlp.getNlpStatus();
+        let nlpStatus = corenlp.getNlpStatus();
         if (typeof nlpStatus.error !== "undefined" && nlpStatus.error !== null) {
             next(nlpStatus.error);
         } else {
-            var err = new Error('Corenlp failed to find a connection, but didnt throw an error!');
+            let err = new Error('Corenlp failed to find a connection, but didnt throw an error!');
             next(err);
         }
     }
@@ -79,19 +79,19 @@ function getLoadTextRoutine(req, res, next) {
 
 function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
-        var text = req.body.textInput;
+        let text = req.body.textInput;
         if (!/\S/.test(text)) {
             res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
         } else {
             //TODO: Parse Text with corenlp
-            var words = uword(text);
+            let words = uword(text);
             console.log('Words are: ' + Array.isArray(words) + words);
             //var words = text.split(' ');
             console.log(text + ' : ' + words.length);
-            var rand = Math.random();
+            let rand = Math.random();
 
-            var rest = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
-            var documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
+            let rest = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
+            let documentID = wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('documents', ['docID'], [rand], ['=']));
             console.log('DocumentID is: ' + rest +': '+ documentID);
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
@@ -100,7 +100,7 @@ function postLoadWrittenText(req, res, next) {
                 null, null));
 
 
-            for (var i = 0; i < words.length; i++) {
+            for (let i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
                 wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
                 //wait.for(sendSQL, dbAction.createInsertCommand('textWords',['wordID', 'docID', 'counter'], [0,documentID[0].docID, i],null,null))
@@ -113,7 +113,7 @@ function postLoadWrittenText(req, res, next) {
 
 function sendSQL(command) {
     try {
-        var result = wait.for(dbStub.makeSQLRequest, command);
+        let result = wait.for(dbStub.makeSQLRequest, command);
         results.push(result);
     } catch (err) {
         results.push(err);
