@@ -85,26 +85,32 @@ function postLoadWrittenText(req, res, next) {
         } else {
             //TODO: Parse Text with corenlp
             let words = uword(text);
-            console.log('Words are: ' + Array.isArray(words) + words);
+            //console.log('Words are: ' + Array.isArray(words) + words);
             //var words = text.split(' ');
-            console.log(text + ' : ' + words.length);
-            let rand = Math.random();
+            //console.log(text + ' : ' + words.length);
 
+            let rand = Math.random();
             let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
-            console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
+            //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title'],
                 [documentInsertResult.insertId, words.length, rand],
                 null, null));
+            req.session.docID = documentInsertResult.insertId;
 
             let wordInsertResult = null;
             for (let i = 0; i < words.length; i++) {
                 words[i] = '"' + words[i] + '"';
-                wordInsertResult = wait.for(sendSQL, dbAction.createInsertCommand('word', ['content', 'isSpecial'], [words[i], 0], null, null));
+                wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                    'word',
+                    ['content', 'isSpecial'],
+                    [words[i], 0],
+                    null, null));
+
                 wordInsertResult = JSON.parse(wordInsertResult);
-                wait.for(sendSQL, dbAction.createInsertCommand(
+                wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                     'textWords',
                     ['wordID', 'docID', 'counter'],
                     [wordInsertResult.insertId, documentInsertResult.insertId, i],
@@ -114,7 +120,6 @@ function postLoadWrittenText(req, res, next) {
         }
     }
 }
-
 
 function sendSQL(command) {
     try {
