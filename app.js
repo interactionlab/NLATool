@@ -1,21 +1,21 @@
-var express = require('express');
-var path = require('path');
+const express = require('express');
+const path = require('path');
 //var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 
-var index = require('./routes/index');
-var analyse = require('./routes/analyse');
-var profile = require('./routes/profile');
-var signIn = require('./routes/signIn');
-var signUp = require('./routes/signUp');
-var test = require('./routes/test');
-var loadtext = require('./routes/loadtext');
-var setup = require('./routes/setup');
-var Comment = require('./routes/Comment');
+const index = require('./routes/index');
+const analyse = require('./routes/analyse');
+const profile = require('./routes/profile');
+const signIn = require('./routes/signIn');
+const signUp = require('./routes/signUp');
+const test = require('./routes/test');
+const loadtext = require('./routes/loadtext');
+const setup = require('./routes/setup');
+const comment = require('./routes/comment');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
@@ -38,11 +38,11 @@ app.use('/signUp', signUp);
 app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
-app.use('/Comment', Comment);
+app.use('/Comment', comment);
 
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
-    var err = new Error('Not Found');
+    let err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -63,7 +63,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.set('port', process.env.PORT || 3000);
-var server = app.listen(app.get('port'), function () {
+let server = app.listen(app.get('port'), function () {
     console.log('Express server listening on port ' + server.address().port);
 });
 
