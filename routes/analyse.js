@@ -31,18 +31,19 @@ router.post('/showText', function (req, res, next) {
 
 function postShowText(req, res, next) {
     let queryOperators = dbAction.getQueryOperators();
+    let docID = '';
     if (isNaN(req.session.docID)) {
         let docID = req.session.docID;
     }
 
-    getTextFromDB(req.session.docID);
+    getTextFromDB(docID);
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 }
 
 function getTextFromDB(docID) {
     let textMap = wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('textWords', ['wordID', 'docID', 'counter'], docID, ['=']));
-    
+        dbAction.createSelectCommand('textWords', null, docID, ['=']));
+    console.log(notMedia + Tag + 'Result of selecting text in textWords: '+ textMap);
 }
 
 module.exports = router;
