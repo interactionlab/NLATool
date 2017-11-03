@@ -26,23 +26,23 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/showText', function (req, res, next) {
-    wait.launchFiber(postShowText,req,res, next);
+    wait.launchFiber(postShowText, req, res, next);
 });
 
 function postShowText(req, res, next) {
     let queryOperators = dbAction.getQueryOperators();
+    if (isNaN(req.session.docID)) {
+        let docID = req.session.docID;
+    }
 
-    wait.for(sendSQL, dbAction.createInnerJoinSelectCommand('word', 'text'));
+    getTextFromDB(req.session.docID);
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 }
 
-function sendSQL(command) {
-    try {
-        let result = wait.for(dbStub.makeSQLRequest, command);
-        results.push(result);
-    } catch (err) {
-        results.push(err);
-    }
+function getTextFromDB(docID) {
+    let textMap = wait.for(dbStub.makeSQLRequest,
+        dbAction.createSelectCommand('textWords', ['wordID', 'docID', 'counter'], docID, ['=']));
+    
 }
 
 module.exports = router;
