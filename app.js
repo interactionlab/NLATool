@@ -18,6 +18,13 @@ const comment = require('./routes/comment');
 
 const app = express();
 
+app.use(session({
+    cookieName: 'session',
+    secret: 'jierjfijeifjiedffakopkerrtjfswf0j',
+    duration: 30 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+}));
+
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
@@ -40,12 +47,6 @@ app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 app.use('/Comment', comment);
 
-app.use(session({
-    cookieName: 'session',
-    secret: 'jierjfijeifjiedffakopkerrtjfswf0j',
-    duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000,
-}));
 
 // catch 404 and forward to connectionError handler
 app.use(function (req, res, next) {
