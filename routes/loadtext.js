@@ -98,7 +98,7 @@ function postLoadWrittenText(req, res, next) {
                 ['docID', 'length', 'title'],
                 [documentInsertResult.insertId, words.length, rand],
                 null, null));
-            //req.session['docID'] = documentInsertResult.insertId;
+            req.session.docID = documentInsertResult.insertId;
 
             let wordInsertResult = null;
             for (let i = 0; i < words.length; i++) {
