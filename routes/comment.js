@@ -1,19 +1,47 @@
-const express = require('express');
-const router = express.Router();
+var express = require('express');
+var router = express.Router();
 
-//--------------------------------------------------------
-/**
- * Tags for console Errors:
- * @type {string}
- */
-let desktop = 'desktop Version: ';
-let mobile = 'Mobile Version: ';
-let bigDesktop = 'Big Desktop Version: ';
-let notMedia = 'Not Media-Related Part: ';
-let Tag = 'signUp.js: ';
 
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/comment', {title: 'NLA - Natural Language Analyse Tool'});
+    /*
+    id=id
+
+    return:
+    {
+        word: word,
+        comment: comment
+    }
+    */
 });
+
+router.post('/save', function (req, res, next) {
+    /*
+    {
+        id: id,
+        comment: comment
+    }
+    */
+});
+
+router.post('/init', function (req, res, next) {
+    /*
+    {
+        words: ["word1", "word2", "word3"]
+    }
+    */
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 module.exports = router;
