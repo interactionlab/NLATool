@@ -56,37 +56,15 @@
             <img src="/images/logo.jpg" alt="Logo" class="graybox" style="text-align: center">
         </div>
         <div style=" width: 100%;text-align: center">
-            <!--TODO take this textarea from loadtext.ejs-->
-            <form action="/loadtext/loadWrittenText" method="post">
-                <div class="mdl-textfield mdl-js-textfield graybox" style="width: 100%;text-align: center">
-                    <textarea class="mdl-textfield__input" type="text" rows="8" id="textbox" name="textInput">
-                    </textarea>
-                    <label class="mdl-textfield__label" for="textbox" name="testFunction" id="holder">
-                        Enter text here ...
-                    </label>
-                </div>
                 <div>
-                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                        <!--TODO change Link to DB or better solurion -->
-                        <i class="material-icons mdl-navigation__link" href="/analyse">send</i>
-                    </button>
+                    <form action="/index/loadText" method="POST">
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                <i class="material-icons">send</i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
-                <!--first vue.js inputs-->
-                <div id="app">
-                    <h1>Hello App!</h1>
-                    <p>
-                        <!-- use router-link component for navigation. -->
-                        <!-- specify the link by passing the `to` prop. -->
-                        <!-- <router-link> will be rendered as an `<a>` tag by default -->
-                        <router-link to="/one">Go to One</router-link>
-                        <router-link to="/two">Go to Two</router-link>
-                    </p>
-                    <!-- route outlet -->
-                    <!-- component matched by the route will render here -->
-                    <router-view></router-view>
-                </div>
-            </form>
         </div>
     </main>
 </div>
