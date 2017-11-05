@@ -5,6 +5,9 @@
   "scripts": {
     "start": "nodemon app.js"
   },
+  "engines": {
+    "npm": "5.3.x"
+  },
   "dependencies": {
     "async": "^2.5.0",
     "babel-polyfill": "^6.26.0",
