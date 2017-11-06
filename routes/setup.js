@@ -31,7 +31,7 @@ function getJSONConfig() {
 }
 
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/setupDB', {
+    res.render('./Desktop/setupdb', {
         title: 'NLA - Natural Language Analyse Tool',
         ResultOfSetNewConnection: ''
     });
@@ -63,12 +63,12 @@ router.post('/setNewConnection', function (req, res) {
     if (dbStub.isDBReadyForQuery()) {
         jsonConfigurator.writeFile(testJson, json, function (err, result) {
             if (err) {
-                res.render('./Desktop/setupDB', {
+                res.render('./Desktop/setupdb', {
                     title: 'NLA - Natural Language Analyse Tool',
                     ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
                 });
             } else {
-                res.render('./Desktop/setupDB', {
+                res.render('./Desktop/setupdb', {
                     title: 'NLA - Natural Language Analyse Tool',
                     ResultOfSetNewConnection: 'Success!'
                 });
