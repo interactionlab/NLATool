@@ -48,6 +48,20 @@ let nlp = {
     error: null
 };
 
+//TODO: check for errors, reset after usage
+let results = {
+    error: null,
+    //coref: [],
+    isSpecial: 0,
+    text: [],
+    ner: [],
+    pos: []
+};
+
+exports.getResults = function () {
+    return results;
+};
+
 /**
  * Reachability Check of Corenlp Server.
  */
@@ -85,7 +99,8 @@ exports.getAReachableConnection = function () {
         if (!coreNLP.positiveNlpStatus()) {
             try {
                 wait.for(coreNLP.isReachable, json.corenlp.connections[connection].host);
-            }catch (e){}
+            } catch (e) {
+            }
             if (nlpStatus.host !== null && nlpStatus.reachable === true) {
                 console.log(nlpStatus.host);
             }
@@ -95,7 +110,7 @@ exports.getAReachableConnection = function () {
 };
 
 exports.setupCorenlp = function () {
-    nlp.connector = new corenlp.ConnectorServer({ dsn: nlpStatus.host });
+    nlp.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlp.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
@@ -105,11 +120,14 @@ exports.setupCorenlp = function () {
 
 exports.parse = function (text, callback) {
     const sent = new CoreNLP.simple.Sentence(text);
+    let ners = [];
     nlp.pipeline.annotate(sent)
         .then(sent => {
             console.log('parse', sent.parse());
             console.log(CoreNLP.util.Tree.fromSentence(sent).dump());
-            callback(null, sent.parse());
+            ners = sent.nerTags();
+            console.log(ners);
+            callback(null, null);
         })
         .catch(err => {
             console.log('err', err);
