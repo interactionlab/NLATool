@@ -90,7 +90,7 @@ syncDatabase = function () {
         //Configuration of DB is not the same, as specified on the Server:
         if (!dbStatus.exists) {
             //DB doesnt exist -> create one on the DB Server
-            dbAction.setupDB(connection);
+            dbAction.setupdb(connection);
             console.log(notMedia + Tag + 'Setup of DB complete.');
             try {
                 let res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
