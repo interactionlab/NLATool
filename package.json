@@ -30,6 +30,7 @@
     "request": "^2.83.0",
     "serve-favicon": "~2.4.2",
     "uwords": "0.0.5",
+    "vue": "^2.5.3",
     "wait.for": "^0.6.6"
   },
   "description": "Natural Language Analysis Tool",
