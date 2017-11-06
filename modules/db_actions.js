@@ -4,7 +4,7 @@
  * @type {string}
  */
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'DB-Actions.js: ';
+let Tag = 'db_actions.js: ';
 let sql = 'The resulting SQL Command is:';
 
 //--------------------------------------------------------
@@ -14,9 +14,9 @@ let sql = 'The resulting SQL Command is:';
 let jsonConfigurator = require('jsonfile');
 let wait = require('wait.for');
 let dbConfig = './modules/config.json';
-let dbAction = require('./DB-Actions');
-let dbStub = require('./DB-Stub');
-let jsonAction = require('./jsonActions');
+let dbAction = require('./db_actions');
+let dbStub = require('./db_stub');
+let jsonAction = require('./json_actions');
 //var json = test.json;
 /**
  * Compare Operations for Where-Query of SQL:
