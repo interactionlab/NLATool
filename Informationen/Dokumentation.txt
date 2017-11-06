@@ -34,5 +34,5 @@ Hauptwebsites (aka Routes):
 -Hinzuf�gen von
 	-analyse.ejs
 	-profile.ejs
-	-signIn.ejs
+	-signin.ejs
 	
