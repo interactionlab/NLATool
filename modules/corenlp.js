@@ -104,7 +104,7 @@ exports.setupCorenlp = function () {
 };
 
 exports.parse = function (text, callback) {
-    const sent = new CoreNLP.simple.Sentence('The little dog runs so fast.');
+    const sent = new CoreNLP.simple.Sentence(text);
     nlp.pipeline.annotate(sent)
         .then(sent => {
             console.log('parse', sent.parse());
