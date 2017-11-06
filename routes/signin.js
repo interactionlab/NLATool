@@ -10,7 +10,7 @@ let desktop = 'desktop Version: ';
 let mobile = 'Mobile Version: ';
 let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'signIn.js: ';
+let Tag = 'signin.js: ';
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
