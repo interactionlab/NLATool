@@ -40,7 +40,7 @@ function getJSONConfig() {
 }
 
 
-exports.setupDB = function (connection) {
+exports.setupdb = function (connection) {
     wait.launchFiber(setupDBs, connection);
 };
 
