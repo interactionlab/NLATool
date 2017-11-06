@@ -5,6 +5,8 @@ Natural Language Analysis Tool
 ## Setup NLATool
 Step-by-step instructions:
 * `$ npm install -g nodemon`
+* `$ npm install -g --production windows-build-tools`
+* `$ npm install -g node-gyp`
 * `$ npm config set python python2.7`
 * `$ npm install`
 * `$ npm start`
