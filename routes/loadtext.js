@@ -83,7 +83,9 @@ function postLoadWrittenText(req, res, next) {
         if (!/\S/.test(text)) {
             res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
         } else {
-            //TODO: Parse Text with corenlp
+            corenlp.setupCorenlp();
+            let parsedText = wait.for(corenlp.parse,text);
+            console.log(notMedia + Tag + 'the parsedText from corenlp is: '+parsedText);
             let words = uword(text);
             //console.log('Words are: ' + Array.isArray(words) + words);
             //var words = text.split(' ');
