@@ -23,6 +23,7 @@ const corenlp = require("corenlp-request-wrapper");
 const jsonConfigurator = require('jsonfile');
 const dbconfig = './modules/config.json';
 const wait = require('wait.for');
+const vue = require('vue');
 
 
 router.get('/', function (req, res, next) {
@@ -84,4 +85,19 @@ router.post('/nlp', function (req, res) {
 
 });
 
+let app = new vue.Vue({
+    el: '#app',
+    data: {
+        message: 'Hello Vue!'
+    }
+});let app2 = new vue.Vue({
+        el: '#app-2',
+        data: {
+            message: 'You loaded this page on ' + new Date().toLocaleString()
+        }
+    })
+
+
 module.exports = router;
+
+
