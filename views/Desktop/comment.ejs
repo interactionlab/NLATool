@@ -6,37 +6,58 @@
     <textarea id="comment"></textarea>
     <input type="button" onclick="saveComment();">
 </div>
-<h1><%= title %></h1>
 <textarea id="input"></textarea>
 <input type="button" value="parse" onclick="parseInput();">
 <div id="output"></div>
 <script>
-    var words;
-    var comments = {};
     var openid;
-
     function parseInput() {
         var text = document.getElementById('input').value;
-        words = text.split(' ');
+        var words = text.split(' ');
         var html = '';
-
-        for (var i = 0; i < words.length; i++) {
+        var url = "/comment/init";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhttp.send(JSON.stringify({"words": words}));
+        for (var i=0; i< words.length;i++) {
             html += '<span style="padding: 0 5px;" onclick="addComment(' + i + ')" id="' + i + '">' + words[i] + '</span>';
         }
         document.getElementById('output').innerHTML = html;
     }
-
     function addComment(id) {
-        //$('#modal').css('display', 'block');
-        document.getElementById('modal').style.display = 'block';
-        //$('#word').html(words[id]);
-        document.getElementById('word').innerHTML = words[id];
-        document.getElementById('comment').value = comments[id];
-        openid = id;
+        var url = "/comment/";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //$('#modal').css('display', 'block');
+                var res = JSON.parse(this.responseText);
+                document.getElementById('modal').style.display = 'block';
+                //$('#word').html(words[id]);
+                document.getElementById('word').innerHTML = res.word;
+                document.getElementById('comment').value = res.comment;
+                openid = id;
+            }
+        };
+        xhttp.open("GET", url + "?id=" + id, true);
+        xhttp.send();
     }
-
     function saveComment() {
-        comments[openid] = document.getElementById('comment').value;
+        var url = "/comment/save";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                //document.getElementById("demo").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhttp.send(JSON.stringify({"id": openid, "comment": document.getElementById('comment').value}));
         document.getElementById('modal').style.display = 'none';
     }
 </script>

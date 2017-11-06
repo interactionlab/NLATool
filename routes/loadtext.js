@@ -17,11 +17,11 @@ let Tag = 'index.js: ';
  */
 const net = require('net');
 //const server = net.createServer();
-const dbAction = require('../modules/DB-Actions.js');
-const dbStub = require('../modules/DB-Stub.js');
+const dbAction = require('../modules/db_actions.js');
+const dbStub = require('../modules/db_stub.js');
 const uword = require('uwords');
 const wait = require('wait.for');
-const jsonAction = require('../modules/jsonActions');
+const jsonAction = require('../modules/json_actions');
 const corenlp = require('../modules/corenlp');
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
