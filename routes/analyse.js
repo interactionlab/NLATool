@@ -14,8 +14,8 @@ let Tag = 'analyse.js: ';
 /**
  * Setup Configuration file Requirements:
  */
-const dbStub = require('../modules/DB-Stub');
-const dbAction = require('../modules/DB-Actions');
+const dbStub = require('../modules/db_stub');
+const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
 
 let textDB = {

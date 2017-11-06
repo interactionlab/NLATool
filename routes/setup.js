@@ -15,11 +15,11 @@ let Tag = 'profile.js: ';
 /**
  * Setup Configuration file Requirements:
  */
-const dbAction = require('../modules/DB-Actions');
+const dbAction = require('../modules/db_actions');
 const jsonConfigurator = require('jsonfile');
 const wait = require('wait.for');
-const dbStub = require('../modules/DB-Stub');
-const jsonAction = require('../modules/jsonActions');
+const dbStub = require('../modules/db_stub');
+const jsonAction = require('../modules/json_actions');
 const testJson = './modules/test.json';
 
 let json;

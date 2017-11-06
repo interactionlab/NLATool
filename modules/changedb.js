@@ -13,10 +13,10 @@ let Tag = 'changeDB.js: ';
 const jsonConfigurator = require('jsonfile');
 const wait = require('wait.for');
 const dbConfig = './modules/config.json';
-const dbAction = require('./DB-Actions');
-const dbStub = require('./DB-Stub');
-const jsonAction = require('./jsonActions');
-const changeDB = require('./changeDB');
+const dbAction = require('./db_actions');
+const dbStub = require('./db_stub');
+const jsonAction = require('./json_actions');
+const changeDB = require('./changedb');
 //var json = test.json;
 
 let json = null;

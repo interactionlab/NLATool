@@ -10,7 +10,7 @@ Hauptwebsites (aka Routes):
 -index (= Startseite, Einloggen || Text hochladen)
 -Profil
 	-Einloggen/Registrieren
-	-Profil-/Dokumentübersicht
+	-Profil-/Dokumentï¿½bersicht
 	-(Einstellungen)
 -Analyse
 	-Hauptanalyse
@@ -20,18 +20,18 @@ Hauptwebsites (aka Routes):
 
 27.08.2017-Eric:
 -Erstellung des Proj.
--Hinzufügen von 
+-Hinzufï¿½gen von 
 	-analyse.js
-	-signIn.js 
+	-signin.js
 	-profile.js
  in routes und app.js
 
 -npm install bootstrap --save  
 -npm install request --save
 (nicht -g verwenden, weil sonst nicht die package.json entsprechend angepasst wird. 
--g wäre dann wenn ihr dieses package auch für andere Projekte auf eurem PC verwenden wollt)
+-g wï¿½re dann wenn ihr dieses package auch fï¿½r andere Projekte auf eurem PC verwenden wollt)
 
--Hinzufügen von
+-Hinzufï¿½gen von
 	-analyse.ejs
 	-profile.ejs
 	-signIn.ejs

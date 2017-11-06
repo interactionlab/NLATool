@@ -4,7 +4,7 @@
  * @type {string}
  */
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'DB-Actions.js: ';
+let Tag = 'db_actions.js: ';
 let sql = 'The resulting SQL Command is:';
 /*
 TODO: change default Settings
@@ -26,7 +26,7 @@ let jsonConfigurator = require('jsonfile');
 let wait = require('wait.for');
 let dbConfig = './modules/config.json';
 let testJson = './modules/test.json';
-let jsonAction = require('./jsonActions');
+let jsonAction = require('./json_actions');
 
 
 let json = null;

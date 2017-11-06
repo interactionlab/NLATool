@@ -16,9 +16,9 @@ let Tag = 'test.js: ';
 /**
  * Special required modules/files:
  */
-const dbAction = require('../modules/DB-Actions');
-const jsonAction = require('../modules/jsonActions');
-const dbStub = require('../modules/DB-Stub');
+const dbAction = require('../modules/db_actions');
+const jsonAction = require('../modules/json_actions');
+const dbStub = require('../modules/db_stub');
 const corenlp = require("corenlp-request-wrapper");
 const jsonConfigurator = require('jsonfile');
 const dbconfig = './modules/config.json';

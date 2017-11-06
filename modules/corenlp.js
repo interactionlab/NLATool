@@ -4,7 +4,7 @@
  * @type {string}
  */
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'DB-Actions.js: ';
+let Tag = 'db_actions.js: ';
 let sql = 'The resulting SQL Command is:';
 //--------------------------------------------------------
 /**
@@ -14,7 +14,7 @@ require('babel-polyfill');
 const jsonConfigurator = require('jsonfile');
 const wait = require('wait.for');
 const corenlp = require('corenlp');
-const jsonAction = require('../modules/jsonActions');
+const jsonAction = require('./json_actions');
 const isReachable = require('is-reachable');
 const coreNLP = require('../modules/corenlp');
 //import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';

@@ -11,14 +11,14 @@ let desktop = 'desktop Version: ';
 let mobile = 'Mobile Version: ';
 let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'DB-Stub.js: ';
+let Tag = 'db_stub.js: ';
 
 //--------------------------------------------------------
 const mysql = require('mysql');
-const dbAction = require('./DB-Actions');
-const dbStub = require('./DB-Stub');
+const dbAction = require('./db_actions');
+const dbStub = require('./db_stub');
 const wait = require('wait.for');
-const jsonAction = require('./jsonActions');
+const jsonAction = require('./json_actions');
 //var test = require('../modules/test');
 
 
