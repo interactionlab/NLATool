@@ -45,7 +45,7 @@ app.use('/signup', signup);
 app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
-app.use('/Comment', comment);
+app.use('/comment', comment);
 
 
 // catch 404 and forward to connectionError handler
