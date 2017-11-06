@@ -22,6 +22,9 @@ router.get('/', function (req, res, next) {
 /**
  * Texte reinladen
  */
+router.post ('/loadText', function(req, res, next) {
+   res.redirect('/loadtext');
+});
 
 //---------------------------------------------------------
 /**
