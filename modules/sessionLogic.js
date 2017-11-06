@@ -4,7 +4,7 @@
  * @type {string}
  */
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'session_logic.js: ';
+let Tag = 'sessionLogic.js: ';
 
 //--------------------------------------------------------
 /**
@@ -40,9 +40,9 @@ exports.verifySessionUser = function (req, res, next) {
     }
 };
 
-exports.requireSignIn = function (req, res, next) {
+exports.requiresignin = function (req, res, next) {
     if (!req.user) {
-        res.redirect('/signIn');
+        res.redirect('/signin');
     } else {
         next();
     }
