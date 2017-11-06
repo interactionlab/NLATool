@@ -17,6 +17,6 @@ let Tag = 'signIn.js: ';
  */
 
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/signIn', {title: 'NLA - Natural Language Analyse Tool'});
+    res.render('./Desktop/signin', {title: 'NLA - Natural Language Analyse Tool'});
 });
 module.exports = router;
