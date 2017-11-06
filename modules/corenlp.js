@@ -17,6 +17,7 @@ const corenlp = require('corenlp');
 const jsonAction = require('./json_actions');
 const isReachable = require('is-reachable');
 const coreNLP = require('../modules/corenlp');
+const CoreNLP = corenlp.default;
 //import CoreNLP, { Properties, Pipeline, ConnectorServer } from 'corenlp';
 
 /**
@@ -41,7 +42,10 @@ let nlpStatus = {
 };
 
 let nlp = {
-
+    connector: null,
+    props: null,
+    pipeline: null,
+    error: null
 };
 
 /**
@@ -91,11 +95,27 @@ exports.getAReachableConnection = function () {
 };
 
 exports.setupCorenlp = function () {
-    const connector = new ConnectorServer({ dsn: nlpStatus.host });
-    const props = new Properties({
+    nlp.connector = new corenlp.ConnectorServer({ dsn: nlpStatus.host });
+    nlp.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    const pipeline = new Pipeline(props, 'English', connector);
+    nlp.pipeline = new corenlp.Pipeline(nlp.props, 'English', nlp.connector);
+
+};
+
+exports.parse = function (text, callback) {
+    const sent = new CoreNLP.simple.Sentence('The little dog runs so fast.');
+    nlp.pipeline.annotate(sent)
+        .then(sent => {
+            console.log('parse', sent.parse());
+            console.log(CoreNLP.util.Tree.fromSentence(sent).dump());
+            callback(null, sent.parse());
+        })
+        .catch(err => {
+            console.log('err', err);
+            nlp.error = err;
+            callback(err, null);
+        });
 };
 
 
