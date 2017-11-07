@@ -85,17 +85,7 @@ router.post('/nlp', function (req, res) {
 
 });
 
-let app = new vue.Vue({
-    el: '#app',
-    data: {
-        message: 'Hello Vue!'
-    }
-});let app2 = new vue.Vue({
-        el: '#app-2',
-        data: {
-            message: 'You loaded this page on ' + new Date().toLocaleString()
-        }
-    })
+
 
 
 module.exports = router;
