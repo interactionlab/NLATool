@@ -1,16 +1,16 @@
 <html>
 <head></head>
 <body>
-<div id="modal" style="display:none;top:100px;width:500px;position:absolute;margin:auto;">
-    <h1 id="word"></h1>
-    <textarea id="comment"></textarea>
-    <input type="button" onclick="saveComment();">
-</div>
+    <div id="modal" style="display:none;top:100px;width:500px;position:absolute;margin:auto;">
+      <h1 id="word"></h1>
+      <textarea id="comment"></textarea>
+      <input type="button" onclick="saveComment();">
+    </div>
 <textarea id="input"></textarea>
 <input type="button" value="parse" onclick="parseInput();">
 <div id="output"></div>
 <script>
-    var openid;
+    var openid, uid;
     function parseInput() {
         var text = document.getElementById('input').value;
         var words = text.split(' ');
@@ -19,6 +19,7 @@
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
+                uid = JSON.parse(this.responseText).uid;
                 //document.getElementById("demo").innerHTML = this.responseText;
             }
         };
@@ -44,7 +45,7 @@
                 openid = id;
             }
         };
-        xhttp.open("GET", url + "?id=" + id, true);
+        xhttp.open("GET", url + "?id=" + id + "&uid=" + uid, true);
         xhttp.send();
     }
     function saveComment() {
@@ -57,7 +58,7 @@
         };
         xhttp.open("POST", url, true);
         xhttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-        xhttp.send(JSON.stringify({"id": openid, "comment": document.getElementById('comment').value}));
+        xhttp.send(JSON.stringify({"uid": uid, "id": openid, "comment": document.getElementById('comment').value}));
         document.getElementById('modal').style.display = 'none';
     }
 </script>
