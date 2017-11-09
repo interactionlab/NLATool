@@ -77,6 +77,9 @@ function getLoadTextRoutine(req, res, next) {
 }
 
 
+//TODO: uninstall uword when its usage is deprecated; override let words
+
+
 function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
@@ -101,6 +104,8 @@ function postLoadWrittenText(req, res, next) {
                 [documentInsertResult.insertId, words.length, rand],
                 null, null));
             req.session.docID = documentInsertResult.insertId;
+
+            //TODO: check if word + NER Tag exists already
 
             let wordInsertResult = null;
             for (let i = 0; i < words.length; i++) {
