@@ -136,7 +136,6 @@ exports.parse = function (text, callback) {
         });
 };
 
-
 //--------------------------------------------------------
 /**
  * Section for managing nlpStatus

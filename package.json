@@ -9,7 +9,7 @@
     "npm": "5.3.x"
   },
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^2.6.0",
     "babel-polyfill": "^6.26.0",
     "bluebird": "^3.5.1",
     "body-parser": "~1.17.1",
@@ -21,6 +21,7 @@
     "debug": "~2.6.3",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
+    "express-vue": "^4.0.13",
     "fibers": "^2.0.0",
     "is-reachable": "^2.3.3",
     "jsonfile": "^4.0.0",
@@ -30,7 +31,6 @@
     "request": "^2.83.0",
     "serve-favicon": "~2.4.2",
     "uwords": "0.0.5",
-    "vue": "^2.5.3",
     "wait.for": "^0.6.6"
   },
   "description": "Natural Language Analysis Tool",
