@@ -26,7 +26,7 @@ const wait = require('wait.for');
 
 
 router.get('/', function (req, res, next) {
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool'});
 });
 
 
