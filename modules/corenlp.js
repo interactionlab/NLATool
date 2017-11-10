@@ -52,7 +52,7 @@ let nlp = {
 let results = {
     error: null,
     //coref: [],
-    isSpecial: 0,
+    isSpecial: [],
     text: [],
     ner: [],
     pos: []
@@ -135,6 +135,29 @@ exports.parse = function (text, callback) {
             callback(err, null);
         });
 };
+
+//TODO: figure out a way to save different usages of interpunctuation to database
+
+exports.analyse = function (text) {
+    const sent = new CoreNLP.simple.Sentence(text);
+    nlp.pipeline.annotate(sent).then(sent => {
+        console.log(CoreNLP.util.Tree.fromSentence(sent).visitLeaves.dump());
+    }).catch(err => {
+
+    });
+
+};
+
+function fillResults(annotation){
+
+    for(let i = 0; i <= ; i++){
+        results.ner;
+        results.pos;
+        results.isSpecial
+    }
+
+
+}
 
 //--------------------------------------------------------
 /**
