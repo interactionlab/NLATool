@@ -15,8 +15,18 @@ const test = require('./routes/test');
 const loadtext = require('./routes/loadtext');
 const setup = require('./routes/setup');
 const comment = require('./routes/comment');
+const expressVue = require('express-vue');
 
 const app = express();
+const vueOptions = {
+    rootPath: path.join(__dirname, '/views'),
+    layout: {
+        start: '<div id="app">',
+        end: '</div>'
+    }
+};
+const expressVueMiddleware = expressVue.init(vueOptions);
+app.use(expressVueMiddleware);
 
 app.use(session({
     cookieName: 'session',
