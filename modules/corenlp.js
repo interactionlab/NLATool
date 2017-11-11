@@ -125,9 +125,9 @@ exports.parse = function (text, callback) {
     nlp.pipeline.annotate(sent)
         .then(sent => {
             console.log('parse', sent.parse());
-            console.log(CoreNLP.util.Tree.fromSentence(sent).dump());
+            console.log('parse Tree Result: ' + CoreNLP.util.Tree.fromSentence(sent).dump());
             ners = sent.nerTags();
-            console.log(ners);
+            console.log('NER Tags: ' + ners);
             callback(null, null);
         })
         .catch(err => {
@@ -139,24 +139,22 @@ exports.parse = function (text, callback) {
 
 //TODO: figure out a way to save different usages of interpunctuation to database
 
-exports.analyse = function (text) {
+exports.analyse = function (text, callback) {
     const sent = new CoreNLP.simple.Sentence(text);
     nlp.pipeline.annotate(sent).then(sent => {
-        console.log(CoreNLP.util.Tree.fromSentence(sent).visitLeaves.dump());
+        console.log('analyse Results: ');
+        console.log('nerTags: ' + sent.nerTags());
+        console.log('posTags:' + sent.posTags());
+        console.log('tokens:' + sent.tokens());
+        console.log('words: '+ sent.words());
+        callback(null, null);
     }).catch(err => {
-
+        callback(err, null);
     });
 
 };
 
-function fillResults(annotation){
-
-    for(let i = 0; i <= ; i++){
-        results.ner;
-        results.pos;
-        results.isSpecial
-    }
-
+function fillResults(annotation) {
 
 }
 

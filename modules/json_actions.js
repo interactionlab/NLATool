@@ -158,3 +158,28 @@ exports.getConnectionSettings = function (connect) {
     }
     return settings;
 };
+
+//--------------------------------------------------------
+/**
+ * Functions for corenlp result filtering
+ */
+
+/**
+ *
+ */
+exports.getAllImportantInfo = function (resultObject, neededInfo) {
+    if (typeof resultObject === 'string') {
+        JSON.parse(resultObject);
+    }
+    let level = resultObject;
+    let j = 0;
+    while (typeof level.children !== 'undefined' || level.children !== null) {
+        level = level.children;
+        for (let key in neededInfo) {
+            if (typeof level[key] !== 'undefined' || level[key] !== null || level[key] !== '') {
+               neededInfo[key][j] = level[key];
+            }
+        }
+        j++;
+    }
+};

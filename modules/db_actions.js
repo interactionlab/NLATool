@@ -245,11 +245,11 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
             commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     } else {
         commandString = commandString + json.database.name;
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
 
@@ -301,7 +301,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
             commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         }
         commandString = commandString + ';';
-        console.log(notMedia + Tag + commandString);
+        //console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Insert Command Creation failed!');
@@ -382,7 +382,7 @@ createWhereQuery = function (columns, values, operators) {
         for (let i = 1; i < operators.length; i++) {
             queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
         }
-        console.log(notMedia + Tag + queryString);
+        //console.log(notMedia + Tag + queryString);
         return queryString;
     }
     console.log(notMedia + Tag + 'Where Query Creation failed!');
