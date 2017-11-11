@@ -167,6 +167,7 @@ exports.getConnectionSettings = function (connect) {
 /**
  *
  */
+/*
 exports.getAllImportantInfo = function (resultObject, neededInfo) {
     if (typeof resultObject === 'string') {
         JSON.parse(resultObject);
@@ -182,4 +183,4 @@ exports.getAllImportantInfo = function (resultObject, neededInfo) {
         }
         j++;
     }
-};
+};*/

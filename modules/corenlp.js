@@ -144,19 +144,19 @@ exports.analyse = function (text, callback) {
     nlp.pipeline.annotate(sent).then(sent => {
         console.log('analyse Results: ');
         console.log('nerTags: ' + sent.nerTags());
+        results.ner = sent.nerTags();
         console.log('posTags:' + sent.posTags());
+        results.pos = sent.posTags();
         console.log('tokens:' + sent.tokens());
+        results.text = sent.words();
         console.log('words: '+ sent.words());
-        callback(null, null);
+        callback(null, results);
     }).catch(err => {
         callback(err, null);
     });
 
 };
 
-function fillResults(annotation) {
-
-}
 
 //--------------------------------------------------------
 /**
