@@ -38,14 +38,10 @@ function getJSONConfig() {
 let nlpStatus = {
     reachable: false,
     host: null,
-    error: null
-};
-
-let nlp = {
+    error: null,
     connector: null,
     props: null,
-    pipeline: null,
-    error: null
+    pipeline: null
 };
 
 //TODO: check for errors, reset after usage
@@ -96,7 +92,7 @@ exports.isReachable = function (host, callback) {
 exports.getAReachableConnection = function () {
     for (let connection in json.corenlp.connections) {
         console.log(json.corenlp.connections[connection].host);
-        if (!coreNLP.positiveNlpStatus()) {
+        if (!nlpReachability()) {
             try {
                 wait.for(coreNLP.isReachable, json.corenlp.connections[connection].host);
             } catch (e) {
@@ -111,18 +107,17 @@ exports.getAReachableConnection = function () {
 
 
 exports.setupCorenlp = function () {
-    nlp.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
-    nlp.props = new corenlp.Properties({
+    nlpStatus.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
+    nlpStatus.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse,dcoref'
     });
-    nlp.pipeline = new corenlp.Pipeline(nlp.props, 'English', nlp.connector);
-
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, 'English', nlpStatus.connector);
 };
 
 exports.parse = function (text, callback) {
     const sent = new CoreNLP.simple.Sentence(text);
     let ners = [];
-    nlp.pipeline.annotate(sent)
+    nlpStatus.pipeline.annotate(sent)
         .then(sent => {
             console.log('parse', sent.parse());
             console.log('parse Tree Result: ' + CoreNLP.util.Tree.fromSentence(sent).dump());
@@ -132,7 +127,7 @@ exports.parse = function (text, callback) {
         })
         .catch(err => {
             console.log('err', err);
-            nlp.error = err;
+            nlpStatus.error = err;
             callback(err, null);
         });
 };
@@ -140,24 +135,40 @@ exports.parse = function (text, callback) {
 //TODO: figure out a way to save different usages of interpunctuation to database
 
 exports.analyse = function (text, callback) {
+
     const doc = new CoreNLP.simple.Document(text);
-    let sentences = doc.sentences();
-    for(let i = 0; i < sentences.length; i++){
-        nlp.pipeline.annotate(sentences[i]).then(sentence => {
+    console.log('got here0' + text);
+    nlpStatus.pipeline.annotate(doc).then(doc => {
+        console.log('got here1');
+        let sentences = doc.sentences();
+        console.log('got here2');
+        for (let i = 0; i < sentences.length; i++) {
+            console.log('got here3');
+            //console.log('words: ' + sentences[i].words());
+            console.log('got here4');
+        }
+        callback(null, results);
+    }).catch(err => {
+        callback(err, null);
+    });
+
+    /*
+    for (let i = 0; i < sentences.length; i++) {
+        nlpStatus.pipeline.annotate(sentences[i]).then(sentence => {
             console.log('analyse Results: ');
             console.log('nerTags: ' + sentence.nerTags());
             results.ner.push(sentence.nerTags());
             console.log('posTags:' + sentence.posTags());
             results.pos.push(sentence.posTags());
             console.log('tokens:' + sentence.tokens());
-            results.text.push(sentence.words());
-            console.log('words: '+ sentence.words());
+            console.log('nerTags: ' + sentence.nerTags());
+            console.log('words: ' + sentence.words());
             callback(null, results);
         }).catch(err => {
             callback(err, null);
         });
     }
-
+    */
 
 };
 
@@ -187,5 +198,17 @@ exports.resetNlpStatus = function () {
  * @returns {boolean}
  */
 exports.positiveNlpStatus = function () {
-    return nlpStatus.host !== null && nlpStatus.reachable === true && nlpStatus.error === null;
+    return nlpStatus.host !== null
+        && nlpStatus.reachable === true
+        && nlpStatus.error === null
+        && nlpStatus.connector !== null
+        && nlpStatus.pipeline !== null
+        && nlpStatus.props !== null;
 };
+
+function nlpReachability() {
+    return nlpStatus.host !== null
+        && nlpStatus.reachable === true
+        && nlpStatus.error === null;
+}
+
