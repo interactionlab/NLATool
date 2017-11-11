@@ -87,13 +87,11 @@ function postLoadWrittenText(req, res, next) {
             res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
         } else {
             corenlp.setupCorenlp();
-            let parsedText = wait.for(corenlp.parse,text);
-            wait.for(corenlp.analyse, text);
-            //console.log(notMedia + Tag + 'the parsedText from corenlp is: '+parsedText);
+            //let parsedText = wait.for(corenlp.parse,text);
+            let parseResult = wait.for(corenlp.analyse, text);
+            console.log(notMedia + Tag + 'the parsedText from corenlp is: '+JSON.stringify(parseResult));
             let words = uword(text);
-            //console.log('Words are: ' + Array.isArray(words) + words);
-            //var words = text.split(' ');
-            //console.log(text + ' : ' + words.length);
+
 
             let rand = Math.random();
             let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [rand], null, null));
