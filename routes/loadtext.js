@@ -88,6 +88,7 @@ function postLoadWrittenText(req, res, next) {
         } else {
             corenlp.setupCorenlp();
             let parsedText = wait.for(corenlp.parse,text);
+            wait.for(corenlp.analyse, text);
             //console.log(notMedia + Tag + 'the parsedText from corenlp is: '+parsedText);
             let words = uword(text);
             //console.log('Words are: ' + Array.isArray(words) + words);
