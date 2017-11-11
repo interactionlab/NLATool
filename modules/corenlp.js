@@ -113,7 +113,7 @@ exports.getAReachableConnection = function () {
 exports.setupCorenlp = function () {
     nlp.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlp.props = new corenlp.Properties({
-        annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
+        annotators: 'tokenize,ssplit,pos,lemma,ner,parse,dcoref'
     });
     nlp.pipeline = new corenlp.Pipeline(nlp.props, 'English', nlp.connector);
 
@@ -140,20 +140,24 @@ exports.parse = function (text, callback) {
 //TODO: figure out a way to save different usages of interpunctuation to database
 
 exports.analyse = function (text, callback) {
-    const sent = new CoreNLP.simple.Sentence(text);
-    nlp.pipeline.annotate(sent).then(sent => {
-        console.log('analyse Results: ');
-        console.log('nerTags: ' + sent.nerTags());
-        results.ner = sent.nerTags();
-        console.log('posTags:' + sent.posTags());
-        results.pos = sent.posTags();
-        console.log('tokens:' + sent.tokens());
-        results.text = sent.words();
-        console.log('words: '+ sent.words());
-        callback(null, results);
-    }).catch(err => {
-        callback(err, null);
-    });
+    const doc = new CoreNLP.simple.Document(text);
+    let sentences = doc.sentences();
+    for(let i = 0; i < sentences.length; i++){
+        nlp.pipeline.annotate(sentences[i]).then(sentence => {
+            console.log('analyse Results: ');
+            console.log('nerTags: ' + sentence.nerTags());
+            results.ner.push(sentence.nerTags());
+            console.log('posTags:' + sentence.posTags());
+            results.pos.push(sentence.posTags());
+            console.log('tokens:' + sentence.tokens());
+            results.text.push(sentence.words());
+            console.log('words: '+ sentence.words());
+            callback(null, results);
+        }).catch(err => {
+            callback(err, null);
+        });
+    }
+
 
 };
 
