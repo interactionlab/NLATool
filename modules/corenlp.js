@@ -109,6 +109,7 @@ exports.getAReachableConnection = function () {
     }
 };
 
+
 exports.setupCorenlp = function () {
     nlp.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlp.props = new corenlp.Properties({
