@@ -1,3 +1,14 @@
+
+
+let vm = new Vue({
+    el: '#app',
+    data: {
+        message: 'Hello Vue!'
+    }
+});
+
+
+/*
 // 0. If using a module system, call Vue.use(VueRouter)
 
 // 1. Define route components.
@@ -29,4 +40,4 @@ const app = new Vue({
     router
 }).$mount('#app');
 
-// Now the app has started!
+// Now the app has started!*/
