@@ -63,6 +63,7 @@ router.post('/loadWrittenText', function (req, res) {
 function getLoadTextRoutine(req, res, next) {
     dbStub.fiberEstablishConnection();
     corenlp.getAReachableConnection();
+    corenlp.setupCorenlp();
     if (corenlp.positiveNlpStatus()) {
         res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
     } else {
