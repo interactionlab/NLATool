@@ -138,6 +138,7 @@ exports.analyse = function (text, callback) {
 
     const doc = new CoreNLP.simple.Document(text);
     console.log('got here0' + text);
+    console.log(nlpStatus.pipeline.getService());
     nlpStatus.pipeline.annotate(doc).then(doc => {
         console.log('got here1');
         let sentences = doc.sentences();
@@ -171,7 +172,22 @@ exports.analyse = function (text, callback) {
     */
 
 };
-
+exports.analyseSentence = function (text, callback) {
+    const sentence = new CoreNLP.simple.Sentence(text);
+    nlpStatus.pipeline.annotate(sentence).then(sentence => {
+        console.log('analyse Results: ');
+        console.log('nerTags: ' + sentence.nerTags());
+        results.ner.push(sentence.nerTags());
+        console.log('posTags:' + sentence.posTags());
+        results.pos.push(sentence.posTags());
+        console.log('tokens:' + sentence.tokens());
+        console.log('nerTags: ' + sentence.nerTags());
+        console.log('words: ' + sentence.words());
+        callback(null, results);
+    }).catch(err => {
+        callback(err, null);
+    });
+};
 
 //--------------------------------------------------------
 /**
