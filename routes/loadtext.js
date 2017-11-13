@@ -36,8 +36,6 @@ function getJSONConfig() {
     json2 = JSON.parse(json2);
 }
 
-
-/* GET home page. */
 router.get('/', function (req, res, next) {
     wait.launchFiber(getLoadTextRoutine, req, res, next);
 });
@@ -60,7 +58,7 @@ router.post('/loadWrittenText', function (req, res) {
  * @param res
  * @param next
  */
-function getLoadTextRoutine(req, res, next) {
+function getLoadTextRoutine(res, next) {
     dbStub.fiberEstablishConnection();
     corenlp.getAReachableConnection();
     corenlp.setupCorenlp();
@@ -91,7 +89,7 @@ function postLoadWrittenText(req, res, next) {
             //let parsedText = wait.for(corenlp.parse,text);
             let parsedResult = wait.for(corenlp.analyse, text);
             //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
-            console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
+            //console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
             //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
             //let words = uword(text);
             let words = parsedResult.text;
@@ -150,74 +148,6 @@ function sendSQL(command) {
 function stringifyForDB(input) {
     return '"' + input + '"';
 }
-
-/*
-server.listen(nlpPort);
-
-    server.once('error', function (err) {
-
-        if (err.code === 'EADDRINUSE') {
-            //port is currently in use, so...
-            console.log("Server online");
-
-            var input = req.body.testFunction;
-
-            corenlp.parse(
-                input, nlpPort, "ner", "json", function (err, parsedText) {
-                    //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
-
-                    //Object -> Json -> String
-                    var json = JSON.parse(parsedText);
-                    var words = {};
-                    var classes = {};
-                    var pos = {};
-
-                    for (var i = 0; i <= json["sentences"].length - 1; i++) {
-                        for (var j = 0; j <= json["sentences"][i]["tokens"].length - 1; j++) {
-                            classes[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].ner));
-                            words[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].word));
-                            pos[j] = (JSON.stringify(json["sentences"][i]["tokens"][j].pos));
-                        }
-                    }
-
-                    // write to database
-
-                    dbStub.fiberEstablishConnection();
-
-                    var word = dbAction.createInsertCommand('word', ['content', 'isSpecial', 'semanticClass', 'pos'], [words[k], 0, classes[k], pos[k]]);
-
-                    dbStub.makeSQLRequest(word, function (err, result) {
-                        if (err) {
-                            res.render('./testview', {
-                                title: 'NLA - Natural Language Analyse Tool',
-                                result: err
-                            });
-                        } else {
-                            res.render('Desktop/loadtext', {
-                                title: 'NLA - Natural Language Analyse Tool',
-                                result: result
-                            })
-                        }
-                    });
-
-                })
-
-        }
-    });
-
-    //if Core NLP is offline:
-    server.once('listening', function () {
-        server.close();
-        setTimeout(function () {
-            console.log("Server offline")
-        }, 5000);
-        res.render('Desktop/loadtext', {
-            title: 'NLA - Natural Language Analyse Tool',
-            result: "Error 501: CoreNLP Server is offline"
-        }, null);
-
-    });
- */
 
 
 module.exports = router;
