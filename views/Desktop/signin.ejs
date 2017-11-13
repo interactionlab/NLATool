@@ -1,5 +1,29 @@
 <!-- VUE template -->
+<template>
+    <div>
+        <title>{{title}}</title>
+        <link rel='stylesheet' href='/css/style.css'/>
 
+        <div class="row">
+            <div class="center-block">
+                <!-- <img src="/public/images/logo.png" alt="Logo">-->
+            </div>
+        </div>
+        <div class="row">
+            <title>{{title}}</title>
+        </div>
+        <div class="row">
+            <form>
+                <!--TODO change to material -->
+                Benutzername oder Email<br>
+                <input type="text" name="username"><br>
+                Password<br>
+                <input type="text" name="pass"><br>
+                <input type="submit">
+            </form>
+        </div>
+    </div>
+</template>
 
 <!-- EJS template -->
 <!DOCTYPE html>
