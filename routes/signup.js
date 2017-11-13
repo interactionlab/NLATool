@@ -17,3 +17,16 @@ router.get('/', function (req, res, next) {
 });
 
 module.exports = router;
+
+/*
+VUE template
+
+<script>
+export default {
+    data: function() {
+        return {}
+    }
+}
+</script>
+
+*/
