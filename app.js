@@ -21,18 +21,36 @@ const app = express();
 const vueOptions = {
     rootPath: path.join(__dirname, '/views'),
     layout: {
-        start: '<div id="app">',
-        end: '</div>'
+        html: {
+            start: '<!DOCTYPE html><html>',
+            end: '</html>'
+        },
+        body: {
+            start: '<body>',
+            end: '</body>'
+        },
+        template: {
+            start: '<div id="app">',
+            end: '</div>'
+        }
     },
     vue: {
         head: {
             title: 'Hello this is a global title',
             meta: [
                 { script: 'https://unpkg.com/vue' },
-                { style: '/assets/rendered/style.css' }
+                { style: '/css/style.css' }
             ]
         }
     },
+    data: {
+        foo: true,
+        bar: 'yes',
+        qux: {
+            id: 123,
+            baz: 'anything you wish, you can have any kind of object in the data object, it will be global and on every route'
+        }
+    }
 };
 const expressVueMiddleware = expressVue.init(vueOptions);
 app.use(expressVueMiddleware);
