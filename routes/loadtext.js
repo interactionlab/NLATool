@@ -91,7 +91,7 @@ function postLoadWrittenText(req, res, next) {
             //let parsedText = wait.for(corenlp.parse,text);
             let parsedResult = wait.for(corenlp.analyse, text);
             //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
-            console.log(notMedia + Tag + 'the parsedText from corenlp is: '+JSON.stringify(parsedResult));
+            console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
             //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
             //let words = uword(text);
             let words = parsedResult.text;
@@ -110,21 +110,25 @@ function postLoadWrittenText(req, res, next) {
             //TODO: check if word + NER Tag exists already
 
             let wordInsertResult = null;
+            let counter = 0;
             for (let i = 0; i < words.length; i++) {
-                for(let j = 0; j <words[i].length;j++){
-                    words[i][j] = '"' + words[i][j] + '"';
+                for (let j = 0; j < words[i].length; j++) {
+                    words[i][j] = stringifyForDB(words[i][j]);
+                    parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
+                    parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
                     wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                         'word',
                         ['content', 'isSpecial', 'semanticClass', 'pos'],
-                        [words[i][j], 0, parsedResult.ner[i], parsedResult.pos[i]],
+                        [words[i][j], 0, parsedResult.ner[i][j], parsedResult.pos[i][j]],
                         null, null));
 
                     wordInsertResult = JSON.parse(wordInsertResult);
                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                         'textWords',
                         ['wordID', 'docID', 'counter'],
-                        [wordInsertResult.insertId, documentInsertResult.insertId, i],
+                        [wordInsertResult.insertId, documentInsertResult.insertId, counter],
                         null, null));
+                    counter++;
                 }
 
             }
@@ -140,6 +144,10 @@ function sendSQL(command) {
     } catch (err) {
         results.push(err);
     }
+}
+
+function stringifyForDB(input) {
+    return '"' + input + '"';
 }
 
 /*

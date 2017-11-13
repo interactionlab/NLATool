@@ -39,12 +39,13 @@ function getAndShowText(req, res, next) {
     let docID = '';
     console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
-        console.log('got here2');
         let docID = req.session.docID;
         getTextFromDB(docID);
     }
-    console.log('got here1');
-    res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: JSON.stringify(textDB.wordList)});
+    res.render('./Desktop/analyse', {
+        title: 'NLA - Natural Language Analyse Tool',
+        result: JSON.stringify(textDB.wordList)
+    });
 }
 
 function getTextFromDB(docID) {
