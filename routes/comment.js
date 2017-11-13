@@ -36,21 +36,10 @@ router.post('/init', function (req, res) {
     }
     req.session.wordTables[uid] = {words: words, comments: comments};
     res.json({uuid: uuid});
-    res.render('./Desktop/comment',{
-        title :  'NLA - Natural Language Analyse Tool'
+    res.render('./Desktop/comment', {
+        title: 'NLA - Natural Language Analyse Tool'
         //result :
+    });
+
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-module.exports = router;
+    module.exports = router;
