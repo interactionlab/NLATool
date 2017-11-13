@@ -168,12 +168,7 @@ exports.resetResults = function () {
  * @returns {boolean}
  */
 exports.positiveNlpStatus = function () {
-    return nlpStatus.host !== null
-        && nlpStatus.reachable === true
-        && nlpStatus.error === null
-        && nlpStatus.connector !== null
-        && nlpStatus.pipeline !== null
-        && nlpStatus.props !== null;
+    return nlpStatus.host !== null && nlpStatus.reachable === true && nlpStatus.error === null && nlpStatus.connector !== null && nlpStatus.pipeline !== null && nlpStatus.props !== null;
 };
 
 function nlpReachability() {
