@@ -108,69 +108,29 @@ exports.getAReachableConnection = function () {
 exports.setupCorenlp = function () {
     nlpStatus.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlpStatus.props = new corenlp.Properties({
-        annotators: 'tokenize,ssplit,pos,lemma,ner,parse,dcoref'
+        annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
     nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, 'English', nlpStatus.connector);
     pipeline = new corenlp.Pipeline(nlpStatus.props, 'English', nlpStatus.connector);
 };
 
-exports.parse = function (text, callback) {
-    const sent = new CoreNLP.simple.Sentence(text);
-    let ners = [];
-    nlpStatus.pipeline.annotate(sent)
-        .then(sent => {
-            console.log('parse', sent.parse());
-            console.log('parse Tree Result: ' + CoreNLP.util.Tree.fromSentence(sent).dump());
-            ners = sent.nerTags();
-            console.log('NER Tags: ' + ners);
-            callback(null, null);
-        })
-        .catch(err => {
-            console.log('err', err);
-            nlpStatus.error = err;
-            callback(err, null);
-        });
-};
-
 //TODO: figure out a way to save different usages of interpunctuation to database
 
 exports.analyse = function (text, callback) {
-
     const doc = new CoreNLP.simple.Document(text);
-    console.log('got here0' + text);
+    //console.log('got here0' + text);
     console.log(nlpStatus.pipeline.getService());
     nlpStatus.pipeline.annotate(doc).then(doc => {
-        console.log('got here1');
         let sentences = doc.sentences();
-        console.log('got here2');
         for (let i = 0; i < sentences.length; i++) {
-            console.log('got here3');
-            //console.log('words: ' + sentences[i].words());
-            console.log('got here4');
+            results.ner.push(sentences[i].nerTags());
+            results.pos.push(sentences[i].posTags());
+            results.text.push(sentences[i].words());
         }
         callback(null, results);
     }).catch(err => {
         callback(err, null);
     });
-
-    /*
-    for (let i = 0; i < sentences.length; i++) {
-        nlpStatus.pipeline.annotate(sentences[i]).then(sentence => {
-            console.log('analyse Results: ');
-            console.log('nerTags: ' + sentence.nerTags());
-            results.ner.push(sentence.nerTags());
-            console.log('posTags:' + sentence.posTags());
-            results.pos.push(sentence.posTags());
-            console.log('tokens:' + sentence.tokens());
-            console.log('nerTags: ' + sentence.nerTags());
-            console.log('words: ' + sentence.words());
-            callback(null, results);
-        }).catch(err => {
-            callback(err, null);
-        });
-    }
-    */
-
 };
 exports.analyseSentence = function (text, callback) {
     let sentence = new CoreNLP.simple.Sentence(text);

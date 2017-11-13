@@ -89,13 +89,13 @@ function postLoadWrittenText(req, res, next) {
         } else {
             //corenlp.setupCorenlp();
             //let parsedText = wait.for(corenlp.parse,text);
-            //let parseResult = wait.for(corenlp.analyse, text);
-            let parsedResultSentence = wait.for(corenlp.analyseSentence,text);
-            //console.log(notMedia + Tag + 'the parsedText from corenlp is: '+JSON.stringify(parseResult));
-            console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: '+JSON.stringify(parsedResultSentence));
+            let parsedResult = wait.for(corenlp.analyse, text);
+            //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
+            console.log(notMedia + Tag + 'the parsedText from corenlp is: '+JSON.stringify(parsedResult));
+            //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
             //let words = uword(text);
-            let words = parsedResultSentence.text;
-            let title = req.body.title;
+            let words = parsedResult.text;
+            let title = '"' + req.body.title + '"';
 
             let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [title], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
@@ -111,19 +111,22 @@ function postLoadWrittenText(req, res, next) {
 
             let wordInsertResult = null;
             for (let i = 0; i < words.length; i++) {
-                words[i] = '"' + words[i] + '"';
-                wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                    'word',
-                    ['content', 'isSpecial','semanticClass','pos'],
-                    [words[i], 0,parsedResultSentence.ner[i], parsedResultSentence.pos[i]],
-                    null, null));
+                for(let j = 0; j <words[i].length;j++){
+                    words[i][j] = '"' + words[i][j] + '"';
+                    wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                        'word',
+                        ['content', 'isSpecial', 'semanticClass', 'pos'],
+                        [words[i][j], 0, parsedResult.ner[i], parsedResult.pos[i]],
+                        null, null));
 
-                wordInsertResult = JSON.parse(wordInsertResult);
-                wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                    'textWords',
-                    ['wordID', 'docID', 'counter'],
-                    [wordInsertResult.insertId, documentInsertResult.insertId, i],
-                    null, null));
+                    wordInsertResult = JSON.parse(wordInsertResult);
+                    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                        'textWords',
+                        ['wordID', 'docID', 'counter'],
+                        [wordInsertResult.insertId, documentInsertResult.insertId, i],
+                        null, null));
+                }
+
             }
             res.redirect('/analyse');
         }
