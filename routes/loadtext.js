@@ -132,6 +132,7 @@ function postLoadWrittenText(req, res, next) {
                 }
 
             }
+            corenlp.resetResults();
             res.redirect('/analyse');
         }
     }
