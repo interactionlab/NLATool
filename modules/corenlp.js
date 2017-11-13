@@ -110,8 +110,8 @@ exports.setupCorenlp = function () {
     nlpStatus.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, 'English', nlpStatus.connector);
-    pipeline = new corenlp.Pipeline(nlpStatus.props, 'English', nlpStatus.connector);
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, 'German', nlpStatus.connector);
+    pipeline = new corenlp.Pipeline(nlpStatus.props, 'German', nlpStatus.connector);
 };
 
 //TODO: figure out a way to save different usages of interpunctuation to database
@@ -126,30 +126,14 @@ exports.analyse = function (text, callback) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
+            console.log(results);
         }
         callback(null, results);
     }).catch(err => {
         callback(err, null);
     });
 };
-exports.analyseSentence = function (text, callback) {
-    let sentence = new CoreNLP.simple.Sentence(text);
-    console.log(JSON.stringify(pipeline) + '--------' + sentence.toString());
-    pipeline.annotate(sentence).then(sentence => {
-        //console.log('analyse Results: ');
-        //console.log('nerTags: ' + sentence.nerTags());
-        results.ner.push(sentence.nerTags());
-        //console.log('posTags:' + sentence.posTags());
-        results.pos.push(sentence.posTags());
-        //console.log('tokens:' + sentence.tokens());
-        results.text.push(sentence.words());
-        //console.log('words: ' + sentence.words());
-        callback(null, results);
-    }).catch(err => {
-        callback(err, null);
-    });
 
-};
 //--------------------------------------------------------
 /**
  * Section for managing nlpStatus
@@ -193,8 +177,6 @@ exports.positiveNlpStatus = function () {
 };
 
 function nlpReachability() {
-    return nlpStatus.host !== null
-        && nlpStatus.reachable === true
-        && nlpStatus.error === null;
+    return nlpStatus.host !== null && nlpStatus.reachable === true && nlpStatus.error === null;
 }
 

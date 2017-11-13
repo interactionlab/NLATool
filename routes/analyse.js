@@ -30,11 +30,11 @@ router.get('/', function (req, res, next) {
     wait.launchFiber(getAndShowText, req, res, next);
 });
 
-router.post('/showText', function (req, res, next) {
+router.post('/showText', function (req, res) {
     res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
 });
 
-function getAndShowText(req, res, next) {
+function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
     let docID = '';
     console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
