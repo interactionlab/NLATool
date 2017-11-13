@@ -23,7 +23,16 @@ const vueOptions = {
     layout: {
         start: '<div id="app">',
         end: '</div>'
-    }
+    },
+    vue: {
+        head: {
+            title: 'Hello this is a global title',
+            meta: [
+                { script: 'https://unpkg.com/vue' },
+                { style: '/assets/rendered/style.css' }
+            ]
+        }
+    },
 };
 const expressVueMiddleware = expressVue.init(vueOptions);
 app.use(expressVueMiddleware);
@@ -36,8 +45,8 @@ app.use(session({
 }));
 
 // view engine setup
-app.set('views', path.join(__dirname, '/views'));
-app.set('view engine', 'ejs');
+//app.set('views', path.join(__dirname, '/views'));
+app.set('view engine', 'vue');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -74,7 +83,7 @@ app.use(function (err, req, res, next) {
     // render the connectionError page
     console.log(err);
     res.status(err.status || 500);
-    res.render('./error', {
+    res.renderVue('../error', {
         message: err.message,
         error: err
     });
