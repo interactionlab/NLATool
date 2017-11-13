@@ -15,7 +15,7 @@ let Tag = 'index.js: ';
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/index', {title: 'NLA - Natural Language Analyse Tool'});
+    res.renderVue('index', {title: 'NLA - Natural Language Analyse Tool'});
 });
 
 //---------------------------------------------------------
