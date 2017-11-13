@@ -1,3 +1,26 @@
+<!-- VUE template -->
+<template lang="html">
+    <div class="row">
+        <div class="center-block">
+        </div>
+    </div>
+    <div class="row">
+        <h1>{{ title }}</h1>
+    </div>
+    <div class="row">
+        <form>
+            Benutzername<br>
+            <input type="text" name="username"><br>
+            Email-Adresse<br>
+            <input type="text" name="email"><br>
+            Password<br>
+            <input type="text" name="pass"><br>
+            <input type="submit">
+        </form>
+    </div>
+</template>
+
+<!-- EJS template -->
 <!DOCTYPE html>
 <html>
 <head>
