@@ -15,7 +15,16 @@ let Tag = 'index.js: ';
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.renderVue('index', {title: 'NLA - Natural Language Analyse Tool'});
+    /*const vueOptions= {
+        head: {
+            title: 'Page Title',
+            meta: [
+                { property:'og:title', content: 'Page Title'},
+                { name:'twitter:title', content: 'Page Title'},
+                ]
+        }
+    };*/
+    res.renderVue('index');
 });
 
 //---------------------------------------------------------
