@@ -175,61 +175,60 @@ exports.analyse = function (text, callback) {
 exports.analyseSentence = function (text, callback) {
     let sentence = new CoreNLP.simple.Sentence(text);
     console.log(JSON.stringify(pipeline) + '--------' + sentence.toString());
-        pipeline.annotate(sentence).then(sentence => {
-            //console.log('analyse Results: ');
-            //console.log('nerTags: ' + sentence.nerTags());
-            results.ner.push(sentence.nerTags());
-            //console.log('posTags:' + sentence.posTags());
-            results.pos.push(sentence.posTags());
-            //console.log('tokens:' + sentence.tokens());
-            //console.log('nerTags: ' + sentence.nerTags());
-            results.text.push(sentence.words());
-            //console.log('words: ' + sentence.words());
-            callback(null, results);
-        }).catch(err => {
-            callback(err, null);
-        });
+    pipeline.annotate(sentence).then(sentence => {
+        //console.log('analyse Results: ');
+        //console.log('nerTags: ' + sentence.nerTags());
+        results.ner.push(sentence.nerTags());
+        //console.log('posTags:' + sentence.posTags());
+        results.pos.push(sentence.posTags());
+        //console.log('tokens:' + sentence.tokens());
+        results.text.push(sentence.words());
+        //console.log('words: ' + sentence.words());
+        callback(null, results);
+    }).catch(err => {
+        callback(err, null);
+    });
 
 };
 //--------------------------------------------------------
-    /**
-     * Section for managing nlpStatus
-     */
-    /**
-     * Returns the whole Object Representing the Nlp Server Status
-     * from node.js Server point of view.
-     * @returns {{reachable: boolean, host: null, error: null}}
-     */
-    exports.getNlpStatus = function () {
-        return nlpStatus;
-    };
-    /**
-     * Resets the nlpStatus Object to its default values.
-     */
-    exports.resetNlpStatus = function () {
-        nlpStatus.error = null;
-        nlpStatus.reachable = false;
-        nlpStatus.host = null;
-        nlpStatus.pipeline = null;
-        nlpStatus.props = null;
-        nlpStatus.connector = null;
-    };
-    /**
-     * Returns true if all the conditions that are specified to
-     * @returns {boolean}
-     */
-    exports.positiveNlpStatus = function () {
-        return nlpStatus.host !== null
-            && nlpStatus.reachable === true
-            && nlpStatus.error === null
-            && nlpStatus.connector !== null
-            && nlpStatus.pipeline !== null
-            && nlpStatus.props !== null;
-    };
+/**
+ * Section for managing nlpStatus
+ */
+/**
+ * Returns the whole Object Representing the Nlp Server Status
+ * from node.js Server point of view.
+ * @returns {{reachable: boolean, host: null, error: null}}
+ */
+exports.getNlpStatus = function () {
+    return nlpStatus;
+};
+/**
+ * Resets the nlpStatus Object to its default values.
+ */
+exports.resetNlpStatus = function () {
+    nlpStatus.error = null;
+    nlpStatus.reachable = false;
+    nlpStatus.host = null;
+    nlpStatus.pipeline = null;
+    nlpStatus.props = null;
+    nlpStatus.connector = null;
+};
+/**
+ * Returns true if all the conditions that are specified to
+ * @returns {boolean}
+ */
+exports.positiveNlpStatus = function () {
+    return nlpStatus.host !== null
+        && nlpStatus.reachable === true
+        && nlpStatus.error === null
+        && nlpStatus.connector !== null
+        && nlpStatus.pipeline !== null
+        && nlpStatus.props !== null;
+};
 
-    function nlpReachability() {
-        return nlpStatus.host !== null
-            && nlpStatus.reachable === true
-            && nlpStatus.error === null;
-    }
+function nlpReachability() {
+    return nlpStatus.host !== null
+        && nlpStatus.reachable === true
+        && nlpStatus.error === null;
+}
 
