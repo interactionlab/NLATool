@@ -173,6 +173,12 @@ exports.resetNlpStatus = function () {
     nlpStatus.props = null;
     nlpStatus.connector = null;
 };
+
+exports.resetResults = function () {
+  for(let key in results){
+      results[key] = [];
+  }
+};
 /**
  * Returns true if all the conditions that are specified to
  * @returns {boolean}
