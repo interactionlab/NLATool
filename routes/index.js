@@ -15,24 +15,27 @@ let Tag = 'index.js: ';
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    /*const vueOptions= {
+    const vueOptions = {
         head: {
-            title: 'Page Title',
+            title: 'bla',
             meta: [
-                { property:'og:title', content: 'Page Title'},
-                { name:'twitter:title', content: 'Page Title'},
-                ]
+                {property: 'og:title', content: 'Page Title'},
+                {name: 'twitter:title', content: 'Page Title'},
+            ]
+        },
+        body: {
+            title: 'bla'
         }
-    };*/
-    res.renderVue('index');
+    };
+    res.renderVue('index', vueOptions);
 });
 
 //---------------------------------------------------------
 /**
  * Texte reinladen
  */
-router.post ('/loadText', function(req, res, next) {
-   res.redirect('/loadtext');
+router.post('/loadText', function (req, res, next) {
+    res.redirect('/loadtext');
 });
 
 //---------------------------------------------------------

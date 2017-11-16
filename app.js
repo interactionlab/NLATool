@@ -36,15 +36,15 @@ const vueOptions = {
     },
     vue: {
         head: {
-            title: 'Hello this is a global title',
+            title: 'NLA - Natural Language Analyse Tool',
             meta: [
-                { script: 'https://unpkg.com/vue' },
-                { style: '/css/style.css' }
+                {script: 'https://unpkg.com/vue'},
+                {style: '/css/style.css'}
             ]
         }
     },
     data: {
-        foo: true,
+        title:'NLA - Natural Language Analyse Tool',
         bar: 'yes',
         qux: {
             id: 123,
@@ -101,10 +101,12 @@ app.use(function (err, req, res, next) {
     // render the connectionError page
     console.log(err);
     res.status(err.status || 500);
-    res.renderVue('../error', {
+    const data = {
         message: err.message,
-        error: err
-    });
+        error: err,
+        status: err.status
+    };
+    res.renderVue('error', data);
 });
 
 app.set('port', process.env.PORT || 3000);
