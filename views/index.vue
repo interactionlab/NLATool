@@ -1,33 +1,83 @@
 <template>
     <!DOCTYPE html>
     <html>
-    <div id="app">
-        <head>
-            <link rel='stylesheet' href='/css/style.css'/>
-        </head>
-        <body>
-        <h1>{{ title }}</h1>
-        <p>Welcome to {{ title }}</p>
-        </body>
-    </div>
+    <head>
+        <title>{{ title }}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width = device-width, initial-scale = 1">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-orange.min.css">
+        <link rel="stylesheet"
+              href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/debugstyle.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <!--<script src="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>-->
 
+        <!--vueTest.js-->
+        <!--<script src="https://unpkg.com/vue/dist/vue.js"></script>
+        <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>-->
+
+        <!--Script in /public/javascripts -->
+        <!--Stylesheets & bootstrap in /public/javascripts -->
+    </head>
+    <body>
+
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Headerbutton (3 dots) on the right-->
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
+                    <i class="material-icons">more_vert</i>
+                </button>
+                <!-- Some examples for headerbutton-->
+                <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
+                    <!--They could/should be linked-->
+                    <li class="mdl-menu__item">About</li>
+                    <li class="mdl-menu__item">Contact</li>
+                    <li class="mdl-menu__item">Legal information</li>
+                </ul>
+            </div>
+        </header>
+        <!-- Sidebar content-->
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">{{ title }}</span> <!--TODO title to big or to long-->
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="signin">Sign in</a>
+                <a class="mdl-navigation__link" href="signup">Sign up</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
+        </div>
+
+        <!-- page content-->
+        <main class="mdl-grid graybox" style="text-align: center">
+            <div style=" width: 100%; text-align: center">
+                <img src="/images/logo.jpg" alt="Logo" class="graybox" style="text-align: center">
+            </div>
+            <div style=" width: 100%;text-align: center">
+                <div>
+                    <form action="/loadText" method="POST">
+                        <div>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                <i class="material-icons">send</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    </body>
     </html>
 </template>
-
-
 <script>
-    /*import messageComp from './components/message-comp.vue';
-    import users from './components/users.vue';
-    import exampleMixin from '../mixins/exampleMixin';
     export default {
-        mixins: [exampleMixin],
         data: function () {
             return {
             }
-        },
-        components: {
-            messageComp: messageComp,
-            users: users
         }
-    }*/
+    }
 </script>
