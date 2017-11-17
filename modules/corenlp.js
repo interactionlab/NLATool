@@ -64,7 +64,6 @@ exports.isReachable = function (host, callback) {
     if (!coreNLP.positiveNlpStatus()) {
         let reached = isReachable(host);
         reached.then(function (reached) {
-            console.log(reached);
             if (reached) {
                 nlpStatus.reachable = reached;
                 nlpStatus.host = host;
@@ -76,13 +75,15 @@ exports.isReachable = function (host, callback) {
                 nlpStatus.error = err;
                 callback(err, reached);
             }
-        }).catch(function (e) {
+        });
+           /* .catch(function (e) {
             nlpStatus.reachable = reached;
             let err = new Error('CoreNlp not reachable' + e);
             err.status = 502;
             nlpStatus.error = err;
+            console.log('Got to Error!');
             callback(err, null);
-        });
+        });*/
     }
 };
 /**
@@ -90,14 +91,14 @@ exports.isReachable = function (host, callback) {
  */
 exports.getAReachableConnection = function () {
     for (let connection in json.corenlp.connections) {
-        console.log(json.corenlp.connections[connection].host);
+
+        console.log(nlpReachability());
         if (!nlpReachability()) {
-            try {
-                wait.for(coreNLP.isReachable, json.corenlp.connections[connection].host);
-            } catch (e) {
-            }
+            console.log('Checking Host: ' + json.corenlp.connections[connection].host);
+            wait.for(coreNLP.isReachable, json.corenlp.connections[connection].host);
+
             if (nlpStatus.host !== null && nlpStatus.reachable === true) {
-                console.log(nlpStatus.host);
+                console.log('Reachable Host is: ' + nlpStatus.host);
             }
 
         }
@@ -159,9 +160,9 @@ exports.resetNlpStatus = function () {
 };
 
 exports.resetResults = function () {
-  for(let key in results){
-      results[key] = [];
-  }
+    for (let key in results) {
+        results[key] = [];
+    }
 };
 /**
  * Returns true if all the conditions that are specified to
