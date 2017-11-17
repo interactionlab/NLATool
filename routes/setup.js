@@ -30,11 +30,24 @@ function getJSONConfig() {
     json = JSON.parse(json);
 }
 
+let vueRenderOptions = {
+    head: {
+        meta: [
+            {script: '/javascripts/ui_functions.js'},
+            {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
+
+        ]
+    }
+};
+
+let vueData = {
+    ResultOfSetNewConnection : null
+};
+
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/setupdb', {
-        title: 'NLA - Natural Language Analyse Tool',
-        ResultOfSetNewConnection: ''
-    });
+    res.renderVue('setupdb', vueData, vueRenderOptions);
 });
 
 router.post('/setNewConnection', function (req, res) {
@@ -63,15 +76,9 @@ router.post('/setNewConnection', function (req, res) {
     if (dbStub.isDBReadyForQuery()) {
         jsonConfigurator.writeFile(testJson, json, function (err, result) {
             if (err) {
-                res.render('./Desktop/setupdb', {
-                    title: 'NLA - Natural Language Analyse Tool',
-                    ResultOfSetNewConnection: 'Uh...Oh...We couldnt connect to the Database.' + err
-                });
+                res.renderVue('setupdb', vueData, vueRenderOptions);
             } else {
-                res.render('./Desktop/setupdb', {
-                    title: 'NLA - Natural Language Analyse Tool',
-                    ResultOfSetNewConnection: 'Success!'
-                });
+                res.renderVue('setupdb', vueData, vueRenderOptions);
             }
         });
     }
