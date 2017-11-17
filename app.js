@@ -41,7 +41,6 @@ const vueOptions = {
                 {script: 'https://unpkg.com/vue'},
                 {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
                 {style: '/css/style.css'},
-                {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'},
                 {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
                 {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
                 {style: '/css/debugstyle.css'}
