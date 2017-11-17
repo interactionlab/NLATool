@@ -12,8 +12,20 @@ let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
 let Tag = 'signup.js: ';
 
+let vueRenderOptions = {
+    head: {
+        meta: [
+            {script: '/javascripts/ui_functions.js'},
+            {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
+
+        ]
+    }
+};
+
 router.get('/', function (req, res, next) {
-    res.render('./Desktop/signup', {title: 'NLA - Natural Language Analyse Tool'});
+    res.renderVue('signup', vueRenderOptions);
 });
 
 module.exports = router;

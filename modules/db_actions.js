@@ -245,11 +245,11 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
             commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
-        //console.log(notMedia + Tag + sql + commandString);
+        console.log(notMedia + Tag + sql + commandString);
         return commandString;
     } else {
         commandString = commandString + json.database.name;
-        //console.log(notMedia + Tag + sql + commandString);
+        console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
 
