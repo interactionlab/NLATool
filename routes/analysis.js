@@ -48,7 +48,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/showText', function (req, res) {
-    res.render('./Desktop/analyse', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+    res.renderVue('analysis', vueData, vueRenderOptions);
 });
 
 function getAndShowText(req, res) {
@@ -66,9 +66,9 @@ function getAndShowText(req, res) {
 }
 
 function filterWordList() {
-    for(let i = 0; i < textDB.tokens.length; i++){
-        textDB.filteredTokens.push(textDB.tokens[0][i].content);
-        textDB.text = textDB.text + ' ' + textDB.tokens[0][i].content;
+    for (let i = 0; i < textDB.tokens.length; i++) {
+        textDB.filteredTokens.push(textDB.tokens[i].content);
+        textDB.text = textDB.text + ' ' + textDB.tokens[i].content;
     }
 }
 
@@ -82,7 +82,7 @@ function getTextFromDB(docID) {
                 dbAction.createSelectCommand('word',
                     ['wordID', 'content', 'isSpecial', 'semanticClass', 'pos'],
                     [textDB.textMap[i].wordID], ['=']));
-            textDB.tokens.push(JSON.parse(word));
+            textDB.tokens.push(JSON.parse(word)[0]);
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
             textDB.error.push(err);
