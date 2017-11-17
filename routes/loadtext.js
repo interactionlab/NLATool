@@ -26,6 +26,16 @@ const corenlp = require('../modules/corenlp');
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
 
+let vueRenderOptions = {
+    head: {
+        meta: [
+            {script: '/javascripts/ui_functions.js'},
+            {script: '/javascripts/data_management.js'},
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
+        ]
+    }
+};
 
 let results = [];
 let json2;
@@ -37,7 +47,11 @@ function getJSONConfig() {
 }
 
 router.get('/', function (req, res, next) {
+
     wait.launchFiber(getLoadTextRoutine, req, res, next);
+    let vueOptions = vueRenderOptions;
+    //let vueData = setVueData();
+    res.renderVue('loadtext', vueOptions);
 });
 
 
@@ -64,21 +78,7 @@ function getLoadTextRoutine(res, next) {
     corenlp.setupCorenlp();
     if (corenlp.positiveNlpStatus()) {
 
-        let vueOptions = {
-            head: {
-                meta: [
-                    {script: '/javascripts/ui_functions.js'},
-                    {script: '/javascripts/data_management.js'},
-                    {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
-                    {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
-                ]
-            },
-            body:{
-                title: 'bla'
-            }
-        };
-        //let vueData = setVueData();
-        res.renderVue('loadtext', vueOptions);
+
     } else {
         let nlpStatus = corenlp.getNlpStatus();
         if (typeof nlpStatus.error !== "undefined" && nlpStatus.error !== null) {
@@ -89,24 +89,6 @@ function getLoadTextRoutine(res, next) {
         }
     }
 }
-
-function vueRenderOptions() {
-    return {
-        head: {
-            meta: [
-                {script: '/javascripts/ui_functions.js'},
-                {script: '/javascripts/data_management.js'},
-                {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
-                {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
-            ]
-        }
-    };
-}
-
-function setVueData() {
-
-}
-
 
 //TODO: uninstall uword when its usage is deprecated; override let words
 function postLoadWrittenText(req, res, next) {
@@ -161,7 +143,7 @@ function postLoadWrittenText(req, res, next) {
 
             }
             corenlp.resetResults();
-            res.redirect('/analyse');
+            res.redirect('/analysis');
         }
     }
 }

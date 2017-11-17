@@ -24,10 +24,28 @@ let textDB = {
     wordList: [],
     error: []
 };
+let vueRenderOptions = {
+    head: {
+        meta: [
+            {script: '/javascripts/ui_functions.js'},
+            {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
+
+        ]
+    }
+};
+
+let vueData = {
+    result: null
+};
 
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
     wait.launchFiber(getAndShowText, req, res, next);
+    //let vueData = setVueData();
+
+
 });
 
 router.post('/showText', function (req, res) {
@@ -41,11 +59,9 @@ function getAndShowText(req, res) {
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
         getTextFromDB(docID);
+        vueData.result = textDB.wordList;
     }
-    res.render('./Desktop/analyse', {
-        title: 'NLA - Natural Language Analyse Tool',
-        result: JSON.stringify(textDB.wordList)
-    });
+    res.renderVue('analysis', vueData, vueRenderOptions);
 }
 
 function getTextFromDB(docID) {
