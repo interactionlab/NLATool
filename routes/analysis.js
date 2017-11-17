@@ -19,7 +19,7 @@ const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
 
 let textDB = {
-    filteredTokens: [],
+    words: [],
     textMap: [],
     textMetaData: [],
     tokens: [],
@@ -67,7 +67,7 @@ function getAndShowText(req, res) {
 
 function filterWordList() {
     for (let i = 0; i < textDB.tokens.length; i++) {
-        textDB.filteredTokens.push(textDB.tokens[i].content);
+        textDB.words.push(textDB.tokens[i].content);
         textDB.text = textDB.text + ' ' + textDB.tokens[i].content;
     }
 }
