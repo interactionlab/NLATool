@@ -39,7 +39,13 @@ const vueOptions = {
             title: 'NLA - Natural Language Analyse Tool',
             meta: [
                 {script: 'https://unpkg.com/vue'},
-                {style: '/css/style.css'}
+                {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
+                {style: '/css/style.css'},
+                {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'},
+                {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
+                {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
+                {style: '/css/debugstyle.css'}
+
             ]
         }
     },
@@ -104,7 +110,8 @@ app.use(function (err, req, res, next) {
     const data = {
         message: err.message,
         error: err,
-        status: err.status
+        status: err.status,
+        stack: err.stack
     };
     res.renderVue('error', data);
 });
