@@ -21,7 +21,7 @@ Hauptwebsites (aka Routes):
 27.08.2017-Eric:
 -Erstellung des Proj.
 -Hinzuf�gen von 
-	-analyse.js
+	-analysis.js
 	-signin.js
 	-profile.js
  in routes und app.js
