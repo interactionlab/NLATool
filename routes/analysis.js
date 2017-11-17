@@ -43,9 +43,6 @@ let vueData = {
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
     wait.launchFiber(getAndShowText, req, res, next);
-    //let vueData = setVueData();
-
-
 });
 
 router.post('/showText', function (req, res) {
