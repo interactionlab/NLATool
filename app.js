@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('client-sessions');
 
 const index = require('./routes/index');
-const analyse = require('./routes/analyse');
+const analysis = require('./routes/analysis');
 const profile = require('./routes/profile');
 const signin = require('./routes/signin');
 const signup = require('./routes/signup');
@@ -40,10 +40,11 @@ const vueOptions = {
             meta: [
                 {script: 'https://unpkg.com/vue'},
                 {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
-                {style: '/css/style.css'},
                 {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
                 {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
-                {style: '/css/debugstyle.css'}
+                {style: '/css/style.css'},
+                {style: '/css/debugstyle.css'},
+                {charset: 'UTF-8'}
 
             ]
         }
@@ -80,7 +81,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/analyse', analyse);
+app.use('/analysis', analysis);
 app.use('/signin', signin);
 app.use('/profile', profile);
 app.use('/signup', signup);
