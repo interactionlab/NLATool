@@ -49,9 +49,8 @@ function getJSONConfig() {
 router.get('/', function (req, res, next) {
 
     wait.launchFiber(getLoadTextRoutine, req, res, next);
-    let vueOptions = vueRenderOptions;
     //let vueData = setVueData();
-    res.renderVue('loadtext', vueOptions);
+    res.renderVue('loadtext', vueRenderOptions);
 });
 
 
@@ -90,7 +89,6 @@ function getLoadTextRoutine(res, next) {
     }
 }
 
-//TODO: uninstall uword when its usage is deprecated; override let words
 function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
