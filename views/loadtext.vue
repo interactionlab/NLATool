@@ -37,7 +37,7 @@
                 <div class="mdl-textfield mdl-js-textfield graybox" style="width: 100%">
                     <textarea class="mdl-textfield__input" type="text" rows="6" id="textbox" name="textInput">
                     </textarea>
-                    <label class="mdl-textfield__label" for="textbox" name="testFunction" id="holder">
+                    <label class="mdl-textfield__label" for="textbox">
                         Enter text here ...
                     </label>
                 </div>
