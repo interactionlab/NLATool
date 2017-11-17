@@ -1,0 +1,63 @@
+<template>
+    <!DOCTYPE html>
+    <html>
+    <!--<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width = device-width, initial-scale = 1">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-blue.min.css">
+        <link rel="stylesheet" href="https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="/css/debugstyle.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <script src="/javascripts/ui_functions.js"></script>
+        <script href="/javascripts/data_management.js"></script>
+    </head>-->
+
+    <body>
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col graybox">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+
+    <div class="mdl-grid"> <!-- Resizable Textfield full size for testing-->
+        <div style="width: 100%">
+            <form action="#">
+
+            </form>
+
+            <form action="/loadtext/loadWrittenText" method="post">
+                <!-- Textfield for title-->
+                <div class="mdl-textfield mdl-js-textfield graybox">
+                    <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
+                    <label class="mdl-textfield__label" for="titlebox">Title</label>
+                </div>
+                <!-- Textfield for textinput -->
+                <div class="mdl-textfield mdl-js-textfield graybox" style="width: 100%">
+                    <textarea class="mdl-textfield__input" type="text" rows="6" id="textbox" name="textInput">
+                    </textarea>
+                    <label class="mdl-textfield__label" for="textbox" name="testFunction" id="holder">
+                        Enter text here ...
+                    </label>
+                </div>
+                <div>
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <i class="material-icons mdl-navigation__link" href="analyse">send</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    </body>
+    </html>
+</template>
+<script>
+    export default {
+        data: function () {
+            return {}
+        }
+    }
+</script>

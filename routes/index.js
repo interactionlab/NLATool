@@ -19,8 +19,7 @@ router.get('/', function (req, res, next) {
         head: {
             title: 'bla',
             meta: [
-                {property: 'og:title', content: 'Page Title'},
-                {name: 'twitter:title', content: 'Page Title'},
+                {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
             ]
         },
         body: {
