@@ -19,10 +19,12 @@ const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
 
 let textDB = {
+    filteredTokens: [],
     textMap: [],
     textMetaData: [],
-    wordList: [],
-    error: []
+    tokens: [],
+    error: [],
+    text: ''
 };
 let vueRenderOptions = {
     head: {
@@ -56,9 +58,18 @@ function getAndShowText(req, res) {
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
         getTextFromDB(docID);
-        vueData.result = textDB.wordList;
+        console.log(textDB.tokens);
+        filterWordList();
+        vueData.result = textDB.text;
     }
     res.renderVue('analysis', vueData, vueRenderOptions);
+}
+
+function filterWordList() {
+    for(let i = 0; i < textDB.tokens.length; i++){
+        textDB.filteredTokens.push(textDB.tokens[0][i].content);
+        textDB.text = textDB.text + ' ' + textDB.tokens[0][i].content;
+    }
 }
 
 function getTextFromDB(docID) {
@@ -71,14 +82,14 @@ function getTextFromDB(docID) {
                 dbAction.createSelectCommand('word',
                     ['wordID', 'content', 'isSpecial', 'semanticClass', 'pos'],
                     [textDB.textMap[i].wordID], ['=']));
-            textDB.wordList.push(JSON.parse(word));
+            textDB.tokens.push(JSON.parse(word));
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
             textDB.error.push(err);
             break;
         }
     }
-    //console.log(notMedia + Tag + 'the current Word List:' + JSON.stringify(textDB.wordList));
+    //console.log(notMedia + Tag + 'the current Word List:' + JSON.stringify(textDB.tokens));
 }
 
 function getTextMetaData(docID) {
