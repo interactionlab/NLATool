@@ -18,6 +18,10 @@ const dbStub = require('../modules/db_stub');
 const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
 
+/**
+ * Object for temporal space.
+ * @type {{words: Array, textMap: Array, textMetaData: Array, tokens: Array, error: Array, text: string}}
+ */
 let textDB = {
     words: [],
     textMap: [],
@@ -26,6 +30,11 @@ let textDB = {
     error: [],
     text: ''
 };
+
+/**
+ * Object that holds all specific meta info for this route.
+ * @type {{head: {meta: [null,null,null,null]}}}
+ */
 let vueRenderOptions = {
     head: {
         meta: [
@@ -37,7 +46,10 @@ let vueRenderOptions = {
         ]
     }
 };
-
+/**
+ * Vue data object to be set for this route.
+ * @type {{result: null}}
+ */
 let vueData = {
     result: null
 };
@@ -51,20 +63,31 @@ router.post('/showText', function (req, res) {
     res.renderVue('analysis', vueData, vueRenderOptions);
 });
 
+/**
+ * Main Fiber function that gets all the text data from the Database and send them
+ * into the vue that should render the .vue view.
+ * @param req
+ * @param res
+ */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
     let docID = '';
     console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
+
         getTextFromDB(docID);
-        console.log(textDB.tokens);
+        //console.log(textDB.tokens);
         filterWordList();
         vueData.result = textDB.text;
     }
+    resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
 }
 
+/**
+ * Naive way to filter the words of the set of tokens and stringify them.
+ */
 function filterWordList() {
     for (let i = 0; i < textDB.tokens.length; i++) {
         textDB.words.push(textDB.tokens[i].content);
@@ -72,10 +95,15 @@ function filterWordList() {
     }
 }
 
+/**
+ * Gets all the tokens of the uploaded text and fills the textDB Object with them for
+ * later use.
+ * @param docID
+ */
 function getTextFromDB(docID) {
     textDB.textMap = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('textWords', ['docID', 'wordID', 'counter'], [docID], ['='])));
-    //console.log(notMedia + Tag + 'Result of selecting text in textWords: ' + JSON.stringify(textDB.textMap));
+    console.log(notMedia + Tag + 'Result of selecting text in textWords: ' + JSON.stringify(textDB.textMap));
     for (let i = 0; i < textDB.textMap.length; i++) {
         if (textDB.textMap[i].counter === i) {
             let word = wait.for(dbStub.makeSQLRequest,
@@ -92,9 +120,26 @@ function getTextFromDB(docID) {
     //console.log(notMedia + Tag + 'the current Word List:' + JSON.stringify(textDB.tokens));
 }
 
+/**
+ * Should get the Meta-Data from a specified text by ID.
+ * Results depend on Database.
+ * @param docID
+ */
 function getTextMetaData(docID) {
     textDB.textMetaData = wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('text', ['docID', 'length', 'title', 'author', 'year'], [docID], ['=']));
+}
+
+/**
+ * resets the textDB Object to default values.
+ */
+function resetTextDB() {
+    textDB.error = [];
+    textDB.text = '';
+    textDB.textMap = [];
+    textDB.tokens = [];
+    textDB.words = [];
+    textDB.textMetaData = [];
 }
 
 module.exports = router;

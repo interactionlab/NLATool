@@ -26,6 +26,10 @@ const corenlp = require('../modules/corenlp');
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
 
+/**
+ * Object that holds all specific meta info for this route.
+ * @type {{head: {meta: [null,null,null,null]}}}
+ */
 let vueRenderOptions = {
     head: {
         meta: [
@@ -76,8 +80,6 @@ function getLoadTextRoutine(res, next) {
     corenlp.getAReachableConnection();
     corenlp.setupCorenlp();
     if (corenlp.positiveNlpStatus()) {
-
-
     } else {
         let nlpStatus = corenlp.getNlpStatus();
         if (typeof nlpStatus.error !== "undefined" && nlpStatus.error !== null) {
@@ -89,6 +91,13 @@ function getLoadTextRoutine(res, next) {
     }
 }
 
+/**
+ * Fiber main function that analyses the text input with corenlp and uploads it
+ * to the database. Finally redirecting to the analysis route.
+ * @param req
+ * @param res
+ * @param next
+ */
 function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
@@ -155,6 +164,12 @@ function sendSQL(command) {
     }
 }
 
+/**
+ * Makes sure the Quotas " are set for each word in the sql query.
+ * TODO: Get this function into db_Actions.js
+ * @param input
+ * @returns {string}
+ */
 function stringifyForDB(input) {
     return '"' + input + '"';
 }
