@@ -24,20 +24,20 @@
             <div class="mdl-layout__header-row">
                 <!-- Title -->
                 <span class="mdl-layout-title">{{title}}</span>
-                <div class="mdl-layout-spacer mdl-layout__header-row">
-                    <!-- Features -->
-                    <nav class="mdl-navigation">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Analysis</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Notes</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Research</b>
-                        </button>
-                    </nav>
-                </div>
+                <div class="mdl-layout-spacer"></div>
+
+                <!-- Headerbutton (3 dots) on the right-->
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
+                    <i class="material-icons">more_vert</i>
+                </button>
+                <!-- Some examples for headerbutton-->
+                <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
+                    <!--They could/should be linked-->
+                    <li class="mdl-menu__item">About</li>
+                    <li class="mdl-menu__item">Contact</li>
+                    <li class="mdl-menu__item">Legal information</li>
+                </ul>
+
             </div>
             <!-- Bottom row, not visible on scroll -->
             <div class="mdl-layout__header-row">
@@ -96,6 +96,21 @@
                             <!-- Buttons for modify the result-->
                             <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
                                 <div class="mdl-cell mdl-cell--6-col graybox" style="width: 98%">
+
+                                    <!-- Features -->
+                                    <nav class="mdl-navigation">
+                                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                            <b class="mdc-button">Analysis</b>
+                                        </button>
+                                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                            <b class="mdc-button">Notes</b>
+                                        </button>
+                                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                            <b class="mdc-button">Research</b>
+                                        </button>
+                                    </nav>
+
+
                                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                                         <b class="mdc-button">Information</b>
                                     </button>
