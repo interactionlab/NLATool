@@ -28,19 +28,13 @@
                     <!-- Features -->
                     <nav class="mdl-navigation">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NER</b>
+                            <b class="mdc-button">Analysis</b>
                         </button>
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NEC</b>
+                            <b class="mdc-button">Notes</b>
                         </button>
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NED</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Highlighting</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Kommentar</b>
+                            <b class="mdc-button">Research</b>
                         </button>
                     </nav>
                 </div>
@@ -53,18 +47,16 @@
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">{{title_small}}</span>
             <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Home</a>
+                <a class="mdl-navigation__link" href="">Load a Text</a>
+                <a class="mdl-navigation__link" href="">Contact</a>
             </nav>
         </div>
         <main class="mdl-layout__content">
             <div class="page-content">
                 <div class="mdl-grid">
+                    <!-- old Featrue field-->
                 </div>
-
-
 
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
