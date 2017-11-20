@@ -23,34 +23,24 @@
             <!-- Top row, always visible -->
             <div class="mdl-layout__header-row">
                 <!-- Title -->
-                <span class="mdl-layout-title">Title</span>
-                <div class="mdl-layout-spacer"></div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable
-                  mdl-textfield--floating-label mdl-textfield--align-right">
-                    <label class="mdl-button mdl-js-button mdl-button--icon"
-                           for="waterfall-exp">
-                        <i class="material-icons">search</i>
-                    </label>
-                    <div class="mdl-textfield__expandable-holder">
-                        <input class="mdl-textfield__input" type="text" name="sample"
-                               id="waterfall-exp">
-                    </div>
+                <span class="mdl-layout-title">{{title}}</span>
+                <div class="mdl-layout-spacer mdl-layout__header-row">
+                    <!-- Features -->
+                    <nav class="mdl-navigation">
+                        <a class="mdl-navigation__link" href="">NER</a>
+                        <a class="mdl-navigation__link" href="">NED</a>
+                        <a class="mdl-navigation__link" href="">NEC</a>
+                        <a class="mdl-navigation__link" href="">Kommentar</a>
+                    </nav>
                 </div>
             </div>
             <!-- Bottom row, not visible on scroll -->
             <div class="mdl-layout__header-row">
                 <div class="mdl-layout-spacer"></div>
-                <!-- Navigation -->
-                <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                    <a class="mdl-navigation__link" href="">Link</a>
-                </nav>
             </div>
         </header>
         <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">Title</span>
+            <span class="mdl-layout-title">{{title_small}}</span>
             <nav class="mdl-navigation">
                 <a class="mdl-navigation__link" href="">Link</a>
                 <a class="mdl-navigation__link" href="">Link</a>
@@ -62,6 +52,18 @@
             <div class="page-content">
                 <div class="mdl-grid"> <!--Row 1 for features -->
                     <div class="mdl-cell mdl-cell--12-col graybox">
+
+                        <!-- Tabs -->
+                        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                            <a href="#scroll-tab-2" class="mdl-layout__tab">NER</a>
+                            <a href="#scroll-tab-3" class="mdl-layout__tab">NEC</a>
+                            <a href="#scroll-tab-4" class="mdl-layout__tab">NED</a>
+                            <a href="#scroll-tab-5" class="mdl-layout__tab">Highlighting</a>
+                            <a href="#scroll-tab-6" class="mdl-layout__tab">Kommentar</a>
+                        </div>
+
+
+
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                             <b class="mdc-button">NER</b>
                         </button>
@@ -77,8 +79,12 @@
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                             <b class="mdc-button">Kommentar</b>
                         </button>
+
+
                     </div>
                 </div>
+
+
 
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
@@ -151,19 +157,9 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </main>
-
-
-
-
-
-
     </div>
-
     </body>
     </html>
 
