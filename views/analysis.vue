@@ -61,38 +61,7 @@
         </div>
         <main class="mdl-layout__content">
             <div class="page-content">
-                <div class="mdl-grid"> <!--Row 1 for features -->
-                    <div class="mdl-cell mdl-cell--12-col graybox">
-
-                        <!-- Tabs -->
-                        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                            <a href="#scroll-tab-2" class="mdl-layout__tab">NER</a>
-                            <a href="#scroll-tab-3" class="mdl-layout__tab">NEC</a>
-                            <a href="#scroll-tab-4" class="mdl-layout__tab">NED</a>
-                            <a href="#scroll-tab-5" class="mdl-layout__tab">Highlighting</a>
-                            <a href="#scroll-tab-6" class="mdl-layout__tab">Kommentar</a>
-                        </div>
-
-
-
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NER</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NEC</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">NED</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Highlighting</b>
-                        </button>
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            <b class="mdc-button">Kommentar</b>
-                        </button>
-
-
-                    </div>
+                <div class="mdl-grid">
                 </div>
 
 
@@ -104,10 +73,6 @@
                             <div>
                                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                                     <i class="material-icons">delete</i>
-                                </button>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                    <!-- TODO why do this link not work?-->
-                                    <i class="material-icons mdl-navigation__link" href="signin">save</i>
                                 </button>
                             </div>
                         </div>
