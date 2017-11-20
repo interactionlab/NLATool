@@ -17,7 +17,7 @@
         <h1>{{ title}}</h1>
     </div>
     <div class="row">
-        <form>
+        <form action="/signin/login" method="post">
             Benutzername oder Email<br>
             <input type="text" name="username"><br>
             Password<br>
