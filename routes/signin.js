@@ -31,6 +31,14 @@ let vueRenderOptions = {
 router.get('/', function (req, res, next) {
     res.renderVue('signin', vueRenderOptions);
 });
+
+router.post('/login',function (req, res, next) {
+
+});
+
+function loginDB(user, pass) {
+
+}
 module.exports = router;
 
 
