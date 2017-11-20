@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-    import ner from '../mixins/ner';
+    import ner from '../../mixins/analysis/research';
     export default {
         mixins: ner,
         data: function () {
