@@ -14,12 +14,6 @@
     </head>-->
 
     <body>
-    <div class="mdl-grid">
-        <div class="mdl-cell mdl-cell--12-col graybox">
-            <h1>{{ title }}</h1>
-        </div>
-    </div>
-
 
     <div class="mdl-grid"> <!-- Resizable Textfield full size for testing-->
         <div style="width: 100%">
