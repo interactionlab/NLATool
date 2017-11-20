@@ -27,10 +27,21 @@
                 <div class="mdl-layout-spacer mdl-layout__header-row">
                     <!-- Features -->
                     <nav class="mdl-navigation">
-                        <a class="mdl-navigation__link" href="">NER</a>
-                        <a class="mdl-navigation__link" href="">NED</a>
-                        <a class="mdl-navigation__link" href="">NEC</a>
-                        <a class="mdl-navigation__link" href="">Kommentar</a>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <b class="mdc-button">NER</b>
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <b class="mdc-button">NEC</b>
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <b class="mdc-button">NED</b>
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <b class="mdc-button">Highlighting</b>
+                        </button>
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <b class="mdc-button">Kommentar</b>
+                        </button>
                     </nav>
                 </div>
             </div>
