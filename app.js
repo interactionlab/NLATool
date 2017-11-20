@@ -51,6 +51,7 @@ const vueOptions = {
     },
     data: {
         title:'NLA - Natural Language Analyse Tool',
+        title_small: 'NLA - Tool',
         bar: 'yes',
         qux: {
             id: 123,
