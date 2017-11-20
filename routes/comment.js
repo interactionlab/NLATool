@@ -1,7 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
+
+
 router.get('/', function (req, res) {
+    res.renderVue('comment', {});
+});
+
+router.get('/:id', function (req, res) {
     let uid = req.body.uid;
     let id = req.body.id;
     let word = req.session.wordTables[uid].words[id];
