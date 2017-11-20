@@ -4,7 +4,10 @@
         <li><button v-on:click="showNed">NED</button></li>
         <li><button v-on:click="showNec">NEC</button></li>
     </ul>
-    
+    <div v-if="">
+        <nerVue/>
+    </div>
+
 </template>
 <script>
     import ner from '../../mixins/analysis/ner';
@@ -16,7 +19,6 @@
         mixins: [ner, ned, nec],
         data: function () {
             return{}
-
         },
         components:{
             nerVue
