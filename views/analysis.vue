@@ -88,10 +88,10 @@
                                     class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                                 <b class="mdc-button">Notes</b>
                             </button>
-                            <button v-on:click="analysisMode = 'research'"
-                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                <b class="mdc-button">Research</b>
-                            </button>
+                            <button v-on:click="getResearch"
+                                     class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                 <b class="mdc-button">Research</b>
+                             </button>
                         </nav>
                         <!-- onclick for show the results-->
                         <!--
@@ -99,8 +99,8 @@
                             <input type="submit" id="switch" value="v" onclick="expand();"/>
                         </div>-->
                         <component :is="analysisMode"></component>
-                        <component is="research"></component>
-                        <component is="analighter"></component>
+                        <!--<component is="research"></component>
+                        <component is="analighter"></component>-->
                     </div>
                 </div>
             </div>
@@ -114,28 +114,31 @@
     import research from './components/analysis/research.vue';
     import analighter from './components/analysis/analighter.vue';
 
-    let analysisMode = 'research';
+    //let analysisMode = 'research';
     export default {
         data: function () {
-            return {}
+            return {
+                analysisMode: 'research',
+            }
         },
+        methods: {
+            getAnalighter: function () {
+                console.log('Got clicked1');
+                this.analysisMode = 'analighter'
+            },
+            getNotes: function () {
+                console.log('got Clicked2');
+                this.analysisMode = 'notes';
 
-        getAnalighter: function () {
-            this.analysisMode = 'analighter'
-        },
-        getNotes: function () {
-            this.analysisMode = 'notes';
-        },
-        getResearch: function () {
-            this.analysisMode = 'research';
+            },
+            getResearch: function () {
+                console.log('Got clicked3');
+                this.analysisMode = 'research';
+            }
         },
         components: {
             research,
             analighter
-
-        },
-        props: {
-            analysisMode: analysisMode
         }
     }
 </script>
