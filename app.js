@@ -45,18 +45,13 @@ const vueOptions = {
                 {style: '/css/style.css'},
                 {style: '/css/debugstyle.css'},
                 {charset: 'UTF-8'}
-
             ]
         }
     },
     data: {
         title:'NLA - Natural Language Analyse Tool',
         title_small: 'NLA - Tool',
-        bar: 'yes',
-        qux: {
-            id: 123,
-            baz: 'anything you wish, you can have any kind of object in the data object, it will be global and on every route'
-        }
+
     }
 };
 const expressVueMiddleware = expressVue.init(vueOptions);
