@@ -2,6 +2,7 @@
     <!DOCTYPE html>
     <html>
     <body>
+
     <div class="demo-layout-waterfall mdl-layout mdl-js-layout">
         <!-- Uses a mainHeader that contracts as the page scrolls down. -->
         <component is="mainheader" v-bind:title="title" v-bind:title_small="this.title_small"></component>
@@ -58,10 +59,12 @@
 
 </template>
 <script>
+
     import research from './components/analysis/research.vue';
     import analighter from './components/analysis/analighter.vue';
+
     import mainheader from './components/global/mainHeader.vue';
-    //let analysisMode = 'research';
+
     export default {
         data: function () {
             return {

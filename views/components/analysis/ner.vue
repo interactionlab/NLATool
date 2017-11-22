@@ -1,7 +1,6 @@
 <template>
-    <div>
+    <div class="mdl-cell mdl-cell--12-col graybox">
         <div>
-
 
         </div>
     </div>
@@ -9,8 +8,11 @@
 </template>
 <script>
     export default {
+        props:['ners'],
         data: function () {
-            return{}
+            return{
+                //ners: this.ners;
+            }
 
         }
     }
