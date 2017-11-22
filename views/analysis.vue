@@ -3,13 +3,14 @@
     <html>
     <body>
 
-    <div class="demo-layout-waterfall mdl-layout mdl-js-layout">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <!-- Uses a mainHeader that contracts as the page scrolls down. -->
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
         <main class="mdl-layout__content">
             <div class="page-content">
-                <component is="titletools"></component>
+                <component is="titletools" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
+                           v-on:emitresearch="getResearch"></component>
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
@@ -30,21 +31,6 @@
 
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <!-- Features -->
-                        <nav class="mdl-navigation">
-                            <button v-on:click="getAnalighter"
-                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                <b class="mdc-button">Analysis</b>
-                            </button>
-                            <button v-on:click="getNotes"
-                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                <b class="mdc-button">Notes</b>
-                            </button>
-                            <button v-on:click="getResearch"
-                                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                <b class="mdc-button">Research</b>
-                            </button>
-                        </nav>
                         <component :is="analysisMode"></component>
                     </div>
                 </div>
@@ -59,8 +45,8 @@
     import titletools from './components/analysis/titletools.vue';
     import research from './components/analysis/research.vue';
     import analighter from './components/analysis/analighter.vue';
+    import notes from './components/analysis/notes.vue';
     import headernavbar from './components/global/headernavbar.vue';
-
     import mainheader from './components/global/mainheader.vue';
 
     export default {
@@ -87,6 +73,7 @@
         components: {
             research,
             analighter,
+            notes,
             mainheader,
             headernavbar,
             titletools
