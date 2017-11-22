@@ -1,10 +1,11 @@
 <template>
-    <div class="mdl-cell mdl-cell--12-col">
-        <span><h4>bla</h4></span>
-        <!--Button that should make textTitle editable and send changes to server to update DB -->
-        <span><button>Edit</button></span>
-        <!--Insert a Space here:-->
-        <span>
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--12-col">
+            <span><h4>bla</h4></span>
+            <!--Button that should make textTitle editable and send changes to server to update DB -->
+            <span><button>Edit</button></span>
+            <!--Insert a Space here:-->
+            <span>
             <nav class="mdl-navigation">
                 <button v-on:click="$emit('getAnalighter')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
@@ -20,8 +21,8 @@
                 </button>
             </nav>
         </span>
+        </div>
     </div>
-
 </template>
 <script>
     export default {
