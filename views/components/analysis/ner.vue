@@ -1,5 +1,6 @@
 <template>
     <div>
+        <div>{{ curentWord }}</div>
         <div>
 
 
