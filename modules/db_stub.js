@@ -76,7 +76,7 @@ function establishConnection() {
             console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes failed.');
         }
     } else {
-        console.connectionError(notMedia + Tag + 'No Database was available or all connection Settings a wrong!')
+        console.log(notMedia + Tag + 'No Database was available or all connection Settings a wrong!')
     }
 }
 
@@ -243,7 +243,7 @@ testDatabase = function () {
                  }*/
                 matchColumns(jsonList[i], jsonColumns, dbColumns);
                 matchColumnSettings(jsonList[i], jsonColumns, dbColumns);
-                console.log('The differences at the end: ' + JSON.stringify(differences));
+                //console.log('The differences at the end: ' + JSON.stringify(differences));
                 //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(jsonColumns));
                 //console.error(notMedia + Tag + jsonList[i] + ': ' + JSON.stringify(dbColumns));
             }
