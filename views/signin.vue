@@ -1,41 +1,37 @@
 <template>
     <!DOCTYPE html>
     <html>
-    <head>
-        <title>{{  title }}</title>
-        <link rel='stylesheet' href='/css/style.css'/>
-        <!--Script in /public/javascripts -->
-        <!--Stylesheets & bootstrap in /public/javascripts -->
-    </head>
     <body>
-    <div class="row">
-        <div class="center-block">
-            <!-- <img src="/public/images/logo.png" alt="Logo">-->
-        </div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <!-- Uses a mainHeader that contracts as the page scrolls down. -->
+        <component is="mainheader" v-bind:title="title"></component>
+        <component is="headernavbar" v-bind:title_small="title_small"></component>
+        <main class="mdl-layout__content">
+            <div class="mdl-cell mdl-cell--12-col graybox">
+                <form action="/signin/login" method="post">
+                    Benutzername oder Email<br>
+                    <input type="text" name="username"><br>
+                    Password<br>
+                    <input type="text" name="pass"><br>
+                    <input type="submit">
+                </form>
+            </div>
+        </main>
     </div>
-    <div class="row">
-        <h1>{{ title}}</h1>
-    </div>
-    <div class="row">
-        <form action="/signin/login" method="post">
-            Benutzername oder Email<br>
-            <input type="text" name="username"><br>
-            Password<br>
-            <input type="text" name="pass"><br>
-            <input type="submit">
-        </form>
-    </div>
-
     </body>
     </html>
 </template>
-
-
 <script>
+    import headernavbar from './components/global/headernavbar.vue';
+    import mainheader from './components/global/mainheader.vue';
+
     export default {
         data: function () {
-            return {
-            }
+            return {}
+        },
+        components: {
+            mainheader,
+            headernavbar
         }
     }
 </script>
