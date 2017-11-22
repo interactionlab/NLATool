@@ -11,9 +11,9 @@
                 <!-- Some examples for headerbutton-->
                 <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
                     <!--They could/should be linked-->
-                    <li class="mdl-menu__item">About</li>
-                    <li class="mdl-menu__item">Contact</li>
-                    <li class="mdl-menu__item">Legal information</li>
+                    <a class="mdl-navigation__link" href="profile"><li class="mdl-menu__item">Profile</li></a>
+                    <a class="mdl-navigation__link" href="signin"><li class="mdl-menu__item">Sign In</li></a>
+                    <a class="mdl-navigation__link" href="signout"><li class="mdl-menu__item">Sign Out</li></a>
                 </ul>
             </div>
         </header>
