@@ -4,34 +4,36 @@
     <body>
     <title>{{ title }}</title>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <header class="mdl-layout__header">
-            <div class="mdl-layout__header-row">
-                <!-- Add spacer, to align navigation to the right -->
-                <div class="mdl-layout-spacer"></div>
-                <!-- Headerbutton (3 dots) on the right-->
-                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
-                    <i class="material-icons">more_vert</i>
-                </button>
-                <!-- Some examples for headerbutton-->
-                <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
-                    <!--They could/should be linked-->
-                    <li class="mdl-menu__item">About</li>
-                    <li class="mdl-menu__item">Contact</li>
-                    <li class="mdl-menu__item">Legal information</li>
-                </ul>
+        <component is="mainheader2" v-bind:title="title" ></component>
+        <component is="headernavbar" v-bind:title_small="title_small"></component>
+        <!--<header class="mdl-layout__header">
+                <div class="mdl-layout__header-row">
+                    &lt;!&ndash; Add spacer, to align navigation to the right &ndash;&gt;
+                    <div class="mdl-layout-spacer"></div>
+                    &lt;!&ndash; Headerbutton (3 dots) on the right&ndash;&gt;
+                    <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button&#45;&#45;icon" id="headerbtn">
+                        <i class="material-icons">more_vert</i>
+                    </button>
+                    &lt;!&ndash; Some examples for headerbutton&ndash;&gt;
+                    <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu&#45;&#45;bottom-right" for="headerbtn">
+                        &lt;!&ndash;They could/should be linked&ndash;&gt;
+                        <li class="mdl-menu__item">About</li>
+                        <li class="mdl-menu__item">Contact</li>
+                        <li class="mdl-menu__item">Legal information</li>
+                    </ul>
+                </div>
+            </header>
+            &lt;!&ndash; Sidebar content&ndash;&gt;
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">{{ title_small }}</span> &lt;!&ndash;TODO title to big or to long&ndash;&gt;
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="signin">Sign in</a>
+                    <a class="mdl-navigation__link" href="signup">Sign up</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href="">Link</a>
+                </nav>
             </div>
-        </header>
-        <!-- Sidebar content-->
-        <div class="mdl-layout__drawer">
-            <span class="mdl-layout-title">{{ title }}</span> <!--TODO title to big or to long-->
-            <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="signin">Sign in</a>
-                <a class="mdl-navigation__link" href="signup">Sign up</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-            </nav>
-        </div>
-
+-->
         <!-- page content-->
         <main class="mdl-grid graybox" style="text-align: center">
             <div style=" width: 100%; text-align: center">
@@ -54,10 +56,16 @@
     </html>
 </template>
 <script>
+    import mainheader2 from './components/global/mainheader.vue';
+    import headernavbar from './components/global/headernavbar.vue';
+
     export default {
         data: function () {
-            return {
-            }
+            return {}
+        },
+        components: {
+            mainheader2,
+            headernavbar
         }
     }
 </script>
