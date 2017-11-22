@@ -21,7 +21,7 @@
     "debug": "~2.6.3",
     "ejs": "~2.5.6",
     "express": "~4.15.2",
-    "express-vue": "^4.0.13",
+    "express-vue": "^4.0.14",
     "fibers": "^2.0.0",
     "is-reachable": "^2.3.3",
     "jsonfile": "^4.0.0",
