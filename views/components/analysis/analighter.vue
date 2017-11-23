@@ -33,6 +33,7 @@
         },
         methods:{
             showNer: function () {
+                performMark(this.filterPos(vueData.vueTokens, 'NE'));
                 this.showMode = 'nerVue';
             },
             showNed: function () {

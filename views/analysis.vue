@@ -22,9 +22,9 @@
                             </div>
                         </div>
 
-                        <div class="mdl-grid"> <!-- Resizable Textfield-->
+                        <div class="mdl-grid" id="textWindow"> <!-- Resizable Textfield-->
                             <div style="width: 100%">
-                                <p>{{ result }}</p>
+                                <p>{{ text }}</p>
                             </div>
                         </div>
                     </div>
