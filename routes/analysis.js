@@ -38,20 +38,22 @@ let textDB = {
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: '/javascripts/ui_functions.js'},
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+            {script: '/javascripts/ui_functions.js'},
+            {script: '/javascripts/mark.js'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
-
         ]
     }
 };
+//{script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'}, CDN for mark.js if npm package doesnt work
 /**
  * Vue data object to be set for this route.
- * @type {{result: null}}
+ * @type {{vueText: null, vueTokens: null}}
  */
 let vueData = {
-    result: null
+    vueText: null,
+    vueTokens: null
 };
 
 router.get('/', function (req, res, next) {
@@ -82,7 +84,8 @@ function getAndShowText(req, res) {
         getTextFromDB(docID);
         //console.log(textDB.tokens);
         filterWordList();
-        vueData.result = textDB.text;
+        vueData.vueTokens = textDB.tokens;
+        vueData.vueText = textDB.text;
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
