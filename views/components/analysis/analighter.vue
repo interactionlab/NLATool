@@ -11,21 +11,29 @@
                 <button v-on:click="showNec">NEC</button>
             </li>
         </ul>
-       <component :is="showMode"></component>
+       <!--<component :is="showMode"></component>-->
     </div>
-</template>
-<script>
+    <!--
     import ner from './mixins/analysis/ner';
     import ned from './mixins/analysis/ned';
     import nec from './mixins/analysis/nec';
-
     import nerVue from './components/analysis/ner.vue';
     import necVue from './components/analysis/nec.vue';
-    import nedVue from './components/analysis/ned.vue'
+    import nedVue from './components/analysis/ned.vue';
 
-    let showMode = 'NER';
-    export default {
+    ,
+        components: {
+            nerVue,
+            necVue,
+            nedVue
+        }
         mixins: [ner, ned, nec],
+    -->
+</template>
+<script>
+
+    export default {
+
         data: function () {
             return {
                 showMode: 'nerVue'
@@ -42,11 +50,6 @@
             showNec: function () {
                 this.showMode = 'necVue';
             },
-        },
-        components: {
-            nerVue,
-            necVue,
-            nedVue
         }
     }
 </script>
