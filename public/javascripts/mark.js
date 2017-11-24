@@ -2,8 +2,8 @@
  This script should highlight ever word that meets specific requirements.
  It use the package mark.js from https://markjs.io/.
  */
-const maskJs = require('mark');
-let mark = new Mark(document.getElementById('textWindow'));
+
+let mark = new maskJs.Mark(document.getElementById('textWindow'));
 
 let keywordInput = document.querySelector("input[name='keyword']");
 
