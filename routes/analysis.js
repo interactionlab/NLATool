@@ -40,7 +40,7 @@ let vueRenderOptions = {
         meta: [
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
             {script: '/javascripts/ui_functions.js'},
-
+            {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
         ]
@@ -48,6 +48,9 @@ let vueRenderOptions = {
 };
 //{script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'}, CDN for mark.js if npm package doesnt work
 //{script: '/javascripts/mark.js'},
+/*
+
+ */
 /**
  * Vue data object to be set for this route.
  * @type {{vueText: null, vueTokens: null}}
