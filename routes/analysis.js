@@ -65,6 +65,10 @@ router.get('/', function (req, res, next) {
     wait.launchFiber(getAndShowText, req, res, next);
 });
 
+router.get('/a', function (req, res, next) {
+   res.renderVue('analysis', vueData, vueRenderOptions);
+});
+
 router.post('/showText', function (req, res) {
     res.renderVue('analysis', vueData, vueRenderOptions);
 });
