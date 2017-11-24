@@ -1,7 +1,5 @@
 <template>
-    <!DOCTYPE html>
-    <html>
-    <body>
+
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <component is="mainheader" v-bind:title="title" ></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
@@ -35,17 +33,9 @@
                     </div>
                 </div>
             </div>
-            <!--
-
-
-            import analighter from './components/analysis/analighter.vue';
-
-            analighter,
-    -->
+            <!-- import analighter from './components/analysis/analighter.vue'-->
         </main>
     </div>
-    </body>
-    </html>
 </template>
 <script>
     import research from './components/analysis/research.vue';
@@ -53,6 +43,7 @@
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import titletools from './components/analysis/titletools.vue';
+    import analighter from './components/analysis/analighter.vue';
 
     export default {
         data: function () {
@@ -74,13 +65,15 @@
                 console.log('Got clicked3');
                 this.analysisMode = 'research';
             },
-            components: {
-                mainheader:mainheader,
-                headernavbar,
-                titletools,
-                research,
-                notes,
-            }
+
+        },
+        components: {
+            mainheader,
+            headernavbar,
+            titletools,
+            research,
+            notes,
+            analighter
         }
     }
 </script>
