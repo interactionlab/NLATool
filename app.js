@@ -18,6 +18,12 @@ const comment = require('./routes/comment');
 const expressVue = require('express-vue');
 
 const app = express();
+
+if (process.env.NODE_ENV === 'production') {
+    //its production so use the minimised production build of vuejs
+    vueScript = 'https://unpkg.com/vue';
+}
+
 const vueOptions = {
     rootPath: path.join(__dirname, '/views'),
     layout: {
