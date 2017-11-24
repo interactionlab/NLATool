@@ -2,11 +2,11 @@
     <!DOCTYPE html>
     <html>
     <body>
-
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <!-- Uses a mainHeader that contracts as the page scrolls down. -->
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
+
+
         <main class="mdl-layout__content">
             <div class="page-content">
                 <component is="titletools" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
@@ -24,30 +24,36 @@
 
                         <div class="mdl-grid" id="textWindow"> <!-- Resizable Textfield-->
                             <div style="width: 100%">
-                                <p>{{ text }}</p>
+                                <p>{{ vueText }}</p>
                             </div>
                         </div>
                     </div>
 
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode"></component>
+                        <!--<component :is="analysisMode"></component>-->
                     </div>
                 </div>
             </div>
+            <!--
+
+
+            import analighter from './components/analysis/analighter.vue';
+
+            analighter,
+
+    -->
         </main>
     </div>
     </body>
     </html>
-
 </template>
 <script>
-    import titletools from './components/analysis/titletools.vue';
     import research from './components/analysis/research.vue';
-    import analighter from './components/analysis/analighter.vue';
     import notes from './components/analysis/notes.vue';
-    import headernavbar from './components/global/headernavbar.vue';
     import mainheader from './components/global/mainheader.vue';
+    import headernavbar from './components/global/headernavbar.vue';
+    import titletools from './components/analysis/titletools.vue';
 
     export default {
         data: function () {
@@ -68,15 +74,14 @@
             getResearch: function () {
                 console.log('Got clicked3');
                 this.analysisMode = 'research';
+            },
+            components: {
+                mainheader,
+                headernavbar,
+                titletools,
+                research,
+                notes,
             }
-        },
-        components: {
-            research,
-            analighter,
-            notes,
-            mainheader,
-            headernavbar,
-            titletools
         }
     }
 </script>
