@@ -2,9 +2,8 @@
     <!DOCTYPE html>
     <html>
     <body>
-    <title>{{ title }}</title>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <component is="mainheader2" v-bind:title="title" ></component>
+        <component is="mainheader" v-bind:title="title" ></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
         <!-- page content-->
@@ -29,7 +28,7 @@
     </html>
 </template>
 <script>
-    import mainheader2 from './components/global/mainheader.vue';
+    import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
 
     export default {
@@ -37,7 +36,7 @@
             return {}
         },
         components: {
-            mainheader2,
+            mainheader,
             headernavbar
         }
     }
