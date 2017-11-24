@@ -3,7 +3,7 @@
     <html>
     <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <component is="mainheader" v-bind:title="title"></component>
+        <component is="mainheader" v-bind:title="title" ></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
 
@@ -31,7 +31,7 @@
 
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <!--<component :is="analysisMode"></component>-->
+                        <component :is="analysisMode"></component>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,6 @@
             import analighter from './components/analysis/analighter.vue';
 
             analighter,
-
     -->
         </main>
     </div>
@@ -76,7 +75,7 @@
                 this.analysisMode = 'research';
             },
             components: {
-                mainheader,
+                mainheader:mainheader,
                 headernavbar,
                 titletools,
                 research,
