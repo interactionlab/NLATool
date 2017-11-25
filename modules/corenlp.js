@@ -127,7 +127,7 @@ exports.analyse = function (text, callback) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
-            console.log(results);
+            //console.log(results);
         }
         callback(null, results);
     }).catch(err => {
