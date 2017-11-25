@@ -33,8 +33,7 @@
         },
         methods: {
             showNer: function () {
-                console.log('The tokens we got: '+this.tokens);
-                console.log(this.filterPos(this.tokens, 'FM'));
+                console.log('FM Filter on the tokens: '+this.filterPos(this.tokens, 'FM'));
 
                 performMark(this.filterPos(this.tokens, 'FM'));
                 this.showMode = 'nerVue';
