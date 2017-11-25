@@ -1,7 +1,7 @@
 <template>
 
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <component is="mainheader" v-bind:title="title" ></component>
+        <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
 
@@ -20,10 +20,8 @@
                             </div>
                         </div>
 
-                        <div class="mdl-grid" id="textWindow"> <!-- Resizable Textfield-->
-                            <div style="width: 100%">
-                                <p>{{ vueText }}</p>
-                            </div>
+                        <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%"> <!-- Resizable Textfield-->
+                            <p>{{ vueText }}</p>
                         </div>
                     </div>
 

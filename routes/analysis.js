@@ -91,7 +91,7 @@ function getAndShowText(req, res) {
         let docID = req.session.docID;
 
         getTextFromDB(docID);
-        //console.log(textDB.tokens);
+        console.log(textDB.tokens);
         filterWordList();
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
