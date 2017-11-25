@@ -24,14 +24,20 @@
 
     export default {
         mixins: [ner, ned, nec],
+        props: ['tokens'],
         data: function () {
             return {
                 showMode: 'nerVue',
+                tokens: this.tokens
             }
         },
         methods: {
             showNer: function () {
-               this.showMode = 'nerVue';
+                console.log('The tokens we got: '+this.tokens);
+                console.log(this.filterPos(this.tokens, 'FM'));
+
+                performMark(this.filterPos(this.tokens, 'FM'));
+                this.showMode = 'nerVue';
             },
             showNed: function () {
                 this.showMode = 'nedVue';
