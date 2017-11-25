@@ -29,7 +29,7 @@
 
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode"></component>
+                        <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
                     </div>
                 </div>
             </div>
