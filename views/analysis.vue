@@ -12,14 +12,6 @@
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <div class="mdl-grid"> <!-- clear button -->
-                            <div>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </div>
-                        </div>
-
                         <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%"> <!-- Resizable Textfield-->
                             <p>{{ vueText }}</p>
                         </div>
