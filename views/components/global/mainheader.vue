@@ -13,6 +13,7 @@
                     <!--They could/should be linked-->
                     <a class="mdl-navigation__link" href="profile"><li class="mdl-menu__item">Profile</li></a>
                     <a class="mdl-navigation__link" href="signin"><li class="mdl-menu__item">Sign In</li></a>
+                    <!-- TODO sign out does not exist -->
                     <a class="mdl-navigation__link" href="signout"><li class="mdl-menu__item">Sign Out</li></a>
                 </ul>
             </div>
