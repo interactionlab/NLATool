@@ -3,6 +3,7 @@
         <ul>
             <li>
                 <button v-on:click="showNer">NER</button>
+                <div></div>
             </li>
             <li>
                 <button v-on:click="showNed">NED</button>
