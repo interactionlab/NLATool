@@ -102,7 +102,7 @@ function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
         if (!/\S/.test(text)) {
-            res.render('./Desktop/loadtext', {title: 'NLA - Natural Language Analyse Tool', result: ''});
+            res.renderVue('loadtext', vueRenderOptions);
         } else {
             //corenlp.setupCorenlp();
             //let parsedText = wait.for(corenlp.parse,text);
