@@ -20,8 +20,11 @@
                             </div>
                         </div>
 
-                        <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%"> <!-- Resizable Textfield-->
-                            <p>{{ vueText }}</p>
+                        <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
+                            <!-- Resizable Textfield-->
+                            <markjs v-bind:markerMode="markerMode" v-bind:tokens="vueTokens">
+                                <p>{{ vueText }}</p>
+                            </markjs>
                         </div>
                     </div>
 
@@ -31,7 +34,6 @@
                     </div>
                 </div>
             </div>
-            <!-- import analighter from './components/analysis/analighter.vue'-->
         </main>
     </div>
 </template>
@@ -42,11 +44,13 @@
     import headernavbar from './components/global/headernavbar.vue';
     import titletools from './components/analysis/titletools.vue';
     import analighter from './components/analysis/analighter.vue';
+    import markjs from './components/analysis/mark.vue';
 
     export default {
         data: function () {
             return {
                 analysisMode: 'research',
+                markerMode: 'NE'
             }
         },
         methods: {
@@ -63,6 +67,11 @@
                 console.log('Got clicked3');
                 this.analysisMode = 'research';
             },
+            changeMarkerMode: function (mode) {
+                console.log('Got event to change the marker Mode: ' + mode)
+                this.markerMode = mode;
+            }
+
 
         },
         components: {
@@ -71,7 +80,8 @@
             titletools,
             research,
             notes,
-            analighter
+            analighter,
+            markjs
         }
     }
 </script>
