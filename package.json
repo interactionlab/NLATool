@@ -26,7 +26,6 @@
     "fibers": "^2.0.0",
     "is-reachable": "^2.3.3",
     "jsonfile": "^4.0.0",
-    "mark.js": "^8.11.0",
     "morgan": "~1.8.1",
     "mysql": "^2.15.0",
     "node-gyp": "^3.6.2",
@@ -46,5 +45,8 @@
   "bugs": {
     "url": "https://github.com/interactionlab/NLATool/issues"
   },
-  "homepage": "https://github.com/interactionlab/NLATool#readme"
+  "homepage": "https://github.com/interactionlab/NLATool#readme",
+  "devDependencies": {
+    "mark.js": "^8.11.0"
+  }
 }
