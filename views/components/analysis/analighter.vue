@@ -3,6 +3,7 @@
         <ul>
             <li>
                 <button v-on:click="showNer">NER</button>
+                <div></div>
             </li>
             <li>
                 <button v-on:click="showNed">NED</button>
@@ -24,25 +25,26 @@
 
     export default {
         mixins: [ner, ned, nec],
-        props: ['tokens'],
+        props: ['tokens', 'markerMode'],
         data: function () {
             return {
                 showMode: 'nerVue',
-                tokens: this.tokens
+                tokens: this.tokens,
             }
         },
         methods: {
             showNer: function () {
-                console.log('FM Filter on the tokens: '+this.filterPos(this.tokens, 'FM'));
-
-                performMark(this.filterPos(this.tokens, 'FM'));
+                //console.log('FM Filter on the tokens: ' + this.filterPos(this.tokens, 'FM'));
                 this.showMode = 'nerVue';
+                this.$emit('changeMarkerMode', 'NE');
             },
             showNed: function () {
                 this.showMode = 'nedVue';
+                this.$emit('changeMarkerMode', 'FM');
             },
             showNec: function () {
                 this.showMode = 'necVue';
+                this.$emit('changeMarkerMode', 'NN');
             },
         },
         components: {
