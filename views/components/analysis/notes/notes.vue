@@ -4,16 +4,23 @@
             <!--Switch between word notes and text notes-->
         </div>
         <component :is="noteMode">
-
         </component>
     </div>
 </template>
 <script>
+    import wordnotes from './components/analysis/notes/wordnotes.vue';
     export default {
+        props:{
+            wordnotesp: Array
+        },
         data: function () {
             return{
-                noteMode: 'wordNote'
+                noteMode: 'wordNotes',
+                wordnotesp: this.wordnotesp
             }
+        },
+        components:{
+            wordnotes
         }
     }
 </script>
