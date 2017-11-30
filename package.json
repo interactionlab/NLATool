@@ -9,6 +9,7 @@
     "npm": "5.3.x"
   },
   "dependencies": {
+    "@material/icon-toggle": "^0.25.0",
     "async": "^2.6.0",
     "babel-polyfill": "^6.26.0",
     "bluebird": "^3.5.1",
