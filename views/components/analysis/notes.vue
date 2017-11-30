@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <p>Notes come here!</p>
+    <div class="mdl-cell mdl-cell--12-col graybox">
+        
     </div>
 </template>
 <script>
