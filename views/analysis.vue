@@ -35,7 +35,7 @@
 </template>
 <script>
     import research from './components/analysis/research.vue';
-    import notes from './components/analysis/notes.vue';
+    import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import titletools from './components/analysis/titletools.vue';
