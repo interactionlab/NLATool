@@ -7,7 +7,8 @@ function parseInput() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
-            uid = JSON.parse(this.responseText).uid;
+            document.getElementById('uid').value = JSON.parse(this.responseText).uuid;
+            //uid = JSON.parse(this.responseText).uid;
             //document.getElementById("demo").innerHTML = this.responseText;
         }
     };
@@ -20,7 +21,8 @@ function parseInput() {
     document.getElementById('output').innerHTML = html;
 }
 function addComment(id) {
-    var url = "/comment/";
+    var url = "/comment";
+    let uid = document.getElementById('uid').value;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
@@ -33,12 +35,13 @@ function addComment(id) {
             openid = id;
         }
     };
-    xhttp.open("GET", url + "/" + id + "/?uid=" + uid, true);
+    xhttp.open("GET", url + "/" + id + "?uid=" + encodeURIComponent(uid), true);
     xhttp.send();
 }
 function saveComment() {
     let url = "/comment/save";
     let xhttp = new XMLHttpRequest();
+    let uid = document.getElementById('uid').value;
     xhttp.onreadystatechange = function() {
         if (this.readyState === 4 && this.status === 200) {
             //document.getElementById("demo").innerHTML = this.responseText;
