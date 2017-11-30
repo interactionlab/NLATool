@@ -1,9 +1,7 @@
 <template>
-
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
-
 
         <main class="mdl-layout__content">
             <div class="page-content">
@@ -13,16 +11,14 @@
                     <!--left grid for text stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
                         <div class="mdl-grid"> <!-- clear button -->
-                            <div>
-                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                    <i class="material-icons">delete</i>
-                                </button>
-                            </div>
+                            <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
+                            <!--<i class="material-icons">delete</i>-->
+                            <!--</button>-->
                         </div>
 
                         <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                             <!-- Resizable Textfield-->
-                            <markjs v-bind:markerMode="markerMode" v-bind:tokens="vueTokens">
+                            <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
                                 <p>{{ vueText }}</p>
                             </markjs>
                         </div>
@@ -30,7 +26,8 @@
 
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
+                        <component :is="analysisMode" v-bind:tokens="vueTokens"
+                                   v-on:changemarkermode="changeMarkerMode($event)"></component>
                     </div>
                 </div>
             </div>
@@ -50,7 +47,7 @@
         data: function () {
             return {
                 analysisMode: 'research',
-                markerMode: 'NE'
+                markermode: 'NE'
             }
         },
         methods: {
@@ -68,8 +65,8 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
-                console.log('Got event to change the marker Mode: ' + mode)
-                this.markerMode = mode;
+                console.log('Got event to change the marker Mode: ' + mode);
+                this.markermode = mode;
             }
 
 

@@ -36,15 +36,15 @@
             showNer: function () {
                 //console.log('FM Filter on the tokens: ' + this.filterPos(this.tokens, 'FM'));
                 this.showMode = 'nerVue';
-                this.$emit('changeMarkerMode', 'NE');
+                this.$emit('changemarkermode', ['NE']);
             },
             showNed: function () {
                 this.showMode = 'nedVue';
-                this.$emit('changeMarkerMode', 'FM');
+                this.$emit('changemarkermode', ['FM']);
             },
             showNec: function () {
                 this.showMode = 'necVue';
-                this.$emit('changeMarkerMode', 'NN');
+                this.$emit('changemarkermode', ['NN']);
             },
         },
         components: {
