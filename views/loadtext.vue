@@ -24,10 +24,10 @@
                         Enter text here ...
                     </label>
                 </div>
-                <!-- TODO add link to analysis use on-click -->
+
                 <div class="mdl-cell mdl-cell--12-col graybox " style="text-align: center">
                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                        <b class="mdc-button mdl-navigation__link" href="analysis">Analyze</b>
+                        <b class="mdc-button">Analyze</b>
                     </button>
                 </div>
             </form>
