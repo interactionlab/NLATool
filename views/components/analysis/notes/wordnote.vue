@@ -18,7 +18,7 @@
         },
         methods: {
             edit: function(){
-
+                this.$emit('edit', [this.wordnote]);
             },
             deleting: function () {
                 //1. delete entry in db
