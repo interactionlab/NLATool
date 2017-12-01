@@ -1,37 +1,40 @@
 <template>
     <div>
-        <div v-if="newnote">
-            <component is="newwordnote" v-bind:note="this.note"></component>
-        </div>
-        <div v-else>
-            <component is="wordnote" v-for="notesfromdbnotcorrectyet" v-on:edit="editnote($event)"></component>
-        </div>
-        <div>
-
-        </div>
+        <keep-alive>
+            <div v-if="newnote">
+                <component is="newwordnote" v-bind:note="this.note" v-on:back="shownotes"></component>
+            </div>
+            <div v-else>
+                <component is="wordnote" v-for="notesfromdbnotcorrectyet" v-on:edit="editnote($event)"></component>
+            </div>
+        </keep-alive>
     </div>
 </template>
 <script>
     import wordnote from './components/analysis/notes/wordnote.vue';
     import newwordnote from './components/analysis/notes/newwordnote.vue';
+
     export default {
-        props:{
+        props: {
             wordnotes: Array
         },
         data: function () {
-            return{
+            return {
                 newnote: false,
                 note: '',
                 wordnotes: this.wordnotes
             }
         },
-        methods:{
-            editnote:function (editText) {
+        methods: {
+            editnote: function (editText) {
                 this.note = editText;
-                this.newnote= true;
+                this.newnote = true;
+            },
+            shownotes: function () {
+                this.newnote = false;
             }
         },
-        components:{
+        components: {
             wordnote,
             newwordnote
         }

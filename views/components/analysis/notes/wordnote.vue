@@ -1,9 +1,10 @@
 <template>
-    <div>
+    <div class="mdl-grid" style="width: 100%">
         <a>Link of word</a>
-        <p>{{ wordnote }}</p>
-        <button v-on:click="edit">Editicon</button>
-        <button v-on:click="deleting">Deleteicon</button>
+        <p class="mdl-cell mdl-cell--12-col graybox">{{ wordnote }}</p>
+        <!--TODO:@Emmi Replace with Icons-->
+        <button class="mdl-button" v-on:click="edit">Editicon</button>
+        <button class="mdl-button" v-on:click="deleting">Deleteicon</button>
     </div>
 </template>
 <script>
