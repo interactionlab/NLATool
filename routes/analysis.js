@@ -76,6 +76,8 @@ router.post('/showText', function (req, res) {
 router.post('/clearText', function (req, res) {
    res.redirect('/loadtext');
 });
+
+
 /**
  * Main Fiber function that gets all the text data from the Database and send them
  * into the vue that should render the .vue view.

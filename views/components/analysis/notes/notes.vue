@@ -3,8 +3,7 @@
         <div>
             <!--Switch between word notes and text notes-->
         </div>
-        <component :is="noteMode">
-        </component>
+        <component :is="noteMode"></component>
     </div>
 </template>
 <script>
@@ -15,7 +14,7 @@
         },
         data: function () {
             return{
-                noteMode: 'wordNotes',
+                noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp
             }
         },

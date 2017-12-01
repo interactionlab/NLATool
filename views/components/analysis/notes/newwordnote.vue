@@ -1,9 +1,9 @@
 <template>
-    <div>
+    <div class="mdl-grid" style="width: 100%">
         <a>Set a Link for word</a>
-        <textarea v-model="note"></textarea>
-        <button v-on:click="save"></button>
-        <button v-on:click="back"></button>
+        <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="note"></textarea>
+        <button class="mdl-button" v-on:click="save">Save</button>
+        <button class="mdl-button" v-on:click="back">Back</button>
     </div>
 </template>
 <script>
@@ -18,9 +18,10 @@
         },
         methods: {
             back: function(){
-                this.$emit()
+                this.$emit('back');
             },
             save: function(){
+                
                 //TODO: send note to Server -> DB
                 //TODO: change Component to wordnotes
             }
