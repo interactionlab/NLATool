@@ -21,8 +21,8 @@
                             <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
                                 <p>{{ vueText }}</p>
                             </markjs>
+                        </div>
                     </div>
-
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
                         <component :is="analysisMode" v-bind:tokens="vueTokens"
