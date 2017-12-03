@@ -5,7 +5,6 @@ let vueRenderOptions = {
     head: {
         meta: [
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
-            {script: '/javascripts/ui_functions.js'},
             //{script: '/javascripts/comment.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
