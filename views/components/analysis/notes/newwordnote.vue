@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+
     export default {
         props:{
             note: String,
@@ -21,7 +22,10 @@
                 this.$emit('back');
             },
             save: function(){
-                
+                let socket = io('http://localhost:8080');
+                socket.emit('savewordnote', this.note, 'genericword');
+                socket.close();
+                this.$emit('back');
                 //TODO: send note to Server -> DB
                 //TODO: change Component to wordnotes
             }

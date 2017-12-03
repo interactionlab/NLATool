@@ -20,7 +20,7 @@ var Tag = 'profile.js: ';
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: '/javascripts/ui_functions.js'},
+
             {script: '/javascripts/data_management.js'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}

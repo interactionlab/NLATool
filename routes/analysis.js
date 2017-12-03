@@ -17,6 +17,7 @@ let Tag = 'analyse.js: ';
 const dbStub = require('../modules/db_stub');
 const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
+const io = require('socket.io')(8080);
 
 /**
  * Object for temporal space.
@@ -39,8 +40,9 @@ let vueRenderOptions = {
     head: {
         meta: [
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
-            {script: '/javascripts/ui_functions.js'},
+            {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
+
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
         ]
@@ -48,9 +50,32 @@ let vueRenderOptions = {
 };
 //{script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'}, CDN for mark.js if npm package doesnt work
 //{script: '/javascripts/mark.js'},
-/*
+// {script: '/socket.io/socket.io.js'},
 
- */
+//--------------------------------------------------------
+io.on('connection', function (socket) {
+    socket.on('savewordnote', function (note, word) {
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + word);
+        wait.launchFiber(function (note, word) {
+            //wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes', )));
+        });
+    });
+
+    socket.on('updatewordnote', function () {
+        console.log(notMedia + Tag + 'update Word Note: ' + value);
+        wait.launchFiber(function (note, word) {
+           // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
+        });
+    });
+
+    socket.on('bignote', function () {
+        console.log(notMedia + Tag + 'big Note: ' + value);
+        wait.launchFiber(function (note, word) {
+            // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
+        });
+    });
+});
+
 /**
  * Vue data object to be set for this route.
  * @type {{vueText: null, vueTokens: null}}
@@ -66,7 +91,8 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/a', function (req, res, next) {
-   res.renderVue('analysis', vueData, vueRenderOptions);
+    dbStub.fiberEstablishConnection();
+    res.renderVue('analysis', vueData, vueRenderOptions);
 });
 
 router.post('/showText', function (req, res) {
@@ -74,7 +100,7 @@ router.post('/showText', function (req, res) {
 });
 
 router.post('/clearText', function (req, res) {
-   res.redirect('/loadtext');
+    res.redirect('/loadtext');
 });
 
 
