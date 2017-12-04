@@ -24,6 +24,7 @@
 </template>
 <script>
     import analightertool from './components/analysis/toolbar/analightertool.vue';
+    import researchtool from './components/analysis/toolbar/researchtool.vue';
     export default {
         data: function () {
             return {
@@ -45,7 +46,8 @@
             }
         },
         components:{
-            analightertool
+            analightertool,
+            researchtool
         }
     }
 </script>
