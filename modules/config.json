@@ -19,19 +19,19 @@
       }
     }
   },
-  "corenlp":{
+  "corenlp": {
     "isTable": false,
     "name": "corenlp",
-    "connections":{
-      "connection1":{
+    "connections": {
+      "connection1": {
         "host": "http://projects.hcilab.org/CoreNLP/",
         "port": ""
       },
-      "connection2":{
+      "connection2": {
         "host": "http://projects.hcilab.org:10940/",
         "port": "10940"
       },
-      "connection3":{
+      "connection3": {
         "host": "localhost:9000",
         "port": "9000"
       }
@@ -143,12 +143,29 @@
       "UNIQUE": true
     },
     "column3": {
-      "name": "tags",
-      "type": "TEXT"
+      "name": "wordID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "word"
     },
     "column4": {
       "name": "content",
       "type": "MEDIUMTEXT"
+    },
+    "column5": {
+      "name": "textIndex1",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6": {
+      "name": "textIndex2",
+      "type": "INT",
+      "length": "11"
+    },
+    "column7": {
+      "name": "noteIndex",
+      "type":"INT",
+      "length":"11"
     }
   },
   "table4": {
@@ -212,25 +229,45 @@
       "length": "20"
     }
   },
-  "table6":{
+  "table6": {
     "isTable": true,
-    "name": "textWords",
-    "column1":{
+    "name": "textmap",
+    "column1": {
       "name": "wordID",
       "type": "INT",
       "length": "11",
       "FOREIGN": "word"
     },
-    "column2":{
+    "column2": {
       "name": "docID",
       "type": "INT",
       "length": "11",
       "FOREIGN": "documents"
     },
-    "column3":{
-      "name": "counter",
+    "column3": {
+      "name": "textIndex",
       "type": "INT",
       "length": "11"
+    }
+  },
+  "table7": {
+    "isTable": true,
+    "name": "textnote",
+    "column1": {
+      "name": "textnoteID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true
+    },
+    "column2": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column3": {
+      "name": "content",
+      "type": "MEDIUMTEXT"
     }
   }
 }
