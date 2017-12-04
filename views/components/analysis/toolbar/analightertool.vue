@@ -1,0 +1,39 @@
+<template>
+    <ul>
+        <li>
+            <button v-on:click="showNer">NER</button>
+            <div></div>
+        </li>
+        <li>
+            <button v-on:click="showNed">NED</button>
+        </li>
+        <li>
+            <button v-on:click="showNec">NEC</button>
+        </li>
+    </ul>
+</template>
+
+<script>
+    export default {
+        name: "analightertool",
+        methods: {
+            showNer: function () {
+                //console.log('FM Filter on the tokens: ' + this.filterPos(this.tokens, 'FM'));
+                this.showMode = 'nerVue';
+                this.$emit('changemarkermode', ['NE']);
+            },
+            showNed: function () {
+                this.showMode = 'nedVue';
+                this.$emit('changemarkermode', ['FM']);
+            },
+            showNec: function () {
+                this.showMode = 'necVue';
+                this.$emit('changemarkermode', ['NN']);
+            },
+        },
+    }
+</script>
+
+<style scoped>
+
+</style>
