@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="graybox">
         <button v-on:click="showNer">NER</button>
         <button v-on:click="showNed">NED</button>
         <button v-on:click="showNec">NEC</button>
