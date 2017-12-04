@@ -140,8 +140,8 @@ function postLoadWrittenText(req, res, next) {
 
                     wordInsertResult = JSON.parse(wordInsertResult);
                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                        'textWords',
-                        ['wordID', 'docID', 'counter'],
+                        'textmap',
+                        ['wordID', 'docID', 'textIndex'],
                         [wordInsertResult.insertId, documentInsertResult.insertId, counter],
                         null, null));
                     counter++;
