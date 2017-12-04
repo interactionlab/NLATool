@@ -5,7 +5,7 @@
 
         <main class="mdl-layout__content">
             <div class="page-content">
-                <component is="titletools" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
+                <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
                            v-on:emitresearch="getResearch"></component>
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
@@ -39,7 +39,7 @@
     import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
-    import titletools from './components/analysis/titletools.vue';
+    import toolbar from './components/analysis/toolbar.vue';
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
 
@@ -74,7 +74,7 @@
         components: {
             mainheader,
             headernavbar,
-            titletools,
+            toolbar,
             research,
             notes,
             analighter,

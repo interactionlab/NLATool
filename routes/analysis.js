@@ -34,6 +34,7 @@ let textDB = {
 
 /**
  * Object that holds all specific meta info for this route.
+ * TODO: set title
  * @type {{head: {meta: [null,null,null,null]}}}
  */
 let vueRenderOptions = {
@@ -51,6 +52,15 @@ let vueRenderOptions = {
 //{script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'}, CDN for mark.js if npm package doesnt work
 //{script: '/javascripts/mark.js'},
 // {script: '/socket.io/socket.io.js'},
+
+/**
+ * Vue data object to be set for this route.
+ * @type {{vueText: null, vueTokens: null}}
+ */
+let vueData = {
+    vueText: null,
+    vueTokens: null
+};
 
 //--------------------------------------------------------
 io.on('connection', function (socket) {
@@ -76,14 +86,7 @@ io.on('connection', function (socket) {
     });
 });
 
-/**
- * Vue data object to be set for this route.
- * @type {{vueText: null, vueTokens: null}}
- */
-let vueData = {
-    vueText: null,
-    vueTokens: null
-};
+
 
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
