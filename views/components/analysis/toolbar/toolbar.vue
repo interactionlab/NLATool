@@ -1,31 +1,34 @@
 <template>
     <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--12-col">
-            <!--Insert a Space here:-->
+            <!--Main Navigation:-->
             <span>
             <nav class="mdl-navigation">
-                <button v-on:click="emitanalighter"
+                <button v-on:click="changetool('analightertool')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                     <b class="mdc-button">Analysis</b>
                 </button>
-                <button v-on:click="emitnotes"
+                <button v-on:click="changetool('notestool')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                     <b class="mdc-button">Notes</b>
                 </button>
-                <button v-on:click="emitresearch"
+                <button v-on:click="changetool('researchtool')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                     <b class="mdc-button">Research</b>
                 </button>
             </nav>
             </span>
+            <component :is="tool" ></component>
         </div>
     </div>
 </template>
 <script>
+
     export default {
         data: function () {
-            return {}
-
+            return {
+                tool: 'analighter'
+            }
         },
         methods: {
             emitanalighter: function () {
@@ -36,6 +39,9 @@
             },
             emitresearch: function () {
                 this.$emit('emitresearch');
+            },
+            changetool:function (tool) {
+                this.tool = tool;
             }
         }
     }

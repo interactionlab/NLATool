@@ -39,7 +39,7 @@
     import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
-    import toolbar from './components/analysis/toolbar.vue';
+    import toolbar from './components/analysis/toolbar/toolbar.vue';
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
 
