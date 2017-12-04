@@ -1,16 +1,9 @@
 <template>
-    <ul>
-        <li>
-            <button v-on:click="showNer">NER</button>
-            <div></div>
-        </li>
-        <li>
-            <button v-on:click="showNed">NED</button>
-        </li>
-        <li>
-            <button v-on:click="showNec">NEC</button>
-        </li>
-    </ul>
+    <div>
+        <button v-on:click="showNer">NER</button>
+        <button v-on:click="showNed">NED</button>
+        <button v-on:click="showNec">NEC</button>
+    </div>
 </template>
 
 <script>
