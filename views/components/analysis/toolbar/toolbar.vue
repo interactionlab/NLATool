@@ -25,10 +25,14 @@
 <script>
     import analightertool from './components/analysis/toolbar/analightertool.vue';
     import researchtool from './components/analysis/toolbar/researchtool.vue';
+    import notestool from './components/analysis/toolbar/notestool.vue';
+
     export default {
         data: function () {
             return {
-                tool: 'analightertool'
+                tool: 'analightertool',
+                tool: 'researchtool',
+                tool: 'notestool'
             }
         },
         methods: {
@@ -47,7 +51,8 @@
         },
         components:{
             analightertool,
-            researchtool
+            researchtool,
+            notestool
         }
     }
 </script>
