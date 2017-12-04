@@ -1,8 +1,17 @@
 <template>
     <div class="graybox">
-        <button v-on:click="showNer">NER</button>
-        <button v-on:click="showNed">NED</button>
-        <button v-on:click="showNec">NEC</button>
+        <button v-on:click="showNer"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <b class="mdc-button">NER</b>
+        </button>
+        <button v-on:click="showNed"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <b class="mdc-button">NED</b>
+        </button>
+        <button v-on:click="showNec"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <b class="mdc-button">NEC</b>
+        </button>
     </div>
 </template>
 
