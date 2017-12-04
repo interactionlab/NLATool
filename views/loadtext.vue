@@ -9,7 +9,7 @@
         <component is="headernavbar" v-bind:title_small="title_small"></component>
         <main class="mdl-layout__content">
 
-            <form action="/loadtext/loadWrittenText" method="post">
+            <form action="/loadWrittenText" method="post">
                 <br/>
                 <!-- Textfield for title-->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col graybox" style="text-align: left">
