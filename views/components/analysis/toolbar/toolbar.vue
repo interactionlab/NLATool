@@ -18,16 +18,16 @@
                 </button>
             </nav>
             </span>
-            <component :is="tool" ></component>
+            <component :is="tool"> </component>
         </div>
     </div>
 </template>
 <script>
-
+    import analightertool from './components/analysis/toolbar/analightertool.vue';
     export default {
         data: function () {
             return {
-                tool: 'analighter'
+                tool: 'analightertool'
             }
         },
         methods: {
@@ -43,6 +43,9 @@
             changetool:function (tool) {
                 this.tool = tool;
             }
+        },
+        components:{
+            analightertool
         }
     }
 </script>
