@@ -18,7 +18,7 @@
                 </button>
             </nav>
             </span>
-            <component :is="tool"> </component>
+            <component :is="tool" v-on:changemerkermode="changeMarkerMode($event)"></component>
         </div>
     </div>
 </template>
@@ -36,20 +36,21 @@
             }
         },
         methods: {
-            emitanalighter: function () {
-                this.$emit('emitanalighter');
-            },
-            emitnotes: function () {
-                this.$emit('emitnotes');
-            },
-            emitresearch: function () {
-                this.$emit('emitresearch');
-            },
-            changetool:function (tool) {
+            changetool: function (tool) {
+                if (tool === 'analightertool') {
+                    this.$emit('emitanalighter');
+                } else if (tool === 'notestool') {
+                    this.$emit('emitnotes');
+                } else if (tool === 'researchtool') {
+                    this.$emit('emitresearch');
+                }
                 this.tool = tool;
+            },
+            changeMarkerMode: function (mode) {
+                this.$emit('changemarkermode', [mode]);
             }
         },
-        components:{
+        components: {
             analightertool,
             researchtool,
             notestool
