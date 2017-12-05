@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-grid">
+    <div class="mdl-grid headerRowLight">
         <div class="mdl-cell mdl-cell--12-col">
             <!--Main Navigation:-->
             <span>
