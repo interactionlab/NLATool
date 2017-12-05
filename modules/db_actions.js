@@ -301,7 +301,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
             commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         }
         commandString = commandString + ';';
-        //console.log(notMedia + Tag + commandString);
+        console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Insert Command Creation failed!');
