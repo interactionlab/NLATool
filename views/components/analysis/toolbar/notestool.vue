@@ -1,8 +1,6 @@
 <template>
-    <div class="mdl-cell mdl-cell--12-col graybox">
-        <div>
-            <!--Switch between word notes and text notes-->
-        </div>
+    <div>
+        <!--Switch between word notes and text notes-->
         <component :is="noteMode"></component>
     </div>
 </template>
