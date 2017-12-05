@@ -1,17 +1,5 @@
 <template>
     <div>
-        <ul>
-            <li>
-                <button v-on:click="showNer">NER</button>
-                <div></div>
-            </li>
-            <li>
-                <button v-on:click="showNed">NED</button>
-            </li>
-            <li>
-                <button v-on:click="showNec">NEC</button>
-            </li>
-        </ul>
         <component :is="showMode"></component>
     </div>
 </template>
