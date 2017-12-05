@@ -1,13 +1,17 @@
 <template>
     <div>
         <!--Switch between word notes and text notes-->
-        <component :is="noteMode"></component>
+        <!--<component :is="noteMode"></component>-->
     </div>
 </template>
 
 <script>
     export default {
-        name: "notestool"
+       data:function () {
+           return{
+               noteMode:''
+           }
+       }
     }
 </script>
 

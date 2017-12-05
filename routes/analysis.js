@@ -148,9 +148,9 @@ function filterWordList() {
 function getTextFromDB(docID) {
     textDB.textMap = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('textmap', ['docID', 'wordID', 'textIndex'], [docID], ['='])));
-    console.log(notMedia + Tag + 'Result of selecting text in textWords: ' + JSON.stringify(textDB.textMap));
+    console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
     for (let i = 0; i < textDB.textMap.length; i++) {
-        if (textDB.textMap[i].counter === i) {
+        if (textDB.textMap[i].textIndex === i) {
             let word = wait.for(dbStub.makeSQLRequest,
                 dbAction.createSelectCommand('word',
                     ['wordID', 'content', 'isSpecial', 'semanticClass', 'pos'],

@@ -1,6 +1,6 @@
 <template>
     <div class="graybox">
-        <button v-on:click="quickResearch"
+        <button
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <b class="mdc-button">Information</b>
         </button>

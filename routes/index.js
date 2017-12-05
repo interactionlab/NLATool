@@ -109,7 +109,6 @@ function postLoadWrittenText(req, res, next) {
             //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
             //console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
             //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
-            //let words = uword(text);
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 

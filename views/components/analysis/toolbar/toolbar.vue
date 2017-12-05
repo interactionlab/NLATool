@@ -18,7 +18,7 @@
                 </button>
             </nav>
             </span>
-            <component :is="tool" v-on:changemerkermode="changeMarkerMode($event)"></component>
+            <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
         </div>
     </div>
 </template>
