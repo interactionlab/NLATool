@@ -23,13 +23,15 @@ let vueRenderOptions = {
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-blue.min.css'},
-            {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'}
+            {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
+            {style: '/css/style.css'},
+
         ]
     }
 };
 
 router.get('/', function (req, res, next) {
-    res.renderVue('profile',vueRenderOptions);
+    res.renderVue('analysis',vueRenderOptions);
 });
 
 module.exports = router;
