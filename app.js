@@ -45,8 +45,7 @@ const vueOptions = {
             title: 'NLA - Natural Language Analyse Tool',
             meta: [
                 {script: 'https://unpkg.com/vue'},
-                {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
-                {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
+                {script: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
                 {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
                 {style: '/css/style.css'},
                 {style: '/css/debugstyle.css'},
