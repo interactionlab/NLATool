@@ -28,8 +28,6 @@
                 socket.emit('savewordnote', this.note, this.clickedword);
                 socket.close();
                 this.$emit('back');
-                //TODO: send note to Server -> DB
-                //TODO: change Component to wordnotes
             }
         }
     }
