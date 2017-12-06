@@ -11,12 +11,14 @@
     export default {
         props:{
             note: String,
-            clickedword: String
+            clickedword: String,
+            docID: String
         },
         data: function () {
             return{
                 note: this.note,
-                clickedword:this.clickedword
+                clickedword:this.clickedword,
+                docID: this.docID
             }
         },
         methods: {
@@ -25,8 +27,7 @@
             },
             save: function(){
                 let socket = io('http://localhost:8080');
-                socket.emit('savewordnote', this.note, this.clickedword);
-                socket.close();
+                socket.emit('savewordnote', this.note, this.clickedword, this.docID);
                 this.$emit('back');
             }
         }

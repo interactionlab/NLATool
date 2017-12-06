@@ -3,7 +3,7 @@
         <div>
             <!--Switch between word notes and text notes-->
         </div>
-        <component :is="noteMode" v-bind:clickedword="clickedword"></component>
+        <component :is="noteMode" v-bind:clickedword="clickedword"  v-bind:docID="docID"></component>
     </div>
 </template>
 <script>
@@ -11,13 +11,15 @@
     export default {
         props:{
             wordnotesp: Array,
-            clickedword: String
+            clickedword: String,
+            docID:String
         },
         data: function () {
             return{
                 noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp,
-                clickedword: this.clickedword
+                clickedword: this.clickedword,
+                docID: this.docID
             }
         },
         components:{

@@ -61,22 +61,19 @@ let vueData = {
     vueText: null,
     vueTokens: null,
     docID: null,
-    wordNotes:null
+    wordNotes: null
 };
 
 //--------------------------------------------------------
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, word, docID) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + word);
-        wait.launchFiber(function (note, word) {
-            wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',['docID', 'content'],[docID, note])));
-        });
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + word + ' docID:' + docID);
+        wait.launchFiber(saveWordNote, note, word, docID);
     });
-
     socket.on('updatewordnote', function () {
         console.log(notMedia + Tag + 'update Word Note: ' + value);
         wait.launchFiber(function (note, word) {
-           // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
+            // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
         });
     });
 
@@ -88,6 +85,12 @@ io.on('connection', function (socket) {
     });
 });
 
+function saveWordNote(note, word, docID) {
+    note = stringifyForDB(note);
+    word = stringifyForDB(word);
+    docID = stringifyForDB(docID);
+    wait.for(dbStub.makeSQLRequest,dbAction.createInsertCommand('notes', ['docID', 'content'], [docID, note], null, null));
+}
 
 
 router.get('/', function (req, res, next) {
@@ -172,9 +175,8 @@ function getTextFromDB(docID) {
  * Retrieves all wordnotes from DB
  * @param docID
  */
-function getWordNotes(docID){
+function getWordNotes(docID) {
     let tempWordNotes = {};
-    
 }
 
 /**
@@ -198,5 +200,15 @@ function resetTextDB() {
     textDB.words = [];
     textDB.textMetaData = [];
 }
+/**
+ * Makes sure the Quotas " are set for each word in the sql query.
+ * TODO: Get this function into db_Actions.js
+ * @param input
+ * @returns {string}
+ */
+function stringifyForDB(input) {
+    return '"' + input + '"';
+}
+
 
 module.exports = router;
