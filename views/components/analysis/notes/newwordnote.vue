@@ -1,6 +1,6 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
-        <a>Set a Link for word</a>
+        <p>{{clickedword}}</p>
         <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="note"></textarea>
         <button class="mdl-button" v-on:click="save">Save</button>
         <button class="mdl-button" v-on:click="back">Back</button>
@@ -11,10 +11,12 @@
     export default {
         props:{
             note: String,
+            clickedword: String
         },
         data: function () {
             return{
-                note: this.note
+                note: this.note,
+                clickedword:this.clickedword
             }
         },
         methods: {
@@ -23,7 +25,7 @@
             },
             save: function(){
                 let socket = io('http://localhost:8080');
-                socket.emit('savewordnote', this.note, 'genericword');
+                socket.emit('savewordnote', this.note, this.clickedword);
                 socket.close();
                 this.$emit('back');
             }
