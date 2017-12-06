@@ -19,7 +19,8 @@
         mounted() {
             console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + this.markermode);
             this.instance = new Mark(this.$refs.mark);
-            this.instance.mark(this.filterPos(this.tokens, 'FM'));
+            //this.instance.mark(this.filterPos(this.tokens, 'FM'));
+            this.instance.mark(this.filterClass(this.tokens, 'I-PER'));
         },
 
 
@@ -35,6 +36,16 @@
                 let toMark = [];
                 for (let i = 0; i < tokens.length; i++) {
                     if (tokens[i].pos === pos) {
+                        toMark.push(tokens[i].content);
+                    }
+                }
+                return toMark;
+            },
+
+            filterClass: function (tokens, semClass) {
+                let toMark = [];
+                for( let i = 0; i < tokens.length; i++){
+                    if(tokens[i].semanticClass === semClass){
                         toMark.push(tokens[i].content);
                     }
                 }
