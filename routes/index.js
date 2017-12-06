@@ -109,7 +109,6 @@ function postLoadWrittenText(req, res, next) {
             //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
             //console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
             //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
-            //let words = uword(text);
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 
@@ -140,8 +139,8 @@ function postLoadWrittenText(req, res, next) {
 
                     wordInsertResult = JSON.parse(wordInsertResult);
                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                        'textWords',
-                        ['wordID', 'docID', 'counter'],
+                        'textmap',
+                        ['wordID', 'docID', 'textIndex'],
                         [wordInsertResult.insertId, documentInsertResult.insertId, counter],
                         null, null));
                     counter++;

@@ -6,7 +6,7 @@
         <main class="mdl-layout__content">
             <div class="page-content">
                 <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                           v-on:emitresearch="getResearch"></component>
+                           v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)"></component>
                 <div class="mdl-grid"> <!-- separate window in two-->
                     <!--left grid for text stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
@@ -26,12 +26,7 @@
                     </div>
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-<<<<<<< telion
-                        <component :is="analysisMode" v-bind:tokens="vueTokens"
-                                   v-on:changemarkermode="changeMarkerMode($event)"></component>
-=======
                         <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord" ></component>
->>>>>>> local
                     </div>
                 </div>
             </div>

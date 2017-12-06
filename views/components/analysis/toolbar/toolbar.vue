@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-grid">
+    <div class="mdl-grid headerRowLight">
         <div class="mdl-cell mdl-cell--12-col">
             <!--Main Navigation:-->
             <span>
@@ -18,31 +18,42 @@
                 </button>
             </nav>
             </span>
-            <component :is="tool" ></component>
+            <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
         </div>
     </div>
 </template>
 <script>
+    import analightertool from './components/analysis/toolbar/analightertool.vue';
+    import researchtool from './components/analysis/toolbar/researchtool.vue';
+    import notestool from './components/analysis/toolbar/notestool.vue';
 
     export default {
         data: function () {
             return {
-                tool: 'analighter'
+                tool: 'analightertool',
+                tool: 'researchtool',
+                tool: 'notestool'
             }
         },
         methods: {
-            emitanalighter: function () {
-                this.$emit('emitanalighter');
-            },
-            emitnotes: function () {
-                this.$emit('emitnotes');
-            },
-            emitresearch: function () {
-                this.$emit('emitresearch');
-            },
-            changetool:function (tool) {
+            changetool: function (tool) {
+                if (tool === 'analightertool') {
+                    this.$emit('emitanalighter');
+                } else if (tool === 'notestool') {
+                    this.$emit('emitnotes');
+                } else if (tool === 'researchtool') {
+                    this.$emit('emitresearch');
+                }
                 this.tool = tool;
+            },
+            changeMarkerMode: function (mode) {
+                this.$emit('changemarkermode', [mode]);
             }
+        },
+        components: {
+            analightertool,
+            researchtool,
+            notestool
         }
     }
 </script>
