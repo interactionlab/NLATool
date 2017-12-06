@@ -19,14 +19,14 @@
 
                         <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                             <!-- Resizable Textfield-->
-                            <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
+                            <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens" v-on:perEvent="setPersons($event)">
                                 <p v-on:click="clickWord">{{ vueText }}</p>
                             </markjs>
                         </div>
                     </div>
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord" ></component>
+                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord" v-bind:persons="persons"></component>
                     </div>
                 </div>
             </div>
@@ -47,13 +47,14 @@
             return {
                 analysisMode: 'research',
                 markermode: 'NE',
-                clickedWord: ''
+                clickedWord: '',
+                persons:''
             }
         },
         methods: {
             getAnalighter: function () {
                 console.log('Got clicked1');
-                this.analysisMode = 'analighter'
+                this.analysisMode = 'analighter';
             },
             getNotes: function () {
                 console.log('got Clicked2');
@@ -79,6 +80,9 @@
                     .replace(/[.,:;!?()+-]/g, '');
                 this.clickedWord = content;
                 console.log(content);
+            },
+            setPersons:function (persons) {
+                this.persons = persons;
             }
 
 
