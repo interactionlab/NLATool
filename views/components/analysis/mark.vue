@@ -19,16 +19,18 @@
         mounted() {
             console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + this.markermode);
             this.instance = new Mark(this.$refs.mark);
-            //this.instance.mark(this.filterPos(this.tokens, 'FM'));
+            this.instance.mark(this.filterPos(this.tokens, 'FM'));
             this.instance.mark(this.filterClass(this.tokens, 'I-PER'));
         },
 
 
         watch: {
             markermode: function (value) {
-                let toMark = this.filterPos(this.tokens, String(value));
+                let toMarkClass = this.filterClass(this.tokens, String(value));
+                let toMarkPos = this.filterPos(this.tokens, String(value));
                 this.instance.unmark();
-                this.instance.mark(toMark);
+                this.instance.mark(toMarkClass);
+                this.instance.mark(toMarkPos);
             }
         },
         methods: {
@@ -49,6 +51,7 @@
                         toMark.push(tokens[i].content);
                     }
                 }
+                //this.$emit('perEvent', [toMark]);
                 return toMark;
             }
         }
