@@ -10,9 +10,10 @@
             <b class="mdc-button">NED</b>
         </button>
         <button v-on:click="showNec"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NEC</b>
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent ">
+            <b class="mdc-button ">NEC</b>
         </button>
+
     </div>
 </template>
 
