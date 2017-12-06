@@ -59,15 +59,17 @@ let vueRenderOptions = {
  */
 let vueData = {
     vueText: null,
-    vueTokens: null
+    vueTokens: null,
+    docID: null,
+    wordNotes:null
 };
 
 //--------------------------------------------------------
 io.on('connection', function (socket) {
-    socket.on('savewordnote', function (note, word) {
+    socket.on('savewordnote', function (note, word, docID) {
         console.log(notMedia + Tag + 'Save Word Note: ' + note + word);
         wait.launchFiber(function (note, word) {
-            //wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes', )));
+            wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',['docID', 'content'],[docID, note])));
         });
     });
 
@@ -121,10 +123,11 @@ function getAndShowText(req, res) {
         let docID = req.session.docID;
 
         getTextFromDB(docID);
-        console.log(textDB.tokens);
+        //console.log(textDB.tokens);
         filterWordList();
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
+        vueData.docID = docID;
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
@@ -163,6 +166,15 @@ function getTextFromDB(docID) {
         }
     }
     //console.log(notMedia + Tag + 'the current Word List:' + JSON.stringify(textDB.tokens));
+}
+
+/**
+ * Retrieves all wordnotes from DB
+ * @param docID
+ */
+function getWordNotes(docID){
+    let tempWordNotes = {};
+    
 }
 
 /**

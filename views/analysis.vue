@@ -20,14 +20,18 @@
                         <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                             <!-- Resizable Textfield-->
                             <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
-                                <p>{{ vueText }}</p>
+                                <p v-on:click="clickWord">{{ vueText }}</p>
                             </markjs>
                         </div>
                     </div>
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
+<<<<<<< telion
                         <component :is="analysisMode" v-bind:tokens="vueTokens"
                                    v-on:changemarkermode="changeMarkerMode($event)"></component>
+=======
+                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord" ></component>
+>>>>>>> local
                     </div>
                 </div>
             </div>
@@ -47,7 +51,8 @@
         data: function () {
             return {
                 analysisMode: 'research',
-                markermode: 'NE'
+                markermode: 'NE',
+                clickedWord: ''
             }
         },
         methods: {
@@ -67,6 +72,18 @@
             changeMarkerMode: function (mode) {
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
+            },
+            clickWord:function (element) {
+                let content = element.target.textContent;
+                let pos = window.getSelection().anchorOffset;
+                content = content
+                    .substring(0, content.indexOf(' ', pos))
+                    .trim();
+                content = content
+                    .substr(content.lastIndexOf(' ') + 1)
+                    .replace(/[.,:;!?()+-]/g, '');
+                this.clickedWord = content;
+                console.log(content);
             }
 
 
