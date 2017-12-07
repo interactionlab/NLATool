@@ -2,10 +2,11 @@
     <div>
         <keep-alive>
             <div v-if="newnote">
-                <component is="newwordnote" v-bind:note="this.note" v-on:back="shownotes"></component>
+                <component is="newwordnote" v-bind:note="this.note" v-on:back="shownotes" v-bind:docid="this.docid"
+                           v-on:click="test"></component>
             </div>
             <div v-else>
-                <component is="wordnote" v-for="notesfromdbnotcorrectyet" v-on:edit="editnote($event)"></component>
+                <component is="wordnote" v-on:edit="editnote($event)"></component>
             </div>
         </keep-alive>
     </div>
@@ -16,13 +17,15 @@
 
     export default {
         props: {
-            wordnotes: Array
+            wordnotes: Array,
+            docid: String
         },
         data: function () {
             return {
                 newnote: false,
                 note: '',
-                wordnotes: this.wordnotes
+                wordnotes: this.wordnotes,
+                docid: this.docid
             }
         },
         methods: {
@@ -32,6 +35,9 @@
             },
             shownotes: function () {
                 this.newnote = false;
+            },
+            test: function () {
+                console.log(this.docid);
             }
         },
         components: {

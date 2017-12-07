@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
         <p>{{clickedword}}</p>
+        <p>{{docid}}</p>
         <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="note"></textarea>
         <button class="mdl-button" v-on:click="save">Save</button>
         <button class="mdl-button" v-on:click="back">Back</button>
@@ -12,13 +13,13 @@
         props:{
             note: String,
             clickedword: String,
-            docID: String
+            docid: String
         },
         data: function () {
             return{
                 note: this.note,
                 clickedword:this.clickedword,
-                docID: this.docID
+                docid: this.docid
             }
         },
         methods: {
@@ -26,8 +27,10 @@
                 this.$emit('back');
             },
             save: function(){
+                console.log('DOCID: '+this.docid);
                 let socket = io('http://localhost:8080');
-                socket.emit('savewordnote', this.note, this.clickedword, this.docID);
+
+                socket.emit('savewordnote', this.note, this.clickedword, this.docid);
                 this.$emit('back');
             }
         }

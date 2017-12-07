@@ -1,6 +1,6 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
-        <a>Link of word</a>
+        <p>{{clickedword}}</p>
         <p class="mdl-cell mdl-cell--12-col graybox" v-on:click="edit" >{{ wordnote }}</p>
         <!--TODO:@Emmi Replace with Icons-->
         <button class="mdl-button" v-on:click="deleting">Deleteicon</button>
