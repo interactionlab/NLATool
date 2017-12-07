@@ -140,7 +140,7 @@
       "name": "docID",
       "type": "INT",
       "length": "11",
-      "UNIQUE": true
+      "FOREIGN": "documents"
     },
     "column3": {
       "name": "wordID",
