@@ -4,30 +4,28 @@
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
         <main class="mdl-layout__content">
-            <div class="page-content">
-                <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                           v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)"></component>
-                <div class="mdl-grid"> <!-- separate window in two-->
-                    <!--left grid for text stuff -->
-                    <div class="mdl-cell mdl-cell--6-col graybox">
-                        <div class="mdl-grid">
-                            <!-- clear button -->
-                            <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
-                            <!--<i class="material-icons">delete</i>-->
-                            <!--</button>-->
-                        </div>
+            <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
+                       v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)"></component>
+            <div class="mdl-grid"> <!-- separate window in two-->
+                <!--left grid for text stuff -->
+                <div class="mdl-cell mdl-cell--6-col graybox">
+                    <div class="mdl-grid">
+                        <!-- clear button -->
+                        <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
+                        <!--<i class="material-icons">delete</i>-->
+                        <!--</button>-->
+                    </div>
 
-                        <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                            <!-- Resizable Textfield-->
-                            <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
-                                <p>{{ vueText }}</p>
-                            </markjs>
-                        </div>
+                    <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
+                        <!-- Resizable Textfield-->
+                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
+                            <p>{{ vueText }}</p>
+                        </markjs>
                     </div>
-                    <!--right grid for result stuff -->
-                    <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
-                    </div>
+                </div>
+                <!--right grid for result stuff -->
+                <div class="mdl-cell mdl-cell--6-col graybox">
+                    <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
                 </div>
             </div>
         </main>
