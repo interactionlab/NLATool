@@ -2,7 +2,7 @@
     <div class="graybox">
         <button v-on:click="showNer"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NE</b>
+            <b class="mdc-button">ALL</b>
         </button>
         <button v-on:click="showNed"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
