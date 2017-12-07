@@ -69,7 +69,8 @@
                 //this.$emit('perEvent', [toMark]);
                 return toMark;
             },
-            //TODO: create a single filter function
+            //TODO: create a combined filter function
+            //TODO: first think about clever filtering of NEs and different important POS
 
         }
     }
