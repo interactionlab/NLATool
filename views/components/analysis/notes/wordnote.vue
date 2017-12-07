@@ -1,11 +1,18 @@
 <template>
-    <div class="mdl-grid" style="width: 100%">
-        <a>Link of word</a>
-        <p class="mdl-cell mdl-cell--12-col graybox" v-on:click="edit" >{{ wordnote }}</p>
+    <div class="graybox">
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <a>Link of word</a>
+        </div>
 
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
-            <i class="material-icons">delete</i>
-        </button>
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <p  v-on:click="edit" >{{ wordnote }}</p>
+        </div>
+
+        <div class="mdl-cell--12-col graybox" style="width: 100%; text-align: right">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
+                <i class="material-icons">delete</i>
+            </button>
+        </div>
     </div>
 </template>
 <script>
