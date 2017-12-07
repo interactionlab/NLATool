@@ -30,21 +30,19 @@
             markermode: function (value) {
                 //this.toMark[value] = this.filterClass(this.tokens, String(value));
                 //this.toMark[value] = this.filterPos(this.tokens, String(value));
-                console.log('VAlue'+ value);
-                console.log('ToMark'+ JSON.stringify(this.toMarkClass));
                 this.toMarkClass[value] = this.filterClass(this.tokens, String(value));
-                console.log('ToMark2'+ JSON.stringify(this.toMarkClass));
                 this.instance.unmark();
                 //this.instance.mark(toMarkClass);
 
-                this.instance.mark(this.toMarkClass[value], {
+                let fillToMarkClass = this.toMarkClass;
+
+                this.instance.mark(fillToMarkClass[value], {
                     each: function (element) {
                         const keyword = element.textContent;
-                        console.log(typeof keyword + " Type");
-                        console.log(keyword);
-                        for (let tag in this.toMarkClass) {
-                            if (this.toMarkClass[tag].indexOf(keyword) !== -1) {
+                        for (let tag in fillToMarkClass) {
+                            if (fillToMarkClass[tag].indexOf(keyword) !== -1) {
                                 element.className += ' ' + tag;
+                                console.log(keyword + ' now has className ' + element.className);
                             }
                         }
                     }
