@@ -28,7 +28,7 @@
                     <!--right grid for result stuff -->
                     <div class="mdl-cell mdl-cell--6-col graybox">
                         <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord"
-                                   v-bind:docID="docID"></component>
+                                   v-bind:docid="docID"></component>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         },
         methods: {
             getAnalighter: function () {
-                console.log('Got clicked1');
+                console.log('Got clicked1'+ this.docID);
                 this.analysisMode = 'analighter'
             },
             getNotes: function () {

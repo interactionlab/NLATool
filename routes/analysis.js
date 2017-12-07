@@ -89,7 +89,7 @@ function saveWordNote(note, word, docID) {
     note = stringifyForDB(note);
     word = stringifyForDB(word);
     docID = stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest,dbAction.createInsertCommand('notes', ['docID', 'content'], [docID, note], null, null));
+    wait.for(dbStub.makeSQLRequest,dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
 }
 
 
@@ -130,7 +130,8 @@ function getAndShowText(req, res) {
         filterWordList();
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
-        vueData.docID = docID;
+        vueData.docID = String(docID);
+        console.log(notMedia+ Tag + 'Final Data sent to the client: '+JSON.stringify(vueData));
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
