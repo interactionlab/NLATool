@@ -14,7 +14,8 @@
             return {
                 tokens: this.tokens,
                 markermode: this.markermode,
-                toMark: {}
+                toMarkClass: {
+                }
             }
         },
         mounted() {
@@ -27,15 +28,22 @@
 
         watch: {
             markermode: function (value) {
-                this.toMark[value] = this.filterClass(this.tokens, String(value));
-                this.toMark[value] = this.filterPos(this.tokens, String(value));
+                //this.toMark[value] = this.filterClass(this.tokens, String(value));
+                //this.toMark[value] = this.filterPos(this.tokens, String(value));
+                console.log('VAlue'+ value);
+                console.log('ToMark'+ JSON.stringify(this.toMarkClass));
+                this.toMarkClass[value] = this.filterClass(this.tokens, String(value));
+                console.log('ToMark2'+ JSON.stringify(this.toMarkClass));
                 this.instance.unmark();
-                this.instance.mark(toMarkClass);
-                this.instance.mark(toMarkPos, {
+                //this.instance.mark(toMarkClass);
+
+                this.instance.mark(this.toMarkClass[value], {
                     each: function (element) {
                         const keyword = element.textContent;
-                        for (let tag in this.toMark) {
-                            if (this.toMark[tag].indexOf(keyword) !== -1) {
+                        console.log(typeof keyword + " Type");
+                        console.log(keyword);
+                        for (let tag in this.toMarkClass) {
+                            if (this.toMarkClass[tag].indexOf(keyword) !== -1) {
                                 element.className += ' ' + tag;
                             }
                         }
@@ -63,6 +71,8 @@
                 //this.$emit('perEvent', [toMark]);
                 return toMark;
             },
+            //TODO: create a single filter function
+
         }
     }
 </script>
