@@ -1,8 +1,6 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
-        <p>{{clickedword}}</p>
-        <p>{{docid}}</p>
-        <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="note"></textarea>
+        <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="newnote"></textarea>
         <button class="mdl-button" v-on:click="save">Save</button>
         <button class="mdl-button" v-on:click="back">Back</button>
     </div>
@@ -10,7 +8,6 @@
 <script>
     export default {
         props:{
-            note: String,
             clickedword: String,
             docid: String
         },
@@ -18,8 +15,15 @@
             return{
                 note: this.note,
                 clickedword:this.clickedword,
-                docid: this.docid
+                docid: this.docid,
+                newnote: ''
             }
+        },
+        computed:{
+          note:function (newNote) {
+              this.docid = newNote.docid;
+              this.newnote = newNote.content;
+          }
         },
         methods: {
             back: function(){

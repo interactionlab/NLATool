@@ -1,38 +1,35 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <!-- Header:-->
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
         <main class="mdl-layout__content">
-            <div class="page-content">
-                <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                           v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
-                </component>
-                <div class="mdl-grid"> <!-- separate window in two-->
-                    <!--left grid for text stuff -->
-                    <div class="mdl-cell mdl-cell--6-col graybox">
-                        <div class="mdl-grid">
-                            <!-- clear button -->
-                            <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
-                            <!--<i class="material-icons">delete</i>-->
-                            <!--</button>-->
-                        </div>
-
-                        <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                            <!-- Resizable Textfield-->
-                            <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
-                                <p v-on:click="clickWord">{{ vueText }}</p>
-                            </markjs>
-                        </div>
+            <!-- Toolbar-->
+            <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
+                       v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
+            </component>
+            <!-- separate window in two-->
+            <div class="mdl-grid">
+                <!--left grid for text stuff -->
+                <div class="mdl-cell mdl-cell--6-col graybox">
+                    <div class="mdl-grid">
+                        <!-- clear button -->
+                        <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
+                        <!--<i class="material-icons">delete</i>-->
+                        <!--</button>-->
                     </div>
-                    <!--right grid for result stuff -->
-                    <div class="mdl-cell mdl-cell--6-col graybox" v-on:click="test">
-                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
-                                   v-bind:docid="docID" v-bind:notes="notes"></component>
+
+                    <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
+                        <!-- Resizable Textfield-->
+                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
+                            <p v-on:click="clickWord">{{ vueText }}</p>
+                        </markjs>
                     </div>
                 </div>
                 <!--right grid for result stuff -->
-                <div class="mdl-cell mdl-cell--6-col graybox">
-                    <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
+                <div class="mdl-cell mdl-cell--6-col graybox" v-on:click="test">
+                    <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
+                               v-bind:docid="docID" v-bind:notes="notes"></component>
                 </div>
             </div>
         </main>
@@ -57,7 +54,7 @@
         },
         methods: {
             getAnalighter: function () {
-                console.log('Got clicked1'+ this.docID);
+                console.log('Got clicked1' + this.docID);
                 this.analysisMode = 'analighter'
             },
             getNotes: function () {
@@ -85,8 +82,8 @@
                 this.clickedWord = content;
                 console.log(content);
             },
-            test:function () {
-                console.log(this.notes);
+            test: function () {
+                console.log(JSON.stringify(this.notes));
             },
         },
         components: {
