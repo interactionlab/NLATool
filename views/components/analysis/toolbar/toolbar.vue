@@ -7,7 +7,34 @@
             <a href="#tab3-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
         </div>
         <div class="mdl-tabs__panel is-active " id="tab1-panel">
-            <p>AnalysisButtons</p>
+            <button v-on:click="changeMarkerMode('NE')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">ALL</b>
+            </button>
+            <button v-on:click="changeMarkerMode('I-PER')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">PERSONS</b>
+            </button>
+            <button v-on:click="changeMarkerMode('I-LOC')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">LOCATION</b>
+            </button>
+            <button v-on:click="changeMarkerMode('I-ORG')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">ORGANIZATION</b>
+            </button>
+            <button v-on:click="changeMarkerMode('I-MISC')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">MISC</b>
+            </button>
+            <button v-on:click="changeMarkerMode('FM')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">(FM)</b>
+            </button>
+            <button v-on:click="changeMarkerMode('NN')"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">(NN)</b>
+            </button>
         </div>
 
         <div class="mdl-tabs__panel " id="tab2-panel">
