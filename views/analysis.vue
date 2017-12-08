@@ -18,10 +18,9 @@
                         <!--<i class="material-icons">delete</i>-->
                         <!--</button>-->
                     </div>
-
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <!-- Resizable Textfield-->
-                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens">
+                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens" v-on:perEvent="setPersons($event)">
                             <p v-on:click="clickWord">{{ vueText }}</p>
                         </markjs>
                     </div>
@@ -29,7 +28,7 @@
                 <!--right grid for result stuff -->
                 <div class="mdl-cell mdl-cell--6-col graybox" v-on:click="test">
                     <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
-                               v-bind:docid="docID" v-bind:notes="notes"></component>
+                               v-bind:docid="docID" v-bind:notes="notes" v-bind:persons="persons"></component>
                 </div>
             </div>
         </main>
@@ -49,21 +48,21 @@
             return {
                 analysisMode: 'analighter',
                 markermode: 'NE',
-                clickedWord: ''
+                showMode: 'nerVue',
+                clickedWord: '',
+                persons:''
             }
         },
         methods: {
             getAnalighter: function () {
                 console.log('Got clicked1' + this.docID);
-                this.analysisMode = 'analighter'
+                this.analysisMode = 'analighter';
             },
             getNotes: function () {
-                console.log('got Clicked2');
                 this.analysisMode = 'notes';
 
             },
             getResearch: function () {
-                console.log('Got clicked3');
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
@@ -85,6 +84,9 @@
             test: function () {
                 console.log(JSON.stringify(this.notes));
             },
+            setPersons:function (persons) {
+                this.persons = persons;
+            }
         },
         components: {
             mainheader,
