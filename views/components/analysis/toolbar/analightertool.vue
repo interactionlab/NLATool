@@ -4,14 +4,6 @@
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <b class="mdc-button">ALL</b>
         </button>
-        <button v-on:click="showNed"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">FM</b>
-        </button>
-        <button v-on:click="showNec"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NN</b>
-        </button>
         <button v-on:click="showPersons"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <b class="mdc-button">PERSONS</b>
@@ -21,23 +13,30 @@
             <b class="mdc-button">LOCATION</b>
         </button>
         <button v-on:click="showOrg"
-                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
         <b class="mdc-button">ORGANIZATION</b>
         </button>
         <button v-on:click="showMisc"
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <b class="mdc-button">MISC</b>
         </button>
-        <button>
-
+        <button v-on:click="showNed"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <b class="mdc-button">(FM)</b>
         </button>
-
+        <button v-on:click="showNec"
+                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            <b class="mdc-button">(NN)</b>
+        </button>
     </div>
 </template>
 
 <script>
     export default {
+        //TODO: set default view to NE, doesn't work right now
         name: "analightertool",
+        showMode: 'nerVue',
+        markermode: 'NE',
         methods: {
             showNer: function () {
                 //console.log('FM Filter on the tokens: ' + this.filterPos(this.tokens, 'FM'));
