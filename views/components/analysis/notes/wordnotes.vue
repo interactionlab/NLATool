@@ -3,10 +3,11 @@
         <keep-alive>
             <div v-if="newnote">
                 <component is="newwordnote" v-bind:note="this.note" v-on:back="shownotes" v-bind:docid="this.docid"
-                           v-on:click="test"></component>
+                           v-on:click="test" v-bind:clickedword="clickedword"></component>
             </div>
             <div v-else>
-                <component is="wordnote" v-on:edit="editnote($event)"></component>
+                <component is="wordnote" v-for="wordnotedb in notes" v-bind:wordnotedb="wordnotedb"
+                           v-bind:key="wordnotedb.noteID" v-on:edit="editnote($event)"></component>
             </div>
         </keep-alive>
     </div>
@@ -18,14 +19,16 @@
     export default {
         props: {
             wordnotes: Array,
-            docid: String
+            docid: String,
+            notes: Array,
         },
         data: function () {
             return {
                 newnote: false,
                 note: '',
                 wordnotes: this.wordnotes,
-                docid: this.docid
+                docid: this.docid,
+                notes: this.notes,
             }
         },
         methods: {
@@ -38,6 +41,11 @@
             },
             test: function () {
                 console.log(this.docid);
+            }
+        },
+        computed: {
+            clickedword: function (word) {
+                this.newnote = true;
             }
         },
         components: {

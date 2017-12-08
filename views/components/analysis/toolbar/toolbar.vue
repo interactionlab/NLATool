@@ -31,8 +31,6 @@
         data: function () {
             return {
                 tool: 'analightertool',
-                tool: 'researchtool',
-                tool: 'notestool'
             }
         },
         methods: {
@@ -48,7 +46,7 @@
             },
             changeMarkerMode: function (mode) {
                 this.$emit('changemarkermode', [mode]);
-            }
+            },
         },
         components: {
             analightertool,
