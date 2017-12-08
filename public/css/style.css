@@ -1,3 +1,7 @@
+.mdl-layout__content{
+    background-color: #dddddd;
+}
+
 .bordered {
     border: 1px solid #000;
 }
@@ -26,14 +30,26 @@
 {
     background-color: #b3d4fc;
 }
-
 /** Account Icon */
 #headerbtn {
     color: #fff;
 }
 
 /** Button in toolbar*/
+mark{
+    background: yellow;
+}
 
+.I-PER{
+    background: red;
+}
 
-
-
+.I-LOC{
+    background: green;
+}
+.I-ORG{
+    background: blue;
+}
+.I-MISC{
+    background: navajowhite;
+}
