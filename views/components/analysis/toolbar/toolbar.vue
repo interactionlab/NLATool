@@ -1,24 +1,24 @@
 <template>
-        <div >
-            <!--Main Navigation:-->
-            <span>
-            <nav class="mdl-navigation">
-                <button v-on:click="changetool('analightertool')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Analysis</b>
-                </button>
-                <button v-on:click="changetool('notestool')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Notes</b>
-                </button>
-                <button v-on:click="changetool('researchtool')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Research</b>
-                </button>
-            </nav>
-            </span>
-            <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
+    <div class="mdl-tabs mdl-js-tabs">
+        <!--Main Navigation:-->
+        <div class="mdl-tabs__tab-bar">
+            <button v-on:click="changetool('analightertool')"
+                    class="mdl-tabs__tab is-active">
+                <b class="mdc-button">Analysis</b>
+            </button>
+            <button v-on:click="changetool('notestool')"
+                    class="mdl-tabs__tab">
+                <b class="mdc-button">Notes</b>
+            </button>
+            <button v-on:click="changetool('researchtool')"
+                    class="mdl-tabs__tab">
+                <b class="mdc-button">Research</b>
+            </button>
         </div>
+        <keep-alive>
+            <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
+        </keep-alive>
+    </div>
 </template>
 <script>
     import analightertool from './components/analysis/toolbar/analightertool.vue';
