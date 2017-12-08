@@ -28,5 +28,19 @@
 }
 
 mark{
-    background: orange;
+    background: yellow;
+}
+
+.I-PER{
+    background: red;
+}
+
+.I-LOC{
+    background: green;
+}
+.I-ORG{
+    background: lightblue;
+}
+.I-MISC{
+    background: darkgrey;
 }
