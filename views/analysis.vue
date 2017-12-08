@@ -2,7 +2,6 @@
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
-
         <main class="mdl-layout__content">
             <div class="page-content">
                 <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
@@ -30,6 +29,10 @@
                         <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
                                    v-bind:docid="docID" v-bind:notes="notes"></component>
                     </div>
+                </div>
+                <!--right grid for result stuff -->
+                <div class="mdl-cell mdl-cell--6-col graybox">
+                    <component :is="analysisMode" v-bind:tokens="vueTokens"></component>
                 </div>
             </div>
         </main>
