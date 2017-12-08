@@ -2,22 +2,52 @@
     <div class="mdl-tabs mdl-js-tabs">
         <!--Main Navigation:-->
         <div class="mdl-tabs__tab-bar">
-            <button v-on:click="changetool('analightertool')"
-                    class="mdl-tabs__tab is-active">
-                <b class="mdc-button">Analysis</b>
+            <a href="#tab1-panel" class="mdl-tabs__tab is-active" v-on:click="changetool('analightertool')">Analysis</a>
+            <a href="#tab2-panel" class="mdl-tabs__tab" v-on:click="changetool('notestool')">Notes</a>
+            <a href="#tab3-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
+        </div>
+        <div class="mdl-tabs__panel is-active " id="tab1-panel">
+            <p>AnalysisButtons</p>
+        </div>
+
+        <div class="mdl-tabs__panel " id="tab2-panel">
+            <p>Notetools</p>
+        </div>
+
+        <div class="mdl-tabs__panel " id="tab3-panel">
+            <button
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">Information</b>
             </button>
-            <button v-on:click="changetool('notestool')"
-                    class="mdl-tabs__tab">
-                <b class="mdc-button">Notes</b>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">Map</b>
             </button>
-            <button v-on:click="changetool('researchtool')"
-                    class="mdl-tabs__tab">
-                <b class="mdc-button">Research</b>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">Statistics</b>
+            </button>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                <b class="mdc-button">Correction</b>
             </button>
         </div>
-        <keep-alive>
-            <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
-        </keep-alive>
+
+
+        <!--<div class="mdl-tabs__tab-bar">-->
+        <!--<button v-on:click="changetool('analightertool')"-->
+        <!--class="mdl-tabs__tab is-active">-->
+        <!--<b class="mdc-button">Analysis</b>-->
+        <!--</button>-->
+        <!--<button v-on:click="changetool('notestool')"-->
+        <!--class="mdl-tabs__tab">-->
+        <!--<b class="mdc-button">Notes</b>-->
+        <!--</button>-->
+        <!--<button v-on:click="changetool('researchtool')"-->
+        <!--class="mdl-tabs__tab">-->
+        <!--<b class="mdc-button">Research</b>-->
+        <!--</button>-->
+        <!--</div>-->
+        <!--<keep-alive>-->
+        <!--<component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>-->
+        <!--</keep-alive>-->
     </div>
 </template>
 <script>
