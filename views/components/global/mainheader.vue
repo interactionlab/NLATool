@@ -6,7 +6,7 @@
                 <div class="mdl-layout-spacer"></div>
                 <!-- Headerbutton (3 dots) on the right-->
                 <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
-                    <i class="material-icons">more_vert</i>
+                    <i class="material-icons">account_circle</i>
                 </button>
                 <!-- Some examples for headerbutton-->
                 <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">

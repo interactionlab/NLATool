@@ -40,12 +40,9 @@ let textDB = {
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
 
-            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
-            {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
         ]
     }
 };

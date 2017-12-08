@@ -1,9 +1,18 @@
 <template>
-    <div class="mdl-grid" style="width: 100%">
-        <p>{{clickedword}}</p>
-        <p class="mdl-cell mdl-cell--12-col graybox" v-on:click="edit" >{{ wordnotedb.content }}</p>
-        <!--TODO:@Emmi Replace with Icons-->
-        <button class="mdl-button" v-on:click="deleting">Deleteicon</button>
+    <div class="graybox">
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <p>{{clickedword}}</p>
+        </div>
+
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <p  v-on:click="edit" >{{ wordnotedb.content }}</p>
+        </div>
+
+        <div class="mdl-cell--12-col graybox" style="width: 100%; text-align: right">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
+                <i class="material-icons">delete</i>
+            </button>
+        </div>
     </div>
 </template>
 <script>
