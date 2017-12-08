@@ -1,18 +1,26 @@
 <template>
-    <div class="graybox">
-        <button v-on:click="showNer"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NER</b>
-        </button>
-        <button v-on:click="showNed"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NED</b>
-        </button>
-        <button v-on:click="showNec"
-                class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-            <b class="mdc-button">NEC</b>
-        </button>
-    </div>
+
+    <div class = "mdl-tabs mdl-js-tabs">
+            <div class = "mdl-tabs__tab-bar">
+                <a href = "#tab1-panel" class = "mdl-tabs__tab is-active">Tab 1</a>
+                <a href = "#tab2-panel" class = "mdl-tabs__tab">Tab 2</a>
+                <a href = "#tab3-panel" class = "mdl-tabs__tab">Tab 3</a>
+            </div>
+
+            <div class = "mdl-tabs__panel is-active" id = "tab1-panel">
+                <p>Tab 1 Content</p>
+            </div>
+
+            <div class = "mdl-tabs__panel" id = "tab2-panel">
+                <p>Tab 2 Content</p>
+            </div>
+
+            <div class = "mdl-tabs__panel" id = "tab3-panel">
+                <p>Tab 3 Content</p>
+            </div>
+        </div>
+
+
 </template>
 
 <script>

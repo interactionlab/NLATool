@@ -1,6 +1,5 @@
 <template>
-    <div class="mdl-grid headerRowLight">
-        <div class="mdl-cell mdl-cell--12-col">
+        <div >
             <!--Main Navigation:-->
             <span>
             <nav class="mdl-navigation">
@@ -20,7 +19,6 @@
             </span>
             <component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>
         </div>
-    </div>
 </template>
 <script>
     import analightertool from './components/analysis/toolbar/analightertool.vue';
