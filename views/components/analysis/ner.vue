@@ -8,10 +8,9 @@
 </template>
 <script>
     export default {
-        props:['ners'],
+        props:['persons'],
         data: function () {
             return{
-                //ners: this.ners;
             }
 
         }

@@ -1,11 +1,11 @@
 <template>
     <div class="graybox">
         <div class="mdl-cell--12-col graybox" style="width: 100%">
-            <a>Link of word</a>
+            <p>{{clickedword}}</p>
         </div>
 
         <div class="mdl-cell--12-col graybox" style="width: 100%">
-            <p  v-on:click="edit" >{{ wordnote }}</p>
+            <p  v-on:click="edit" >{{ wordnotedb.content }}</p>
         </div>
 
         <div class="mdl-cell--12-col graybox" style="width: 100%; text-align: right">
@@ -18,16 +18,16 @@
 <script>
     export default {
         props:{
-            wordnote: String
+            wordnotedb: String
         },
         data: function () {
             return{
-                wordnote: this.wordnote
+                wordnotedb: this.wordnotedb
             }
         },
         methods: {
             edit: function(){
-                this.$emit('edit', [this.wordnote]);
+                this.$emit('edit', [this.wordnotedb]);
             },
             deleting: function () {
                 //1. delete entry in db
