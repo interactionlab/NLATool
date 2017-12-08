@@ -9,6 +9,7 @@
                     <a href="#tab3-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
                 </div>
             </div>
+            <div class="mdl-grid">
             <div class="mdl-tabs__panel is-active " id="tab1-panel">
                 <button v-on:click="changeMarkerMode('NE')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
@@ -39,7 +40,6 @@
                     <b class="mdc-button">(NN)</b>
                 </button>
             </div>
-
             <div class="mdl-tabs__panel " id="tab2-panel">
                 <p>Notetools</p>
             </div>
@@ -58,6 +58,7 @@
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                     <b class="mdc-button">Correction</b>
                 </button>
+            </div>
             </div>
             <!--<div class="mdl-tabs__tab-bar">-->
             <!--<button v-on:click="changetool('analightertool')"-->
