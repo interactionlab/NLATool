@@ -32,6 +32,9 @@
     color: #fff;
 }
 
+.mdl-layout__content{
+    background-color: #dddddd;
+}
 /** Button in toolbar*/
 
 

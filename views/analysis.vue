@@ -47,7 +47,7 @@
     export default {
         data: function () {
             return {
-                analysisMode: 'research',
+                analysisMode: 'analighter',
                 markermode: 'NE',
                 clickedWord: ''
             }
