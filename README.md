@@ -6,18 +6,13 @@ with a quick research functionality.
 
 ## Setup NLATool
 Step-by-step instructions:
+* `$ npm install update`
 * `$ npm install -g nodemon`
-* `$ npm install -g node-gyp`
-* `$ npm config set python python2.7`
-* `$ npm install`
 * `$ npm start`
 
-Linux:
-Hint: To install node-gyp you have to install Python 2.7 (v3.x.x is not supported), and run `npm config set python python2.7` before you run `npm install`.
+Linux and Mac:
+Some packages like express-vue won't work.
 
-Windows:
-To install node-gyp you need to run this:
-npm install -g --production windows-build-tools`
 
 ## Quick start:
 
