@@ -42,7 +42,6 @@ let vueRenderOptions = {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
-
         ]
     }
 };
@@ -57,8 +56,8 @@ let vueRenderOptions = {
 let vueData = {
     vueText: null,
     vueTokens: null,
+    notes: null,
     docID: 293,
-    notes: null
 };
 
 //--------------------------------------------------------
