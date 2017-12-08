@@ -19,7 +19,7 @@
             }
         },
         mounted() {
-            console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + this.markermode);
+            console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + "current mode: " +this.markermode);
             this.instance = new Mark(this.$refs.mark);
             // this.instance.mark(this.filterPos(this.tokens, 'FM'));
             // this.instance.mark(this.filterClass(this.tokens, 'I-PER'));
@@ -28,25 +28,49 @@
 
         watch: {
             markermode: function (value) {
-                //this.toMark[value] = this.filterClass(this.tokens, String(value));
-                //this.toMark[value] = this.filterPos(this.tokens, String(value));
-                this.toMarkClass[value] = this.filterClass(this.tokens, String(value));
-                this.instance.unmark();
-                //this.instance.mark(toMarkClass);
 
-                let fillToMarkClass = this.toMarkClass;
+                if (value == 'NE') {
+                    let classes = ['I-PER', 'I-LOC', 'I-ORG', 'I-MISC'];
+                    console.log("if check");
+                    for (let i = 0; i <= classes.length; i++) {
+                        this.toMarkClass[classes[i]] = this.filterClass(this.tokens, String(classes[i]));
 
-                this.instance.mark(fillToMarkClass[value], {
-                    each: function (element) {
-                        const keyword = element.textContent;
-                        for (let tag in fillToMarkClass) {
-                            if (fillToMarkClass[tag].indexOf(keyword) !== -1) {
-                                element.className += ' ' + tag;
-                                console.log(keyword + ' now has className ' + element.className);
+                        let fillToMarkClass = this.toMarkClass;
+
+                        this.instance.mark(fillToMarkClass[classes[i]], {
+                            each: function (element) {
+                                const keyword = element.textContent;
+                                for (let tag in fillToMarkClass) {
+                                    if (fillToMarkClass[tag].indexOf(keyword) !== -1) {
+                                        element.className += ' ' + tag;
+                                        console.log(keyword + ' now has className ' + element.className);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } else {
+
+                    //this.toMark[value] = this.filterClass(this.tokens, String(value));
+                    //this.toMark[value] = this.filterPos(this.tokens, String(value));
+                    this.toMarkClass[value] = this.filterClass(this.tokens, String(value));
+                    this.instance.unmark();
+                    //this.instance.mark(toMarkClass);
+
+                    let fillToMarkClass = this.toMarkClass;
+
+                    this.instance.mark(fillToMarkClass[value], {
+                        each: function (element) {
+                            const keyword = element.textContent;
+                            for (let tag in fillToMarkClass) {
+                                if (fillToMarkClass[tag].indexOf(keyword) !== -1) {
+                                    element.className += ' ' + tag;
+                                    console.log(keyword + ' now has className ' + element.className);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         },
         methods: {

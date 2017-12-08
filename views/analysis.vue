@@ -53,16 +53,15 @@
         },
         methods: {
             getAnalighter: function () {
-                console.log('Got clicked1');
                 this.analysisMode = 'analighter';
+                this.showMode = 'nerVue';
+                this.$emit('changemarkermode', ['NE']);
             },
             getNotes: function () {
-                console.log('got Clicked2');
                 this.analysisMode = 'notes';
 
             },
             getResearch: function () {
-                console.log('Got clicked3');
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
