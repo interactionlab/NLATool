@@ -8,7 +8,6 @@
             <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
                        v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
             </component>
-
             <!-- separate window in two-->
             <div class="mdl-grid">
                 <!--left grid for text stuff -->
