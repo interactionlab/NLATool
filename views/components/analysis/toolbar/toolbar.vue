@@ -56,8 +56,6 @@
                 <b class="mdc-button">Correction</b>
             </button>
         </div>
-
-
         <!--<div class="mdl-tabs__tab-bar">-->
         <!--<button v-on:click="changetool('analightertool')"-->
         <!--class="mdl-tabs__tab is-active">-->

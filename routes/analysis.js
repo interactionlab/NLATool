@@ -187,7 +187,7 @@ function getWordNotes(docID) {
  */
 function getTextMetaData(docID) {
     textDB.textMetaData = wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('text', ['docID', 'length', 'title', 'author', 'year'], [docID], ['=']));
+        dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['=']));
 }
 
 /**
