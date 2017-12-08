@@ -47,6 +47,7 @@
             return {
                 analysisMode: 'research',
                 markermode: 'NE',
+                showMode: 'nerVue',
                 clickedWord: '',
                 persons:''
             }
@@ -54,8 +55,6 @@
         methods: {
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
-                this.showMode = 'nerVue';
-                this.$emit('changemarkermode', ['NE']);
             },
             getNotes: function () {
                 this.analysisMode = 'notes';
