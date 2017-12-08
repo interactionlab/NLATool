@@ -134,7 +134,9 @@
       "name": "noteID",
       "type": "INT",
       "length": "11",
-      "PRIMARY": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+
     },
     "column2": {
       "name": "docID",

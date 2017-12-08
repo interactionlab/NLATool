@@ -60,8 +60,8 @@ let vueRenderOptions = {
 let vueData = {
     vueText: null,
     vueTokens: null,
-    docID: null,
-    wordNotes: null
+    docID: 293,
+    notes: null
 };
 
 //--------------------------------------------------------
@@ -89,7 +89,7 @@ function saveWordNote(note, word, docID) {
     note = stringifyForDB(note);
     word = stringifyForDB(word);
     docID = stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest,dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
+    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
 }
 
 
@@ -108,7 +108,7 @@ router.post('/showText', function (req, res) {
 });
 
 router.post('/clearText', function (req, res) {
-    res.redirect('/loadtext');
+    res.redirect('/');
 });
 
 
@@ -131,7 +131,8 @@ function getAndShowText(req, res) {
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
         vueData.docID = String(docID);
-        console.log(notMedia+ Tag + 'Final Data sent to the client: '+JSON.stringify(vueData));
+        vueData.notes = getWordNotes(306);
+        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
@@ -177,7 +178,10 @@ function getTextFromDB(docID) {
  * @param docID
  */
 function getWordNotes(docID) {
-    let tempWordNotes = {};
+    let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'content'], [docID], ['='])));
+    console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
+    return tempWordNotes;
 }
 
 /**
@@ -201,6 +205,7 @@ function resetTextDB() {
     textDB.words = [];
     textDB.textMetaData = [];
 }
+
 /**
  * Makes sure the Quotas " are set for each word in the sql query.
  * TODO: Get this function into db_Actions.js
