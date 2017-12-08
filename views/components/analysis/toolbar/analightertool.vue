@@ -1,4 +1,3 @@
-
 <template>
     <div class="graybox">
         <button v-on:click="showNer"

@@ -26,9 +26,9 @@
                         </div>
                     </div>
                     <!--right grid for result stuff -->
-                    <div class="mdl-cell mdl-cell--6-col graybox">
-                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedWord="clickedWord"
-                                   v-bind:docid="docID"></component>
+                    <div class="mdl-cell mdl-cell--6-col graybox" v-on:click="test">
+                        <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
+                                   v-bind:docid="docID" v-bind:notes="notes"></component>
                     </div>
                 </div>
             </div>
@@ -81,9 +81,10 @@
                     .replace(/[.,:;!?()+-]/g, '');
                 this.clickedWord = content;
                 console.log(content);
-            }
-
-
+            },
+            test:function () {
+                console.log(this.notes);
+            },
         },
         components: {
             mainheader,
