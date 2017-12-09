@@ -3,12 +3,15 @@
         <!-- Header:-->
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
+
         <main class="mdl-layout__content">
             <!-- Toolbar-->
+            <div class="headerRowLight">
             <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
                        v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
             </component>
-            <!-- separate window in two-->
+            </div>
+
             <div class="mdl-grid">
                 <!--left grid for text stuff -->
                 <div class="mdl-cell mdl-cell--6-col graybox">
@@ -19,7 +22,6 @@
                         <!--</button>-->
                     </div>
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                        <!-- Resizable Textfield-->
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens" v-on:perEvent="setPersons($event)">
                             <p v-on:click="clickWord">{{ vueText }}</p>
                         </markjs>
