@@ -1,3 +1,7 @@
+.mdl-layout__content {
+    background-color: #e8e8e8;
+}
+
 .bordered {
     border: 1px solid #000;
 }
@@ -17,12 +21,48 @@
     border: 2px dashed #009ACD;
 }
 
-.highlight
-{
-    background-color:yellow;
+.highlight {
+    background-color: yellow;
 }
 
-.headerRowLight
-{
-    background-color: #99b3ff;
+.headerRowLight {
+    background-color: #b3d4fc;
 }
+
+/** Account Icon */
+#headerbtn {
+    color: #fff;
+}
+
+/** Button in toolbar*/
+mark {
+    background: yellow;
+}
+
+.I-PER {
+    background: red;
+}
+
+.I-LOC {
+    background: green;
+}
+
+.I-ORG {
+    background: blue;
+}
+
+.I-MISC {
+    background: navajowhite;
+}
+
+/** Button color */
+.mdc-button-container-fill-color {
+    color: black;
+    /**background-color: black;*/
+}
+
+/**
+Background color for Buttons
+.mdl-button--raised{
+    background: #b3d4fc;
+}*/

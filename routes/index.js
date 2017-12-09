@@ -112,9 +112,11 @@ function postLoadWrittenText(req, res, next) {
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 
+            //Insert Statement to initiate a Document
             let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [title], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
+            //Inserting Meta Info
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title'],

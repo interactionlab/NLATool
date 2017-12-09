@@ -134,13 +134,15 @@
       "name": "noteID",
       "type": "INT",
       "length": "11",
-      "PRIMARY": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+
     },
     "column2": {
       "name": "docID",
       "type": "INT",
       "length": "11",
-      "UNIQUE": true
+      "FOREIGN": "documents"
     },
     "column3": {
       "name": "wordID",
@@ -246,6 +248,21 @@
     },
     "column3": {
       "name": "textIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column4":{
+      "name": "beginOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column5":{
+      "name": "EndOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6":{
+      "name": "whitespaceInfo",
       "type": "INT",
       "length": "11"
     }
