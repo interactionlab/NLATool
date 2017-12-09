@@ -1,5 +1,5 @@
 <template>
-    <main class="mdl-layout__content">
+    <main class="mdl-layout__content headerRowLight">
         <div class="mdl-tabs mdl-js-tabs">
             <div class="mdl-grid" style="width: 100%; text-align: left">
                 <!--Main Navigation:-->
