@@ -13,31 +13,31 @@
             <div class="mdl-tabs__panel is-active " id="tab1-panel">
                 <button v-on:click="changeMarkerMode('NE')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">ALL</b>
+                    <small class="mdc-button">ALL</small>
                 </button>
                 <button v-on:click="changeMarkerMode('I-PER')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">PERSONS</b>
+                    <small class="mdc-button">PERSONS</small>
                 </button>
                 <button v-on:click="changeMarkerMode('I-LOC')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">LOCATION</b>
+                    <small class="mdc-button">LOCATION</small>
                 </button>
                 <button v-on:click="changeMarkerMode('I-ORG')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">ORGANIZATION</b>
+                    <small class="mdc-button">ORGANIZATION</small>
                 </button>
                 <button v-on:click="changeMarkerMode('I-MISC')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">MISC</b>
+                    <small class="mdc-button">MISC</small>
                 </button>
                 <button v-on:click="changeMarkerMode('FM')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">(FM)</b>
+                    <small class="mdc-button">(FM)</small>
                 </button>
                 <button v-on:click="changeMarkerMode('NN')"
                         class="mdl-button mdl-js-button">
-                    <b class="mdc-button">(NN)</b>
+                    <small class="mdc-button">(NN)</small>
                 </button>
             </div>
             <div class="mdl-tabs__panel " id="tab2-panel">
