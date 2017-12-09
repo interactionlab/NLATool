@@ -4,13 +4,13 @@
             <div class="mdl-grid" style="width: 100%; text-align: left">
                 <!--Main Navigation:-->
                 <div class="mdl-tabs__tab-bar">
-                    <a href="#tab1-panel" class="mdl-tabs__tab is-active" v-on:click="changetool('analightertool')">Analysis</a>
-                    <a href="#tab2-panel" class="mdl-tabs__tab" v-on:click="changetool('notestool')">Notes</a>
-                    <a href="#tab3-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
+                    <a href="#analysis-panel" class="mdl-tabs__tab is-active" v-on:click="changetool('analightertool')">Analysis</a>
+                    <a href="#notes-panel" class="mdl-tabs__tab" v-on:click="changetool('notestool')">Notes</a>
+                    <a href="#research-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
                 </div>
             </div>
             <div class="mdl-grid">
-            <div class="mdl-tabs__panel is-active " id="tab1-panel">
+            <div class="mdl-tabs__panel is-active " id="analysis-panel">
                 <button v-on:click="changeMarkerMode('NE')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">ALL</small>
@@ -40,11 +40,11 @@
                     <small class="mdc-button">(NN)</small>
                 </button>
             </div>
-            <div class="mdl-tabs__panel " id="tab2-panel">
+            <div class="mdl-tabs__panel " id="notes-panel">
                 <p>Notetools</p>
             </div>
 
-            <div class="mdl-tabs__panel " id="tab3-panel">
+            <div class="mdl-tabs__panel " id="research-panel">
                 <button class="mdl-button mdl-js-button">
                     <small class="mdc-button">Information</small>
                 </button>
