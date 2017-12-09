@@ -28,7 +28,7 @@
                 <!-- Analyze Button -->
                 <div class="mdl-grid mdl-cell--8-col graybox">
                     <div class="mdl-grid graybox" style="text-align: center"> <!-- extra div needed to make button in center -->
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        <button class="mdl-button mdl-js-button">
                             <b class="mdc-button">Analyze</b>
                         </button>
                     </div>
