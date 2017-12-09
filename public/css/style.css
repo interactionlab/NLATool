@@ -1,5 +1,5 @@
-.mdl-layout__content{
-    background-color: #dddddd;
+.mdl-layout__content {
+    background-color: #e8e8e8;
 }
 
 .bordered {
@@ -21,35 +21,46 @@
     border: 2px dashed #009ACD;
 }
 
-.highlight
-{
-    background-color:yellow;
+.highlight {
+    background-color: yellow;
 }
 
-.headerRowLight
-{
+.headerRowLight {
     background-color: #b3d4fc;
 }
+
 /** Account Icon */
 #headerbtn {
     color: #fff;
 }
 
 /** Button in toolbar*/
-mark{
+mark {
     background: yellow;
 }
 
-.I-PER{
+.I-PER {
     background: red;
 }
 
-.I-LOC{
+.I-LOC {
     background: green;
 }
-.I-ORG{
+
+.I-ORG {
     background: blue;
 }
-.I-MISC{
+
+.I-MISC {
     background: navajowhite;
+}
+
+/** Button color */
+.mdc-button-container-fill-color {
+    color: white;
+    /**background-color: black;*/
+}
+
+.mdl-js-ripple-effect {
+    color: darkorange;
 }
