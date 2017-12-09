@@ -72,6 +72,7 @@
             clickWord: function (element) {
                 let content = element.target.textContent;
                 let pos = window.getSelection().anchorOffset;
+                console.log('Pos: '+pos +' WindowSelection:'+ window.getSelection().baseOffset);
                 content = content
                     .substring(0, content.indexOf(' ', pos))
                     .trim();
