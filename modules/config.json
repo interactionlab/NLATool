@@ -250,6 +250,21 @@
       "name": "textIndex",
       "type": "INT",
       "length": "11"
+    },
+    "column4":{
+      "name": "beginOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column5":{
+      "name": "EndOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6":{
+      "name": "whitespaceInfo",
+      "type": "INT",
+      "length": "11"
     }
   },
   "table7": {
