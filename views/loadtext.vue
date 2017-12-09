@@ -19,7 +19,7 @@
                     <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
                              style="width: 100%">
-                    <textarea class="mdl-textfield__input" type="text" rows="10" id="textbox" name="textInput">
+                    <textarea class="mdl-textfield__input" type="text" rows="20" id="textbox" name="textInput">
                     </textarea>
                             <label class="mdl-textfield__label" for="textbox">
                                 Enter text here ...
