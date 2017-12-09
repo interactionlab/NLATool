@@ -1,6 +1,9 @@
 .mdl-layout__content {
     background-color: #e8e8e8;
 }
+.contentColor{
+    background-color: white;
+}
 
 .bordered {
     border: 1px solid #000;
@@ -60,6 +63,7 @@ mark {
     color: black;
     /**background-color: black;*/
 }
+
 
 /**
 Background color for Buttons

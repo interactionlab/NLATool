@@ -8,15 +8,15 @@
 
             <form action="/loadWrittenText" method="post">
                 <!-- Textfield for title-->
-                <div class="mdl-grid mdl-cell--8-col graybox">
-                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col graybox">
+                <div class="mdl-grid mdl-cell--8-col contentColor">
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col contentColor">
                         <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
                         <label class="mdl-textfield__label" for="titlebox">Title</label>
                     </div>
                 </div>
                 <!-- Textfield for textinput -->
-                <div class="mdl-grid mdl-cell--8-col graybox">
-                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col graybox"
+                <div class="mdl-grid mdl-cell--8-col contentColor">
+                    <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
                          style="width: 100%" >
                     <textarea class="mdl-textfield__input" type="text" rows="10" id="textbox" name="textInput">
                     </textarea>
@@ -26,8 +26,8 @@
                     </div>
                 </div>
                 <!-- Analyze Button -->
-                <div class="mdl-grid mdl-cell--8-col graybox">
-                    <div class="mdl-grid graybox" style="text-align: center"> <!-- extra div needed to make button in center -->
+                <div class="mdl-grid mdl-cell--8-col contentColor">
+                    <div class="mdl-grid contentColor" style="text-align: center"> <!-- extra div needed to make button in center -->
                         <button class="mdl-button mdl-js-button">
                             <b class="mdc-button">Analyze</b>
                         </button>

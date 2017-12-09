@@ -1,14 +1,14 @@
 <template>
-    <div class="graybox">
-        <div class="mdl-cell--12-col graybox" style="width: 100%">
+    <div class="contentColor">
+        <div class="mdl-cell--12-col contentColor" style="width: 100%">
             <p></p>
         </div>
 
-        <div class="mdl-cell--12-col graybox" style="width: 100%">
+        <div class="mdl-cell--12-col contentColor" style="width: 100%">
             <p  v-on:click="edit" >{{ wordnotedb.content }}</p>
         </div>
 
-        <div class="mdl-cell--12-col graybox" style="width: 100%; text-align: right">
+        <div class="mdl-cell--12-col contentColor" style="width: 100%; text-align: right">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
                 <i class="material-icons">delete</i>
             </button>
