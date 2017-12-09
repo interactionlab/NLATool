@@ -4,9 +4,9 @@
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
         <!-- page content-->
-        <main class="mdl-grid graybox" style="text-align: center">
+        <main class="mdl-grid contentColor" style="text-align: center">
             <div style=" width: 100%; text-align: center">
-                <img src="/images/logo.jpg" alt="Logo" class="graybox" style="text-align: center">
+                <img src="/images/logo.jpg" alt="Logo" class="contentColor" style="text-align: center">
             </div>
             <div style=" width: 100%;text-align: center">
                 <div>
