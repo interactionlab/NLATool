@@ -45,18 +45,17 @@
             </div>
 
             <div class="mdl-tabs__panel " id="tab3-panel">
-                <button
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Information</b>
+                <button class="mdl-button mdl-js-button">
+                    <small class="mdc-button">Information</small>
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Map</b>
+                <button class="mdl-button mdl-js-button">
+                    <small class="mdc-button">Map</small>
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Statistics</b>
+                <button class="mdl-button mdl-js-button">
+                    <small class="mdc-button">Statistics</small>
                 </button>
-                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">Correction</b>
+                <button class="mdl-button mdl-js-button">
+                    <small class="mdc-button">Correction</small>
                 </button>
             </div>
             </div>
