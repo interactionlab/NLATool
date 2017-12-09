@@ -14,7 +14,7 @@
 
             <div class="mdl-grid">
                 <!--left grid for text stuff -->
-                <div class="mdl-cell mdl-cell--6-col graybox">
+                <div class="mdl-cell mdl-cell--6-col contentColor">
                     <div class="mdl-grid">
                         <!-- clear button -->
                         <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <!--right grid for result stuff -->
-                <div class="mdl-cell mdl-cell--6-col graybox" v-on:click="test">
+                <div class="mdl-cell mdl-cell--6-col contentColor" v-on:click="test">
                     <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
                                v-bind:docid="docID" v-bind:notes="notes" v-bind:persons="persons"></component>
                 </div>

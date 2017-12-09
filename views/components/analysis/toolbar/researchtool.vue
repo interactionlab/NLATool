@@ -1,5 +1,5 @@
 <template>
-    <div class="graybox">
+    <div class="contentColor">
         <button
                 class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
             <b class="mdc-button">Information</b>
