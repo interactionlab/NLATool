@@ -12,31 +12,31 @@
             <div class="mdl-grid">
             <div class="mdl-tabs__panel is-active " id="tab1-panel">
                 <button v-on:click="changeMarkerMode('NE')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdc-button-container-fill-color">
-                    <b class="mdc-button mdc-button-container-fill-color">ALL</b>
+                        class="mdl-button mdl-js-button">
+                    <b class="mdc-button">ALL</b>
                 </button>
                 <button v-on:click="changeMarkerMode('I-PER')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">PERSONS</b>
                 </button>
                 <button v-on:click="changeMarkerMode('I-LOC')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">LOCATION</b>
                 </button>
                 <button v-on:click="changeMarkerMode('I-ORG')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">ORGANIZATION</b>
                 </button>
                 <button v-on:click="changeMarkerMode('I-MISC')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">MISC</b>
                 </button>
                 <button v-on:click="changeMarkerMode('FM')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">(FM)</b>
                 </button>
                 <button v-on:click="changeMarkerMode('NN')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        class="mdl-button mdl-js-button">
                     <b class="mdc-button">(NN)</b>
                 </button>
             </div>
