@@ -7,7 +7,6 @@
         <main class="mdl-layout__content">
             <form action="/loadWrittenText" method="post">
                 <div class="mdl-grid">
-                    <br/>
                     <!-- Textfield for title-->
                     <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col contentColor">
@@ -15,10 +14,9 @@
                             <label class="mdl-textfield__label" for="titlebox">Title</label>
                         </div>
                     </div>
-                </div>
+
                 <!-- Textfield for textinput -->
-                <div class="mdl-grid">
-                    <div class="mdl-grid mdl-cell--8-col contentColor">
+                    <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
                              style="width: 100%">
                     <textarea class="mdl-textfield__input" type="text" rows="10" id="textbox" name="textInput">
