@@ -1,0 +1,15 @@
+.featurecell {
+    padding-bottom: 2px;
+}
+
+.featurecell2 {
+    padding: 0px 8px 8px 0px;
+}
+
+.featurecell3 {
+    padding: 0px 0px 8px 8px;
+}
+
+.bordered {
+    border: 1px solid #000000;
+}
