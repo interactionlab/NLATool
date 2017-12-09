@@ -53,3 +53,14 @@ mark{
 .I-MISC{
     background: navajowhite;
 }
+
+
+/** Button color */
+.mdc-button-ink-color{
+    color: black;
+    --mdc-theme-background: black;
+}
+
+.mdc-button-container-fill-color {
+    color:black;
+}
