@@ -1,5 +1,6 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
+        <p>{{word}}</p>
         <textarea class="mdl-cell mdl-cell--12-col graybox" v-model="newnote"></textarea>
         <button class="mdl-button" v-on:click="save">Save</button>
         <button class="mdl-button" v-on:click="back">Back</button>
@@ -8,13 +9,13 @@
 <script>
     export default {
         props:{
-            clickedword: String,
+            word: String,
             docid: String
         },
         data: function () {
             return{
                 note: this.note,
-                clickedword:this.clickedword,
+                clickedword:this.word,
                 docid: this.docid,
                 newnote: ''
             }
