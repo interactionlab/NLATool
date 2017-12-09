@@ -1,20 +1,14 @@
 <template>
-    <div>
-        <!--Switch between word notes and text notes-->
-        <!--<component :is="noteMode"></component>-->
-    </div>
+<div></div>
 </template>
 
 <script>
     export default {
-       data:function () {
-           return{
-               noteMode:''
-           }
-       }
+        data: function () {
+            return {}
+        },
+        methods:{
+
+        }
     }
 </script>
-
-<style scoped>
-
-</style>

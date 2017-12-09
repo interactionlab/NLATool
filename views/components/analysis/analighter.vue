@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component :is="showMode"></component>
+        <component :is="showMode" v-bind:persons="persons"></component>
     </div>
 </template>
 <script>
@@ -11,34 +11,22 @@
     import necVue from './components/analysis/nec.vue';
     import nedVue from './components/analysis/ned.vue';
 
+
     export default {
         mixins: [ner, ned, nec],
-        props: ['tokens', 'markerMode'],
+        props: ['tokens', 'markerMode', 'persons'],
         data: function () {
             return {
                 showMode: 'nerVue',
                 tokens: this.tokens,
+                persons: this.persons
             }
         },
-        methods: {
-            showNer: function () {
-                //console.log('FM Filter on the tokens: ' + this.filterPos(this.tokens, 'FM'));
-                this.showMode = 'nerVue';
-                this.$emit('changemarkermode', ['NE']);
-            },
-            showNed: function () {
-                this.showMode = 'nedVue';
-                this.$emit('changemarkermode', ['FM']);
-            },
-            showNec: function () {
-                this.showMode = 'necVue';
-                this.$emit('changemarkermode', ['NN']);
-            },
-        },
+        methods: {},
         components: {
             nerVue,
             necVue,
-            nedVue
+            nedVue,
         }
     }
 </script>
