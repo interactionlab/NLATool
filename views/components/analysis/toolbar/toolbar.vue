@@ -12,8 +12,8 @@
             <div class="mdl-grid">
             <div class="mdl-tabs__panel is-active " id="tab1-panel">
                 <button v-on:click="changeMarkerMode('NE')"
-                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                    <b class="mdc-button">ALL</b>
+                        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent mdc-button-container-fill-color">
+                    <b class="mdc-button mdc-button-container-fill-color">ALL</b>
                 </button>
                 <button v-on:click="changeMarkerMode('I-PER')"
                         class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
