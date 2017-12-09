@@ -7,8 +7,9 @@
         <main class="mdl-layout__content">
             <form action="/loadWrittenText" method="post">
                 <div class="mdl-grid">
+                    <br/>
                     <!-- Textfield for title-->
-                    <div class="mdl-grid mdl-cell--8-col contentColor">
+                    <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col contentColor">
                             <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
                             <label class="mdl-textfield__label" for="titlebox">Title</label>
@@ -29,16 +30,14 @@
                     </div>
                 </div>
                 <!-- Analyze Button -->
-                <div class="mdl-grid">
-                    <div class="mdl-grid mdl-cell--8-col contentColor">
-                        <div class="mdl-grid contentColor" style="text-align: center">
+                    <div class="mdl-grid mdl-cell--2-col">
+                        <div class="mdl-grid" style="text-align: center">
                             <!-- extra div needed to make button in center -->
                             <button class="mdl-button mdl-js-button">
                                 <b class="mdc-button">Analyze</b>
                             </button>
                         </div>
                     </div>
-                </div>
             </form>
         </main>
     </div>
