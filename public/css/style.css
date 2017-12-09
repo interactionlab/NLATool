@@ -57,10 +57,12 @@ mark {
 
 /** Button color */
 .mdc-button-container-fill-color {
-    color: white;
+    color: black;
     /**background-color: black;*/
 }
 
-.mdl-js-ripple-effect {
-    color: darkorange;
-}
+/**
+Background color for Buttons
+.mdl-button--raised{
+    background: #b3d4fc;
+}*/
