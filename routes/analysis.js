@@ -58,6 +58,8 @@ let vueData = {
     vueTokens: null,
     notes: null,
     docID: 293,
+    meta: null,
+    title: 'NLA - Natural Language Analyse Tool'
 };
 
 //--------------------------------------------------------
@@ -128,6 +130,8 @@ function getAndShowText(req, res) {
         vueData.vueText = textDB.text;
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(306);
+        getTextMetaData(docID);
+        vueData.meta = textDB.textMetaData;
         console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
@@ -186,8 +190,14 @@ function getWordNotes(docID) {
  * @param docID
  */
 function getTextMetaData(docID) {
-    textDB.textMetaData = wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['=']));
+    textDB.textMetaData = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['='])));
+    console.log(notMedia + Tag + 'Metadata from DB: ' + JSON.stringify(textDB.textMetaData));
+    if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].title.length > 0) {
+        vueData.title = textDB.textMetaData[0].title;
+    } else {
+        vueData.title = 'NLA - Natural Language Analyse Tool';
+    }
 }
 
 /**
