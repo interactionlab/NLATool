@@ -2,7 +2,7 @@
     <div>
         <!-- display the selected NER-->
         <div class="mdl-cell mdl-cell--12-col graybox">
-            NER (name, place, etc) <!--<input type="submit" value="NER (name, place, etc)" /> -->
+            {{clickedword}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
         <div class="mdl-cell mdl-cell--12-col graybox">
             <form action="#">
@@ -21,7 +21,10 @@
     export default {
         mixins: [research],
         data: function () {
-            return {}
+            return {
+                clickedword: 'NER (name, place, etc)',
+                researchResult: 'Results will be displayed here.'
+            }
 
         }
     }

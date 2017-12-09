@@ -40,12 +40,8 @@ let textDB = {
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
-
-            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
-            {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
         ]
     }
 };
@@ -59,22 +55,23 @@ let vueRenderOptions = {
  */
 let vueData = {
     vueText: null,
-    vueTokens: null
+    vueTokens: null,
+    notes: null,
+    docID: 293,
+    meta: null,
+    title: 'NLA - Natural Language Analyse Tool'
 };
 
 //--------------------------------------------------------
 io.on('connection', function (socket) {
-    socket.on('savewordnote', function (note, word) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + word);
-        wait.launchFiber(function (note, word) {
-            //wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes', )));
-        });
+    socket.on('savewordnote', function (note, word, docID) {
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + word + ' docID:' + docID);
+        wait.launchFiber(saveWordNote, note, word, docID);
     });
-
     socket.on('updatewordnote', function () {
         console.log(notMedia + Tag + 'update Word Note: ' + value);
         wait.launchFiber(function (note, word) {
-           // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
+            // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
         });
     });
 
@@ -86,6 +83,12 @@ io.on('connection', function (socket) {
     });
 });
 
+function saveWordNote(note, word, docID) {
+    note = stringifyForDB(note);
+    word = stringifyForDB(word);
+    docID = stringifyForDB(docID);
+    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
+}
 
 
 router.get('/', function (req, res, next) {
@@ -103,7 +106,7 @@ router.post('/showText', function (req, res) {
 });
 
 router.post('/clearText', function (req, res) {
-    res.redirect('/loadtext');
+    res.redirect('/');
 });
 
 
@@ -121,10 +124,15 @@ function getAndShowText(req, res) {
         let docID = req.session.docID;
 
         getTextFromDB(docID);
-        console.log(textDB.tokens);
+        //console.log(textDB.tokens);
         filterWordList();
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
+        vueData.docID = String(docID);
+        vueData.notes = getWordNotes(306);
+        getTextMetaData(docID);
+        vueData.meta = textDB.textMetaData;
+        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
@@ -166,13 +174,30 @@ function getTextFromDB(docID) {
 }
 
 /**
+ * Retrieves all wordnotes from DB
+ * @param docID
+ */
+function getWordNotes(docID) {
+    let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'content'], [docID], ['='])));
+    console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
+    return tempWordNotes;
+}
+
+/**
  * Should get the Meta-Data from a specified text by ID.
  * Results depend on Database.
  * @param docID
  */
 function getTextMetaData(docID) {
-    textDB.textMetaData = wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('text', ['docID', 'length', 'title', 'author', 'year'], [docID], ['=']));
+    textDB.textMetaData = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['='])));
+    console.log(notMedia + Tag + 'Metadata from DB: ' + JSON.stringify(textDB.textMetaData));
+    if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].title.length > 0) {
+        vueData.title = textDB.textMetaData[0].title;
+    } else {
+        vueData.title = 'NLA - Natural Language Analyse Tool';
+    }
 }
 
 /**
@@ -186,5 +211,16 @@ function resetTextDB() {
     textDB.words = [];
     textDB.textMetaData = [];
 }
+
+/**
+ * Makes sure the Quotas " are set for each word in the sql query.
+ * TODO: Get this function into db_Actions.js
+ * @param input
+ * @returns {string}
+ */
+function stringifyForDB(input) {
+    return '"' + input + '"';
+}
+
 
 module.exports = router;
