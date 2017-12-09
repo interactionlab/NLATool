@@ -3,7 +3,8 @@
             <div class="mdl-layout__header-row">
                 <!-- Add spacer, to align navigation to the right -->
                 <span class="mdl-layout-title">{{title}}</span>
-                <div class="mdl-layout-spacer"></div>
+                <div class="mdl-layout-spacer">
+                </div>
                 <!-- Headerbutton (3 dots) on the right-->
                 <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
                     <i class="material-icons">account_circle</i>
@@ -17,7 +18,6 @@
                 </ul>
             </div>
         </header>
-        <!-- Sidebar content-->
 </template>
 <script>
     export default {
