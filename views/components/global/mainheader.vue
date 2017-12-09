@@ -18,8 +18,6 @@
                 </ul>
             </div>
         </header>
-        <!-- toolbar -->
-
 </template>
 <script>
     export default {
