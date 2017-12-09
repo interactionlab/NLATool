@@ -3,7 +3,7 @@
         <keep-alive>
             <div v-if="newnote">
                 <component is="newwordnote" v-bind:note="this.note" v-on:back="shownotes" v-bind:docid="this.docid"
-                           v-on:click="test" v-bind:clickedword="clickedword" v-bind="word"></component>
+                           v-on:click="test" v-bind:word="clickedword"></component>
             </div>
             <div v-else>
                 <component is="wordnote" v-for="wordnotedb in notes" v-bind:wordnotedb="wordnotedb"
@@ -21,6 +21,7 @@
             wordnotes: Array,
             docid: String,
             notes: Array,
+            clickedword:String
         },
         data: function () {
             return {
@@ -29,7 +30,7 @@
                 wordnotes: this.wordnotes,
                 docid: this.docid,
                 notes: this.notes,
-                word: ''
+                clickedword: this.clickedword
             }
         },
         methods: {
@@ -45,9 +46,8 @@
             }
         },
         computed: {
-            clickedword: function (word) {
+            clickedword: function () {
                 this.newnote = true;
-                this.word = word;
             }
         },
         components: {
