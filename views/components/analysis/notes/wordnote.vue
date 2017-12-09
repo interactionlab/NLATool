@@ -1,7 +1,7 @@
 <template>
     <div class="graybox">
         <div class="mdl-cell--12-col graybox" style="width: 100%">
-            <p>{{clickedword}}</p>
+            <p></p>
         </div>
 
         <div class="mdl-cell--12-col graybox" style="width: 100%">
@@ -17,9 +17,9 @@
 </template>
 <script>
     export default {
-        props:{
-            wordnotedb: String
-        },
+        props:[
+            'wordnotedb'
+        ],
         data: function () {
             return{
                 wordnotedb: this.wordnotedb
