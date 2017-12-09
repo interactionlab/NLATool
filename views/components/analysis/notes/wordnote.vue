@@ -1,24 +1,33 @@
 <template>
-    <div class="mdl-grid" style="width: 100%">
-        <a>Link of word</a>
-        <p class="mdl-cell mdl-cell--12-col graybox" v-on:click="edit" >{{ wordnote }}</p>
-        <!--TODO:@Emmi Replace with Icons-->
-        <button class="mdl-button" v-on:click="deleting">Deleteicon</button>
+    <div class="graybox">
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <p></p>
+        </div>
+
+        <div class="mdl-cell--12-col graybox" style="width: 100%">
+            <p  v-on:click="edit" >{{ wordnotedb.content }}</p>
+        </div>
+
+        <div class="mdl-cell--12-col graybox" style="width: 100%; text-align: right">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
+                <i class="material-icons">delete</i>
+            </button>
+        </div>
     </div>
 </template>
 <script>
     export default {
-        props:{
-            wordnote: String
-        },
+        props:[
+            'wordnotedb'
+        ],
         data: function () {
             return{
-                wordnote: this.wordnote
+                wordnotedb: this.wordnotedb
             }
         },
         methods: {
             edit: function(){
-                this.$emit('edit', [this.wordnote]);
+                this.$emit('edit', [this.wordnotedb]);
             },
             deleting: function () {
                 //1. delete entry in db
