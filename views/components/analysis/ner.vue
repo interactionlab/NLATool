@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-cell mdl-cell--12-col graybox">
+    <div class="mdl-cell mdl-cell--12-col contentColor">
         <div>
 
         </div>
