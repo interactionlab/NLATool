@@ -7,7 +7,7 @@
         <component is="mainheader" v-bind:title="title"></component>
         <component is="headernavbar" v-bind:title_small="title_small"></component>
         <main class="mdl-layout__content">
-            <div class="mdl-cell mdl-cell--12-col graybox">
+            <div class="mdl-cell mdl-cell--12-col contentColor">
                 <form action="/signin/login" method="post">
                     Benutzername oder Email<br>
                     <input type="text" name="username"><br>
