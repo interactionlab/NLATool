@@ -1,10 +1,10 @@
 <template>
     <div>
         <!-- display the selected NER-->
-        <div class="mdl-cell mdl-cell--12-col graybox">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             {{clickedword}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
-        <div class="mdl-cell mdl-cell--12-col graybox">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <div class="mdl-textfield mdl-js-textfield" id="textbox">
                     <label class="mdl-textfield__label" for="textbox">
