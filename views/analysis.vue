@@ -8,7 +8,7 @@
             <!-- Toolbar-->
             <div class="headerRowLight">
                 <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                           v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
+                           v-on:emitresearch="getResearch" v-bind:lang="lang" v-on:changemarkermode="changeMarkerMode($event)">
                 </component>
             </div>
 
@@ -23,7 +23,7 @@
                     </div>
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
-                                v-on:perEvent="setPersons($event)">
+                                v-on:perEvent="setPersons($event)" v-bind:lang="lang">
                             <div v-on:click="clickWord">{{ vueText + '  ' }}</div>
                         </markjs>
                     </div>
