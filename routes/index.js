@@ -44,7 +44,7 @@ let results = [];
 let json2;
 
 
-let language = 'German';
+let language = 'English';
 
 
 wait.launchFiber(getJSONConfig);
@@ -128,7 +128,7 @@ function postLoadWrittenText(req, res, next) {
                 [documentInsertResult.insertId, words.length, title],
                 null, null));
             req.session.docID = documentInsertResult.insertId;
-
+            req.session.lang = language;
             //TODO: check if word + NER Tag exists already
 
             let wordInsertResult = null;
