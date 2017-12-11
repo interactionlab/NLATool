@@ -74,6 +74,9 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
         });
     });
+    socket.on('deletenote',function () {
+
+    });
 
     socket.on('bignote', function () {
         console.log(notMedia + Tag + 'big Note: ' + value);
@@ -179,7 +182,7 @@ function getTextFromDB(docID) {
  */
 function getWordNotes(docID) {
     let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'content'], [docID], ['='])));
+        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'wordID', 'content'], [docID], ['='])));
     console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
     return tempWordNotes;
 }

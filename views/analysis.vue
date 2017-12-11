@@ -24,7 +24,7 @@
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
                                 v-on:perEvent="setPersons($event)">
-                            <p v-on:click="clickWord">{{ vueText }}</p>
+                            <p v-on:click="clickWord">{{ vueText + ' ' }}</p>
                         </markjs>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
             clickWord: function (element) {
                 let content = element.target.textContent;
                 let pos = window.getSelection().anchorOffset;
-                console.log('Pos: ' + pos + ' WindowSelection:' + window.getSelection().baseOffset);
+                console.log('Pos: ' + pos + ' WindowSelection: ' + element.target);
                 content = content
                     .substring(0, content.indexOf(' ', pos))
                     .trim();
