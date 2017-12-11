@@ -41,7 +41,7 @@
 mark {
     background: yellow;
 }
-
+/**german*/
 .I-PER{
     background: orangered;
 }
@@ -57,6 +57,20 @@ mark {
 }
 .POS{
     background: navajowhite;
+}
+/**english*/
+.PERSON{
+    background: orangered;
+}
+
+.LOCATION{
+    background: darkseagreen;
+}
+.ORGANIZATION{
+    background: deepskyblue;
+}
+.MISC{
+    background: violet;
 }
 
 /** Button color */
