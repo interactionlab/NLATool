@@ -6,6 +6,7 @@
 let notMedia = 'Not Media-Related Part: ';
 let Tag = 'db_actions.js: ';
 let sql = 'The resulting SQL Command is:';
+
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
@@ -106,13 +107,16 @@ exports.getAReachableConnection = function () {
 };
 
 
-exports.setupCorenlp = function () {
+exports.setupCorenlp = function (language) {
+    if(typeof language === 'undefined'){
+        language = 'English';
+    }
     nlpStatus.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlpStatus.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
     });
-    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, 'German', nlpStatus.connector);
-    pipeline = new corenlp.Pipeline(nlpStatus.props, 'German', nlpStatus.connector);
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language , nlpStatus.connector);
+    pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
 };
 
 //TODO: figure out a way to save different usages of interpunctuation to database

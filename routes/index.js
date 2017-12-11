@@ -42,6 +42,11 @@ let vueRenderOptions = {
 
 let results = [];
 let json2;
+
+
+let language = 'English';
+
+
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
@@ -77,7 +82,7 @@ router.post('/loadWrittenText', function (req, res) {
 function getLoadTextRoutine(res, next) {
     dbStub.fiberEstablishConnection();
     corenlp.getAReachableConnection();
-    corenlp.setupCorenlp();
+    corenlp.setupCorenlp(language);
     if (corenlp.positiveNlpStatus()) {
     } else {
         let nlpStatus = corenlp.getNlpStatus();
@@ -123,7 +128,7 @@ function postLoadWrittenText(req, res, next) {
                 [documentInsertResult.insertId, words.length, title],
                 null, null));
             req.session.docID = documentInsertResult.insertId;
-
+            req.session.lang = language;
             //TODO: check if word + NER Tag exists already
 
             let wordInsertResult = null;

@@ -41,21 +41,36 @@
 mark {
     background: yellow;
 }
-
-.I-PER {
-    background: red;
+/**german*/
+.I-PER{
+    background: orangered;
 }
 
-.I-LOC {
-    background: green;
+.I-LOC{
+    background: darkseagreen;
 }
-
-.I-ORG {
-    background: blue;
+.I-ORG{
+    background: deepskyblue;
 }
-
-.I-MISC {
+.I-MISC{
+    background: violet;
+}
+.POS{
     background: navajowhite;
+}
+/**english*/
+.PERSON{
+    background: orangered;
+}
+
+.LOCATION{
+    background: darkseagreen;
+}
+.ORGANIZATION{
+    background: deepskyblue;
+}
+.MISC{
+    background: violet;
 }
 
 /** Button color */
