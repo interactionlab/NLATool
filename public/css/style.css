@@ -42,19 +42,20 @@ mark {
     background: yellow;
 }
 
-.I-PER {
-    background: red;
+.I-PER{
+    background: orangered;
 }
 
-.I-LOC {
-    background: green;
+.I-LOC{
+    background: darkseagreen;
 }
-
-.I-ORG {
-    background: blue;
+.I-ORG{
+    background: deepskyblue;
 }
-
-.I-MISC {
+.I-MISC{
+    background: violet;
+}
+.POS{
     background: navajowhite;
 }
 
