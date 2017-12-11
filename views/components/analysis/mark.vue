@@ -5,16 +5,19 @@
 </template>
 
 <script>
+
     export default {
         props: {
             tokens: Object,
-            markermode: String
+            markermode: String,
+            lang: String
         },
         data: function () {
             return {
                 tokens: this.tokens,
                 markermode: this.markermode,
-                toMarkClass: {}
+                toMarkClass: {},
+                lang: this.lang
             }
         },
         mounted() {
@@ -26,18 +29,36 @@
         watch: {
             markermode: function (value) {
                 let classes = [value];
-                //unmark content when changing tabs
-                if (value != 'NE') {
-                    this.instance.unmark();
-                    console.log("unmark check");
+
+                //language selector
+                if(this.lang == 'German') {
+                    //unmark content when changing tabs
+                    if (value != 'NE') {
+                        this.instance.unmark();
+                        console.log("unmark check");
+                    }
+                    //ALL view
+                    if (value == 'NE') {
+                        classes = ['I-PER', 'I-LOC', 'I-ORG', 'I-MISC'];
+                        //correction view
+                    } else if (value == 'POS') {
+                        classes = ['FM', 'NE', 'NN']
+                    }
+                }else if(this.lang == 'English'){
+                    //unmark content when changing tabs
+                    if (value != 'NE') {
+                        this.instance.unmark();
+                        console.log("unmark check");
+                    }
+                    //ALL view
+                    if (value == 'NE') {
+                        classes = ['PERSON', 'LOCATION', 'ORGANIZATION', 'MISC'];
+                        //correction view
+                    } else if (value == 'POS') {
+                        classes = ['FM', 'NE', 'NN']
+                    }
                 }
-                //ALL view
-                if (value == 'NE') {
-                    classes = ['I-PER', 'I-LOC', 'I-ORG', 'I-MISC'];
-                    //correction view
-                }else if(value == 'POS'){
-                    classes = ['FM','NE','NN']
-                }
+
                 for (let i = 0; i <= classes.length; i++) {
                     this.toMarkClass[classes[i]] = this.filterClass(this.tokens, String(classes[i]));
                     let fillToMarkClass = this.toMarkClass;

@@ -15,19 +15,19 @@
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">ALL</small>
                 </button>
-                <button v-on:click="changeMarkerMode('I-PER')"
+                <button v-on:click="changeMarkerMode('Person')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">PERSONS</small>
                 </button>
-                <button v-on:click="changeMarkerMode('I-LOC')"
+                <button v-on:click="changeMarkerMode('Location')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">LOCATION</small>
                 </button>
-                <button v-on:click="changeMarkerMode('I-ORG')"
+                <button v-on:click="changeMarkerMode('Organization')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">ORGANIZATION</small>
                 </button>
-                <button v-on:click="changeMarkerMode('I-MISC')"
+                <button v-on:click="changeMarkerMode('Misc')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">MISC</small>
                 </button>
@@ -81,9 +81,13 @@
 </template>
 <script>
     export default {
+        props: {
+            lang: String
+        },
         data: function () {
             return {
                 tool: 'analightertool',
+                lang: this.lang
             }
         },
         methods: {
@@ -98,6 +102,36 @@
                 this.tool = tool;
             },
             changeMarkerMode: function (mode) {
+                if(this.lang == 'English'){
+
+                    console.log("English classes selected!");
+
+                    if(mode == 'Person'){
+                        mode = 'PERSON';
+                    }
+                    if(mode == 'Location'){
+                        mode = 'LOCATION';
+                    }
+                    if(mode == 'Organization'){
+                        mode = 'ORGANIZATION';
+                    }
+                    if(mode == 'Misc'){
+                        mode = 'MISC';
+                    }
+                }else if(this.lang == 'German'){
+                    if(mode == 'Person'){
+                        mode = 'I-PER';
+                    }
+                    if(mode == 'Location'){
+                        mode = 'I-LOC';
+                    }
+                    if(mode == 'Organization'){
+                        mode = 'I-ORG';
+                    }
+                    if(mode == 'Misc'){
+                        mode = 'I-MISC';
+                    }
+                }
                 this.$emit('changemarkermode', [mode]);
             },
         },
