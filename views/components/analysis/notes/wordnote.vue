@@ -9,7 +9,7 @@
         </div>
 
         <div class="mdl-cell--12-col contentColor" style="width: 100%; text-align: right">
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting" id="noteMenu">
                 <i class="material-icons">delete</i>
             </button>
         </div>

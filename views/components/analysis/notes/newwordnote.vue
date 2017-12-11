@@ -1,15 +1,18 @@
 <template>
     <div class="mdl-grid" style="width: 100%">
-        <p>{{word}}</p>
+        <p>{{clickedword}}</p>
         <textarea class="mdl-cell mdl-cell--12-col contentColor" v-model="newnote"></textarea>
         <button class="mdl-button" v-on:click="save">Save</button>
         <button class="mdl-button" v-on:click="back">Back</button>
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" v-on:click="deleting" id="noteMenu">
+            <i class="material-icons">delete</i>
+        </button>
     </div>
 </template>
 <script>
     export default {
         props:{
-            word: String,
+            clickedword: String,
             docid: String
         },
         data: function () {
@@ -17,7 +20,7 @@
                 note: this.note,
                 clickedword:this.word,
                 docid: this.docid,
-                newnote: ''
+                newnote: '',
             }
         },
         computed:{
@@ -35,6 +38,13 @@
                 let socket = io('http://localhost:8080');
 
                 socket.emit('savewordnote', this.note, this.clickedword, this.docid);
+                this.$emit('back');
+            },
+            deleting: function () {
+                console.log('DOCID: '+this.docid);
+                let socket = io('http://localhost:8080');
+
+                socket.emit('deletenote', this.note, this.clickedword, this.docid);
                 this.$emit('back');
             }
         }

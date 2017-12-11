@@ -128,6 +128,12 @@ exports.analyse = function (text, callback) {
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
             //console.log(results);
+            /*
+            for(let token in sentences[i].tokens()){
+                results.offsetBegin.push(token.offsetBegin);
+                results.offsetEnd.push(token.offsetEnd);
+            }
+            */
         }
         callback(null, results);
     }).catch(err => {
