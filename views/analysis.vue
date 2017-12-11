@@ -7,9 +7,9 @@
         <main class="mdl-layout__content">
             <!-- Toolbar-->
             <div class="headerRowLight">
-            <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                       v-on:emitresearch="getResearch" v-on:changemarkermode="changeMarkerMode($event)">
-            </component>
+                <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
+                           v-on:emitresearch="getResearch" v-bind:lang="lang" v-on:changemarkermode="changeMarkerMode($event)">
+                </component>
             </div>
 
             <div class="mdl-grid">
@@ -22,7 +22,8 @@
                         <!--</button>-->
                     </div>
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens" v-on:perEvent="setPersons($event)">
+                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
+                                v-on:perEvent="setPersons($event)" v-bind:lang="lang">
                             <p v-on:click="clickWord">{{ vueText }}</p>
                         </markjs>
                     </div>
@@ -52,7 +53,7 @@
                 markermode: 'NE',
                 showMode: 'nerVue',
                 clickedWord: '',
-                persons:''
+                persons: ''
             }
         },
         methods: {
@@ -74,7 +75,7 @@
             clickWord: function (element) {
                 let content = element.target.textContent;
                 let pos = window.getSelection().anchorOffset;
-                console.log('Pos: '+pos +' WindowSelection:'+ window.getSelection().baseOffset);
+                console.log('Pos: ' + pos + ' WindowSelection:' + window.getSelection().baseOffset);
                 content = content
                     .substring(0, content.indexOf(' ', pos))
                     .trim();
@@ -87,7 +88,7 @@
             test: function () {
                 console.log(JSON.stringify(this.notes));
             },
-            setPersons:function (persons) {
+            setPersons: function (persons) {
                 this.persons = persons;
             }
         },
