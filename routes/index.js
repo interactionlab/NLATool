@@ -42,6 +42,11 @@ let vueRenderOptions = {
 
 let results = [];
 let json2;
+
+
+let language = 'German';
+
+
 wait.launchFiber(getJSONConfig);
 
 function getJSONConfig() {
@@ -77,7 +82,7 @@ router.post('/loadWrittenText', function (req, res) {
 function getLoadTextRoutine(res, next) {
     dbStub.fiberEstablishConnection();
     corenlp.getAReachableConnection();
-    corenlp.setupCorenlp();
+    corenlp.setupCorenlp(language);
     if (corenlp.positiveNlpStatus()) {
     } else {
         let nlpStatus = corenlp.getNlpStatus();
