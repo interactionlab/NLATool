@@ -59,7 +59,8 @@ let vueData = {
     notes: null,
     docID: 293,
     meta: null,
-    title: 'NLA - Natural Language Analyse Tool'
+    title: 'NLA - Natural Language Analyse Tool',
+    lang: null
 };
 
 //--------------------------------------------------------
@@ -135,6 +136,7 @@ function getAndShowText(req, res) {
         vueData.notes = getWordNotes(306);
         getTextMetaData(docID);
         vueData.meta = textDB.textMetaData;
+        vueData.lang = req.session.lang;
         console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
