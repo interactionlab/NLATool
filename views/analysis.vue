@@ -24,7 +24,7 @@
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
                                 v-on:perEvent="setPersons($event)">
-                            <p v-on:click="clickWord">{{ vueText + ' ' }}</p>
+                            <div v-on:click="clickWord">{{ vueText + '  ' }}</div>
                         </markjs>
                     </div>
                 </div>
@@ -73,17 +73,14 @@
                 this.markermode = mode;
             },
             clickWord: function (element) {
-                let content = element.target.textContent;
-                let pos = window.getSelection().anchorOffset;
-                console.log('Pos: ' + pos + ' WindowSelection: ' + element.target);
-                content = content
-                    .substring(0, content.indexOf(' ', pos))
-                    .trim();
-                content = content
-                    .substr(content.lastIndexOf(' ') + 1)
-                    .replace(/[.,:;!?()+-]/g, '');
-                this.clickedWord = content;
-                console.log(content);
+                const sel = window.getSelection();
+                const text = sel.anchorNode.textContent;
+                const lmatch = text.substr(0, sel.anchorOffset).match(/[\s\S]*\s/);
+                const offset = lmatch ? lmatch[0].length : 0;
+                const match = text.substr(offset).match(/\w+/);
+
+                console.log(match && match[0]);
+                this.clickedWord = match && match[0];
             },
             test: function () {
                 console.log(JSON.stringify(this.notes));
