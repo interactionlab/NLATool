@@ -15,6 +15,9 @@ let Tag = 'signin.js: ';
 /**
  * Setup Configuration file Requirements:
  */
+const dbAction = require('../modules/db_actions');
+const dbStub = require('../modules/db_stub');
+const wait = require('wait.for');
 
 let vueRenderOptions = {
     head: {
@@ -27,17 +30,29 @@ let vueRenderOptions = {
     }
 };
 
+let vueData = {};
+
 router.get('/', function (req, res, next) {
     res.renderVue('signin', vueRenderOptions);
 });
 
-router.post('/login',function (req, res, next) {
+router.post('/login', function (req, res, next) {
+    if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
+        req.session.user = req.body.user;
+        res.renderVue('signin', vueRenderOptions);
+    }
+});
 
+router.post('/register', function (req, res, next) {
+    res.renderVue('signin', vueRenderOptions);
 });
 
 function loginDB(user, pass) {
+    wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('accountData',['email','username','pass']));
 
+    return false;
 }
+
 module.exports = router;
 
 
