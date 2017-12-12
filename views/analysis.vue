@@ -15,12 +15,6 @@
             <div class="mdl-grid">
                 <!--left grid for text stuff -->
                 <div class="mdl-cell mdl-cell--6-col contentColor">
-                    <div class="mdl-grid">
-                        <!-- clear button -->
-                        <!--<button class="mdl-button mdl-js-button mdl-button&#45;&#45;raised mdl-js-ripple-effect mdl-button&#45;&#45;accent">-->
-                        <!--<i class="material-icons">delete</i>-->
-                        <!--</button>-->
-                    </div>
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
                                 v-on:perEvent="setPersons($event)" v-bind:lang="lang">
