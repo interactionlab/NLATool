@@ -47,6 +47,7 @@ router.post('/register', function (req, res, next) {
     res.renderVue('signin', vueRenderOptions);
 });
 
+
 function loginDB(user, pass) {
     wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('accountData',['email','username','pass']));
 
