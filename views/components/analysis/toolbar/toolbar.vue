@@ -9,6 +9,7 @@
                     <a href="#research-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
                 </div>
             </div>
+            <!--Tab values-->
             <div class="mdl-grid">
             <div class="mdl-tabs__panel is-active " id="analysis-panel">
                 <button v-on:click="changeMarkerMode('NE')"
@@ -41,7 +42,7 @@
                 </button>
             </div>
             <div class="mdl-tabs__panel " id="notes-panel">
-                <p>Notetools</p>
+
             </div>
 
             <div class="mdl-tabs__panel " id="research-panel">
@@ -59,23 +60,6 @@
                 </button>
             </div>
             </div>
-            <!--<div class="mdl-tabs__tab-bar">-->
-            <!--<button v-on:click="changetool('analightertool')"-->
-            <!--class="mdl-tabs__tab is-active">-->
-            <!--<b class="mdc-button">Analysis</b>-->
-            <!--</button>-->
-            <!--<button v-on:click="changetool('notestool')"-->
-            <!--class="mdl-tabs__tab">-->
-            <!--<b class="mdc-button">Notes</b>-->
-            <!--</button>-->
-            <!--<button v-on:click="changetool('researchtool')"-->
-            <!--class="mdl-tabs__tab">-->
-            <!--<b class="mdc-button">Research</b>-->
-            <!--</button>-->
-            <!--</div>-->
-            <!--<keep-alive>-->
-            <!--<component :is="tool" v-on:changemarkermode="changeMarkerMode($event)"></component>-->
-            <!--</keep-alive>-->
         </div>
     </main>
 </template>
