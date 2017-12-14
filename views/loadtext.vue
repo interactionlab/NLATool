@@ -6,8 +6,7 @@
 
         <main class="mdl-layout__content">
             <div class="mdl-grid">
-            <div class="mdl-layout-spacer"></div>
-            <div class="mdl-cell mdl-cell--2-col">
+            <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
                 <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
                     <small class="mdc-button" >English</small>
                 </button>
