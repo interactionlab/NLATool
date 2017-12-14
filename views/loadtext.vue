@@ -8,10 +8,10 @@
             <div class="mdl-grid">
             <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
                 <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
-                    <small class="mdc-button" >English</small>
+                    <b class="mdc-button" >English</b>
                 </button>
                 <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
-                    <small class="mdc-button">German</small>
+                    <b class="mdc-button">German</b>
                 </button>
             </div>
             </div>
