@@ -3,20 +3,22 @@
         <div>
             <!--Switch between word notes and text notes-->
         </div>
-        <component :is="noteMode" v-bind:clickedword="clickedword"  v-bind:docid="docid" v-bind:notes="notes"></component>
+        <component :is="noteMode" v-bind:clickedword="clickedword" v-bind:docid="docid"
+                   v-bind:notes="notes" ></component>
     </div>
 </template>
 <script>
     import wordnotes from './components/analysis/notes/wordnotes.vue';
+
     export default {
-        props:{
+        props: {
             wordnotesp: Array,
             clickedword: String,
-            docid:String,
-            notes:Array
+            docid: String,
+            notes: Array
         },
         data: function () {
-            return{
+            return {
                 noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp,
                 clickedword: this.clickedword,
@@ -24,7 +26,10 @@
                 notes: this.notes
             }
         },
-        components:{
+        methods:{
+
+        },
+        components: {
             wordnotes
         }
     }
