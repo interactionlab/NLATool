@@ -91,10 +91,9 @@
                 this.tool = tool;
             },
             changeMarkerMode: function (mode) {
+                console.log("1");
                 if(this.lang == 'English'){
-
-                    console.log("English classes selected!");
-
+                console.log("2");
                     if(mode == 'Person'){
                         mode = 'PERSON';
                     }
@@ -107,7 +106,10 @@
                     if(mode == 'Misc'){
                         mode = 'MISC';
                     }
-                }else if(this.lang == 'German'){
+
+                }
+                else if(this.lang == 'German'){
+                    console.log("D2");
                     if(mode == 'Person'){
                         mode = 'I-PER';
                     }

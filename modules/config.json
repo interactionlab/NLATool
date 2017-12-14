@@ -185,20 +185,25 @@
       "type": "INT",
       "length": "11"
     },
-    "column4": {
+    "column3": {
       "name": "title",
       "type": "VARCHAR",
       "length": "20"
     },
-    "column5": {
+    "column4": {
       "name": "author",
       "type": "VARCHAR",
       "length": "20"
     },
-    "column6": {
+    "column5": {
       "name": "year",
       "type": "YEAR",
       "length": "4"
+    },
+    "column6": {
+      "name": "lang",
+      "type": "VARCHAR",
+      "length": "11"
     }
   },
   "table5": {
