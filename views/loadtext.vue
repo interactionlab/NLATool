@@ -5,17 +5,31 @@
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
         <main class="mdl-layout__content">
+            <div class="mdl-grid">
+            <div class="mdl-layout-spacer"></div>
+            <div class="mdl-cell mdl-cell--2-col">
+                <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
+                    <small class="mdc-button" >English</small>
+                </button>
+                <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
+                    <small class="mdc-button">German</small>
+                </button>
+            </div>
+            </div>
             <form action="/loadWrittenText" method="post">
                 <div class="mdl-grid">
                     <!-- Textfield for title-->
-                    <div class="mdl-grid mdl-cell--8-col">
+                    <div class="mdl-grid mdl-cell mdl-cell--6-col">
+                        <div class="mdl-layout-spacer"></div>
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col contentColor">
                             <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
                             <label class="mdl-textfield__label" for="titlebox">Title</label>
                         </div>
+                        <div class="mdl-layout-spacer"></div>
                     </div>
 
-                <!-- Textfield for textinput -->
+
+                    <!-- Textfield for textinput -->
                     <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
                              style="width: 100%">
@@ -28,14 +42,14 @@
                     </div>
                 </div>
                 <!-- Analyze Button -->
-                    <div class="mdl-grid mdl-cell--2-col">
-                        <div class="mdl-grid" style="text-align: center">
-                            <!-- extra div needed to make button in center -->
-                            <button class="mdl-button mdl-js-button">
-                                <b class="mdc-button">Analyze</b>
-                            </button>
-                        </div>
+                <div class="mdl-grid mdl-cell--2-col">
+                    <div class="mdl-grid" style="text-align: center">
+                        <!-- extra div needed to make button in center -->
+                        <button class="mdl-button mdl-js-button">
+                            <b class="mdc-button">Analyze</b>
+                        </button>
                     </div>
+                </div>
             </form>
         </main>
     </div>
@@ -45,12 +59,25 @@
     import mainheader from './components/global/mainheader.vue';
 
     export default {
+
         data: function () {
-            return {}
+            return {
+
+            }
         },
         components: {
             mainheader,
             headernavbar
+        }, methods: {
+            setLanguageGerman: function () {
+                console.log('Set lang to German');
+                let socket = io('http://localhost:8090');
+                socket.emit('setLanguage','German');
+            },
+            setLanguageEnglish: function () {
+                let socket = io('http://localhost:8090');
+                socket.emit('setLanguage','English');
+            }
         }
     }
 </script>

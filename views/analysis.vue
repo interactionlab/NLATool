@@ -47,7 +47,8 @@
                 markermode: 'NE',
                 showMode: 'nerVue',
                 clickedWord: '',
-                persons: ''
+                persons: '',
+
             }
         },
         methods: {
