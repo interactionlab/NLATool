@@ -5,18 +5,17 @@
         <component is="headernavbar" v-bind:title_small="title_small"></component>
 
         <main class="mdl-layout__content">
-            <div class="mdl-grid">
-            <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
-                <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
-                    <b class="mdc-button" >English</b>
-                </button>
-                <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
-                    <b class="mdc-button">German</b>
-                </button>
-            </div>
-            </div>
             <form action="/loadWrittenText" method="post">
                 <div class="mdl-grid">
+                    <!-- Bottons for localisation-->
+                    <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
+                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
+                            <b class="mdc-button" >English</b>
+                        </button>
+                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
+                            <b class="mdc-button">German</b>
+                        </button>
+                    </div>
                     <!-- Textfield for title-->
                     <div class="mdl-grid mdl-cell mdl-cell--6-col">
                         <div class="mdl-layout-spacer"></div>
@@ -32,7 +31,7 @@
                     <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
                              style="width: 100%">
-                    <textarea class="mdl-textfield__input" type="text" rows="20" id="textbox" name="textInput">
+                    <textarea class="mdl-textfield__input" type="text" rows="15" id="textbox" name="textInput">
                     </textarea>
                             <label class="mdl-textfield__label" for="textbox">
                                 Enter text here ...
