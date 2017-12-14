@@ -119,6 +119,10 @@ exports.setupCorenlp = function (language) {
     pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
 };
 
+exports.resetPipeline = function (language) {
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language , nlpStatus.connector);
+};
+
 //TODO: figure out a way to save different usages of interpunctuation to database
 
 exports.analyse = function (text, callback) {
