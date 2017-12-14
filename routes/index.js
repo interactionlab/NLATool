@@ -139,8 +139,6 @@ function postLoadWrittenText(req, res, next) {
                     words[i][j] = stringifyForDB(words[i][j]);
                     parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
                     parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
-                    console.log(parsedResult.offsetBegin[i*(j+1)]);
-
                     parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
                     parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
 
