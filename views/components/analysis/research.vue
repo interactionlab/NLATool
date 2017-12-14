@@ -1,13 +1,12 @@
 <template>
     <div>
-        <!-- display the selected NER-->
         <div class="mdl-cell mdl-cell--12-col contentColor">
             {{clickedword}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
-                <div class="mdl-textfield mdl-js-textfield" id="textbox">
-                    <label class="mdl-textfield__label" for="textbox">
+                <div class="mdl-textfield mdl-js-textfield" id="resultfield">
+                    <label class="mdl-textfield__label" for="resultfield">
                         Results will be displayed here.
                     </label>
                 </div>
@@ -17,12 +16,15 @@
 </template>
 <script>
     import research from './mixins/analysis/research';
-
+    import analysis from './components/analysis';
     export default {
         mixins: [research],
+        props:{
+            clickedword: String
+        },
         data: function () {
             return {
-                clickedword: 'NER (name, place, etc)',
+                clickedword: this.clickedword,
                 researchResult: 'Results will be displayed here.'
             }
 
