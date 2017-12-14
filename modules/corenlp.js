@@ -51,7 +51,9 @@ let results = {
     isSpecial: [],
     text: [],
     ner: [],
-    pos: []
+    pos: [],
+    offsetBegin:[],
+    offsetEnd:[]
 };
 
 exports.getResults = function () {
@@ -132,12 +134,13 @@ exports.analyse = function (text, callback) {
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
             //console.log(results);
-            /*
-            for(let token in sentences[i].tokens()){
-                results.offsetBegin.push(token.offsetBegin);
-                results.offsetEnd.push(token.offsetEnd);
+
+            for(let j= 0; j < sentences[i].tokens().length; j++){
+                results.offsetBegin.push(sentences[i].tokens()[j].characterOffsetBegin());
+                results.offsetEnd.push(sentences[i].tokens()[j].characterOffsetEnd());
             }
-            */
+            console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
+            console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         }
         callback(null, results);
     }).catch(err => {
