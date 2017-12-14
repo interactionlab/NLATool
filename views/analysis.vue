@@ -24,7 +24,7 @@
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
                         <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
                                 v-on:perEvent="setPersons($event)" v-bind:lang="lang">
-                            <div v-on:click="clickWord">{{ vueText + '  ' }}</div>
+                            <div v-on:click="clickWord"><pre>{{vueText}}</pre></div>
                         </markjs>
                     </div>
                 </div>
@@ -72,13 +72,13 @@
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
             },
-            clickWord: function (element) {
+            clickWord: function () {
                 const sel = window.getSelection();
                 const text = sel.anchorNode.textContent;
                 const lmatch = text.substr(0, sel.anchorOffset).match(/[\s\S]*\s/);
                 const offset = lmatch ? lmatch[0].length : 0;
                 const match = text.substr(offset).match(/\w+/);
-
+                console.log('pos: ' + sel.anchorOffset);
                 console.log(match && match[0]);
                 this.clickedWord = match && match[0];
             },
