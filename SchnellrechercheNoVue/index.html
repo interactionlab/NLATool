@@ -52,7 +52,8 @@
 
     </script>
 
- <!-- Folgender Bereich dient nur zur Veranschaulichung, wird später in die Hauptdatei (schöner) eingebunden  -->
+ <!-- Folgender Bereich dient nur zur Veranschaulichung, wird später in die Hauptdatei
+ (schöner) eingebunden  -->
 <title>Schnellrecherche</title>
 </head>
 <body>
@@ -61,10 +62,15 @@
           <textarea id="textfield" style="width: 500px; height: 500px;">
 
           </textarea>
-        <label> Suchbegriff eingeben - diesen markieren - Google Suche clicken. Z.B. Boris Becker
+        <label> Suchbegriff eingeben - diesen markieren - Google Suche clicken. Z.B. Boris Becker.
+          <br />
         Der Fehler, falls kein Treffer, wurde noch nicht abgefangen.</label>
           <br />
-        <div class="col-sm-4"><div style="border: 1px solid #000000; cursor:default;" onclick="getEntities();" style="cursor:default">Google Suche</div></div>
+        <div class="col-sm-4">
+          <div style="border: 1px solid #000000; cursor:default;" onclick="getEntities();"
+               style="cursor:default">Google Suche
+          </div>
+        </div>
         <br /><br />
         <div class="bordered" id="resultfield" ></div>
       </div>
