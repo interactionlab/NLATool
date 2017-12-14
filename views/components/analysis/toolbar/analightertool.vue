@@ -1,42 +1,20 @@
 <template>
     <div>
-        <div class="graybox">
-            <button v-on:click="showNer"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">ALL</b>
-            </button>
-            <button v-on:click="showPersons"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">PERSONS</b>
-            </button>
-            <button v-on:click="showLoc"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">LOCATION</b>
-            </button>
-            <button v-on:click="showOrg"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">ORGANIZATION</b>
-            </button>
-            <button v-on:click="showMisc"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">MISC</b>
-            </button>
-            <button v-on:click="showNed"
-                    class="mdl-button mdl-js-button">
-                <b class="mdc-button">(FM)</b>
-            </button>
-            <button v-on:click="showNec"
-                    class="mdl-button mdl-js-button ">
-                <b class="mdc-button">(NN)</b>
-            </button>
-        </div>
+    <md-tabs>
+        <md-tab id="tab-home" md-label="Home"></md-tab>
+        <md-tab id="tab-pages" md-label="Pages"></md-tab>
+        <md-tab id="tab-posts" md-label="Posts"></md-tab>
+        <md-tab id="tab-favorites" md-label="Favorites"></md-tab>
+    </md-tabs>
     </div>
+
 </template>
 
 <script>
     export default {
         //TODO: set default view to NE, doesn't work right now
         name: "analightertool",
+        name: 'TabAlignments',
         showMode: 'nerVue',
         markermode: 'NE',
         methods: {
@@ -74,5 +52,7 @@
 </script>
 
 <style scoped>
-
+    .md-tabs {
+        margin-bottom: 24px;
+    }
 </style>
