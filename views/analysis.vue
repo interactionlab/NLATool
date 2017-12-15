@@ -16,9 +16,12 @@
                 <!--left grid for text stuff -->
                 <div class="mdl-cell mdl-cell--6-col contentColor">
                     <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                        <markjs v-bind:markermode="markermode" v-bind:tokens="vueTokens"
-                                v-on:perEvent="setPersons($event)" v-bind:lang="lang">
-                            <div v-on:click="clickWord"><pre>{{vueText}}</pre></div>
+                        <markjs v-bind:markermode="markermode"
+                                v-bind:tokens="vueTokens"
+                                v-bind:lang="lang"
+                                v-on:perEvent="setPersons($event)"
+                                v-on:clickedword="setClickedWord($event)">
+                            <div><pre>{{vueText}}</pre></div>
                         </markjs>
                     </div>
                 </div>
@@ -48,7 +51,6 @@
                 showMode: 'nerVue',
                 clickedWord: '',
                 persons: '',
-                tokens:this.vueTokens
             }
         },
         methods: {
@@ -67,15 +69,14 @@
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
             },
-            clickWord: function () {
-                const pos = window.getSelection().anchorOffset;
-                console.log(this.tokens);
-            },
             test: function () {
                 console.log(JSON.stringify(this.notes));
             },
             setPersons: function (persons) {
                 this.persons = persons;
+            },
+            setClickedWord:function (word) {
+                this.clickedWord = word;
             }
         },
         components: {
