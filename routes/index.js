@@ -19,10 +19,10 @@ const net = require('net');
 //const server = net.createServer();
 const dbAction = require('../modules/db_actions.js');
 const dbStub = require('../modules/db_stub.js');
-const uword = require('uwords');
 const wait = require('wait.for');
 const jsonAction = require('../modules/json_actions');
 const corenlp = require('../modules/corenlp');
+const io = require('socket.io')(8090);
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
 
@@ -33,8 +33,8 @@ const corenlp = require('../modules/corenlp');
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: '/javascripts/data_management.js'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
+            {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
         ]
     }
@@ -46,6 +46,18 @@ let json2;
 
 let language = 'English';
 
+let vueData = {
+  lang : language
+};
+
+io.on('connection', function (socket) {
+       console.log('socket check');
+   socket.on('setLanguage', function (language) {
+       console.log('socket check2 ' + language);
+       corenlp.resetPipeline(language);
+       this.language = language;
+   });
+});
 
 wait.launchFiber(getJSONConfig);
 
@@ -58,7 +70,7 @@ router.get('/', function (req, res, next) {
 
     wait.launchFiber(getLoadTextRoutine, req, res, next);
     //let vueData = setVueData();
-    res.renderVue('loadtext', vueRenderOptions);
+    res.renderVue('loadtext', vueData,vueRenderOptions);
 });
 
 
@@ -123,10 +135,12 @@ function postLoadWrittenText(req, res, next) {
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
+            //TODO: make sure German is selected
+            let lang = '"'+language+'"';
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
-                ['docID', 'length', 'title'],
-                [documentInsertResult.insertId, words.length, title],
+                ['docID', 'length', 'title', 'lang'],
+                [documentInsertResult.insertId, words.length, title, lang],
                 null, null));
             req.session.docID = documentInsertResult.insertId;
             req.session.lang = language;
