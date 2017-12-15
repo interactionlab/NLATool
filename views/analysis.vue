@@ -47,7 +47,8 @@
                 markermode: 'NE',
                 showMode: 'nerVue',
                 clickedWord: '',
-                persons: ''
+                persons: '',
+                tokens:this.vueTokens
             }
         },
         methods: {
@@ -67,14 +68,8 @@
                 this.markermode = mode;
             },
             clickWord: function () {
-                const sel = window.getSelection();
-                const text = sel.anchorNode.textContent;
-                const lmatch = text.substr(0, sel.anchorOffset).match(/[\s\S]*\s/);
-                const offset = lmatch ? lmatch[0].length : 0;
-                const match = text.substr(offset).match(/\w+/);
-                console.log('pos: ' + sel.anchorOffset);
-                console.log(match && match[0]);
-                this.clickedWord = match && match[0];
+                const pos = window.getSelection().anchorOffset;
+                console.log(this.tokens);
             },
             test: function () {
                 console.log(JSON.stringify(this.notes));
