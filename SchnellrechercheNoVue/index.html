@@ -45,7 +45,13 @@
 
         $.getJSON(service_url + '?callback=?', params, function(response) { 
             $.each(response.itemListElement, function(i, element) {
-                    document.getElementById("resultfield").innerHTML = "<img src=\"" + element['result']['image']["contentUrl"] + "\"> " + element['result']['name'] + "<br />" + element['result']['description'] + "<br />" + element["result"]["detailedDescription"]["articleBody"]  + "<br /><a href=\"" + element["result"]["detailedDescription"]["url"] + "\">Mehr info</a>";
+                    document.getElementById("resultfield").innerHTML = "<img src=\""
+                        + element['result']['image']["contentUrl"] + "\"> "
+                        + element['result']['name'] + "<br />"
+                        + element['result']['description']
+                        + "<br />" + element["result"]["detailedDescription"]["articleBody"]
+                        + "<br /><a href=\"" + element["result"]["detailedDescription"]["url"]
+                        + "\">Mehr info</a>";
             });
         });
     }
