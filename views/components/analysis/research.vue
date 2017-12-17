@@ -1,13 +1,14 @@
 <template>
     <div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
-            {{clickedword}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
+            {{clickedword.word}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield" id="resultfield">
-                    {{googleResponse}}
+
+                    {{searchGoogle.clickedword}}
                 </div>
             </form>
         </div>
@@ -24,14 +25,38 @@
             return {
                 clickedword: this.clickedword,
                 researchResult: 'Results will be displayed here.',
-                googleResponse:{}
+                searchGoogle:{}
             }
         },
         methods:{
-            searchGoogle:function () {
+            searchGoogle:function (clickedword) {
+                let service_url= 'https://kgsearch.googleapis.com/v1/entities:search';
+                let params = {
+                    'query': clickedword,
+                    'limit': 1,
+                    'indent': true,
+                    'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
+                };
                 //TODO: establish Connection -> get Response /result
-                this.googleResponse=displayedResult;
+               // this.googleResponse=displayedResult;
                 //TODO: sent results to server
+            },
+            getEntries:function (){
+                let textComponent = document.getElementById('textfield');
+                let selectedText;
+                // IE version
+                if (document.selection != undefined) {
+                    textComponent.focus();
+                    let sel = document.selection.createRange();
+                    selectedText = sel.text;
+                }
+                // Mozilla version
+                else if (textComponent.selectionStart != undefined){
+                    let startPos = textComponent.selectionStart;
+                    let endPos = textComponent.selectionEnd;
+                    selectedText = textComponent.value.substring(startPos, endPos)
+                }
+                searchGoogle(selectedText);
             }
         }
     }
