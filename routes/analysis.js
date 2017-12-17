@@ -91,7 +91,8 @@ function saveWordNote(note, word, docID) {
     note = stringifyForDB(note);
     word = stringifyForDB(word);
     docID = stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
+
+    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, word], null, null));
 }
 
 
@@ -122,7 +123,6 @@ router.post('/clearText', function (req, res) {
  */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
-    let docID = '';
     console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
@@ -225,6 +225,20 @@ function getTextFromDB(docID) {
 function getWordNotes(docID) {
     let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('notes', ['docID', 'noteID', 'wordID', 'content'], [docID], ['='])));
+    let tempWord = '';
+    let tempToken = -1;
+    for (let i = 0; i < tempWordNotes.length; i++) {
+        if (typeof tempWordNotes[i].wordID !== 'undefined' || tempWordNotes[i].wordID !== '') {
+            tempToken = binaryTokensSearch(textDB.tokens, 'wordID', tempWordNotes[i].wordID);
+            if (tempToken === -1) {
+                tempWordNotes[i]['word'] = 'Word broke!';
+            } else {
+                tempWordNotes[i]['word'] = textDB.tokens[tempToken].content;
+            }
+        }else{
+            tempWordNotes[i]['word'] = 'Word doesnt exist';
+        }
+    }
     console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
     return tempWordNotes;
 }
@@ -267,5 +281,35 @@ function stringifyForDB(input) {
     return '"' + input + '"';
 }
 
+/**
+ * search Algorithm to find a specific token based on the property
+ * you base the search on. value is the value you look for.
+ * This will only work if the tokens are sorted based on this property.
+ * E.g. property content wont work.
+ * @param tokens
+ * @param property
+ * @param value
+ */
+function binaryTokensSearch(tokens, property, value) {
+    let left = 0;
+    let right = tokens.length - 1;
+    let middle = 0;
+    console.log('Search started with: tokens = ' + JSON.stringify(tokens) + ' property = ' + property + ' value = '+ value);
+    while (left <= right) {
+        middle = Math.trunc(left + ((right - left) / 2));
+        console.log('Start Loop with middle = ' + middle);
+        console.log('token = ' + tokens[middle][property] +' =? ' + value);
+        if (tokens[middle][property] === value) {
+            return middle;
+        } else {
+            if (tokens[middle][property] > value) {
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+    }
+    return -1;
+}
 
 module.exports = router;

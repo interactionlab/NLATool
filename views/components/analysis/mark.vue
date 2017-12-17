@@ -99,11 +99,15 @@
             },
             clickWord: function () {
                 let pos = window.getSelection().anchorOffset;
-                let clickedword = '';
+                let clickedword = {
+                    word:'',
+                    wordID:''
+                };
                 for(let i = 0; i < this.tokens.length; i++){
                     if(pos <= this.tokens[i].offsetEnd){
                         console.log('Word that was clicked: ' + this.tokens[i].content);
-                        clickedword = this.tokens[i].content;
+                        clickedword.word = this.tokens[i].content;
+                        clickedword.wordID = this.tokens[i].wordID;
                         break;
                     }
                 }

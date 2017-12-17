@@ -1,22 +1,37 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <!-- Header:-->
-        <component is="mainheader" v-bind:title="title"></component>
-        <component is="headernavbar" v-bind:title_small="title_small"></component>
+        <component
+                is="mainheader"
+                v-bind:title="title">
+        </component>
+        <component
+                is="headernavbar"
+                v-bind:title_small="title_small">
+        </component>
 
         <main class="mdl-layout__content">
             <!-- Toolbar-->
             <div class="headerRowLight">
-                <component is="toolbar" v-on:emitanalighter="getAnalighter" v-on:emitnotes="getNotes"
-                           v-on:emitresearch="getResearch" v-bind:lang="lang" v-on:changemarkermode="changeMarkerMode($event)">
+                <component
+                        is="toolbar"
+                        v-bind:lang="lang"
+                        v-on:emitanalighter="getAnalighter"
+                        v-on:emitnotes="getNotes"
+                        v-on:emitresearch="getResearch"
+                        v-on:changemarkermode="changeMarkerMode($event)">
                 </component>
             </div>
 
             <div class="mdl-grid">
                 <!--left grid for text stuff -->
                 <div class="mdl-cell mdl-cell--6-col contentColor">
-                    <div class="mdl-grid" id="textWindow" ref="textWindow" style="width: 100%">
-                        <markjs v-bind:markermode="markermode"
+                    <div class="mdl-grid"
+                         id="textWindow"
+                         ref="textWindow"
+                         style="width: 100%">
+                        <markjs
+                                v-bind:markermode="markermode"
                                 v-bind:tokens="vueTokens"
                                 v-bind:lang="lang"
                                 v-on:perEvent="setPersons($event)"
@@ -27,8 +42,14 @@
                 </div>
                 <!--right grid for result stuff -->
                 <div class="mdl-cell mdl-cell--6-col contentColor" v-on:click="test">
-                    <component :is="analysisMode" v-bind:tokens="vueTokens" v-bind:clickedword="clickedWord"
-                               v-bind:docid="docID" v-bind:notes="notes" v-bind:persons="persons"></component>
+                    <component
+                            :is="analysisMode"
+                            v-bind:tokens="vueTokens"
+                            v-bind:clickedword="clickedWord"
+                            v-bind:docid="docID"
+                            v-bind:notes="notes"
+                            v-bind:persons="persons">
+                    </component>
                 </div>
             </div>
         </main>
@@ -49,7 +70,7 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'nerVue',
-                clickedWord: '',
+                clickedWord: {},
                 persons: '',
             }
         },
