@@ -130,7 +130,8 @@ function postLoadWrittenText(req, res, next) {
             let title = '"' + req.body.title + '"';
 
             //Insert Statement to initiate a Document
-            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+            let documentInsertResult = wait.for(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('documents', ['name'], [title], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
@@ -152,17 +153,42 @@ function postLoadWrittenText(req, res, next) {
                     words[i][j] = stringifyForDB(words[i][j]);
                     parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
                     parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
+                    parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
+                    parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
+
                     wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                         'word',
-                        ['content', 'isSpecial', 'semanticClass', 'pos'],
-                        [words[i][j], 0, parsedResult.ner[i][j], parsedResult.pos[i][j]],
+                        [
+                            'content',
+                            'isSpecial',
+                            'semanticClass',
+                            'pos'
+                        ],[
+                            words[i][j],
+                            0,
+                            parsedResult.ner[i][j],
+                            parsedResult.pos[i][j]
+                        ],
                         null, null));
 
                     wordInsertResult = JSON.parse(wordInsertResult);
                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                         'textmap',
-                        ['wordID', 'docID', 'textIndex'],
-                        [wordInsertResult.insertId, documentInsertResult.insertId, counter],
+                        [
+                            'wordID',
+                            'docID',
+                            'textIndex',
+                            'beginOffSet',
+                            'EndOffSet',
+                            'whitespaceInfo'
+                        ],[
+                            wordInsertResult.insertId,
+                            documentInsertResult.insertId,
+                            counter,
+                            parsedResult.offsetBegin[counter],
+                            parsedResult.offsetEnd[counter],
+                            '"-10"'
+                        ],
                         null, null));
                     counter++;
                 }

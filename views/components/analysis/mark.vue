@@ -1,5 +1,5 @@
 <template>
-    <div ref="mark">
+    <div ref="mark" v-on:click="clickWord">
         <slot>No Text available!</slot>
     </div>
 </template>
@@ -17,7 +17,7 @@
                 tokens: this.tokens,
                 markermode: this.markermode,
                 toMarkClass: {},
-                lang: this.lang
+                lang: this.lang,
             }
         },
         mounted() {
@@ -96,6 +96,18 @@
                 }
                 //this.$emit('perEvent', [toMark]);
                 return toMark;
+            },
+            clickWord: function () {
+                let pos = window.getSelection().anchorOffset;
+                let clickedword = '';
+                for(let i = 0; i < this.tokens.length; i++){
+                    if(pos <= this.tokens[i].offsetEnd){
+                        console.log('Word that was clicked: ' + this.tokens[i].content);
+                        clickedword = this.tokens[i].content;
+                        break;
+                    }
+                }
+                this.$emit('clickedword', clickedword);
             },
         }
     }
