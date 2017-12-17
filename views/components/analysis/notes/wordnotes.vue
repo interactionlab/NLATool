@@ -28,7 +28,7 @@
             wordnotes: Array,
             docid: String,
             notes: Array,
-            clickedword: String
+            clickedword: Object
         },
         data: function () {
             return {
