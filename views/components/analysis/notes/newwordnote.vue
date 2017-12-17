@@ -1,14 +1,14 @@
 <template>
     <div>
-        <p>{{clickedword}}</p>
+        <p>{{clickedword.word}}</p>
         <div class="mdl-grid">
             <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col">
                 <textarea class="mdl-cell mdl-cell--12-col mdl-textfield__input contentColor"
-                      style="width: 100%"
-                      v-model="newnote"
-                      id="textbox"
-                      type="text"
-                      rows="1">
+                          style="width: 100%"
+                          v-model="newnote"
+                          id="textbox"
+                          type="text"
+                          rows="1">
                 </textarea>
                 <label class="mdl-textfield__label" for="textbox">
                     New+
@@ -37,20 +37,16 @@
     export default {
         props: {
             clickedword: String,
-            docid: String
+            docid: String,
+            newnote: String,
+            note: Object
         },
         data: function () {
             return {
-                note: this.note,
                 clickedword: this.clickedword,
                 docid: this.docid,
-                newnote: '',
-            }
-        },
-        computed: {
-            note: function (newNote) {
-                this.docid = newNote.docid;
-                this.newnote = newNote.content;
+                newnote: this.newnote,
+                note: this.note
             }
         },
         methods: {
@@ -58,17 +54,17 @@
                 this.$emit('back');
             },
             save: function () {
-                console.log('DOCID: ' + this.docid);
+                console.log('DOCID: ' + this.docid + ' : ' + this.clickedword.wordID);
                 let socket = io('http://localhost:8080');
 
-                socket.emit('savewordnote', this.note, this.clickedword, this.docid);
+                socket.emit('savewordnote', this.newnote, this.clickedword.wordID, this.docid);
                 this.$emit('back');
             },
             deleting: function () {
                 console.log('DOCID: ' + this.docid);
                 let socket = io('http://localhost:8080');
 
-                socket.emit('deletenote', this.note, this.clickedword, this.docid);
+                socket.emit('deletenote', this.note, this.clickedword.wordID, this.docid);
                 this.$emit('back');
             }
         }
