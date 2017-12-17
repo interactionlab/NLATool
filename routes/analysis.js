@@ -75,7 +75,7 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
         });
     });
-    socket.on('deletenote',function () {
+    socket.on('deletenote', function () {
 
     });
 
@@ -129,7 +129,7 @@ function getAndShowText(req, res) {
 
         getTextFromDB(docID);
         //console.log(textDB.tokens);
-        filterWordList();
+        buildText();
         vueData.vueTokens = textDB.tokens;
         vueData.vueText = textDB.text;
         vueData.docID = String(docID);
@@ -146,11 +146,32 @@ function getAndShowText(req, res) {
 /**
  * Naive way to filter the words of the set of tokens and stringify them.
  */
-function filterWordList() {
-    for (let i = 0; i < textDB.tokens.length; i++) {
-        textDB.words.push(textDB.tokens[i].content);
-        textDB.text = textDB.text + ' ' + textDB.tokens[i].content;
+function buildText() {
+    let gap = '';
+    textDB.text = textDB.tokens[0].content;
+    for (let i = 1; i < textDB.tokens.length; i++) {
+        //textDB.words.push(textDB.tokens[i].content);
+        console.log(textDB.tokens[i - 1]);
+        gap = getWordGap(
+            textDB.tokens[i - 1].offsetEnd,
+            textDB.tokens[i].offsetBegin,
+            textDB.tokens[i - 1].whitespaceInfo);
+        textDB.text = textDB.text + gap + textDB.tokens[i].content;
     }
+    console.log(notMedia + Tag + 'Builded Text: ' + textDB.text);
+}
+
+function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
+    //default Setting: 1 space * difference between Offsets
+    let gap = '';
+    if (whitespaceInfo === -10) {
+        let dist = word2OffsetBegin - word1OffsetEnd;
+        //console.log(notMedia + Tag + 'Distance: ' + dist + ' ' + word1OffsetEnd + ' ' + word2OffsetBegin);
+        for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
+            gap = gap + ' ';
+        }
+    }
+    return gap;
 }
 
 /**
@@ -160,15 +181,34 @@ function filterWordList() {
  */
 function getTextFromDB(docID) {
     textDB.textMap = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('textmap', ['docID', 'wordID', 'textIndex'], [docID], ['='])));
-    console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
+        dbAction.createSelectCommand('textmap',
+            [
+                'docID',
+                'wordID',
+                'textIndex',
+                'beginOffSet',
+                'EndOffSet',
+                'whitespaceInfo'
+            ],
+            [docID], ['='])));
+    //console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
     for (let i = 0; i < textDB.textMap.length; i++) {
         if (textDB.textMap[i].textIndex === i) {
-            let word = wait.for(dbStub.makeSQLRequest,
+            let word = JSON.parse(wait.for(dbStub.makeSQLRequest,
                 dbAction.createSelectCommand('word',
-                    ['wordID', 'content', 'isSpecial', 'semanticClass', 'pos'],
-                    [textDB.textMap[i].wordID], ['=']));
-            textDB.tokens.push(JSON.parse(word)[0]);
+                    [
+                        'wordID',
+                        'content',
+                        'isSpecial',
+                        'semanticClass',
+                        'pos'
+                    ],
+                    [textDB.textMap[i].wordID], ['='])));
+            word[0]['offsetBegin'] = textDB.textMap[i].beginOffSet;
+            word[0]['offsetEnd'] = textDB.textMap[i].EndOffSet;
+            word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
+            //console.log(JSON.stringify(word));
+            textDB.tokens.push(word[0]);
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
             textDB.error.push(err);
