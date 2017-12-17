@@ -200,9 +200,9 @@
       "type": "YEAR",
       "length": "4"
     },
-    "column6": {
-      "name": "lang",
-      "type": "VARCHAR",
+    "column6":{
+      "name":"lang",
+      "type":"VARCHAR",
       "length": "11"
     }
   },
