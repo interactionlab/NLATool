@@ -2,7 +2,7 @@
     <div>
         <!-- display the selected NER-->
         <div class="mdl-cell mdl-cell--12-col contentColor">
-            {{clickedword}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
+            {{clickedword.word}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
@@ -20,9 +20,12 @@
 
     export default {
         mixins: [research],
+        props:{
+            clickedword: Object
+        },
         data: function () {
             return {
-                clickedword: 'NER (name, place, etc)',
+                clickedword: this.clickedword,
                 researchResult: 'Results will be displayed here.'
             }
 
