@@ -5,10 +5,9 @@
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
+                <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield" id="resultfield">
-                    <label class="mdl-textfield__label" for="resultfield">
-                        Results will be displayed here.
-                    </label>
+                    {{googleResponse}}
                 </div>
             </form>
         </div>
@@ -16,7 +15,6 @@
 </template>
 <script>
     import research from './mixins/analysis/research';
-    import analysis from './components/analysis';
     export default {
         mixins: [research],
         props:{
@@ -25,9 +23,16 @@
         data: function () {
             return {
                 clickedword: this.clickedword,
-                researchResult: 'Results will be displayed here.'
+                researchResult: 'Results will be displayed here.',
+                googleResponse:{}
             }
-
+        },
+        methods:{
+            searchGoogle:function () {
+                //TODO: establish Connection -> get Response /result
+                this.googleResponse=displayedResult;
+                //TODO: sent results to server
+            }
         }
     }
 </script>
