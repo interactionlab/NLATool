@@ -30,14 +30,6 @@
                          id="textWindow"
                          ref="textWindow"
                          style="width: 100%">
-                        <markjs
-                                v-bind:markermode="markermode"
-                                v-bind:tokens="vueTokens"
-                                v-bind:lang="lang"
-                                v-on:perEvent="setPersons($event)"
-                                v-on:clickedword="setClickedWord($event)">
-                            <div><pre>{{vueText}}</pre></div>
-                        </markjs>
                     </div>
                 </div>
                 <!--right grid for result stuff -->
