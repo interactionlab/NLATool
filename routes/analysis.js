@@ -106,6 +106,7 @@ function saveWordNote(note, word, docID) {
             [docID, note, word],
             null, null)));
 }
+
 /**
  * deletes a note associated to a word from the Database.
  * @param noteID
@@ -114,6 +115,7 @@ function deleteNote(noteID) {
     noteID = stringifyForDB(noteID);
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('notes', ['noteID'], [noteID]));
 }
+
 /**
  * updates a note associated to a word on the Database.
  * @param noteID
@@ -185,7 +187,14 @@ function buildText() {
             textDB.tokens[i - 1].offsetEnd,
             textDB.tokens[i].offsetBegin,
             textDB.tokens[i - 1].whitespaceInfo);
-        textDB.text = textDB.text + gap + textDB.tokens[i].content;
+        textDB.text = textDB.text
+            + '<span class="gap">'
+            + gap
+            + '</span>'
+            + '<span class="' + textDB.tokens[i].semanticClass + '">'
+            + textDB.tokens[i].content
+            + '</span>'
+        ;
     }
     console.log(notMedia + Tag + 'Builded Text: ' + textDB.text);
 }

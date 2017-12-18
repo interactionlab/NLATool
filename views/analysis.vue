@@ -30,7 +30,7 @@
                          id="textWindow"
                          ref="textWindow"
                          style="width: 100%">
-                        
+                        <p v-html="vueText"></p>
                     </div>
                 </div>
                 <!--right grid for result stuff -->
