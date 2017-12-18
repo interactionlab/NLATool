@@ -135,7 +135,7 @@ function postLoadWrittenText(req, res, next) {
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
-            //TODO: make sure German is selected
+            //TODO: make sure German is selected in database, change the button design first
             let lang = '"'+language+'"';
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
