@@ -30,6 +30,7 @@
                          id="textWindow"
                          ref="textWindow"
                          style="width: 100%">
+                        
                     </div>
                 </div>
                 <!--right grid for result stuff -->
