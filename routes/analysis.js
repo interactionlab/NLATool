@@ -65,19 +65,22 @@ let vueData = {
 };
 
 //--------------------------------------------------------
+/**
+ * Section for socket.io to listen on port 8080 for events from
+ * the client that shouldnt reload the page. This happens especially
+ * if writing, deleting or updating a note.
+ */
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, word, docID) {
         console.log(notMedia + Tag + 'Save Word Note: ' + note + word + ' docID:' + docID);
         wait.launchFiber(saveWordNote, note, word, docID);
     });
-    socket.on('updatewordnote', function () {
-        console.log(notMedia + Tag + 'update Word Note: ' + value);
-        wait.launchFiber(function (note, word) {
-            // wait.for(dbStub.makeSQLRequest(dbAction.createUpdateCommand('notes',)));
-        });
+    socket.on('updatewordnote', function (noteID, note) {
+        console.log(notMedia + Tag + 'update Word Note: ');
+        wait.launchFiber(updateNote, noteID, note);
     });
-    socket.on('deletenote', function () {
-
+    socket.on('deletenote', function (noteID) {
+        wait.launchFiber(deleteNote, noteID);
     });
 
     socket.on('bignote', function () {
@@ -88,13 +91,40 @@ io.on('connection', function (socket) {
     });
 });
 
+/**
+ * saves a note associated to a word on the Database.
+ * @param note
+ * @param word
+ * @param docID
+ */
 function saveWordNote(note, word, docID) {
     note = stringifyForDB(note);
     word = stringifyForDB(word);
     docID = stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('notes', ['docID', 'content', 'wordID'], [docID, note, '"440"'], null, null));
+    let savedNote = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createInsertCommand('notes',
+            ['docID', 'content', 'wordID'],
+            [docID, note, word],
+            null, null)));
 }
-
+/**
+ * deletes a note associated to a word from the Database.
+ * @param noteID
+ */
+function deleteNote(noteID) {
+    noteID = stringifyForDB(noteID);
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('notes', ['noteID'], [noteID]));
+}
+/**
+ * updates a note associated to a word on the Database.
+ * @param noteID
+ * @param note
+ */
+function updateNote(noteID, note) {
+    noteID = stringifyForDB(noteID);
+    note = stringifyForDB(note);
+    wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('notes', ['content'], [note], ['noteID'], [noteID], ['=']));
+}
 
 router.get('/', function (req, res, next) {
     dbStub.fiberEstablishConnection();
@@ -123,7 +153,6 @@ router.post('/clearText', function (req, res) {
  */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
-    let docID = '';
     console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
@@ -162,6 +191,13 @@ function buildText() {
     console.log(notMedia + Tag + 'Builded Text: ' + textDB.text);
 }
 
+/**
+ * Determines the kind and length of a gap between the words for rebuilding a text.
+ * @param word1OffsetEnd
+ * @param word2OffsetBegin
+ * @param whitespaceInfo
+ * @returns {string}
+ */
 function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
     //default Setting: 1 space * difference between Offsets
     let gap = '';
@@ -226,6 +262,20 @@ function getTextFromDB(docID) {
 function getWordNotes(docID) {
     let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('notes', ['docID', 'noteID', 'wordID', 'content'], [docID], ['='])));
+    let tempWord = '';
+    let tempToken = -1;
+    for (let i = 0; i < tempWordNotes.length; i++) {
+        if (typeof tempWordNotes[i].wordID !== 'undefined' || tempWordNotes[i].wordID !== '') {
+            tempToken = binaryTokensSearch(textDB.tokens, 'wordID', tempWordNotes[i].wordID);
+            if (tempToken === -1) {
+                tempWordNotes[i]['word'] = 'Word broke!';
+            } else {
+                tempWordNotes[i]['word'] = textDB.tokens[tempToken].content;
+            }
+        } else {
+            tempWordNotes[i]['word'] = 'Word doesnt exist';
+        }
+    }
     console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
     return tempWordNotes;
 }
@@ -268,5 +318,35 @@ function stringifyForDB(input) {
     return '"' + input + '"';
 }
 
+/**
+ * search Algorithm to find a specific token based on the property
+ * you base the search on. value is the value you look for.
+ * This will only work if the tokens are sorted based on this property.
+ * E.g. property content wont work.
+ * @param tokens
+ * @param property
+ * @param value
+ */
+function binaryTokensSearch(tokens, property, value) {
+    let left = 0;
+    let right = tokens.length - 1;
+    let middle = 0;
+    console.log('Search started with: tokens = ' + JSON.stringify(tokens) + ' property = ' + property + ' value = ' + value);
+    while (left <= right) {
+        middle = Math.trunc(left + ((right - left) / 2));
+        console.log('Start Loop with middle = ' + middle);
+        console.log('token = ' + tokens[middle][property] + ' =? ' + value);
+        if (tokens[middle][property] === value) {
+            return middle;
+        } else {
+            if (tokens[middle][property] > value) {
+                right = middle - 1;
+            } else {
+                left = middle + 1;
+            }
+        }
+    }
+    return -1;
+}
 
 module.exports = router;

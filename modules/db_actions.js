@@ -317,7 +317,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
  * @param operators
  * @returns {*}
  */
-exports.createUpdateCommand = function (table, columns, values, valuesToCompare, operators) {
+exports.createUpdateCommand = function (table, columns, values,columnsToCompare,  valuesToCompare, operators) {
     let commandString = 'UPDATE ';
     if (table !== null && columns !== null && values !== null) {
         commandString = commandString + table + ' SET ' + columns[0] + ' = ' + values[0];
@@ -325,7 +325,7 @@ exports.createUpdateCommand = function (table, columns, values, valuesToCompare,
             commandString = commandString + ', ' + columns[i] + ' = ' + values[i];
         }
         if (valuesToCompare !== null && operators !== null) {
-            commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
+            commandString = commandString + ' ' + createWhereQuery(columnsToCompare, valuesToCompare, operators);
         }
         console.log(notMedia + Tag + commandString);
         return commandString;
@@ -342,9 +342,9 @@ exports.createUpdateCommand = function (table, columns, values, valuesToCompare,
  * @param valueToCompare
  * @returns {*}
  */
-exports.createDeleteCommand = function (table, column, value, valueToCompare) {
+exports.createDeleteCommand = function (table, column, valueToCompare) {
     let commandString = 'DELETE FROM ';
-    if (table !== null && column !== null && value !== null) {
+    if (table !== null && column !== null && valueToCompare !== null) {
         let operator = [queryOperators[0]];
         commandString = commandString + table + ' ' + createWhereQuery(column, valueToCompare, operator);
         console.log(notMedia + Tag + commandString);
