@@ -1,13 +1,13 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col contentColor">
+        <div class="mdl-cell mdl-cell--12-col gray box contentColor">
             {{clickedword.word}}
         </div>
+        <!-- TODO remove Michael Jackson at the end. That is our default value -->
         <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Michael Jackson')">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
-
                 </div>
             </form>
         </div>
@@ -42,12 +42,11 @@
                     console.log('Response for Research: ' + JSON.stringify(response));
                     $.each(response.itemListElement, function (i, element) {
                         document.getElementById("resultfield").innerHTML = "<img src=\""
-                            + element['result']['image']["contentUrl"] + "\"> "
+                            + element['result']['image']["contentUrl"] + "\"> "+ "<br />"
                             + element['result']['name'] + "<br />"
-                            + element['result']['description']
-                            + "<br />" + element["result"]["detailedDescription"]["articleBody"]
-                            + "<br /><a href=\"" + element["result"]["detailedDescription"]["url"]
-                            + "\">Mehr info</a>";
+                            + element['result']['description'] + "<br />"
+                            + element['result']['detailedDescription']['articleBody']+"<br />"
+                            +"<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
                     });
                 });
                 //TODO: establish Connection -> get Response /result
