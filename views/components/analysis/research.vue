@@ -1,9 +1,7 @@
 <template>
     <div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
-            <div class="mdl-textfield mdl-js-textfield graybox">
-                <p>{{clickedword}}</p>
-            </div>
+            {{clickedword.word}}
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Michael Jackson')">
             <form action="#">
@@ -21,21 +19,20 @@
 
     export default {
         mixins: [research],
-        props: {
-            clickedword: String
+        props:{
+            clickedword: Object
         },
         data: function () {
             return {
                 clickedword: this.clickedword,
-                researchResult: 'Results will be displayed here.',
-                searchoogle: {}
+                researchResult: 'Results will be displayed here.'
             }
         },
         methods: {
             searchGoogle: function () {
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
-                    'query': this.clickedword || 'Michael Jackson',
+                    'query': this.clickedword.word || 'Michael Jackson',
                     'limit': 1,
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',

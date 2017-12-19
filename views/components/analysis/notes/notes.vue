@@ -13,7 +13,7 @@
     export default {
         props: {
             wordnotesp: Array,
-            clickedword: String,
+            clickedword: Object,
             docid: String,
             notes: Array
         },
