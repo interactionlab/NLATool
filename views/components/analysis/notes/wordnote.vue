@@ -2,10 +2,11 @@
     <div class="contentColor"
          v-on:mouseover="showButns"
          v-on:mouseout="hideButns">
-        <div class="mdl-cell mdl-cell--10-col contentColor">
-            <p>The linked word from the DB</p>
-        </div>
-        <div class="mdl-grid" v-if="!editing">
+        <div class="mdl-grid"
+             v-if="!editing">
+            <div class="mdl-cell--12-col contentColor">
+                <p>{{wordnotedb.word}}</p>
+            </div>
             <div class="mdl-cell--10-col contentColor">
                 <p v-on:click="edit">{{ wordnotedb.content }}</p>
             </div>
@@ -24,15 +25,17 @@
         </div>
         <component is="newwordnote"
                    v-else
-                   v-bind:note="wordnotedb"
-                   v-bind:word="clickedword"
+                   v-bind:wordnotedb="wordnotedb"
+                   v-bind:newnote="wordnotedb.content"
+                   v-bind:clickedword="clickedword"
                    v-bind:docid="this.docid"
-                   v-on:back="editing = false">
+                   v-on:back="back($event)">
         </component>
     </div>
 </template>
 <script>
     import newwordnote from './components/analysis/notes/newwordnote.vue';
+
     export default {
         props: {
             wordnotedb: Object,
@@ -44,16 +47,24 @@
                 ishovered: false,
                 editing: false,
                 docid: this.docid,
+                clickedword: {
+                    wordID: '',
+                    word: ''
+                }
             }
         },
         methods: {
             edit: function () {
+                this.setclickedword();
                 this.editing = true;
                 this.$emit('edit', [this.wordnotedb]);
             },
             deleting: function () {
-                //1. delete entry in db
-                //2. delete current component
+                console.log('DOCID: ' + this.docid);
+                let socket = io('http://localhost:8080');
+
+                socket.emit('deletenote', this.wordnotedb.noteID, this.clickedword.wordID, this.docid);
+                this.editing = false;
             },
             showButns: function () {
                 this.ishovered = true;
@@ -61,9 +72,17 @@
             },
             hideButns: function () {
                 this.ishovered = false;
+            },
+            setclickedword: function () {
+                this.clickedword.wordID = this.wordnotedb.wordID;
+                this.clickedword.word = this.wordnotedb.word;
+            },
+            back:function(note, action){
+                this.editing = false;
+                this.$emit('back', note, action);
             }
         },
-        components:{
+        components: {
             newwordnote
         }
     }
