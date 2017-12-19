@@ -1,36 +1,39 @@
 <template>
     <div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
-            {{clickedword.word}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
+            <div class="mdl-textfield mdl-js-textfield graybox">
+                <p>{{clickedword}}</p>
+            </div>
         </div>
-        <div class="mdl-cell mdl-cell--12-col contentColor" v-on:click="searchGoogle('Michael Jackson')">
+        <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Michael Jackson')">
             <form action="#">
                 <!--Results will be displayed here. -->
-                <div class="mdl-textfield mdl-js-textfield" id="resultfield">
+                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
 
-                    {{searchGoogle.clickedword}}
                 </div>
             </form>
         </div>
     </div>
 </template>
+
 <script>
     import research from './mixins/analysis/research';
+
     export default {
         mixins: [research],
-        props:{
+        props: {
             clickedword: String
         },
         data: function () {
             return {
                 clickedword: this.clickedword,
                 researchResult: 'Results will be displayed here.',
-                searchoogle:{}
+                searchoogle: {}
             }
         },
-        methods:{
-            searchGoogle:function () {
-                let service_url= 'https://kgsearch.googleapis.com/v1/entities:search';
+        methods: {
+            searchGoogle: function () {
+                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
                     'query': this.clickedword || 'Michael Jackson',
                     'limit': 1,
@@ -39,7 +42,7 @@
                 };
 
                 $.getJSON(service_url + '?callback=?', params, function (response) {
-                    console.log('Response for Research: '+JSON.stringify(response));
+                    console.log('Response for Research: ' + JSON.stringify(response));
                     $.each(response.itemListElement, function (i, element) {
                         document.getElementById("resultfield").innerHTML = "<img src=\""
                             + element['result']['image']["contentUrl"] + "\"> "
@@ -51,10 +54,10 @@
                     });
                 });
                 //TODO: establish Connection -> get Response /result
-               // this.googleResponse=displayedResult;
+                // this.googleResponse=displayedResult;
                 //TODO: sent results to server
             },
-            getEntries:function (){
+            getEntries: function () {
                 let textComponent = document.getElementById('textfield');
                 let selectedText;
                 // IE version
@@ -64,7 +67,7 @@
                     selectedText = sel.text;
                 }
                 // Mozilla version
-                else if (textComponent.selectionStart != undefined){
+                else if (textComponent.selectionStart != undefined) {
                     let startPos = textComponent.selectionStart;
                     let endPos = textComponent.selectionEnd;
                     selectedText = textComponent.value.substring(startPos, endPos)
