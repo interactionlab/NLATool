@@ -1,50 +1,50 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
+<head>
     <meta name="author" content="Emine Turcan">
     <meta name="date" content="2017-09-22">
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
-    <link rel="stylesheet" type="text/css" href="css/summernote.css" />
-    <link rel="stylesheet" type="text/css" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="css/bootstrap-autocolumns.css" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="css/summernote.css"/>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-autocolumns.css"/>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/summernote.js"></script>
     <script>
 
         //Funktion sucht im Text ein ausgewähltes Wort
-        function getEntities() { 
+        function getEntities() {
             var textComponent = document.getElementById('textfield');
-              var selectedText;
-                // IE version
-                if (document.selection != undefined) {
-                    textComponent.focus();
-                    var sel = document.selection.createRange();
-                    selectedText = sel.text;
-                }
-                // Mozilla version
-                else if (textComponent.selectionStart != undefined){
-                    var startPos = textComponent.selectionStart;
-                    var endPos = textComponent.selectionEnd;
-                    selectedText = textComponent.value.substring(startPos, endPos)
-                }
-                    searchGoogle(selectedText);
-                }
+            var selectedText;
+            // IE version
+            if (document.selection != undefined) {
+                textComponent.focus();
+                var sel = document.selection.createRange();
+                selectedText = sel.text;
+            }
+            // Mozilla version
+            else if (textComponent.selectionStart != undefined) {
+                var startPos = textComponent.selectionStart;
+                var endPos = textComponent.selectionEnd;
+                selectedText = textComponent.value.substring(startPos, endPos)
+            }
+            searchGoogle(selectedText);
+        }
 
         //Diese Funktion verwendet die Google Knowledge Graph API und zeigt Bild, Name, kurze Erläuterung, Beschreibung sowie eine URL. Ergebnisse stammen aus Wikipedia       
-        function searchGoogle(entity){
+        function searchGoogle(entity) {
             var service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
             var params = {
-                'query': entity, 
+                'query': entity,
                 'limit': 1, // Zeigt das wahrscheinlichste Ergebnis an - Anzahl Ergebnisse kann eingestellt werden 
                 'indent': true,
                 'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
-        };
+            };
 
-        $.getJSON(service_url + '?callback=?', params, function(response) { 
-            $.each(response.itemListElement, function(i, element) {
+            $.getJSON(service_url + '?callback=?', params, function (response) {
+                $.each(response.itemListElement, function (i, element) {
                     document.getElementById("resultfield").innerHTML = "<img src=\""
                         + element['result']['image']["contentUrl"] + "\"> "
                         + element['result']['name'] + "<br />"
@@ -52,35 +52,35 @@
                         + "<br />" + element["result"]["detailedDescription"]["articleBody"]
                         + "<br /><a href=\"" + element["result"]["detailedDescription"]["url"]
                         + "\">Mehr info</a>";
+                });
             });
-        });
-    }
+        }
 
     </script>
 
- <!-- Folgender Bereich dient nur zur Veranschaulichung, wird später in die Hauptdatei
- (schöner) eingebunden  -->
-<title>Schnellrecherche</title>
+    <!-- Folgender Bereich dient nur zur Veranschaulichung, wird später in die Hauptdatei
+    (schöner) eingebunden  -->
+    <title>Schnellrecherche</title>
 </head>
 <body>
-    <div class="container">
-      <div class="row">
+<div class="container">
+    <div class="row">
           <textarea id="textfield" style="width: 500px; height: 500px;">
 
           </textarea>
         <label> Suchbegriff eingeben - diesen markieren - Google Suche clicken. Z.B. Boris Becker.
-          <br />
-        Der Fehler, falls kein Treffer, wurde noch nicht abgefangen.</label>
-          <br />
+            <br/>
+            Der Fehler, falls kein Treffer, wurde noch nicht abgefangen.</label>
+        <br/>
         <div class="col-sm-4">
-          <div style="border: 1px solid #000000; cursor:default;" onclick="getEntities();"
-               style="cursor:default">Google Suche
-          </div>
+            <div style="border: 1px solid #000000; cursor:default;" onclick="getEntities();"
+                 style="cursor:default">Google Suche
+            </div>
         </div>
-        <br /><br />
-        <div class="bordered" id="resultfield" ></div>
-      </div>
+        <br/><br/>
+        <div class="bordered" id="resultfield"></div>
     </div>
-  </div>
-  </body>  
+</div>
+</div>
+</body>
 </html>
