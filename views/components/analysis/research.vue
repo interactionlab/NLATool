@@ -3,7 +3,7 @@
         <div class="mdl-cell mdl-cell--12-col contentColor">
             {{clickedword.word}} <!--<input type="submit" value="NER (name, place, etc)" /> -->
         </div>
-        <div class="mdl-cell mdl-cell--12-col contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor" v-on:click="searchGoogle('Michael Jackson')">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield" id="resultfield">
@@ -25,18 +25,31 @@
             return {
                 clickedword: this.clickedword,
                 researchResult: 'Results will be displayed here.',
-                searchGoogle:{}
+                searchoogle:{}
             }
         },
         methods:{
-            searchGoogle:function (clickedword) {
+            searchGoogle:function () {
                 let service_url= 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
-                    'query': clickedword,
+                    'query': this.clickedword || 'Michael Jackson',
                     'limit': 1,
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
                 };
+
+                $.getJSON(service_url + '?callback=?', params, function (response) {
+                    console.log('Response for Research: '+JSON.stringify(response));
+                    $.each(response.itemListElement, function (i, element) {
+                        document.getElementById("resultfield").innerHTML = "<img src=\""
+                            + element['result']['image']["contentUrl"] + "\"> "
+                            + element['result']['name'] + "<br />"
+                            + element['result']['description']
+                            + "<br />" + element["result"]["detailedDescription"]["articleBody"]
+                            + "<br /><a href=\"" + element["result"]["detailedDescription"]["url"]
+                            + "\">Mehr info</a>";
+                    });
+                });
                 //TODO: establish Connection -> get Response /result
                // this.googleResponse=displayedResult;
                 //TODO: sent results to server
