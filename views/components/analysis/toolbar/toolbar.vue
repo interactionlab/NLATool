@@ -76,7 +76,17 @@
         data: function () {
             return {
                 tool: 'analightertool',
-                lang: this.lang
+                lang: this.lang,
+                classesToMark: {
+                    PERSON: false,
+                    LOCATION: false,
+                    ORGANIZATION: false,
+                    MISC: false,
+                    'I-PER': false,
+                    'I-LOC': false,
+                    'I-ORG': false,
+                    'I-MISC': false,
+                }
             }
         },
         methods: {
@@ -91,42 +101,47 @@
                 this.tool = tool;
             },
             changeMarkerMode: function (mode) {
-                console.log("1");
-                if(this.lang == 'English'){
-                console.log("2");
-                    if(mode == 'Person'){
+                if (this.lang == 'English') {
+                    if (mode == 'Person') {
                         mode = 'PERSON';
+                        this.classesToMark.PERSON = !this.classesToMark.PERSON;
                     }
-                    if(mode == 'Location'){
+                    if (mode == 'Location') {
                         mode = 'LOCATION';
+                        this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
                     }
-                    if(mode == 'Organization'){
+                    if (mode == 'Organization') {
                         mode = 'ORGANIZATION';
+                        this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
                     }
-                    if(mode == 'Misc'){
+                    if (mode == 'Misc') {
                         mode = 'MISC';
+                        this.classesToMark.MISC = !this.classesToMark.MISC;
                     }
 
                 }
-                else if(this.lang == 'German'){
+                else if (this.lang == 'German') {
                     console.log("D2");
-                    if(mode == 'Person'){
+                    if (mode == 'Person') {
                         mode = 'I-PER';
+                        this.classesToMark["I-PER"] = !this.classesToMark["I-PER"];
                     }
-                    if(mode == 'Location'){
+                    if (mode == 'Location') {
                         mode = 'I-LOC';
+                        this.classesToMark["I-LOC"] = !this.classesToMark["I-LOC"];
                     }
-                    if(mode == 'Organization'){
+                    if (mode == 'Organization') {
                         mode = 'I-ORG';
+                        this.classesToMark["I-ORG"] = !this.classesToMark["I-ORG"];
                     }
-                    if(mode == 'Misc'){
+                    if (mode == 'Misc') {
                         mode = 'I-MISC';
+                        this.classesToMark["I-MISC"] = !this.classesToMark["I-MISC"];
                     }
                 }
-                this.$emit('changemarkermode', [mode]);
+                this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
         },
-        components: {
-        }
+        components: {}
     }
 </script>

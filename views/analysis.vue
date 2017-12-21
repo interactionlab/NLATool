@@ -30,7 +30,7 @@
                          id="textWindow"
                          ref="textWindow"
                          style="width: 100%">
-                        <p v-html="vueText"></p>
+                        <p v-html="decodeURI(vueText)"></p>
                     </div>
                 </div>
                 <!--right grid for result stuff -->
@@ -65,6 +65,16 @@
                 showMode: 'nerVue',
                 clickedWord: {},
                 persons: '',
+                classesToMark: {
+                    PERSON: false,
+                    LOCATION: false,
+                    ORGANIZATION: false,
+                    MISC: false,
+                    'I-PER': false,
+                    'I-LOC': false,
+                    'I-ORG': false,
+                    'I-MISC': false,
+                }
             }
         },
         methods: {
@@ -82,6 +92,9 @@
             changeMarkerMode: function (mode) {
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
+                console.log('classesToMark: '+JSON.stringify(mode[1]));
+                this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
+                this.$forceUpdate();
             },
             test: function () {
                 console.log(JSON.stringify(this.notes));

@@ -160,9 +160,8 @@ function getAndShowText(req, res) {
 
         getTextFromDB(docID);
         //console.log(textDB.tokens);
-        buildText();
         vueData.vueTokens = textDB.tokens;
-        vueData.vueText = textDB.text;
+        vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(306);
         getTextMetaData(docID);
@@ -179,7 +178,7 @@ function getAndShowText(req, res) {
  */
 function buildText() {
     let gap = '';
-    textDB.text = textDB.tokens[0].content;
+    let text = '<span class="' + textDB.tokens[0].semanticClass + '">' + textDB.tokens[0].content + '</span>';
     for (let i = 1; i < textDB.tokens.length; i++) {
         //textDB.words.push(textDB.tokens[i].content);
         console.log(textDB.tokens[i - 1]);
@@ -187,16 +186,18 @@ function buildText() {
             textDB.tokens[i - 1].offsetEnd,
             textDB.tokens[i].offsetBegin,
             textDB.tokens[i - 1].whitespaceInfo);
-        textDB.text = textDB.text
-            + '<span class="gap">'
+        text = text
+            + '<span v-bind:class="{gap: true}">'
             + gap
             + '</span>'
-            + '<span class="' + textDB.tokens[i].semanticClass + '">'
+            + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.'+textDB.tokens[i].semanticClass+'}">'
             + textDB.tokens[i].content
             + '</span>'
         ;
     }
-    console.log(notMedia + Tag + 'Builded Text: ' + textDB.text);
+    text = encodeURI(text);
+    console.log(notMedia + Tag + 'Builded Text: ' + text);
+    return text;
 }
 
 /**
