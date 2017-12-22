@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col graybox contentColor" >
+        <div class="mdl-cell mdl-cell--12-col graybox contentColor">
             <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle" v-model="clickedword.word"/>
+            <input v-on:keydown.enter="searchGoogle(clickedword.word)" v-model="clickedword.word"/>
         </div>
         <!-- TODO remove Michael Jackson at the end. That is our default value -->
         <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Taylor Swift')">
@@ -21,20 +21,22 @@
 
     export default {
         mixins: [research],
-        props:{
-            clickedword: Object
+        props: {
+            clickedword: Object,
+            researchmode: String
         },
         data: function () {
             return {
                 clickedword: this.clickedword,
-                researchResult: 'Results will be displayed here.'
+                researchResult: 'Results will be displayed here.',
+                researchmode: this.researchmode
             }
         },
         methods: {
-            searchGoogle: function () {
+            searchGoogle: function (query) {
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
-                    'query': this.clickedword.word || 'Taylor Swift',
+                    'query': query,
                     'limit': 1,
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
@@ -44,16 +46,24 @@
                     console.log('Response for Research: ' + JSON.stringify(response));
                     $.each(response.itemListElement, function (i, element) {
                         document.getElementById("resultfield").innerHTML = "<img src=\""
-                            + element['result']['image']["contentUrl"] + "\"> "+ "<br />"
+                            + element['result']['image']["contentUrl"] + "\"> " + "<br />"
                             + element['result']['name'] + "<br />"
                             + element['result']['description'] + "<br />"
-                            + element['result']['detailedDescription']['articleBody']+"<br />"
-                            +"<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
+                            + element['result']['detailedDescription']['articleBody'] + "<br />"
+                            + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
                     });
                 });
                 //TODO: establish Connection -> get Response /result
                 // this.googleResponse=displayedResult;
                 //TODO: sent results to server
+            }
+        },
+        watch: {
+            researchmode: function (mode) {
+                //if (mode === 'Info') {
+                console.log('researchmode was changed to:'+ mode);
+                    this.searchGoogle('Taylor Swift');
+                //}
             }
         }
     }
