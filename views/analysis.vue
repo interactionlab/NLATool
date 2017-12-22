@@ -30,7 +30,15 @@
                          id="textWindow"
                          ref="textWindow"
                          style="width: 100%">
-                        <p v-html="decodeURI(vueText)"></p>
+                        <component is="tex"
+                                   v-for="(token,i) in vueTokens"
+                                   v-bind:key="token.wordID"
+                                   v-bind:token="token"
+                                   v-bind:tokens="vueTokens"
+                                   v-bind:index="i+1"
+                                   v-bind:classestomark="classesToMark">
+                        </component>
+                        <!--<p v-html="decodeURI(vueText)"></p>-->
                     </div>
                 </div>
                 <!--right grid for result stuff -->
@@ -56,6 +64,7 @@
     import toolbar from './components/analysis/toolbar/toolbar.vue';
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
+    import tex from './components/analysis/text.vue';
 
     export default {
         data: function () {
@@ -92,9 +101,8 @@
             changeMarkerMode: function (mode) {
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-                console.log('classesToMark: '+JSON.stringify(mode[1]));
+                console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
-                this.$forceUpdate();
             },
             test: function () {
                 console.log(JSON.stringify(this.notes));
@@ -102,7 +110,7 @@
             setPersons: function (persons) {
                 this.persons = persons;
             },
-            setClickedWord:function (word) {
+            setClickedWord: function (word) {
                 this.clickedWord = word;
             }
         },
@@ -113,7 +121,8 @@
             research,
             notes,
             analighter,
-            markjs
+            markjs,
+            tex
         }
     }
 </script>

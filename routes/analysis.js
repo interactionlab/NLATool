@@ -161,7 +161,7 @@ function getAndShowText(req, res) {
         getTextFromDB(docID);
         //console.log(textDB.tokens);
         vueData.vueTokens = textDB.tokens;
-        vueData.vueText = buildText();
+        //vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(306);
         getTextMetaData(docID);
