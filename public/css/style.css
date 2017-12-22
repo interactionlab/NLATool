@@ -1,7 +1,8 @@
 .mdl-layout__content {
     background-color: #e8e8e8;
 }
-.contentColor{
+
+.contentColor {
     background-color: white;
 }
 
@@ -41,35 +42,55 @@
 mark {
     background: yellow;
 }
+
+pre {
+    display: inline;
+}
+
+.preAlt{
+    display: inline;
+    white-space: pre;
+}
+.nonPreAlt{
+    display: inline;
+    white-space: normal;
+}
+
 /**german*/
-.I-PER{
+.I-PER {
     background: orangered;
 }
 
-.I-LOC{
+.I-LOC {
     background: darkseagreen;
 }
-.I-ORG{
+
+.I-ORG {
     background: deepskyblue;
 }
-.I-MISC{
+
+.I-MISC {
     background: violet;
 }
-.POS{
+
+.POS {
     background: navajowhite;
 }
+
 /**english*/
-.PERSON{
+.PERSON {
     background: orangered;
 }
 
-.LOCATION{
+.LOCATION {
     background: darkseagreen;
 }
-.ORGANIZATION{
+
+.ORGANIZATION {
     background: deepskyblue;
 }
-.MISC{
+
+.MISC {
     background: violet;
 }
 
@@ -78,7 +99,6 @@ mark {
     color: black;
     /**background-color: black;*/
 }
-
 
 /**
 Background color for Buttons
