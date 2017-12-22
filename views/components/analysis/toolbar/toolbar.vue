@@ -44,7 +44,8 @@
 
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button class="mdl-button mdl-js-button">
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="setResearchMode('Info')">
                         <small class="mdc-button">Information</small>
                     </button>
                     <button class="mdl-button mdl-js-button">
@@ -125,6 +126,10 @@
                 }
                 this.$emit('changemarkermode', [mode]);
             },
+            setResearchMode:function (mode) {
+                console.log('got the Event:' + mode);
+                this.$emit('changeresearchrode',[mode]);
+            }
         },
         components: {
         }
