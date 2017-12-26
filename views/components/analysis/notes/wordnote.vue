@@ -75,7 +75,7 @@
             },
             setclickedword: function () {
                 this.clickedword.wordID = this.wordnotedb.wordID;
-                this.clickedword.word = this.wordnotedb.word;
+                this.clickedword.content = this.wordnotedb.content;
             },
             back:function(note, action){
                 this.editing = false;

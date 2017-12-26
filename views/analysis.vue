@@ -111,6 +111,7 @@
                 this.persons = persons;
             },
             setClickedWord: function (word) {
+                console.log('Setted clickword: '+JSON.stringify(word));
                 this.clickedWord = word;
             }
         },

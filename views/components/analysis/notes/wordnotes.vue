@@ -81,7 +81,6 @@
                 }
             }
         },
-        computed: {},
         components: {
             wordnote,
             newwordnote
