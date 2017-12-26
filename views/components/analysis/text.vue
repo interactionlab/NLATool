@@ -26,15 +26,15 @@
         },
         computed: {
             vueSemanticClass: function () {
-                console.log('Debug token: ' + JSON.stringify(this.token));
+                //console.log('Debug token: ' + JSON.stringify(this.token));
                 let htmlclass = {};
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                 htmlclass[this.token.pos] = this.classestomark[this.token.pos];
                 return htmlclass;
             },
             getWordGap: function () {
-                console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
-                console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
+                //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
+                //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
                 let token = this.tokens[this.index];
                 let word1OffsetEnd = this.tokens[this.index - 1].offsetEnd;
                 let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
@@ -48,7 +48,7 @@
                 let gap = '';
                 if (word2OffsetBegin !== -1) {
                     if (whitespaceInfo === -10) {
-                        console.log('offsets: ' + word1OffsetEnd + ' ' + word2OffsetBegin);
+                        //console.log('offsets: ' + word1OffsetEnd + ' ' + word2OffsetBegin);
                         for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
                             gap = gap + ' ';
                         }
@@ -59,7 +59,8 @@
         },
         methods:{
             setClickedWord:function(){
-                this.$emit('clickword', [token]);
+
+                this.$emit('clickword', this.token);
             }
         }
     }

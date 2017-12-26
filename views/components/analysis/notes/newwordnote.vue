@@ -1,6 +1,6 @@
 <template>
     <div class="mdl-grid">
-        <p class="mdl-cell mdl-cell--12-col">{{clickedword.word}}</p>
+        <p class="mdl-cell mdl-cell--12-col">{{clickedword.content}}</p>
         <form class="mdl-cell mdl-cell--8-col">
             <div class="mdl-textfield mdl-js-textfield">
                 <textarea class="mdl-textfield__input contentColor"
@@ -33,7 +33,7 @@
 <script>
     export default {
         props: {
-            clickedword: String,
+            clickedword: Object,
             docid: String,
             newnote: String,
             wordnotedb: Object
