@@ -59,7 +59,6 @@
         },
         methods:{
             setClickedWord:function(){
-
                 this.$emit('clickword', this.token);
             }
         }
