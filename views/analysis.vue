@@ -19,7 +19,9 @@
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
-                        v-on:changemarkermode="changeMarkerMode($event)">
+                        v-on:changemarkermode="changeMarkerMode($event)"
+                        v-on:changeresearchrode="changeResearchMode($event)"
+                >
                 </component>
             </div>
 
@@ -49,7 +51,8 @@
                             v-bind:clickedword="clickedWord"
                             v-bind:docid="docID"
                             v-bind:notes="notes"
-                            v-bind:persons="persons">
+                            v-bind:persons="persons"
+                            v-bind:researchmode="researchmode">
                     </component>
                 </div>
             </div>
@@ -72,6 +75,7 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'nerVue',
+                researchmode: '',
                 clickedWord: {},
                 persons: '',
                 classesToMark: {
@@ -113,6 +117,10 @@
             setClickedWord: function (word) {
                 console.log('Setted clickword: '+JSON.stringify(word));
                 this.clickedWord = word;
+            },
+            changeResearchMode:function (mode) {
+                console.log('analysis: Changing researchmode: '+ mode);
+                this.researchmode = mode;
             }
         },
         components: {
