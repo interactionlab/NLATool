@@ -1,6 +1,8 @@
 <template>
     <span>
-        <span class="nonPreAlt" v-bind:class="vueSemanticClass">{{token.content}}</span
+        <span class="nonPreAlt"
+              v-bind:class="vueSemanticClass"
+              v-on:click="setClickedWord">{{token.content}}</span
         ><span class="preAlt">{{getWordGap}}</span>
     </span>
 </template>
@@ -12,14 +14,14 @@
             token: Object,
             tokens: Array,
             index: Number,
-            classestomark:Object
+            classestomark: Object
         },
         data: function () {
             return {
                 token: this.token,
                 tokens: this.tokens,
                 index: this.index,
-                classestomark:this.classestomark
+                classestomark: this.classestomark
             }
         },
         computed: {
@@ -53,6 +55,11 @@
                     }
                 }
                 return gap;
+            }
+        },
+        methods:{
+            setClickedWord:function(){
+                this.$emit('clickword', [token]);
             }
         }
     }
