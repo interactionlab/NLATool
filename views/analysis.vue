@@ -36,9 +36,9 @@
                                    v-bind:token="token"
                                    v-bind:tokens="vueTokens"
                                    v-bind:index="i+1"
-                                   v-bind:classestomark="classesToMark">
+                                   v-bind:classestomark="classesToMark"
+                                   v-on:clickword="setClickedWord($event)">
                         </component>
-                        <!--<p v-html="decodeURI(vueText)"></p>-->
                     </div>
                 </div>
                 <!--right grid for result stuff -->
