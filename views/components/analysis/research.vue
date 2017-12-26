@@ -2,7 +2,7 @@
     <div>
         <div class="mdl-cell mdl-cell--12-col graybox contentColor">
             <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle(clickedword.word)" v-model="clickedword.word"/>
+            <input v-on:keydown.enter="searchGoogle(clickedword.content)" v-model="clickedword.content"/>
         </div>
         <!-- TODO remove Michael Jackson at the end. That is our default value -->
         <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Taylor Swift')">
