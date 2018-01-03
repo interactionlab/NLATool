@@ -7,6 +7,7 @@
                    v-bind:ishovered="ishovered"
                    v-bind:docid="docid"
                    v-on:edit="editnote($event)"
+                   v-on:back="back($event)"
                    v-on:mouseover="showButns"
                    v-on:mouseout="hideButns"
         ></component>
@@ -14,6 +15,7 @@
         <component is="newwordnote"
                    v-bind:clickedword="clickedword"
                    v-bind:docid="this.docid"
+                   v-on:back="back($event)"
         ></component>
 
     </div>
@@ -48,33 +50,35 @@
             hideButns: function () {
                 this.ishovered = false;
             },
-            back: function (noteID, action, note) {
-                if (action === 0) {
+            back: function (noteToChange) {
+                console.log('got here: 3');
+                console.log('action: '+ noteToChange[1]);
+                if (noteToChange[1] === 0) {
                     //delete
                     let i = 0;
                     for(i = 0; i < this.notes.length; i++){
-                        if(this.notes[i].noteID === noteID){
+                        if(this.notes[i].noteID === noteToChange[0]){
                             break;
                         }
                     }
                     console.log('debug splice: ' + typeof this.notes + ' : ' + i + ' : ' + JSON.stringify(this.notes));
                     this.notes.splice(i-1,1);
                     console.log('debug end: ' +  JSON.stringify(this.notes));
-                } else if (action === 1) {
+                } else if (noteToChange[1] === 1) {
                     //new
-                    console.log('debug splice: ' + typeof this.notes + ' : ' + i + ' : ' + JSON.stringify(this.notes));
-                    this.notes.splice(this.notes.length, 0, note);
+                    console.log('debug splice: ' + typeof this.notes + ' : ' + JSON.stringify(this.notes));
+                    this.notes.splice(this.notes.length, 0, noteToChange[2]);
                     console.log('debug end: ' +  JSON.stringify(this.notes));
-                } else if (action === 2) {
+                } else if (noteToChange[1] === 2) {
                     //update
                     let i = 0;
                     for(i = 0; i < this.notes.length; i++){
-                        if(this.notes[i].noteID === noteID){
+                        if(this.notes[i].noteID === noteToChange[1]){
                             break;
                         }
                     }
                     console.log('debug splice: ' + typeof this.notes + ' : ' + i + ' : ' + JSON.stringify(this.notes));
-                    this.notes.splice(i-1,1,note);
+                    this.notes.splice(i-1,1,noteToChange[2]);
                     console.log('debug end: ' +  JSON.stringify(this.notes));
                 } else {
 
