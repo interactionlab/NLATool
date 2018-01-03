@@ -77,9 +77,12 @@
                 this.clickedword.wordID = this.wordnotedb.wordID;
                 this.clickedword.content = this.wordnotedb.content;
             },
-            back:function(note, action){
+            back: function (noteToChange) {
+                console.log('Check: ' + noteToChange[0] +' : ' + noteToChange[1] + ' : ' + noteToChange[2]);
                 this.editing = false;
-                this.$emit('back', note, action);
+                if(noteToChange[0]!== -10 && noteToChange[1]!== -10 && noteToChange[2]!== -10){
+                    this.$emit('back', noteToChange);
+                }
             }
         },
         components: {
