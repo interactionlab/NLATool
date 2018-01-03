@@ -55,7 +55,8 @@
                 });
                 //TODO: establish Connection -> get Response /result
                 // this.googleResponse=displayedResult;
-                //TODO: sent results to server
+                //TODO: sent results to serverrs
+
             }
         },
         watch: {
