@@ -1,7 +1,7 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor">
         <component :is="noteMode" v-bind:clickedword="clickedword" v-bind:docid="docid"
-                   v-bind:notes="notes" ></component>
+                   v-bind:notes="notes"></component>
     </div>
 </template>
 <script>
@@ -23,9 +23,7 @@
                 notes: this.notes
             }
         },
-        methods:{
-
-        },
+        methods: {},
         components: {
             wordnotes
         }
