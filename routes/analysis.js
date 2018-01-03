@@ -174,6 +174,7 @@ function getAndShowText(req, res) {
     res.renderVue('analysis', vueData, vueRenderOptions);
 }
 
+
 /**
  * Naive way to filter the words of the set of tokens and stringify them.
  */
