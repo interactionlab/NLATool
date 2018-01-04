@@ -103,6 +103,7 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
+                //TODO: All button functionalitiy
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
                 console.log('classesToMark: ' + JSON.stringify(mode[1]));
