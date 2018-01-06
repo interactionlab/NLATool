@@ -153,12 +153,14 @@ transformColumnToSQL = function (column, options) {
             //console.log(key +  ': ' + options[key] +' last:'+ tempKey);
             if (!isNaN(options[key]) && !(typeof options[key] === "boolean")) {
                 transformString = transformString + ' (' + options[key] + ')';
-            } else if(key ==='FOREIGN'){}
+            } else if (key === 'FOREIGN') {
+            }
             else if (!(typeof options[key] === "boolean") && isNaN(options[key])) {
                 transformString = transformString + ' ' + options[key];
             } else if (key === 'AUTO_INCREMENT' && options[key] === true) {
                 transformString = transformString + ' ' + key;
-            } else if(key ==='FOREIGN'){}
+            } else if (key === 'FOREIGN') {
+            }
 
             tempKey = key;
         }
@@ -255,7 +257,29 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
 
 
 };
+exports.createLimitedSelectCommand = function (table, columns, start, amount) {
+    let commandString = 'SELECT ';
+    if (table !== null) {
+        if (columns !== null) {
+            commandString = commandString + columns[0];
+            for (let i = 1; i < columns.length; i++) {
+                commandString = commandString + ',' + columns[i];
+            }
+            commandString = commandString + ' FROM ' + json.database.name + ' . ' + table;
+        } else {
+            commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
+        }
+        commandString = commandString + ' limit ' + start + ' , ' + amount;
+        console.log(notMedia + Tag + sql + commandString);
+        return commandString;
+    } else {
+        commandString = commandString + json.database.name;
+        console.log(notMedia + Tag + sql + commandString);
+        return commandString;
+    }
 
+
+};
 exports.createInnerJoinSelectCommand = function (table1, table2, joinCondition) {
     let commandString = 'SELECT ' + table1 + ' INNER JOIN ' + table2 + ' ' + joinCondition;
     return commandString;
@@ -317,7 +341,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
  * @param operators
  * @returns {*}
  */
-exports.createUpdateCommand = function (table, columns, values,columnsToCompare,  valuesToCompare, operators) {
+exports.createUpdateCommand = function (table, columns, values, columnsToCompare, valuesToCompare, operators) {
     let commandString = 'UPDATE ';
     if (table !== null && columns !== null && values !== null) {
         commandString = commandString + table + ' SET ' + columns[0] + ' = ' + values[0];
@@ -393,5 +417,14 @@ exports.createDropDBCommand = function () {
     let json = jsonAction.getJsonConfiguration();
     return 'DROP DATABASE ' + json.database.name + ' IF EXISTS';
 
+};
+
+/**
+ * Makes sure the Quotas " are set for each word in the sql query.
+ * @param input
+ * @returns {string}
+ */
+exports.stringifyForDB = function (input) {
+    return '"' + input + '"';
 };
 //--------------------------------------------------------
