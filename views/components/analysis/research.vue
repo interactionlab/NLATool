@@ -10,7 +10,7 @@
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
                     <!-- {{searchGoogle.clickedword}} -->
-                    <component is = "results" v-bind:researchResult="researchResult"></component>
+                    <component is = "results" v-for="researchResult in researchResults" v-bind:researchResult="researchResult"></component>
                 </div>
             </form>
         </div>
@@ -29,7 +29,7 @@
         data: function () {
             return {
                 clickedword: this.clickedword,
-                researchResult: 'Results will be displayed here.',
+                researchResults: 'Results will be displayed here.',
                 researchmode: this.researchmode
             }
         },
