@@ -54,7 +54,7 @@
                             + element['result']['detailedDescription']['articleBody'] + "<br />"
                             + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
                     });
-                });
+                }); //TODO: use socket emit for database handling
                 //TODO: establish Connection -> get Response /result
                 // this.googleResponse=displayedResult;
                 //TODO: sent results to server
