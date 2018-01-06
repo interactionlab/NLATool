@@ -10,6 +10,7 @@
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
                     <!-- {{searchGoogle.clickedword}} -->
+                    <component is = "results" v-bind:researchResult="researchResult"></component>
                 </div>
             </form>
         </div>
@@ -44,6 +45,7 @@
 
                 $.getJSON(service_url + '?callback=?', params, function (response) {
                     console.log('Response for Research: ' + JSON.stringify(response));
+                    this.researchResult = response;
                     $.each(response.itemListElement, function (i, element) {
                         document.getElementById("resultfield").innerHTML = "<img src=\""
                             + element['result']['image']["contentUrl"] + "\"> " + "<br />"
