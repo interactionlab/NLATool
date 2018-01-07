@@ -8,20 +8,30 @@
         <component is="headernavbar" v-bind:title_small="title_small"
         ></component>
         <main class="mdl-layout__content">
-            <form action="/profile/loadMoreDocuments"
-                  method="post"
-                  v-for="numberOfButton in amountOfButtons"
-                  class="mdl-cell--12-col">
-                <button style="float: left" name="numberOfButton" v-bind:value="numberOfButton">{{numberOfButton}}</button>
-            </form>
-            <div class="mdl-layout-spacer"></div>
-            <component is="document"
-                       v-for="document in documents"
-                       v-bind:document="document"
-                       v-bind:key="document.docID"
-                       class="mdl-cell--8-col"
-            ></component>
-            <div class="mdl-layout-spacer"></div>
+            <div style="display: table">
+                <form action="/profile/loadMoreDocuments"
+                      method="post"
+                      v-for="numberOfButton in amountOfButtons"
+                      style="display: table-cell;"
+                >
+                    <button name="numberOfButton"
+                            v-bind:value="numberOfButton"
+                            class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                            style="display: inline"
+                    >{{numberOfButton}}
+                    </button>
+                </form>
+            </div>
+            <div class="mdl-grid">
+                <component is="document"
+                           v-for="document in documents"
+                           v-bind:document="document"
+                           v-bind:key="document.docID"
+                           v-on:deleted="deleted($event)"
+                           class="mdl-cell--8-col"
+                ></component>
+
+            </div>
         </main>
     </div>
     </body>
@@ -35,6 +45,18 @@
     export default {
         data: function () {
             return {}
+        },
+        methods:{
+            deleted:function (docID) {
+               console.log('Got here with this ID: ' + docID);
+               for(let i = 0; i < this.documents.length; i++){
+                   if(this.documents[i].docID === docID){
+                       console.log('got here !!!');
+                       this.documents.splice(i, 1);
+                       break;
+                   }
+               }
+            }
         },
         components: {
             mainheader,

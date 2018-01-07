@@ -2,6 +2,7 @@
     <component :is="changing"
                v-bind:document="document"
                v-on:editing="editing($event)"
+               v-on:deleted="deleted($event)"
     ></component>
 </template>
 
@@ -36,6 +37,9 @@
                     this.document.name = newTitle;
                 }
             },
+            deleted:function(docID){
+                this.$emit('deleted', docID);
+            }
         },
         computed: {
         },

@@ -62,7 +62,8 @@ io.on('connection', function (socket) {
         wait.launchFiber(updateTitle, docID, newTitle);
     });
     socket.on('deleteDocument', function (docID) {
-
+        console.log('Got here with this ID: ' + docID);
+        wait.launchFiber(deleteDocument, docID);
     });
 });
 
@@ -117,7 +118,7 @@ function prepareProfile(req, res, next) {
  */
 function loadMoreDocuments(req, res, next) {
     console.log(notMedia + Tag + 'load More Documents: ' + JSON.stringify(req.body.numberOfButton));
-    req.session.numberOfButton = req.body.numberOfButton-1;
+    req.session.numberOfButton = req.body.numberOfButton - 1;
     res.redirect('/profile');
 }
 
@@ -135,12 +136,12 @@ function getDocuments(start, amount) {
             start, amount
         )
     ));
-    for(let i = 0;i < profileData.documents.length; i++){
-        if(profileData.documents[i].name.length === 0){
+    for (let i = 0; i < profileData.documents.length; i++) {
+        if (profileData.documents[i].name.length === 0) {
             profileData.documents[i].name = 'No Name specified';
         }
     }
-    console.log(notMedia + Tag + 'documents: '+ JSON.stringify(profileData.documents));
+    console.log(notMedia + Tag + 'documents: ' + JSON.stringify(profileData.documents));
 }
 
 /**
@@ -152,6 +153,16 @@ function updateTitle(docID, newTitle) {
     docID = dbAction.stringifyForDB(docID);
     newTitle = dbAction.stringifyForDB(newTitle);
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
+}
+
+function deleteDocument(docID) {
+    docID = dbAction.stringifyForDB(docID);
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('documents', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('searchResults', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('notes', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('text', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textmap', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textnote', [docID], [docID]));
 }
 
 module.exports = router;
