@@ -1,10 +1,20 @@
 <template>
-    <input type="text"
-           v-model="newTitle"
-           v-on:keyup.enter="edit"
-           v-bind:value="document.name"
-    />
-    
+    <div class="mdl-grid">
+        <input type="text"
+               v-model="newTitle"
+               v-on:keyup.enter="edit"
+               v-bind:value="document.name"/>
+        <div class="mdl-cell mdl-cell--2-col contentColor"
+             v-show="ishovered">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                    v-on:click="edit"
+            >Save</button>
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect"
+                    v-on:click="back"
+                    id="noteMenu"
+            >Back</button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -25,6 +35,9 @@
                 socket.emit('changeTitle', this.document.docID, this.newTitle);
                 this.$emit('editing', this.newTitle);
             },
+            back: function(){
+                this.$emit('editing', this.document.name);
+            }
         },
         computed: {}
     }

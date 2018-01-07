@@ -61,14 +61,10 @@
                             break;
                         }
                     }
-                    console.log('debug splice: ' + typeof this.notes + ' : ' + i + ' : ' + JSON.stringify(this.notes));
-                    this.notes.splice(i-1,1);
-                    console.log('debug end: ' +  JSON.stringify(this.notes));
+                    this.notes.splice(i,1);
                 } else if (noteToChange[1] === 1) {
                     //new
-                    console.log('debug splice: ' + typeof this.notes + ' : ' + JSON.stringify(this.notes));
                     this.notes.splice(this.notes.length, 0, noteToChange[2]);
-                    console.log('debug end: ' +  JSON.stringify(this.notes));
                 } else if (noteToChange[1] === 2) {
                     //update
                     let i = 0;
@@ -77,9 +73,7 @@
                             break;
                         }
                     }
-                    console.log('debug splice: ' + typeof this.notes + ' : ' + i + ' : ' + JSON.stringify(this.notes));
                     this.notes.splice(i-1,1,noteToChange[2]);
-                    console.log('debug end: ' +  JSON.stringify(this.notes));
                 } else {
 
                 }
