@@ -15,10 +15,11 @@
                 <div class="mdl-layout-spacer"></div>
             </div>
             <div class="mdl-grid">
+                <div class="mdl-layout-spacer" style="text-align: center">
                 <button class="mdl-button mdl-js-button" v-on:click="switchauthentification">
                     <b class="mdc-button">{{signbutn}}</b>
                 </button>
-
+                </div>
             </div>
         </main>
     </div>
