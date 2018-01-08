@@ -3,9 +3,9 @@
         <input type="text"
                v-model="newTitle"
                v-on:keyup.enter="edit"
-               v-bind:value="document.name"/>
-        <div class="mdl-cell mdl-cell--2-col contentColor"
-             v-show="ishovered">
+               v-bind:value="document.name"
+               class="mdl-cell mdl-cell--8-col contentColor"/>
+        <div class="mdl-cell mdl-cell--4-col contentColor">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect"
                     v-on:click="edit"
             >Save</button>
