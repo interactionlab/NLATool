@@ -49,7 +49,8 @@
                 let tempresults = {};
                 $.getJSON(service_url + '?callback=?', params, function (response) {
                     console.log('Response for Research: ' + JSON.stringify(response));
-                    this.researchresults.push(response);
+                    response.researchresults();
+                    data.researchresults.push(response);
                     console.log('Response for Research222222222222222222: ' + JSON.stringify(this.researchresults));
                     // $.each(response.itemListElement, function (i, element) {
                     //     document.getElementById("resultfield").innerHTML = "<img src=\""
@@ -60,8 +61,6 @@
                     //         + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
                     // });
                 });
-
-
                 //TODO: use socket emit for database handling
                 //TODO: establish Connection -> get Response /result
                 // this.googleResponse=displayedResult;
