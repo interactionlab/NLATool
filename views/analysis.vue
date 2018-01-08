@@ -117,7 +117,9 @@
             },
             setClickedWord: function (word) {
                 console.log('Setted clickword: '+JSON.stringify(word));
-                this.clickedWord = word;
+                //TODO: JSON parse(stringify(OBJECT))
+                const x = word;
+                this.clickedWord = x;
             },
             changeResearchMode:function (mode) {
                 console.log('analysis: Changing researchmode: '+ mode);
