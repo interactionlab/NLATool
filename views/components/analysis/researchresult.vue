@@ -1,22 +1,24 @@
 <template>
-    <div><img v-bind:src="researchresult.image.contentUrl"/></div>
+    <div>
+        <div><img v-if="typeof researchresult.result.image !== 'undefined'"
+                  v-bind:src="researchresult.result.image.contentUrl"/></div>
 
-    <div>{{researchresult.result.name}}</div>
-    <div> {{researchresult.description}}</div>
-    <div> {{researchresult.detailedDescription.articleBody}}</div>
-    <div>{{research}}</div>
+        <div v-if="typeof researchresult.result !== 'undefined'">{{researchresult.result.name}}</div>
+        <div v-if="typeof researchresult.result.description !== 'undefined'"> {{researchresult.result.description}}</div>
+        <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'"> {{researchresult.result.detailedDescription.articleBody}}</div>
+    </div>
 </template>
 
 <script>
     export default {
-        props:{
-            researchresult:Object,
-            research: Object
+        props: {
+            researchresult: Object,
+            researchresults: Object
         },
-        data:function(){
-            return{
-                researchresult:this.researchresult,
-                research: this.research
+        data: function () {
+            return {
+                researchresult: this.researchresult,
+                researchresults: this.researchresults
             }
         }
     }
