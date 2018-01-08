@@ -1,9 +1,13 @@
 <template>
+    <!-- Shows the image-->
     <div><img v-bind:src="researchresult.image.contentUrl"/></div>
-
+    <!-- Shows a Name -->
     <div>{{researchresult.result.name}}</div>
+    <!-- Shows a short description -->
     <div> {{researchresult.description}}</div>
+    <!-- Shows a longer description -->
     <div> {{researchresult.detailedDescription.articleBody}}</div>
+    <!-- Shows the source -->
     <div>{{research}}</div>
 </template>
 
