@@ -1,0 +1,221 @@
+{
+  "@context": {
+    "@vocab": "http://schema.org/",
+    "goog": "http://schema.googleapis.com/",
+    "EntitySearchResult": "goog:EntitySearchResult",
+    "detailedDescription": "goog:detailedDescription",
+    "resultScore": "goog:resultScore",
+    "kg": "http://g.co/kg"
+  },
+  "@type": "ItemList",
+  "itemListElement": [
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/013gkg",
+        "name": "Olaf II of Norway",
+        "@type": [
+          "Thing",
+          "Person"
+        ],
+        "description": "King",
+        "image": {
+          "contentUrl": "http://t3.gstatic.com/images?q=tbn:ANd9GcTmSgdUKhKBAjce1ihxGJitpfElPRiZRu8Hlr4XiNT4aAtRD7rx",
+          "url": "https://no.wikipedia.org/wiki/Fil:Olav_der_Heilige06.jpg"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf II Haraldsson, later known as St. Olaf, was King of Norway from 1015 to 1028. He was posthumously given the title Rex Perpetuus Norvegiae and canonised at Nidaros by Bishop Grimkell, one year after his death in the Battle of Stiklestad on 29 July 1030. ",
+          "url": "https://en.wikipedia.org/wiki/Olaf_II_of_Norway",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 67.907463
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/0hjj3",
+        "name": "Olaf Tryggvason",
+        "@type": [
+          "Thing",
+          "Person"
+        ],
+        "description": "Former King of Norway",
+        "image": {
+          "contentUrl": "http://t2.gstatic.com/images?q=tbn:ANd9GcTfmCuAtlwTcOGnr_5BcV-ZuQsmYJNU8tDRiXE_ZsbQJaQxO4hf",
+          "url": "https://commons.wikimedia.org/wiki/File:Peter_Nicolai_Arbo-Olav_Tryggvasons_ankomst_til_Norge.jpg"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf Tryggvason was King of Norway from 995 to 1000. He was the son of Tryggvi Olafsson, king of Viken, and, according to later sagas, the great-grandson of Harald Fairhair, first King of Norway.\n",
+          "url": "https://en.wikipedia.org/wiki/Olaf_Tryggvason",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 52.637878
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/01pdgp",
+        "name": "St. Olaf College",
+        "@type": [
+          "EducationalOrganization",
+          "Thing",
+          "Organization",
+          "CollegeOrUniversity",
+          "TouristAttraction",
+          "Place",
+          "Corporation"
+        ],
+        "description": "Liberal arts college in Northfield, Minnesota",
+        "detailedDescription": {
+          "articleBody": "St. Olaf College is a coeducational, residential, four-year, private liberal arts college in Northfield, Minnesota, United States. It was founded in 1874 by a group of Norwegian-American immigrant pastors and farmers, led by Pastor Bernt Julius Muus. ",
+          "url": "https://en.wikipedia.org/wiki/St._Olaf_College",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        },
+        "url": "http://stolaf.edu/"
+      },
+      "resultScore": 44.956074
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/0_s48xy",
+        "name": "Olaf",
+        "@type": [
+          "Thing"
+        ],
+        "description": "Fictional character"
+      },
+      "resultScore": 39.297062
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/0hjgv",
+        "name": "Olaf II of Denmark",
+        "@type": [
+          "Person",
+          "Thing"
+        ],
+        "description": "King of Norway",
+        "image": {
+          "contentUrl": "http://t0.gstatic.com/images?q=tbn:ANd9GcSAhREMLZJXFooYYaCqbjlEtP7wmM0VPs0Jt0zVd14KT81_5i36",
+          "url": "https://en.wikipedia.org/wiki/Olaf_II_of_Denmark"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf II Haakonsson was King of Denmark as Olaf II and King of Norway as Olaf IV. Olaf was son of King Haakon VI of Norway and the grandson of King Magnus IV of Sweden. ",
+          "url": "https://en.wikipedia.org/wiki/Olaf_II_of_Denmark",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 34.66629
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/0hh98",
+        "name": "Olav V of Norway",
+        "@type": [
+          "Person",
+          "Thing"
+        ],
+        "description": "Former King of Norway",
+        "image": {
+          "contentUrl": "http://t3.gstatic.com/images?q=tbn:ANd9GcQF-nAG6SQ8dDhvlH3uYU8pKmATkdYnxcZzG82Q1DaXTWfMeehK",
+          "url": "https://en.wikipedia.org/wiki/Olav_V_of_Norway"
+        },
+        "detailedDescription": {
+          "articleBody": "Olav V was King of Norway from 1957 until his death.\nOlav was the only child of Haakon VII and Maud of Wales. He became heir apparent to the Norwegian throne when his father was elected King of Norway in 1905. ",
+          "url": "https://en.wikipedia.org/wiki/Olav_V_of_Norway",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 30.212826
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/03cyjv4",
+        "name": "Olaf Scholz",
+        "@type": [
+          "Thing",
+          "Person"
+        ],
+        "description": "Mayor of Hamburg",
+        "image": {
+          "contentUrl": "http://t1.gstatic.com/images?q=tbn:ANd9GcQ5bwU6k6OeZJcshSNNICUDaumXF3igtEWT-g08cvIHzZ8Oy6cv",
+          "url": "https://commons.wikimedia.org/wiki/File:Olaf_Scholz_%E2%80%93_B%C3%BCrgerschaftswahl_in_Hamburg_2015_02.jpg"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf Scholz is a German politician of the Social Democratic Party of Germany and First Mayor of Hamburg since 7 March 2011.",
+          "url": "https://en.wikipedia.org/wiki/Olaf_Scholz",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        },
+        "url": "http://www.olafscholz.de/"
+      },
+      "resultScore": 28.094337
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/01s3gqn",
+        "name": "Olaf Schubert",
+        "@type": [
+          "Thing",
+          "Person"
+        ],
+        "description": "German comedian",
+        "image": {
+          "contentUrl": "http://t1.gstatic.com/images?q=tbn:ANd9GcRzwNnbwnPt8EHiKvcdD2bnIlhtbEdJQH0akdwBwqmMt-jg6Gh7",
+          "url": "https://de.wikipedia.org/wiki/Olaf_Schubert"
+        },
+        "url": "http://www.olaf-schubert.de/"
+      },
+      "resultScore": 27.069401
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/02rwvfk",
+        "name": "Olaf Janßen",
+        "@type": [
+          "Person",
+          "Thing"
+        ],
+        "description": "Soccer player",
+        "image": {
+          "contentUrl": "http://t1.gstatic.com/images?q=tbn:ANd9GcSyV_tpNPL8nHUw5-kJ3-5y0RFiPwV6yKmj8wBpJBN2UgNg6tec",
+          "url": "https://en.wikipedia.org/wiki/Olaf_Jan%C3%9Fen"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf Janßen is a retired German footballer and manager who played as a midfielder.",
+          "url": "https://en.wikipedia.org/wiki/Olaf_Jan%C3%9Fen",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 25.573502
+    },
+    {
+      "@type": "EntitySearchResult",
+      "result": {
+        "@id": "kg:/m/018jvv",
+        "name": "Olaf III of Norway",
+        "@type": [
+          "Thing",
+          "Person"
+        ],
+        "image": {
+          "contentUrl": "http://t3.gstatic.com/images?q=tbn:ANd9GcTUwksQEIqNYGldCr2RYp-5znuKtqkbzqO76Qyf9YDpYn-C35qW",
+          "url": "https://no.wikipedia.org/wiki/Fil:Olav_Kyrres_saga-Tittelfrise-G._Munthe.jpg"
+        },
+        "detailedDescription": {
+          "articleBody": "Olaf Haraldsson, known as Olaf Kyrre, ruled Norway as from 1067 until his death in 1093.\nHe was present at the Battle of Stamford Bridge in England in 1066 where his father, King Harald Hardrada, saw defeat and was killed in action, an event that directly preceded his kingship. ",
+          "url": "https://en.wikipedia.org/wiki/Olaf_III_of_Norway",
+          "license": "https://en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License"
+        }
+      },
+      "resultScore": 25.502035
+    }
+  ]
+}
