@@ -40,6 +40,9 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">(NN)</small>
                     </button>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Correction</small>
+                    </button>
                 </div>
 
 
@@ -53,9 +56,6 @@
                     </button>
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Statistics</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Correction</small>
                     </button>
                 </div>
 

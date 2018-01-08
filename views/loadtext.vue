@@ -8,7 +8,7 @@
             <form action="/loadWrittenText" method="post">
 
                 <div class="mdl-grid">
-                    <!-- Bottons for localisation-->
+                    <!-- Buttons for localisation-->
                     <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
                         <button class="mdl-button mdl-js-button" v-bind:class="{green: onOff, pink: !onOff}" v-on:click="setLanguageEnglish">
                             <b class="mdc-button" v-on:click="toggleOnOff">English</b>
@@ -82,6 +82,7 @@
                 socket.emit('setLanguage', 'German');
             },
             setLanguageEnglish: function () {
+                console.log('Set lang to English');
                 let socket = io('http://localhost:8090');
                 socket.emit('setLanguage', 'English');
             }
