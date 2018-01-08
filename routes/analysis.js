@@ -41,7 +41,8 @@ let vueRenderOptions = {
     head: {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
+            {script: 'https://unpkg.com/wait.for'},
+            {script: 'https://unpkg.com/fibers'},
             {script: 'https://code.jquery.com/jquery-3.2.1.min.js'}
         ]
     }
