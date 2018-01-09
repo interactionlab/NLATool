@@ -1,8 +1,11 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <!-- Uses a mainHeader that contracts as the page scrolls down. -->
-        <component is="mainheader" v-bind:title="title"></component>
-        <component is="headernavbar" v-bind:title_small="title_small"></component>
+        <component is="mainheader"
+                   v-bind:title="title"
+                   v-bind:preventtitleedit="true"></component>
+        <component is="headernavbar"
+                   v-bind:title_small="title_small"></component>
 
         <main class="mdl-layout__content">
             <form action="/loadWrittenText" method="post">
