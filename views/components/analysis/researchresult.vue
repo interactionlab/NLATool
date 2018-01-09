@@ -1,4 +1,4 @@
-<templat>
+<template>
     <div>
         <div><img v-if="typeof researchresult.result.image !== 'undefined'"
                   v-bind:src="researchresult.result.image.contentUrl"/></div>
@@ -8,7 +8,7 @@
             {{researchresult.result.detailedDescription.articleBody}}
         </div>
     </div>
-</templat>
+</template>
 
 <script>
     export default {
