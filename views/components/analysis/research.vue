@@ -9,12 +9,21 @@
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
-
                     <component is="researchresult"
+                               v-if="resultselected"
+                               v-bind:researchresult="selectedresult"
+                               v-bind:index="selectedindex"
+                    >
+
+                    </component>
+                    <component is="researchresult"
+                               v-else
                                v-for="(researchresult,index) in researchresults[0].itemListElement"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
+                               v-bind:index="index"
                                v-bind:researchresults="researchresults"
+                               v-on:selectresult="selectResult($event)"
                     ></component>
                 </div>
             </form>
@@ -34,7 +43,10 @@
             return {
                 clickedword: this.clickedword,
                 researchresults: [''],
-                researchmode: this.researchmode
+                researchmode: this.researchmode,
+                resultselected: false,
+                selectedresult: {},
+                selectedindex: -1
             }
         },
         methods: {
@@ -56,6 +68,12 @@
                 });
 
             },
+            selectResult: function (index) {
+                this.resultselected = true;
+                this.selectedindex = index;
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
+                this.selectedresult = this.researchresults[0].itemListElement[index];
+            }
         },
         computed: {},
         watch: {
