@@ -3,7 +3,9 @@
         <!-- Header:-->
         <component
                 is="mainheader"
-                v-bind:title="title">
+                v-bind:title="title"
+                v-bind:docid="docID"
+                v-bind:preventtitleedit="false">
         </component>
         <component
                 is="headernavbar"
