@@ -22,8 +22,7 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchrode="changeResearchMode($event)"
-                >
+                        v-on:changeresearchrode="changeResearchMode($event)">
                 </component>
             </div>
 
@@ -41,7 +40,9 @@
                                    v-bind:tokens="vueTokens"
                                    v-bind:index="i+1"
                                    v-bind:classestomark="classesToMark"
-                                   v-on:clickword="setClickedWord($event)">
+                                   v-on:clickword="setClickedWord($event)"
+                                   v-on:startsection="selectText($event,0)"
+                                   v-on:endselection="selectText($event,1)">
                         </component>
                     </div>
                 </div>
@@ -89,6 +90,10 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                selectedtextindexes: {
+                    start: -1,
+                    end: -1
                 }
             }
         },
@@ -118,14 +123,22 @@
                 this.persons = persons;
             },
             setClickedWord: function (word) {
-                console.log('Setted clickword: '+JSON.stringify(word));
+                console.log('Setted clickword: ' + JSON.stringify(word));
                 //TODO: JSON parse(stringify(OBJECT))
                 const x = word;
                 this.clickedWord = x;
             },
-            changeResearchMode:function (mode) {
-                console.log('analysis: Changing researchmode: '+ mode);
+            changeResearchMode: function (mode) {
+                console.log('analysis: Changing researchmode: ' + mode);
                 this.researchmode = mode;
+            },
+            selectText: function (index, modus) {
+                if (modus === 0) {
+                    this.selectedtextindexes.start = index;
+                    this.selectedtextindexes.end= -1;
+                } else if (modus === 1) {
+                    this.selectedtextindexes.end = index;
+                }
             }
         },
         components: {
