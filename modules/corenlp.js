@@ -138,7 +138,8 @@ exports.analyse = function (text, callback) {
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
             //console.log(results);
-
+            //const tree = CoreNLP.util.Tree.fromSentence(sentences[i]);
+            //console.log('the tree: '+tree.dump());
             for(let j= 0; j < sentences[i].tokens().length; j++){
                 results.offsetBegin.push(sentences[i].tokens()[j].characterOffsetBegin());
                 results.offsetEnd.push(sentences[i].tokens()[j].characterOffsetEnd());
