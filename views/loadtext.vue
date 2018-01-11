@@ -52,11 +52,6 @@
                     </div>
                 </div>
             </form>
-            <div class="toggleBox">
-                <button v-bind:class="{green: onOff, black: !onOff}"
-                        v-on:click.capture="toggleOnOff()"> Toggle
-                </button>
-            </div>
         </main>
     </div>
 </template>
