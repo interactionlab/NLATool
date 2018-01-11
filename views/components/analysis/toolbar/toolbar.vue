@@ -42,12 +42,14 @@
                     </button>
                 </div>
 
-
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('Info')">
-                        <small class="mdc-button">Information</small>
-                    </button>
+                    <div  v-bind:class="{green: onOff}">
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleOnOff(), setResearchMode('Info')">
+                            <small class="mdc-button">Information</small>
+                        </button>
+                    </div>
+
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Map</small>
                     </button>
@@ -76,6 +78,11 @@
         },
         data: function () {
             return {
+                onOff: false,
+            }
+        },
+        function () {
+            return {
                 tool: 'analightertool',
                 lang: this.lang,
                 classesToMark: {
@@ -91,6 +98,9 @@
             }
         },
         methods: {
+            toggleOnOff: function () {
+                this.onOff = !this.onOff;
+            },
             changetool: function (tool) {
                 if (tool === 'analightertool') {
                     this.$emit('emitanalighter');
@@ -142,9 +152,9 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            setResearchMode:function (mode) {
+            setResearchMode: function (mode) {
                 console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode',[mode]);
+                this.$emit('changeresearchrode', [mode]);
             }
         },
         components: {}
