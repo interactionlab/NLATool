@@ -43,6 +43,7 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
+                    <!--TODO: define toggle just for one Button -->
                     <div  v-bind:class="{green: onOff}">
                         <button class="mdl-button mdl-js-button"
                                 v-on:click="toggleOnOff(), setResearchMode('Info')">
