@@ -34,7 +34,8 @@
                 this.hover = !this.hover;
             },
             selectResult: function () {
-
+                let soket = io('http://localhost:8080');
+               // socket.$emit('selectresult',this.index);
                 this.$emit('selectresult', this.index);
             }
         }
