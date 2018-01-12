@@ -1,11 +1,13 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col graybox contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle(clickedword.word)" v-model="clickedword.word"/>
+            <input v-on:keydown.enter="searchGoogle(selectedtext)"
+                   v-model="selectedtext"
+                   class="mdl-textfield__input"/>
         </div>
         <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div class="mdl-cell mdl-cell--12-col contentColor graybox">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
@@ -24,17 +26,24 @@
 
 <script>
     import researchresult from './components/analysis/researchresult.vue';
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
 
     export default {
+        mixins: [getselectedtext],
         props: {
             clickedword: Object,
-            researchmode: String
+            researchmode: String,
+            selectedindexes: Object,
+            tokens: Array
         },
         data: function () {
             return {
                 clickedword: this.clickedword,
                 researchresults: [''],
-                researchmode: this.researchmode
+                researchmode: this.researchmode,
+                tokens: this.tokens,
+                selectedtext: '',
+                selectedindexes: this.selectedindexes
             }
         },
         methods: {
@@ -47,7 +56,7 @@
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
                 };
                 let tempresults = {};
-                $.getJSON(service_url + '?callback=?', params,(response)=> {
+                $.getJSON(service_url + '?callback=?', params, (response) => {
                     // $.each(response.itemListElement, function (i, element) {
                     //     document.getElementById("resultfield").innerHTML = "<img src=\""
                     //         + element['result']['image']["contentUrl"] + "\"> " + "<br />"
@@ -56,7 +65,7 @@
                     //         + element['result']['detailedDescription']['articleBody'] + "<br />"
                     //         + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
                     // });
-                }).done((response)=>{
+                }).done((response) => {
                     console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
@@ -69,10 +78,18 @@
                 //TODO: sent results to server
             },
         },
-        computed:{
-
-        },
+        computed: {},
         watch: {
+            selectedindexes: {
+                handler: function (newSelectedIndexes) {
+                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                        this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
+                        this.searchGoogle(this.selectedtext);
+                    }
+                },
+                deep: true
+            },
             researchmode: function (mode) {
                 //if (mode === 'Info') {
                 console.log('researchmode was changed to:' + mode);
