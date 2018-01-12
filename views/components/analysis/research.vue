@@ -31,14 +31,12 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            clickedword: Object,
             researchmode: String,
             selectedindexes: Object,
             tokens: Array
         },
         data: function () {
             return {
-                clickedword: this.clickedword,
                 researchresults: [''],
                 researchmode: this.researchmode,
                 tokens: this.tokens,
