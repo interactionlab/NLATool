@@ -50,6 +50,6 @@
   },
   "homepage": "https://github.com/interactionlab/NLATool#readme",
   "devDependencies": {
-    "mark.js": "^8.11.0"
+    "mark.js": "^8.11.1"
   }
 }

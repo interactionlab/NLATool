@@ -41,7 +41,7 @@
                                    v-bind:index="i+1"
                                    v-bind:classestomark="classesToMark"
                                    v-on:clickword="setClickedWord($event)"
-                                   v-on:startsection="selectText($event,0)"
+                                   v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
                         </component>
                     </div>
@@ -55,7 +55,8 @@
                             v-bind:docid="docID"
                             v-bind:notes="notes"
                             v-bind:persons="persons"
-                            v-bind:researchmode="researchmode">
+                            v-bind:researchmode="researchmode"
+                            v-bind:selectedindexes="selectedtextindexes">
                     </component>
                 </div>
             </div>
@@ -135,10 +136,18 @@
             selectText: function (index, modus) {
                 if (modus === 0) {
                     this.selectedtextindexes.start = index;
-                    this.selectedtextindexes.end= -1;
+                    this.selectedtextindexes.end = -1;
                 } else if (modus === 1) {
                     this.selectedtextindexes.end = index;
                 }
+                if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
+                    if (this.selectedtextindexes.start > this.selectedtextindexes.end) {
+                        let tempstart = this.selectedtextindexes.start;
+                        this.selectedtextindexes.start = this.selectedtextindexes.end;
+                        this.selectedtextindexes.end = tempstart;
+                    }
+                }
+                console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
             }
         },
         components: {
