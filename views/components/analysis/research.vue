@@ -40,7 +40,7 @@
         props: {
             researchmode: String,
             selectedindexes: Object,
-            tokens: Array
+            tokens: Array,
         },
         data: function () {
             return {
