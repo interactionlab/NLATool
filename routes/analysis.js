@@ -70,9 +70,9 @@ let vueData = {
  * if writing, deleting or updating a note.
  */
 io.on('connection', function (socket) {
-    socket.on('savewordnote', function (note, word, docID) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + word + ' docID:' + docID);
-        wait.launchFiber(saveWordNote, note, word, docID);
+    socket.on('savewordnote', function (note, docID, indexes) {
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID+ ' Indexes: ' + JSON.stringify(indexes));
+        wait.launchFiber(saveWordNote, note, docID, indexes);
     });
     socket.on('updatewordnote', function (noteID, note) {
         console.log(notMedia + Tag + 'update Word Note: ');
@@ -96,14 +96,15 @@ io.on('connection', function (socket) {
  * @param word
  * @param docID
  */
-function saveWordNote(note, word, docID) {
+function saveWordNote(note, docID, indexes) {
     note = stringifyForDB(note);
-    word = stringifyForDB(word);
     docID = stringifyForDB(docID);
+    indexes.start = stringifyForDB(indexes.start);
+    indexes.end = stringifyForDB(indexes.end);
     let savedNote = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createInsertCommand('notes',
-            ['docID', 'content', 'wordID'],
-            [docID, note, word],
+            ['docID', 'content', 'textIndex1', 'textIndex2'],
+            [docID, note, indexes.start, indexes.end],
             null, null)));
 }
 

@@ -1,7 +1,11 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor">
-        <component :is="noteMode" v-bind:clickedword="clickedword" v-bind:docid="docid"
-                   v-bind:notes="notes"></component>
+        <component :is="noteMode"
+                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:docid="docid"
+                   v-bind:tokens="tokens"
+                   v-bind:notes="notes">
+        </component>
     </div>
 </template>
 <script>
@@ -10,17 +14,19 @@
     export default {
         props: {
             wordnotesp: Array,
-            clickedword: Object,
+            selectedindexes: Object,
             docid: String,
-            notes: Array
+            notes: Array,
+            tokens:Object
         },
         data: function () {
             return {
                 noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp,
-                clickedword: this.clickedword,
+                selectedindexes: this.selectedindexes,
                 docid: this.docid,
-                notes: this.notes
+                notes: this.notes,
+                tokens:this.tokens
             }
         },
         methods: {},

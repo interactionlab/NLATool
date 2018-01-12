@@ -40,7 +40,6 @@
                                    v-bind:tokens="vueTokens"
                                    v-bind:index="i+1"
                                    v-bind:classestomark="classesToMark"
-                                   v-on:clickword="setClickedWord($event)"
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
                         </component>
@@ -51,7 +50,6 @@
                     <component
                             :is="analysisMode"
                             v-bind:tokens="vueTokens"
-                            v-bind:clickedword="clickedWord"
                             v-bind:docid="docID"
                             v-bind:notes="notes"
                             v-bind:persons="persons"
@@ -80,7 +78,6 @@
                 markermode: 'NE',
                 showMode: 'nerVue',
                 researchmode: '',
-                clickedWord: {},
                 persons: '',
                 classesToMark: {
                     PERSON: false,
@@ -122,12 +119,6 @@
             },
             setPersons: function (persons) {
                 this.persons = persons;
-            },
-            setClickedWord: function (word) {
-                console.log('Setted clickword: ' + JSON.stringify(word));
-                //TODO: JSON parse(stringify(OBJECT))
-                const x = word;
-                this.clickedWord = x;
             },
             changeResearchMode: function (mode) {
                 console.log('analysis: Changing researchmode: ' + mode);
