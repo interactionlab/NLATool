@@ -23,6 +23,7 @@
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changeresearchrode="changeResearchMode($event)">
+                    v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
 
@@ -92,6 +93,10 @@
                 selectedtextindexes: {
                     start: -1,
                     end: -1
+                },
+                notemodes: {
+                    wordnote: true,
+                    globalnotes: false
                 }
             }
         },
@@ -139,6 +144,10 @@
                     }
                 }
                 console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
+
+            },
+            changeNoteMode: function (newNoteModes) {
+                this.notemodes = newNoteModes;
             }
         },
         components: {
