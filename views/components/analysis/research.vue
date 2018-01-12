@@ -10,13 +10,20 @@
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
-                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
-
+                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col" id="resultfield">
                     <component is="researchresult"
+                               v-if="resultselected"
+                               v-bind:researchresult="selectedresult"
+                               v-bind:index="selectedindex">
+                    </component>
+                    <component is="researchresult"
+                               v-else
                                v-for="(researchresult,index) in researchresults[0].itemListElement"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
-                               v-bind:researchresults="researchresults">
+                               v-bind:index="index"
+                               v-bind:researchresults="researchresults"
+                               v-on:selectresult="selectResult($event)">
                     </component>
                 </div>
             </form>
@@ -41,7 +48,10 @@
                 researchmode: this.researchmode,
                 tokens: this.tokens,
                 selectedtext: '',
-                selectedindexes: this.selectedindexes
+                selectedindexes: this.selectedindexes,
+                resultselected: false,
+                selectedresult: {},
+                selectedindex: -1
             }
         },
         methods: {
@@ -53,28 +63,20 @@
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
                 };
-                let tempresults = {};
                 $.getJSON(service_url + '?callback=?', params, (response) => {
-                    // $.each(response.itemListElement, function (i, element) {
-                    //     document.getElementById("resultfield").innerHTML = "<img src=\""
-                    //         + element['result']['image']["contentUrl"] + "\"> " + "<br />"
-                    //         + element['result']['name'] + "<br />"
-                    //         + element['result']['description'] + "<br />"
-                    //         + element['result']['detailedDescription']['articleBody'] + "<br />"
-                    //         + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
-                    // });
                 }).done((response) => {
                     console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
                 });
-                console.log('Response for Research222222222222222222: ' + JSON.stringify(this.researchresults));
 
-                //TODO: use socket emit for database handling
-                //TODO: establish Connection -> get Response /result
-                // this.googleResponse=displayedResult;
-                //TODO: sent results to server
             },
+            selectResult: function (index) {
+                this.resultselected = true;
+                this.selectedindex = index;
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
+                this.selectedresult = this.researchresults[0].itemListElement[index];
+            }
         },
         computed: {},
         watch: {
