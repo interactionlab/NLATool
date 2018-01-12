@@ -1,7 +1,10 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor">
-        <component :is="noteMode" v-bind:clickedword="clickedword" v-bind:docid="docid"
-                   v-bind:notes="notes"></component>
+        <component :is="noteMode"
+                   v-bind:clickedword="clickedword"
+                   v-bind:docid="docid"
+                   v-bind:notes="notes">
+        </component>
     </div>
 </template>
 <script>

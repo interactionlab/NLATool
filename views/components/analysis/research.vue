@@ -14,8 +14,8 @@
                                v-for="(researchresult,index) in researchresults[0].itemListElement"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
-                               v-bind:researchresults="researchresults"
-                    ></component>
+                               v-bind:researchresults="researchresults">
+                    </component>
                 </div>
             </form>
         </div>
