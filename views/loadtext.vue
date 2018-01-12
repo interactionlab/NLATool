@@ -13,9 +13,12 @@
                 <div class="mdl-grid">
                     <!-- Bottons for localisation-->
                     <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
-                        <button class="mdl-button mdl-js-button" v-bind:class="{green: onOff, pink: !onOff}" v-on:click="setLanguageEnglish">
-                            <b class="mdc-button" v-on:click="toggleOnOff">English</b>
+                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish, toggleOnOff()">
+                            <div class="toggleBox" v-bind:class="{green: onOff, black: !onOff}">
+                                <b class="mdc-button">English</b>
+                            </div>
                         </button>
+
                         <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
                             <b class="mdc-button">German</b>
                         </button>
@@ -52,11 +55,6 @@
                     </div>
                 </div>
             </form>
-
-
-            <div class="toggleBox" v-bind:class="{green: onOff, black: !onOff}">
-                <button v-on:click="toggleOnOff()"> Toggle </button>
-            </div>
         </main>
     </div>
 </template>
