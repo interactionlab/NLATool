@@ -65,7 +65,10 @@
                 <div class="mdl-tabs__panel " id="notes-panel">
                     <!--No Tab Value needed-->
                     <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button"></small>
+                        <small class="mdc-button">Word Notes</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Global Notes</small>
                     </button>
                 </div>
             </div>
@@ -95,6 +98,10 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                noteModes:{
+                    wordnote:true,
+                    globalnotes: false
                 }
             }
         },
@@ -155,7 +162,12 @@
             },
             setResearchMode: function (mode) {
                 console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode', [mode]);
+                this.$emit('changeresearchrode',[mode]);
+            },
+            toggleNoteMode:function () {
+                this.noteModes.wordnote = !this.noteModes.wordnote;
+                this.noteModes.globalnotes = !this.noteModes.globalnotes;
+                this.$emit('changenotemode', this.noteModes);
             }
         },
         components: {}
