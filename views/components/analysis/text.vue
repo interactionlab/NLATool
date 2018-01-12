@@ -63,10 +63,11 @@
                 this.$emit('clickword', this.token);
             },
             startSelection:function () {
+                console.log('mouse pressed at: ' + this.index-1);
                 this.$emit('startselection', this.index-1);
             },
             endSelection:function(){
-                this.$emit('endselection', this.index-1);
+                this.$emit('endselection', this.index);
             }
         }
     }
