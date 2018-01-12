@@ -21,7 +21,7 @@
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changeresearchrode="changeResearchMode($event)"
-                >
+                        v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
 
@@ -87,6 +87,10 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                notemodes: {
+                    wordnote:true,
+                    globalnotes: false
                 }
             }
         },
@@ -124,6 +128,9 @@
             changeResearchMode:function (mode) {
                 console.log('analysis: Changing researchmode: '+ mode);
                 this.researchmode = mode;
+            },
+            changeNoteMode:function (newNoteModes) {
+                this.notemodes = newNoteModes;
             }
         },
         components: {
