@@ -17,6 +17,7 @@
                         <small class="mdc-button">ALL</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Person')"
+                            v-bind:class="{PERSON: classesToMark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSONS</small>
                     </button>
@@ -42,21 +43,27 @@
                     </button>
                 </div>
 
-
-                <div class="mdl-tabs__panel " id="research-panel">
-                    <button class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('Info')">
-                        <small class="mdc-button">Information</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Map</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Statistics</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Correction</small>
-                    </button>
+                <div class="mdl-grid">
+                    <div class="mdl-tabs__panel is-active" id="research-panel">
+                        <button v-bind:class="{green: onOff}"
+                                v-on:click="setResearchMode('Info')"
+                                class="toggleBox, mdl-button mdl-js-button">
+                            <small class="mdc-button">Information</small>
+                        </button>
+                        <button v-bind:class="{green: onOff}"
+                                v-on:click="setResearchMode('Info')"
+                                class="mdl-button mdl-js-button">
+                            <small class="mdc-button">Map</small>
+                        </button>
+                        <!--
+                            <button class="mdl-button mdl-js-button">
+                                <small class="mdc-button">Statistics</small>
+                            </button>
+                            <button class="mdl-button mdl-js-button">
+                                <small class="mdc-button">Correction</small>
+                            </button>
+                            -->
+                    </div>
                 </div>
 
                 <div class="mdl-tabs__panel " id="notes-panel">
@@ -77,6 +84,7 @@
         data: function () {
             return {
                 tool: 'analightertool',
+                onOff: false,
                 lang: this.lang,
                 classesToMark: {
                     PERSON: false,
@@ -87,10 +95,19 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                classestoresearch: {
+                    info: false,
+                    map: false,
                 }
             }
         },
         methods: {
+            toggleOnOff: function () {
+                console.log('toggleing');
+                _rejectSeri
+                this.onOff = !this.onOff;
+            },
             changetool: function (tool) {
                 if (tool === 'analightertool') {
                     this.$emit('emitanalighter');
@@ -142,9 +159,10 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            setResearchMode:function (mode) {
+            setResearchMode: function (mode) {
+                this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode',[mode]);
+                this.$emit('changeresearchrode', [mode]);
             }
         },
         components: {}
