@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-grid">
-        <p class="mdl-cell mdl-cell--12-col">{{clickedword.content}}</p>
+        <p class="mdl-cell mdl-cell--12-col"
+            v-on:click="jumpMarkText">{{selectedtext}}</p>
         <form class="mdl-cell mdl-cell--8-col">
             <div class="mdl-textfield mdl-js-textfield">
                 <textarea class="mdl-textfield__input contentColor"
@@ -10,9 +11,6 @@
                           type="text"
                           rows="1">
                 </textarea>
-                <label class="mdl-textfield__label" for="textbox">
-                    New+
-                </label>
             </div>
         </form>
         <div class="mdl-cell mdl-cell--4-col">
@@ -31,19 +29,24 @@
     </div>
 </template>
 <script>
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     export default {
+        mixins: [getselectedtext],
         props: {
-            clickedword: Object,
+            selectedindexes: Object,
             docid: String,
             newnote: String,
-            wordnotedb: Object
+            wordnotedb: Object,
+            tokens: Object
         },
         data: function () {
             return {
-                clickedword: this.clickedword,
+                selectedindexes: this.selectedindexes,
                 docid: this.docid,
                 newnote: this.newnote,
-                wordnotedb: this.wordnotedb
+                wordnotedb: this.wordnotedb,
+                selectedtext: '',
+                tokens:this.tokens
             }
         },
         methods: {
@@ -51,24 +54,24 @@
                 this.$emit('back',[-10,-10,-10]);
             },
             save: function () {
-                console.log('DOCID: ' + this.docid + ' : ' + this.clickedword.wordID);
-                if (typeof this.clickedword !== 'undefined'
-                    && this.clickedword.wordID !== null
-                    && typeof this.clickedword.wordID !== 'undefined') {
+                console.log('DOCID: ' + this.docid + ' : ' + this.selectedindexes);
+                if (typeof this.selectedindexes !== 'undefined'
+                    && this.selectedindexes.start !== -1
+                    && this.selectedindexes.end !== -1) {
                     let socket = io('http://localhost:8080');
                     if (typeof this.wordnotedb === 'undefined') {
                         console.log('got here: 0');
-                        socket.emit('savewordnote', this.newnote, this.clickedword.wordID, this.docid);
+                        socket.emit('savewordnote', this.newnote, this.docid, this.selectedindexes);
                         console.log('got here: 1');
+                        //TODO: get noteID from DB in callback and correct it while/after render in the background
                         let tempNote = {
                             docID: this.docid,
                             noteID: -1,
-                            wordID: -1,
                             content: this.newnote,
-                            word: this.clickedword.content
+                            word: this.selectedtext
                         };
                         this.newnote = '';
-                        this.clickedword = {};
+                        this.selectedindexes = {}
                         console.log('got here: 2');
                         this.$emit('back', [-1, 1, tempNote]);
                     } else {
@@ -79,15 +82,29 @@
                 }
             },
             deleting: function () {
-                console.log('DOCID: ' + this.docid + this.clickedword.wordID);
-                if (typeof this.clickedword !== 'undefined'
-                    && this.clickedword.wordID !== null
-                    && typeof this.clickedword.wordID !== 'undefined') {
+                if (typeof this.selectedindexes !== 'undefined'
+                    && this.selectedindexes.start !== -1
+                    && this.selectedindexes.end !== -1) {
                     let socket = io('http://localhost:8080');
-                    socket.emit('deletenote', this.wordnotedb.noteID, this.clickedword.wordID, this.docid);
+                    socket.emit('deletenote', this.wordnotedb.noteID);
                     this.$emit('back', this.wordnotedb.nodeID, 0);
                 }
+            },
+            jumpMarkText:function () {
+
             }
+        },
+        watch: {
+            selectedindexes: {
+                handler: function (newSelectedIndexes) {
+                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                        this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
+
+                    }
+                },
+                deep: true
+            },
         }
     }
 </script>
