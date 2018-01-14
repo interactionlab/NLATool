@@ -1,14 +1,43 @@
 <template>
-    <div> <!-- show Picture if possible --></div>
+    <div v-bind:class="{researchresulthover: hover}"
+         v-on:mouseout="accentuate"
+         v-on:mouseover="accentuate"
+         v-on:click="selectResult">
 
-    <div> <!-- show short description --></div>
-    <div> <!-- show detailed description --></div>
-    <div> <!-- show URL --></div>
+        <div><img v-if="typeof researchresult.result.image !== 'undefined'"
+                  v-bind:src="researchresult.result.image.contentUrl"/></div>
+        <div v-if="typeof researchresult.result !== 'undefined'">{{researchresult.result.name}}</div>
+        <div v-if="typeof researchresult.result.description !== 'undefined'">{{researchresult.result.description}}</div>
+        <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+            {{researchresult.result.detailedDescription.articleBody}}
+        </div>
+    </div>
 </template>
+
 
 <script>
     export default {
-        name: "research-result"
+        props: {
+            researchresults: Object,
+            index: Number
+        },
+        data: function () {
+            return {
+                researchresult: this.researchresult,
+                researchresults: this.researchresults,
+                hover: false,
+                index: this.index
+            }
+        },
+        methods: {
+            accentuate: function () {
+                this.hover = !this.hover;
+            },
+            selectResult: function () {
+
+                this.$emit('selectresult', this.index);
+            }
+        }
     }
 </script>
 
