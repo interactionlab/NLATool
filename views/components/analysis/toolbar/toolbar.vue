@@ -44,22 +44,23 @@
 
                 <div class="mdl-tabs__panel " id="research-panel">
                     <!--TODO: define toggle just for one Button -->
-                    <div  v-bind:class="{green: onOff}">
-                        <button class="mdl-button mdl-js-button"
+                    <div  >
+                        <button v-bind:class="{green: onOff}" class="mdl-button mdl-js-button"
                                 v-on:click="toggleOnOff(), setResearchMode('Info')">
                             <small class="mdc-button">Information</small>
                         </button>
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleOnOff(), setResearchMode('Info')">
+                            <small class="mdc-button">Map</small>
+                        </button>
                     </div>
-
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Map</small>
-                    </button>
+                    <!--
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Statistics</small>
                     </button>
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Correction</small>
-                    </button>
+                    </button>-->
                 </div>
 
                 <div class="mdl-tabs__panel " id="notes-panel">
