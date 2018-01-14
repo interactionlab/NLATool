@@ -88,10 +88,6 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
-<<<<<<< HEAD
-=======
-
->>>>>>> 5890a9c7b643e5324144aa785c2bace6de052a11
     socket.on('saveResearchResult', function () {
         //TODO function like below
     });
@@ -199,12 +195,8 @@ function buildText() {
             + '<span v-bind:class="{gap: true}">'
             + gap
             + '</span>'
-<<<<<<< HEAD
-        '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'            + textDB.tokens[i].content
-=======
             + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'
             + textDB.tokens[i].content
->>>>>>> 5890a9c7b643e5324144aa785c2bace6de052a11
             + '</span>'
         ;
     }
