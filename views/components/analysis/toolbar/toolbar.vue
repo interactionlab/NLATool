@@ -170,4 +170,5 @@
         },
         components: {}
     }
+    
 </script>
