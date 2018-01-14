@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-grid">
-        <p class="mdl-cell mdl-cell--12-col">{{selectedtext}}</p>
+        <p class="mdl-cell mdl-cell--12-col"
+            v-on:click="jumpMarkText">{{selectedtext}}</p>
         <form class="mdl-cell mdl-cell--8-col">
             <div class="mdl-textfield mdl-js-textfield">
                 <textarea class="mdl-textfield__input contentColor"
@@ -10,9 +11,6 @@
                           type="text"
                           rows="1">
                 </textarea>
-                <label class="mdl-textfield__label" for="textbox">
-                    New+
-                </label>
             </div>
         </form>
         <div class="mdl-cell mdl-cell--4-col">
@@ -91,6 +89,9 @@
                     socket.emit('deletenote', this.wordnotedb.noteID);
                     this.$emit('back', this.wordnotedb.nodeID, 0);
                 }
+            },
+            jumpMarkText:function () {
+
             }
         },
         watch: {

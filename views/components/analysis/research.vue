@@ -84,6 +84,7 @@
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                        this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
                     }
