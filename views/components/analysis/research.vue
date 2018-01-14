@@ -1,21 +1,28 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col graybox contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
             <input v-on:keydown.enter="searchGoogle(clickedword.word)" v-model="clickedword.word"/>
         </div>
         <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div class="mdl-cell mdl-cell--12-col contentColor graybox">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
-                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
-
+                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col" id="resultfield">
                     <component is="researchresult"
+                               v-if="resultselected"
+                               v-bind:researchresult="selectedresult"
+                               v-bind:index="selectedindex">
+                    </component>
+                    <component is="researchresult"
+                               v-else
                                v-for="(researchresult,index) in researchresults[0].itemListElement"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
-                               v-bind:researchresults="researchresults">
-                    </component>
+                               v-bind:index="index"
+                               v-bind:researchresults="researchresults"
+                               v-on:selectresult="selectResult($event)"
+                    ></component>
                 </div>
             </form>
         </div>
@@ -34,7 +41,10 @@
             return {
                 clickedword: this.clickedword,
                 researchresults: [''],
-                researchmode: this.researchmode
+                researchmode: this.researchmode,
+                resultselected: false,
+                selectedresult: {},
+                selectedindex: -1
             }
         },
         methods: {
@@ -56,6 +66,12 @@
                 });
 
             },
+            selectResult: function (index) {
+                this.resultselected = true;
+                this.selectedindex = index;
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
+                this.selectedresult = this.researchresults[0].itemListElement[index];
+            }
         },
         computed: {},
         watch: {
