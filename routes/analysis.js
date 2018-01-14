@@ -41,7 +41,6 @@ let vueRenderOptions = {
     head: {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {script: 'https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.0/mark.js'},
             {script: 'https://code.jquery.com/jquery-3.2.1.min.js'}
         ]
     }
@@ -71,9 +70,9 @@ let vueData = {
  * if writing, deleting or updating a note.
  */
 io.on('connection', function (socket) {
-    socket.on('savewordnote', function (note, word, docID) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + word + ' docID:' + docID);
-        wait.launchFiber(saveWordNote, note, word, docID);
+    socket.on('savewordnote', function (note, docID, indexes) {
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID+ ' Indexes: ' + JSON.stringify(indexes));
+        wait.launchFiber(saveWordNote, note, docID, indexes);
     });
     socket.on('updatewordnote', function (noteID, note) {
         console.log(notMedia + Tag + 'update Word Note: ');
@@ -89,6 +88,10 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5890a9c7b643e5324144aa785c2bace6de052a11
     socket.on('saveResearchResult', function () {
         //TODO function like below
     });
@@ -100,14 +103,15 @@ io.on('connection', function (socket) {
  * @param word
  * @param docID
  */
-function saveWordNote(note, word, docID) {
+function saveWordNote(note, docID, indexes) {
     note = stringifyForDB(note);
-    word = stringifyForDB(word);
     docID = stringifyForDB(docID);
+    indexes.start = stringifyForDB(indexes.start);
+    indexes.end = stringifyForDB(indexes.end);
     let savedNote = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createInsertCommand('notes',
-            ['docID', 'content', 'wordID'],
-            [docID, note, word],
+            ['docID', 'content', 'textIndex1', 'textIndex2'],
+            [docID, note, indexes.start, indexes.end],
             null, null)));
 }
 
@@ -195,7 +199,12 @@ function buildText() {
             + '<span v-bind:class="{gap: true}">'
             + gap
             + '</span>'
+<<<<<<< HEAD
         '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'            + textDB.tokens[i].content
+=======
+            + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'
+            + textDB.tokens[i].content
+>>>>>>> 5890a9c7b643e5324144aa785c2bace6de052a11
             + '</span>'
         ;
     }

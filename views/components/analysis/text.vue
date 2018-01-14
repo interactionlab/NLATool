@@ -1,8 +1,8 @@
 <template>
-    <span>
+    <span v-on:mousedown="startSelection"
+          v-on:mouseup="endSelection">
         <span class="nonPreAlt"
-              v-bind:class="vueSemanticClass"
-              v-on:click="setClickedWord">{{token.content}}</span
+              v-bind:class="vueSemanticClass">{{token.content}}</span
         ><span class="preAlt">{{getWordGap}}</span>
     </span>
 </template>
@@ -57,9 +57,13 @@
                 return gap;
             }
         },
-        methods:{
-            setClickedWord:function(){
-                this.$emit('clickword', this.token);
+        methods: {
+            startSelection:function () {
+                console.log('mouse pressed at: ' + this.index-1);
+                this.$emit('startselection', this.index-1);
+            },
+            endSelection:function(){
+                this.$emit('endselection', this.index);
             }
         }
     }
