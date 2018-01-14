@@ -10,28 +10,40 @@
 </template>
 <script>
     import wordnotes from './components/analysis/notes/wordnotes.vue';
-
+    import globalnote from './components/analysis/notes/globalnote.vue'
     export default {
         props: {
             wordnotesp: Array,
             selectedindexes: Object,
             docid: String,
             notes: Array,
-            tokens:Object
+            tokens:Object,
+            notemodes:Object
         },
         data: function () {
             return {
-                noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,
                 notes: this.notes,
-                tokens:this.tokens
+                tokens:this.tokens,
+                notemodes:this.notemodes
             }
         },
-        methods: {},
+        methods: {
+        },
+        computed:{
+            noteMode:function () {
+                if(this.notemodes.wordnote && !this.notemodes.globalnote){
+                    return 'wordnotes';
+                } else{
+                    return 'globalnote';
+                }
+            }
+        },
         components: {
-            wordnotes
+            wordnotes,
+            globalnote
         }
     }
 </script>
