@@ -43,27 +43,24 @@
                     </button>
                 </div>
 
-                <div class="mdl-grid">
-                    <div class="mdl-tabs__panel is-active" id="research-panel">
-                        <button v-bind:class="{green: onOff}"
-                                v-on:click="setResearchMode('Info')"
-                                class="toggleBox, mdl-button mdl-js-button">
+                <div class="mdl-tabs__panel " id="research-panel">
+                    <!--TODO: define toggle just for one Button -->
+                    <div  v-bind:class="{green: onOff}">
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleOnOff(), setResearchMode('Info')">
                             <small class="mdc-button">Information</small>
                         </button>
-                        <button v-bind:class="{green: onOff}"
-                                v-on:click="setResearchMode('Info')"
-                                class="mdl-button mdl-js-button">
-                            <small class="mdc-button">Map</small>
-                        </button>
-                        <!--
-                            <button class="mdl-button mdl-js-button">
-                                <small class="mdc-button">Statistics</small>
-                            </button>
-                            <button class="mdl-button mdl-js-button">
-                                <small class="mdc-button">Correction</small>
-                            </button>
-                            -->
                     </div>
+
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Map</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Statistics</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Correction</small>
+                    </button>
                 </div>
 
                 <div class="mdl-tabs__panel " id="notes-panel">
@@ -82,6 +79,11 @@
             lang: String
         },
         data: function () {
+            return {
+                onOff: false,
+            }
+        },
+        function () {
             return {
                 tool: 'analightertool',
                 onOff: false,
@@ -104,8 +106,10 @@
         },
         methods: {
             toggleOnOff: function () {
-                console.log('toggleing');
-                _rejectSeri
+<<<<<<< HEAD
+              // console.log('toggleing');
+              //  _rejectSeri
+
                 this.onOff = !this.onOff;
             },
             changetool: function (tool) {
@@ -160,7 +164,10 @@
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
             setResearchMode: function (mode) {
+<<<<<<< HEAD
                 this.onOff = !this.onOff;
+=======
+>>>>>>> 5890a9c7b643e5324144aa785c2bace6de052a11
                 console.log('got the Event:' + mode);
                 this.$emit('changeresearchrode', [mode]);
             }

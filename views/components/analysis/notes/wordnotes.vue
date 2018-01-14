@@ -6,17 +6,19 @@
                    v-bind:key="wordnotedb.noteID"
                    v-bind:ishovered="ishovered"
                    v-bind:docid="docid"
+                   v-bind:tokens="tokens"
                    v-on:edit="editnote($event)"
                    v-on:back="back($event)"
                    v-on:mouseover="showButns"
-                   v-on:mouseout="hideButns"
-        ></component>
+                   v-on:mouseout="hideButns">
+        </component>
 
         <component is="newwordnote"
-                   v-bind:clickedword="clickedword"
+                   v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="this.docid"
-                   v-on:back="back($event)"
-        ></component>
+                   v-bind:tokens="tokens"
+                   v-on:back="back($event)">
+        </component>
 
     </div>
 </template>
@@ -28,15 +30,17 @@
         props: {
             docid: String,
             notes: Array,
-            clickedword: Object
+            selectedindexes: Object,
+            tokens: Object
         },
         data: function () {
             return {
                 note: '',
                 docid: this.docid,
                 notes: this.notes,
-                clickedword: this.clickedword,
-                ishovered: false
+                selectedindexes: this.selectedindexes,
+                ishovered: false,
+                tokens: this.tokens
             }
         },
         methods: {

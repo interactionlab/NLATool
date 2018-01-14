@@ -25,6 +25,10 @@
     border: 2px dashed #009ACD;
 }
 
+.researchresulthover{
+    background-color: deeppink;
+}
+
 .highlight {
     background-color: yellow;
 }
