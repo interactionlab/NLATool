@@ -1,9 +1,10 @@
 <template>
     <component :is="changing"
+               v-bind:newtitle="newtitle"
                v-bind:document="document"
                v-on:editing="editing($event)"
-               v-on:deleted="deleted($event)"
-    ></component>
+               v-on:deleted="deleted($event)">
+    </component>
 </template>
 
 <script>
@@ -18,6 +19,7 @@
             return {
                 document: this.document,
                 changing: 'showdoc',
+                newtitle: ''
             }
         },
         methods: {
@@ -30,11 +32,14 @@
             },
             editing: function (newTitle) {
                 if (this.changing === 'showdoc') {
+                    this.newtitle = this.document.name;
+                    console.log('newtitle Var is set:' + this.newtitle + JSON.stringify(this.document));
                     this.changing = 'editdoc';
                 }
                 else {
                     this.changing = 'showdoc';
                     this.document.name = newTitle;
+                    console.log('showing this title now: '+ this.document.name);
                 }
             },
             deleted:function(docID){
