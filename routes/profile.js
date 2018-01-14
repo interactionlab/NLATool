@@ -157,12 +157,13 @@ function updateTitle(docID, newTitle) {
 
 function deleteDocument(docID) {
     docID = dbAction.stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('documents', ['docID'], [docID]));
+
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('searchResults', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('notes', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('text', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textmap', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textnote', [docID], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('documents', ['docID'], [docID]));
 }
 
 module.exports = router;

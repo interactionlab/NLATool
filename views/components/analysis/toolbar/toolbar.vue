@@ -64,10 +64,12 @@
 
                 <div class="mdl-tabs__panel " id="notes-panel">
                     <!--No Tab Value needed-->
-                    <button class="mdl-button mdl-js-button">
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
                         <small class="mdc-button">Word Notes</small>
                     </button>
-                    <button class="mdl-button mdl-js-button">
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
                         <small class="mdc-button">Global Notes</small>
                     </button>
                 </div>
@@ -83,10 +85,6 @@
         data: function () {
             return {
                 onOff: false,
-            }
-        },
-        function () {
-            return {
                 tool: 'analightertool',
                 lang: this.lang,
                 classesToMark: {
@@ -101,7 +99,7 @@
                 },
                 noteModes:{
                     wordnote:true,
-                    globalnotes: false
+                    globalnote: false
                 }
             }
         },
@@ -166,10 +164,11 @@
             },
             toggleNoteMode:function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
-                this.noteModes.globalnotes = !this.noteModes.globalnotes;
+                this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             }
         },
         components: {}
     }
+    
 </script>

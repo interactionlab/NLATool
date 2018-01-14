@@ -104,6 +104,10 @@ pre {
     /**background-color: black;*/
 }
 
+.notemark{
+    background: yellow;
+}
+
 /**
 Background color for Buttons
 .mdl-button--raised{
