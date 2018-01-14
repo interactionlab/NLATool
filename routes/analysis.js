@@ -89,6 +89,9 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
+    socket.on('saveResearchResult', function () {
+        //TODO function like below
+    });
 });
 
 /**
@@ -192,8 +195,7 @@ function buildText() {
             + '<span v-bind:class="{gap: true}">'
             + gap
             + '</span>'
-            + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.'+textDB.tokens[i].semanticClass+'}">'
-            + textDB.tokens[i].content
+        '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'            + textDB.tokens[i].content
             + '</span>'
         ;
     }
