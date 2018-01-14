@@ -22,8 +22,8 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchrode="changeResearchMode($event)">
-                    v-on:changenotemode="changeNoteMode($event)">
+                        v-on:changeresearchrode="changeResearchMode($event)"
+                        v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
 
@@ -40,6 +40,7 @@
                                    v-bind:token="token"
                                    v-bind:tokens="vueTokens"
                                    v-bind:index="i+1"
+                                   v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
@@ -53,6 +54,7 @@
                             v-bind:tokens="vueTokens"
                             v-bind:docid="docID"
                             v-bind:notes="notes"
+                            v-bind:notemodes="notemodes"
                             v-bind:persons="persons"
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes">
@@ -96,7 +98,7 @@
                 },
                 notemodes: {
                     wordnote: true,
-                    globalnotes: false
+                    globalnote: false
                 }
             }
         },
@@ -147,6 +149,7 @@
 
             },
             changeNoteMode: function (newNoteModes) {
+                console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             }
         },
