@@ -104,10 +104,9 @@ pre {
     /**background-color: black;*/
 }
 
-.researchresulthover{
-    background-color: deeppink;
+.notemark{
+    background: yellow;
 }
-
 
 /**
 Background color for Buttons
