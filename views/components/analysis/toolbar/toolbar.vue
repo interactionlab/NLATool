@@ -45,11 +45,11 @@
                 <div class="mdl-tabs__panel " id="research-panel">
                     <!--TODO: define toggle just for one Button -->
                     <div  >
-                        <button v-bind:class="{green: onOff}" class="mdl-button mdl-js-button"
+                        <button v-bind:class="{green: !onOff}" class="mdl-button mdl-js-button"
                                 v-on:click="toggleOnOff(), setResearchMode('Info')">
                             <small class="mdc-button">Information</small>
                         </button>
-                        <button class="mdl-button mdl-js-button"
+                        <button v-bind:class="{green: onOff}" class="mdl-button mdl-js-button"
                                 v-on:click="toggleOnOff(), setResearchMode('Info')">
                             <small class="mdc-button">Map</small>
                         </button>
@@ -85,7 +85,9 @@
         },
         data: function () {
             return {
-                onOff: false,
+                onOff:{
+                    Info: false,
+                },
                 tool: 'analightertool',
                 lang: this.lang,
                 classesToMark: {
