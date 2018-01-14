@@ -25,8 +25,8 @@
     border: 2px dashed #009ACD;
 }
 
-.researchresulthover{
-    background-color: deeppink;
+.researchresulthover {
+    background-color: lightsteelblue;
 }
 
 .highlight {
@@ -51,13 +51,20 @@ pre {
     display: inline;
 }
 
-.preAlt{
+.preAlt {
     display: inline;
     white-space: pre;
 }
-.nonPreAlt{
+
+.nonPreAlt {
     display: inline;
     white-space: normal;
+}
+
+/**Toggle Bottons */
+.activeButton {
+    background: lightsteelblue;
+    text-decoration-style: solid;
 }
 
 /**german*/
@@ -104,7 +111,7 @@ pre {
     /**background-color: black;*/
 }
 
-.notemark{
+.notemark {
     background: yellow;
 }
 

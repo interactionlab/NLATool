@@ -43,16 +43,16 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <!--TODO: define toggle just for one Button -->
-                    <div  >
-                        <button v-bind:class="{green: !onOff}" class="mdl-button mdl-js-button"
+                    <div>
+                        <button v-bind:class="{activeButton: !onOff}"
+                                class="mdl-button mdl-js-button"
                                 v-on:click="toggleOnOff(), setResearchMode('Info')">
                             <small class="mdc-button">Information</small>
                         </button>
-                        <button v-bind:class="{green: onOff}" class="mdl-button mdl-js-button"
-                                v-on:click="toggleOnOff(), setResearchMode('Info')">
-                            <small class="mdc-button">Map</small>
-                        </button>
+                        <!-- <button v-bind:class="{activeButton: !onOff}" class="mdl-button mdl-js-button"
+                                 v-on:click="toggleOnOff(), setResearchMode('Map')">
+                             <small class="mdc-button">Map</small>
+                         </button> -->
                     </div>
                     <!--
                     <button class="mdl-button mdl-js-button">
@@ -85,9 +85,6 @@
         },
         data: function () {
             return {
-                onOff:{
-                    Info: false,
-                },
                 tool: 'analightertool',
                 lang: this.lang,
                 classesToMark: {
@@ -100,8 +97,12 @@
                     'I-ORG': false,
                     'I-MISC': false,
                 },
-                noteModes:{
-                    wordnote:true,
+                onOff: {
+                    Info: false,
+                    Map: false
+                },
+                noteModes: {
+                    wordnote: true,
                     globalnote: false
                 }
             }
@@ -161,11 +162,29 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
+            changeReseachButton: function (mode) {
+                if (mode == 'Info') {
+                    mode = 'activeButton';
+                    this.onOff.Info = !this.onOff.Map;
+                }
+                if (mode == 'Map') {
+                    mode = 'activeButton';
+                    this.onOff.Map = !this.onOff.Info;
+                }
+                else {
+                    if (mode == 'Info') {
+                        mode = !onOff;
+                    }
+                    if (mode == 'Map') {
+                        mode = !onOff;
+                    }
+                }
+            },
             setResearchMode: function (mode) {
                 console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode',[mode]);
+                this.$emit('changeresearchrode', [mode]);
             },
-            toggleNoteMode:function () {
+            toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
@@ -173,5 +192,5 @@
         },
         components: {}
     }
-    
+
 </script>
