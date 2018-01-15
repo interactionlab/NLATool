@@ -63,7 +63,7 @@ pre {
 
 /**Toggle Bottons */
 .activeButton {
-    background: lightsteelblue;
+    background: white;
     text-decoration-style: solid;
 }
 
