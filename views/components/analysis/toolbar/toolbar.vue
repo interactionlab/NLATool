@@ -12,7 +12,7 @@
             <!--Tab values-->
             <div class="mdl-grid">
                 <div class="mdl-tabs__panel is-active " id="analysis-panel">
-                    <button v-on:click="changeMarkerMode('NE')"
+                    <button v-on:click="allButton"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ALL</small>
                     </button>
@@ -22,14 +22,17 @@
                         <small class="mdc-button">PERSONS</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Location')"
+                            v-bind:class="{LOCATION: classesToMark.LOCATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">LOCATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Organization')"
+                            v-bind:class="{ORGANIZATION: classesToMark.ORGANIZATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ORGANIZATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Misc')"
+                            v-bind:class="{MISC: classesToMark.MISC}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
@@ -122,6 +125,26 @@
                 }
                 this.tool = tool;
             },
+
+            allButton: function () {
+
+                if (this.classesToMark.PERSON === false) {
+                    this.changeMarkerMode('Person');
+                }
+                if (this.classesToMark.LOCATION === false) {
+                    this.changeMarkerMode('Location');
+                }
+                if (this.classesToMark.ORGANIZATION === false) {
+                    this.changeMarkerMode('Organization');
+                }
+                if (this.classesToMark.MISC === false) {
+                    this.changeMarkerMode('Misc');
+                }
+                for (let key in this.classesToMark) {
+                    this.classesToMark[key] = true;
+                }
+            },
+
             changeMarkerMode: function (mode) {
                 if (this.lang == 'English') {
                     if (mode == 'Person') {
