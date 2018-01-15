@@ -1,8 +1,13 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <!-- Uses a mainHeader that contracts as the page scrolls down. -->
-        <component is="mainheader" v-bind:title="title"></component>
-        <component is="headernavbar" v-bind:title_small="title_small"></component>
+        <component is="mainheader"
+                   v-bind:title="title"
+                   v-bind:preventtitleedit="true">
+        </component>
+        <component is="headernavbar"
+                   v-bind:title_small="title_small">
+        </component>
 
         <main class="mdl-layout__content">
             <form action="/loadWrittenText" method="post">
@@ -10,9 +15,10 @@
                 <div class="mdl-grid">
                     <!-- Buttons for localisation-->
                     <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
-                        <button class="mdl-button mdl-js-button" v-bind:class="{green: onOff, pink: !onOff}" v-on:click="setLanguageEnglish">
-                            <b class="mdc-button" v-on:click="toggleOnOff">English</b>
+                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
+                            <b class="mdc-button">English</b>
                         </button>
+
                         <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
                             <b class="mdc-button">German</b>
                         </button>
@@ -49,11 +55,6 @@
                     </div>
                 </div>
             </form>
-
-
-            <div class="toggleBox" v-bind:class="{green: onOff, black: !onOff}">
-                <button v-on:click="toggleOnOff()"> Toggle </button>
-            </div>
         </main>
     </div>
 </template>
@@ -73,6 +74,7 @@
             headernavbar,
 
         }, methods: {
+            //TODO: toggling in forms shows differes as usual
             toggleOnOff: function () {
                 this.onOff = !this.onOff;
             },

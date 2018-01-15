@@ -50,6 +50,9 @@ exports.fiberEstablishConnection = function () {
     wait.launchFiber(establishConnection);
 };
 
+exports.nonFiberEstablishConnection = function(){
+    establishConnection();
+};
 /**
  * sets up the whole connection Process, checking the database, setting up the database,
  * synchronises all the Settings made in the config.json with those on the DB itself.

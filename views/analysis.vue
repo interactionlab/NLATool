@@ -3,7 +3,9 @@
         <!-- Header:-->
         <component
                 is="mainheader"
-                v-bind:title="title">
+                v-bind:title="title"
+                v-bind:docid="docID"
+                v-bind:preventtitleedit="false">
         </component>
         <component
                 is="headernavbar"
@@ -21,7 +23,7 @@
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changeresearchrode="changeResearchMode($event)"
-                >
+                        v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
 
@@ -38,8 +40,10 @@
                                    v-bind:token="token"
                                    v-bind:tokens="vueTokens"
                                    v-bind:index="i+1"
+                                   v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
-                                   v-on:clickword="setClickedWord($event)">
+                                   v-on:startselection="selectText($event,0)"
+                                   v-on:endselection="selectText($event,1)">
                         </component>
                     </div>
                 </div>
@@ -48,11 +52,12 @@
                     <component
                             :is="analysisMode"
                             v-bind:tokens="vueTokens"
-                            v-bind:clickedword="clickedWord"
                             v-bind:docid="docID"
                             v-bind:notes="notes"
+                            v-bind:notemodes="notemodes"
                             v-bind:persons="persons"
-                            v-bind:researchmode="researchmode">
+                            v-bind:researchmode="researchmode"
+                            v-bind:selectedindexes="selectedtextindexes">
                     </component>
                 </div>
             </div>
@@ -76,7 +81,6 @@
                 markermode: 'NE',
                 showMode: 'nerVue',
                 researchmode: '',
-                clickedWord: {},
                 persons: '',
                 classesToMark: {
                     PERSON: false,
@@ -87,6 +91,14 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                selectedtextindexes: {
+                    start: -1,
+                    end: -1
+                },
+                notemodes: {
+                    wordnote: true,
+                    globalnote: false
                 }
             }
         },
@@ -115,13 +127,30 @@
             setPersons: function (persons) {
                 this.persons = persons;
             },
-            setClickedWord: function (word) {
-                console.log('Setted clickword: '+JSON.stringify(word));
-                this.clickedWord = word;
-            },
-            changeResearchMode:function (mode) {
-                console.log('analysis: Changing researchmode: '+ mode);
+            changeResearchMode: function (mode) {
+                console.log('analysis: Changing researchmode: ' + mode);
                 this.researchmode = mode;
+            },
+            selectText: function (index, modus) {
+                if (modus === 0) {
+                    this.selectedtextindexes.start = index;
+                    this.selectedtextindexes.end = -1;
+                } else if (modus === 1) {
+                    this.selectedtextindexes.end = index;
+                }
+                if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
+                    if (this.selectedtextindexes.start > this.selectedtextindexes.end) {
+                        let tempstart = this.selectedtextindexes.start;
+                        this.selectedtextindexes.start = this.selectedtextindexes.end;
+                        this.selectedtextindexes.end = tempstart;
+                    }
+                }
+                console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
+
+            },
+            changeNoteMode: function (newNoteModes) {
+                console.log('changing Note Modes: ' + newNoteModes);
+                this.notemodes = newNoteModes;
             }
         },
         components: {

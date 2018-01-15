@@ -25,6 +25,10 @@
     border: 2px dashed #009ACD;
 }
 
+.researchresulthover{
+    background-color: deeppink;
+}
+
 .highlight {
     background-color: yellow;
 }
@@ -98,6 +102,10 @@ pre {
 .mdc-button-container-fill-color {
     color: black;
     /**background-color: black;*/
+}
+
+.notemark{
+    background: yellow;
 }
 
 /**
