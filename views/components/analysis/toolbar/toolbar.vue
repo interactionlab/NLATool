@@ -36,15 +36,8 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('FM')"
+                    <button v-on:click="correctionMode(), changeMarkerMode('POS')"
                             class="mdl-button mdl-js-button">
-                        <small class="mdc-button">(FM)</small>
-                    </button>
-                    <button v-on:click="changeMarkerMode('NN')"
-                            class="mdl-button mdl-js-button">
-                        <small class="mdc-button">(NN)</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Correction</small>
                     </button>
                 </div>
@@ -112,7 +105,7 @@
         },
         methods: {
             toggleOnOff: function () {
-                console.log('toggleing');
+                console.log('toggling');
                 this.onOff = !this.onOff;
             },
             changetool: function (tool) {
@@ -124,6 +117,10 @@
                     this.$emit('emitresearch');
                 }
                 this.tool = tool;
+            },
+
+            correctionMode: function(){
+
             },
 
             allButton: function () {
