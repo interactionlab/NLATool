@@ -115,7 +115,7 @@ exports.setupCorenlp = function (language) {
     }
     nlpStatus.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlpStatus.props = new corenlp.Properties({
-        annotators: 'tokenize,ssplit,pos,lemma,ner,parse'
+        annotators: 'tokenize,ssplit,pos,lemma,ner,parse,coref'
     });
     nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language , nlpStatus.connector);
     pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
@@ -147,6 +147,7 @@ exports.analyse = function (text, callback) {
             console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
             console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         }
+        const corefChains = doc.corefs();
         callback(null, results);
     }).catch(err => {
         callback(err, null);
