@@ -42,7 +42,7 @@
                         classes = ['I-PER', 'I-LOC', 'I-ORG', 'I-MISC'];
                         //correction view
                     } else if (value == 'POS') {
-                        classes = ['FM', 'NE', 'NN']
+                        classes = ['FM', 'NE', 'NN','NNP','NNS','NNPS','CD'];
                     }
                 }else if(this.lang == 'English'){
                     //unmark content when changing tabs
@@ -55,7 +55,7 @@
                         classes = ['PERSON', 'LOCATION', 'ORGANIZATION', 'MISC'];
                         //correction view
                     } else if (value == 'POS') {
-                        classes = ['FM', 'NE', 'NN']
+                        classes = ['FM', 'NE', 'NN','NNP','NNS','NNPS','CD'];
                     }
                 }
 
