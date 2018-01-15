@@ -85,7 +85,6 @@
         },
         data: function () {
             return {
-                onOff: false,
                 tool: 'analightertool',
                 onOff: false,
                 lang: this.lang,
@@ -109,74 +108,73 @@
             }
         },
         methods: {
-            //  toggleOnOff: function () {
-            //    console.log('toggleing');
-            //      _rejectSeri
+            toggleOnOff: function () {
+                console.log('toggleing');
+                this.onOff = !this.onOff;
+            },
+            changetool: function (tool) {
+                if (tool === 'analightertool') {
+                    this.$emit('emitanalighter');
+                } else if (tool === 'notestool') {
+                    this.$emit('emitnotes');
+                } else if (tool === 'researchtool') {
+                    this.$emit('emitresearch');
+                }
+                this.tool = tool;
+            },
+            changeMarkerMode: function (mode) {
+                if (this.lang == 'English') {
+                    if (mode == 'Person') {
+                        mode = 'PERSON';
+                        this.classesToMark.PERSON = !this.classesToMark.PERSON;
+                    }
+                    if (mode == 'Location') {
+                        mode = 'LOCATION';
+                        this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
+                    }
+                    if (mode == 'Organization') {
+                        mode = 'ORGANIZATION';
+                        this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
+                    }
+                    if (mode == 'Misc') {
+                        mode = 'MISC';
+                        this.classesToMark.MISC = !this.classesToMark.MISC;
+                    }
 
-            //      this.onOff = !this.onOff;
-        },
-        changetool: function (tool) {
-            if (tool === 'analightertool') {
-                this.$emit('emitanalighter');
-            } else if (tool === 'notestool') {
-                this.$emit('emitnotes');
-            } else if (tool === 'researchtool') {
-                this.$emit('emitresearch');
+                }
+                else if (this.lang == 'German') {
+                    console.log("D2");
+                    if (mode == 'Person') {
+                        mode = 'I-PER';
+                        this.classesToMark["I-PER"] = !this.classesToMark["I-PER"];
+                    }
+                    if (mode == 'Location') {
+                        mode = 'I-LOC';
+                        this.classesToMark["I-LOC"] = !this.classesToMark["I-LOC"];
+                    }
+                    if (mode == 'Organization') {
+                        mode = 'I-ORG';
+                        this.classesToMark["I-ORG"] = !this.classesToMark["I-ORG"];
+                    }
+                    if (mode == 'Misc') {
+                        mode = 'I-MISC';
+                        this.classesToMark["I-MISC"] = !this.classesToMark["I-MISC"];
+                    }
+                }
+                this.$emit('changemarkermode', [mode, this.classesToMark]);
+            },
+            setResearchMode: function (mode) {
+                this.onOff = !this.onOff;
+                console.log('got the Event:' + mode);
+                this.$emit('changeresearchrode', [mode]);
+            },
+            toggleNoteMode: function () {
+                this.noteModes.wordnote = !this.noteModes.wordnote;
+                this.noteModes.globalnote = !this.noteModes.globalnote;
+                this.$emit('changenotemode', this.noteModes);
             }
-            this.tool = tool;
-        },
-        changeMarkerMode: function (mode) {
-            if (this.lang == 'English') {
-                if (mode == 'Person') {
-                    mode = 'PERSON';
-                    this.classesToMark.PERSON = !this.classesToMark.PERSON;
-                }
-                if (mode == 'Location') {
-                    mode = 'LOCATION';
-                    this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
-                }
-                if (mode == 'Organization') {
-                    mode = 'ORGANIZATION';
-                    this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
-                }
-                if (mode == 'Misc') {
-                    mode = 'MISC';
-                    this.classesToMark.MISC = !this.classesToMark.MISC;
-                }
 
-            }
-            else if (this.lang == 'German') {
-                console.log("D2");
-                if (mode == 'Person') {
-                    mode = 'I-PER';
-                    this.classesToMark["I-PER"] = !this.classesToMark["I-PER"];
-                }
-                if (mode == 'Location') {
-                    mode = 'I-LOC';
-                    this.classesToMark["I-LOC"] = !this.classesToMark["I-LOC"];
-                }
-                if (mode == 'Organization') {
-                    mode = 'I-ORG';
-                    this.classesToMark["I-ORG"] = !this.classesToMark["I-ORG"];
-                }
-                if (mode == 'Misc') {
-                    mode = 'I-MISC';
-                    this.classesToMark["I-MISC"] = !this.classesToMark["I-MISC"];
-                }
-            }
-            this.$emit('changemarkermode', [mode, this.classesToMark]);
-        },
-        setResearchMode: function (mode) {
-            this.onOff = !this.onOff;
-            console.log('got the Event:' + mode);
-            this.$emit('changeresearchrode', [mode]);
-        },
-        toggleNoteMode: function () {
-            this.noteModes.wordnote = !this.noteModes.wordnote;
-            this.noteModes.globalnote = !this.noteModes.globalnote;
-            this.$emit('changenotemode', this.noteModes);
         }
-
     }
 
 </script>
