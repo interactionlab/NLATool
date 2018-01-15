@@ -4,7 +4,8 @@
          v-on:mouseout="hideButns">
         <div class="mdl-grid"
              v-if="!editing">
-            <div class="mdl-cell--12-col contentColor">
+            <div class="mdl-cell--12-col contentColor"
+                v-on:click="jumpMarkText">
                 <p>{{wordnotedb.word}}</p>
             </div>
             <div class="mdl-cell--10-col contentColor">
@@ -80,6 +81,10 @@
                 if(noteToChange[0]!== -10 && noteToChange[1]!== -10 && noteToChange[2]!== -10){
                     this.$emit('back', noteToChange);
                 }
+            },
+            jumpMarkText:function () {
+                this.setSelectedRanges();
+                //href #selectesindexes.start behavior
             }
         },
         components: {
