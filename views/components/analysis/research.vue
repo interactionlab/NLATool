@@ -1,15 +1,31 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col graybox contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle(clickedword.content)" v-model="clickedword.content"/>
+            <input v-on:keydown.enter="searchGoogle(selectedtext)"
+                   v-model="selectedtext"
+                   class="mdl-textfield__input"/>
         </div>
-        <!-- TODO remove Michael Jackson at the end. That is our default value -->
-        <div class="mdl-cell mdl-cell--12-col contentColor graybox" v-on:click="searchGoogle('Taylor Swift')">
+        <!-- TODO remove Taylor Swift at the end. That is our default value -->
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
-                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col graybox" id="resultfield">
-                    <!-- {{searchGoogle.clickedword}} -->
+                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col" id="resultfield">
+                    <component is="researchresult"
+                               v-if="resultselected"
+                               v-bind:researchresult="selectedresult"
+                               v-bind:index="selectedindex">
+                    </component>
+                    <component is="researchresult"
+
+                               v-else
+                               v-for="(researchresult,index) in researchresults[0].itemListElement"
+                               v-bind:researchresult="researchresult"
+                               v-bind:key="index"
+                               v-bind:index="index"
+                               v-bind:researchresults="researchresults"
+                               v-on:selectresult="selectResult($event)">
+                    </component>
                 </div>
             </form>
         </div>
@@ -17,19 +33,26 @@
 </template>
 
 <script>
-    import research from './mixins/analysis/research';
+    import researchresult from './components/analysis/researchresult.vue';
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
 
     export default {
-        mixins: [research],
+        mixins: [getselectedtext],
         props: {
-            clickedword: Object,
-            researchmode: String
+            researchmode: String,
+            selectedindexes: Object,
+            tokens: Array,
         },
         data: function () {
             return {
-                clickedword: this.clickedword,
-                researchResult: 'Results will be displayed here.',
-                researchmode: this.researchmode
+                researchresults: [''],
+                researchmode: this.researchmode,
+                tokens: this.tokens,
+                selectedtext: '',
+                selectedindexes: this.selectedindexes,
+                resultselected: false,
+                selectedresult: {},
+                selectedindex: -1
             }
         },
         methods: {
@@ -37,35 +60,46 @@
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
                     'query': query,
-                    'limit': 1,
+                    'limit': 10,
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
                 };
-
-                $.getJSON(service_url + '?callback=?', params, function (response) {
+                $.getJSON(service_url + '?callback=?', params, (response) => {
+                }).done((response) => {
                     console.log('Response for Research: ' + JSON.stringify(response));
-                    $.each(response.itemListElement, function (i, element) {
-                        document.getElementById("resultfield").innerHTML = "<img src=\""
-                            + element['result']['image']["contentUrl"] + "\"> " + "<br />"
-                            + element['result']['name'] + "<br />"
-                            + element['result']['description'] + "<br />"
-                            + element['result']['detailedDescription']['articleBody'] + "<br />"
-                            + "<a href=\" + element['result']['detailedDescription']['url']\">Mehr info</a>";
-                    });
+                    this.researchresults.pop();
+                    this.researchresults.push(response);
                 });
-                //TODO: establish Connection -> get Response /result
-                // this.googleResponse=displayedResult;
-                //TODO: sent results to serverrs
-
+            },
+            selectResult: function (index) {
+                this.resultselected = true;
+                this.selectedindex = index;
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
+                this.selectedresult = this.researchresults[0].itemListElement[index];
             }
         },
+        computed: {},
         watch: {
+            selectedindexes: {
+                handler: function (newSelectedIndexes) {
+                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                        this.resultselected = false;
+                        this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
+                        this.searchGoogle(this.selectedtext);
+                    }
+                },
+                deep: true
+            },
             researchmode: function (mode) {
                 //if (mode === 'Info') {
-                console.log('researchmode was changed to:'+ mode);
-                    this.searchGoogle('Taylor Swift');
+                console.log('researchmode was changed to:' + mode);
+                this.searchGoogle('Taylor Swift');
                 //}
             }
+        },
+        components: {
+            researchresult
         }
     }
 </script>
