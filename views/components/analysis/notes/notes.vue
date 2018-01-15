@@ -1,31 +1,49 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor">
-        <component :is="noteMode" v-bind:clickedword="clickedword" v-bind:docid="docid"
-                   v-bind:notes="notes"></component>
+        <component :is="noteMode"
+                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:docid="docid"
+                   v-bind:tokens="tokens"
+                   v-bind:notes="notes">
+        </component>
     </div>
 </template>
 <script>
     import wordnotes from './components/analysis/notes/wordnotes.vue';
-
+    import globalnote from './components/analysis/notes/globalnote.vue'
     export default {
         props: {
             wordnotesp: Array,
-            clickedword: Object,
+            selectedindexes: Object,
             docid: String,
-            notes: Array
+            notes: Array,
+            tokens:Object,
+            notemodes:Object
         },
         data: function () {
             return {
-                noteMode: 'wordnotes',
                 wordnotesp: this.wordnotesp,
-                clickedword: this.clickedword,
+                selectedindexes: this.selectedindexes,
                 docid: this.docid,
-                notes: this.notes
+                notes: this.notes,
+                tokens:this.tokens,
+                notemodes:this.notemodes
             }
         },
-        methods: {},
+        methods: {
+        },
+        computed:{
+            noteMode:function () {
+                if(this.notemodes.wordnote && !this.notemodes.globalnote){
+                    return 'wordnotes';
+                } else{
+                    return 'globalnote';
+                }
+            }
+        },
         components: {
-            wordnotes
+            wordnotes,
+            globalnote
         }
     }
 </script>
