@@ -98,6 +98,10 @@ pre {
     background: violet;
 }
 
+.POS{
+    background: darkgrey;
+}
+
 /** Button color */
 .mdc-button-container-fill-color {
     color: black;
