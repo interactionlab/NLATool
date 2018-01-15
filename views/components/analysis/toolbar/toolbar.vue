@@ -17,6 +17,7 @@
                         <small class="mdc-button">ALL</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Person')"
+                            v-bind:class="{PERSON: classesToMark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSONS</small>
                     </button>
@@ -45,12 +46,15 @@
                     </button>
                 </div>
 
-
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('Info')">
-                        <small class="mdc-button">Information</small>
-                    </button>
+                    <!--TODO: define toggle just for one Button -->
+                    <div v-bind:class="{green: onOff}">
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleOnOff(), setResearchMode('Info')">
+                            <small class="mdc-button">Information</small>
+                        </button>
+                    </div>
+
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Map</small>
                     </button>
@@ -61,8 +65,13 @@
 
                 <div class="mdl-tabs__panel " id="notes-panel">
                     <!--No Tab Value needed-->
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button"></small>
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Word Notes</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Global Notes</small>
                     </button>
                 </div>
             </div>
@@ -77,6 +86,7 @@
         data: function () {
             return {
                 tool: 'analightertool',
+                onOff: false,
                 lang: this.lang,
                 classesToMark: {
                     PERSON: false,
@@ -87,10 +97,21 @@
                     'I-LOC': false,
                     'I-ORG': false,
                     'I-MISC': false,
+                },
+                //    classestoresearch: {
+                //        info: false,
+                //        map: false,
+                noteModes: {
+                    wordnote: true,
+                    globalnote: false
                 }
             }
         },
         methods: {
+            toggleOnOff: function () {
+                console.log('toggleing');
+                this.onOff = !this.onOff;
+            },
             changetool: function (tool) {
                 if (tool === 'analightertool') {
                     this.$emit('emitanalighter');
@@ -142,11 +163,18 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            setResearchMode:function (mode) {
+            setResearchMode: function (mode) {
+                this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode',[mode]);
+                this.$emit('changeresearchrode', [mode]);
+            },
+            toggleNoteMode: function () {
+                this.noteModes.wordnote = !this.noteModes.wordnote;
+                this.noteModes.globalnote = !this.noteModes.globalnote;
+                this.$emit('changenotemode', this.noteModes);
             }
-        },
-        components: {}
+
+        }
     }
+
 </script>

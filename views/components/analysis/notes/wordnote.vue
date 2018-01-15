@@ -4,7 +4,8 @@
          v-on:mouseout="hideButns">
         <div class="mdl-grid"
              v-if="!editing">
-            <div class="mdl-cell--12-col contentColor">
+            <div class="mdl-cell--12-col contentColor"
+                v-on:click="jumpMarkText">
                 <p>{{wordnotedb.word}}</p>
             </div>
             <div class="mdl-cell--10-col contentColor">
@@ -27,7 +28,8 @@
                    v-else
                    v-bind:wordnotedb="wordnotedb"
                    v-bind:newnote="wordnotedb.content"
-                   v-bind:clickedword="clickedword"
+                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:tokens="tokens"
                    v-bind:docid="this.docid"
                    v-on:back="back($event)">
         </component>
@@ -40,6 +42,7 @@
         props: {
             wordnotedb: Object,
             docid: String,
+            tokens:Object
         },
         data: function () {
             return {
@@ -47,23 +50,18 @@
                 ishovered: false,
                 editing: false,
                 docid: this.docid,
-                clickedword: {
-                    wordID: '',
-                    word: ''
-                }
+                tokens:this.tokens
             }
         },
         methods: {
             edit: function () {
-                this.setclickedword();
+                this.setSelectedRanges();
                 this.editing = true;
                 this.$emit('edit', [this.wordnotedb]);
             },
             deleting: function () {
-                console.log('DOCID: ' + this.docid);
                 let socket = io('http://localhost:8080');
-
-                socket.emit('deletenote', this.wordnotedb.noteID, this.clickedword.wordID, this.docid);
+                socket.emit('deletenote', this.wordnotedb.noteID);
                 this.editing = false;
             },
             showButns: function () {
@@ -73,9 +71,9 @@
             hideButns: function () {
                 this.ishovered = false;
             },
-            setclickedword: function () {
-                this.clickedword.wordID = this.wordnotedb.wordID;
-                this.clickedword.content = this.wordnotedb.content;
+            setSelectedRanges: function () {
+                this.selectedindexes.start = this.wordnotedb.textIndex1;
+                this.selectedindexes.end = this.wordnotedb.textIndex2;
             },
             back: function (noteToChange) {
                 console.log('Check: ' + noteToChange[0] +' : ' + noteToChange[1] + ' : ' + noteToChange[2]);
@@ -83,6 +81,10 @@
                 if(noteToChange[0]!== -10 && noteToChange[1]!== -10 && noteToChange[2]!== -10){
                     this.$emit('back', noteToChange);
                 }
+            },
+            jumpMarkText:function () {
+                this.setSelectedRanges();
+                //href #selectesindexes.start behavior
             }
         },
         components: {
