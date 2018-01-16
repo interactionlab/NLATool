@@ -15,10 +15,8 @@
                 <div class="mdl-grid">
                     <!-- Bottons for localisation-->
                     <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
-                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish, toggleOnOff()">
-                            <div class="toggleBox" v-bind:class="{green: onOff, black: !onOff}">
-                                <b class="mdc-button">English</b>
-                            </div>
+                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
+                            <b class="mdc-button">English</b>
                         </button>
 
                         <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
@@ -76,6 +74,7 @@
             headernavbar,
 
         }, methods: {
+            //TODO: toggling in forms shows differes as usual
             toggleOnOff: function () {
                 this.onOff = !this.onOff;
             },

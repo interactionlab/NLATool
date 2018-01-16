@@ -88,7 +88,6 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
-
     socket.on('saveResearchResult', function () {
         //TODO function like below
     });

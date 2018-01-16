@@ -1,5 +1,6 @@
 <template>
-    <span v-on:mousedown="startSelection"
+    <span v-bind:name="tobejumped"
+          v-on:mousedown="startSelection"
           v-on:mouseup="endSelection">
         <span class="nonPreAlt"
               v-bind:class="toHighlight">{{token.content}}</span
@@ -29,15 +30,12 @@
             }
         },
         computed: {
-
-            vueSemanticClass: function () {
-                //console.log('Debug token: ' + JSON.stringify(this.token));
-
-                this.htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                this.htmlclass[this.token.pos] = this.classestomark[this.token.pos];
-                return this.htmlclass;
+            tobejumped:function () {
+                if(this.index === this.selectedindexes.start){
+                    return this.index;
+                }
             },
-            toHighlight:function () {
+            toHighlight: function () {
                 let htmlclass = {};
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {

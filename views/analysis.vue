@@ -139,9 +139,10 @@
                     this.selectedtextindexes.end = index;
                 }
                 if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    if (this.selectedtextindexes.start > this.selectedtextindexes.end) {
-                        let tempstart = this.selectedtextindexes.start;
-                        this.selectedtextindexes.start = this.selectedtextindexes.end;
+                    console.log(this.selectedtextindexes.start +' >> ' + this.selectedtextindexes.end-1);
+                    if (this.selectedtextindexes.start > this.selectedtextindexes.end-1) {
+                        let tempstart = this.selectedtextindexes.start+1;
+                        this.selectedtextindexes.start = this.selectedtextindexes.end-1;
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
