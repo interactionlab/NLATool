@@ -44,24 +44,11 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <div>
-                        <button v-bind:class="{activeButton: !onOff}"
-                                class="mdl-button mdl-js-button"
-                                v-on:click="toggleOnOff(), setResearchMode('Info')">
-                            <small class="mdc-button">Information</small>
-                        </button>
-                        <!-- <button v-bind:class="{activeButton: !onOff}" class="mdl-button mdl-js-button"
-                                 v-on:click="toggleOnOff(), setResearchMode('Map')">
-                             <small class="mdc-button">Map</small>
-                         </button> -->
-                    </div>
-                    <!--
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Statistics</small>
+                    <button v-bind:class="{'activeButton': onOff}"
+                            class="mdl-button mdl-js-button"
+                            v-on:click="setResearchMode('Info')">
+                        <small class="mdc-button">Information</small>
                     </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Correction</small>
-                    </button>-->
                 </div>
 
                 <div class="mdl-tabs__panel " id="notes-panel">
@@ -99,9 +86,6 @@
                     'I-ORG': false,
                     'I-MISC': false,
                 },
-                //    classestoresearch: {
-                //        info: false,
-                //        map: false,
                 noteModes: {
                     wordnote: true,
                     globalnote: false
