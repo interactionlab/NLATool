@@ -1,5 +1,5 @@
 <template> <!--editordocument in 8080-->
-    <main class="mdl-layout__content">
+
         <div class="mdl-grid">
             <!-- Bottons for localisation-->
             <div class="mdl-cell mdl-cell--10-col">
@@ -26,25 +26,34 @@
                             {{researchresult.result.detailedDescription.articleBody}}
                         </div>
                     </div>
+
+                    <div>
+                        <button v-on:click="selectResult">save</button>
+                        <button v-on:click="showall">back</button>
+                    </div>
                 </div>
 
                 <div v-else>
-                        <div v-bind:class="{researchresulthover: hover}"
-                             v-on:mouseout="accentuate"
-                             v-on:mouseover="accentuate"
-                             v-on:click="showall">
+                    <div v-bind:class="{researchresulthover: hover}"
+                         v-on:mouseout="accentuate"
+                         v-on:mouseover="accentuate"
+                         v-on:click="showall">
 
-                            <div v-if="typeof researchresult.result !== 'undefined'">
-                                {{researchresult.result.name}}
-                            </div>
-                            <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                {{researchresult.result.description}}
-                            </div>
+                        <div v-if="typeof researchresult.result !== 'undefined'">
+                            {{researchresult.result.name}}
+                        </div>
+                        <div v-if="typeof researchresult.result.description !== 'undefined'">
+                            {{researchresult.result.description}}
                         </div>
                     </div>
+
+                    <div>
+                        <button v-on:click="selectResult">save</button>
+                    </div>
+
                 </div>
             </div>
-    </main>
+        </div>
 </template>
 
 <script>
