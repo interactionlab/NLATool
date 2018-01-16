@@ -17,7 +17,6 @@
                                v-bind:index="selectedindex">
                     </component>
                     <component is="researchresult"
-
                                v-else
                                v-for="(researchresult,index) in researchresults[0].itemListElement"
                                v-bind:researchresult="researchresult"
