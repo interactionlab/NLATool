@@ -91,7 +91,7 @@
                 }
             },
             jumpMarkText:function () {
-
+                //href bahavior for #selectedindexes.start
             }
         },
         watch: {

@@ -3,6 +3,8 @@
         <div class="mdl-grid">
             <!-- Bottons for localisation-->
             <div class="mdl-cell mdl-cell--10-col">
+
+
                 <div v-bind:class="{researchresulthover: hover}"
                      v-on:mouseout="accentuate"
                      v-on:mouseover="accentuate"
