@@ -17,6 +17,7 @@
                         <small class="mdc-button">ALL</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Person')"
+                            v-bind:class="{PERSON: classesToMark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSONS</small>
                     </button>
@@ -86,6 +87,7 @@
         data: function () {
             return {
                 tool: 'analightertool',
+                onOff: false,
                 lang: this.lang,
                 classesToMark: {
                     PERSON: false,
@@ -97,10 +99,9 @@
                     'I-ORG': false,
                     'I-MISC': false,
                 },
-                onOff: {
-                    Info: false,
-                    Map: false
-                },
+                //    classestoresearch: {
+                //        info: false,
+                //        map: false,
                 noteModes: {
                     wordnote: true,
                     globalnote: false
@@ -109,6 +110,7 @@
         },
         methods: {
             toggleOnOff: function () {
+                console.log('toggleing');
                 this.onOff = !this.onOff;
             },
             changetool: function (tool) {
@@ -181,6 +183,7 @@
                 }
             },
             setResearchMode: function (mode) {
+                this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
                 this.$emit('changeresearchrode', [mode]);
             },
@@ -189,8 +192,8 @@
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             }
-        },
-        components: {}
+
+        }
     }
 
 </script>
