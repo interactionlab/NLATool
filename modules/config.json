@@ -136,7 +136,6 @@
       "length": "11",
       "PRIMARY": true,
       "AUTO_INCREMENT": true
-
     },
     "column2": {
       "name": "docID",
@@ -166,8 +165,8 @@
     },
     "column7": {
       "name": "noteIndex",
-      "type":"INT",
-      "length":"11"
+      "type": "INT",
+      "length": "11"
     }
   },
   "table4": {
@@ -200,9 +199,9 @@
       "type": "YEAR",
       "length": "4"
     },
-    "column6":{
-      "name":"lang",
-      "type":"VARCHAR",
+    "column6": {
+      "name": "lang",
+      "type": "VARCHAR",
       "length": "11"
     }
   },
@@ -256,20 +255,26 @@
       "type": "INT",
       "length": "11"
     },
-    "column4":{
+    "column4": {
       "name": "beginOffSet",
       "type": "INT",
       "length": "11"
     },
-    "column5":{
+    "column5": {
       "name": "EndOffSet",
       "type": "INT",
       "length": "11"
     },
-    "column6":{
+    "column6": {
       "name": "whitespaceInfo",
       "type": "INT",
       "length": "11"
+    },
+    "column7":{
+      "name":"mentionID",
+      "type":"INT",
+      "length": "11",
+      "FOREIGN": "corefmentions"
     }
   },
   "table7": {
@@ -290,6 +295,41 @@
     "column3": {
       "name": "content",
       "type": "MEDIUMTEXT"
+    }
+  },
+  "table8": {
+    "isTable": true,
+    "name": "corefmentions",
+    "column1": {
+      "name": "mentionID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true
+    },
+    "column2": {
+      "name": "representative",
+      "type": "INT",
+      "length": "11"
+    },
+    "column3":{
+      "name":"gender",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column4":{
+      "name": "type",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5":{
+      "name": "number",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column6":{
+      "name": "animacy",
+      "type": "VARCHAR",
+      "length": "20"
     }
   }
 }
