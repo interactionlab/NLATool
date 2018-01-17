@@ -144,26 +144,20 @@
       "FOREIGN": "documents"
     },
     "column3": {
-      "name": "wordID",
-      "type": "INT",
-      "length": "11",
-      "FOREIGN": "word"
-    },
-    "column4": {
       "name": "content",
       "type": "MEDIUMTEXT"
     },
-    "column5": {
+    "column4": {
       "name": "textIndex1",
       "type": "INT",
       "length": "11"
     },
-    "column6": {
+    "column5": {
       "name": "textIndex2",
       "type": "INT",
       "length": "11"
     },
-    "column7": {
+    "column6": {
       "name": "noteIndex",
       "type": "INT",
       "length": "11"
