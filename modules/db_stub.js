@@ -50,9 +50,10 @@ exports.fiberEstablishConnection = function () {
     wait.launchFiber(establishConnection);
 };
 
-exports.nonFiberEstablishConnection = function(){
+exports.nonFiberEstablishConnection = function () {
     establishConnection();
 };
+
 /**
  * sets up the whole connection Process, checking the database, setting up the database,
  * synchronises all the Settings made in the config.json with those on the DB itself.
@@ -182,17 +183,55 @@ exports.makeSQLRequest = function (query, callback) {
      }*/
 };
 
-/*
-try {
-        var dbSelected = wait.for(makeSQLRequest, 'SELECT DATABASE()');
-        dbSelected = JSON.parse(dbSelected);
-        console.log(notMedia + Tag + 'Result of dbSelected: ' + JSON.stringify(dbSelected));
-    }
-    catch (err) {
-        console.connectionError(notMedia + Tag + 'catched a Error with the SQL Request: ' + err);
 
+/**
+ * Gets a set of querys and commands on what to do between the querys.
+ * Needs to be used in a fiber. (wait.for.launchFiber())
+ * @param querys
+ * @param controlTrans
+ * @param callback
+ */
+exports.makeTransaction = function (querys, controlTrans, callback) {
+    let results = [];
+    try {
+        connection.beginTransaction();
+        console.log(Tag + 'Began Transaction: ')
+        for (let i = 0; i < querys.length; i++) {
+            if (controlTrans.getId) {
+                let result = wait.for(makeSQLRequest, querys[i]);
+                let controlResult = {getId: result};
+                results.push(controlResult);
+            } else if (controlTrans.select) {
+                results.push(wait.for(makeSQLRequest, querys[i]));
+            } else if (controlTrans.useId[i] !== -1) {
+                let newQuery = '';
+                if (controlTrans.useId[i].kindOfQuery === 'insert') {
+
+                    controlTrans.useId[i].values[controlTrans.useId[i].numberOfColumn]
+                        = results[controlTrans.useId[i].ofResult].getID.insertId;
+
+                    newQuery = dbAction.createInsertCommand(
+                        controlTrans.useId[i].columns,
+                        controlTrans.useId[i].values,
+                        controlTrans.useId[i].toCompare,
+                        controlTrans.useId[i].operators);
+                    results.push(wait.for(makeSQLRequest, newQuery));
+                }
+
+            } else {
+                console.log(Tag+ 'Executing a normal Query without extras: ');
+                results.push(wait.for(makeSQLRequest,querys[i]));
+            }
+        }
+        console.log(Tag + 'got to the commit')
+        connection.commit();
+    } catch (err) {
+        console.log(Tag+ err);
+        connection.rollback();
+        callback(err, null);
     }
-* */
+};
+
 /**
  * Checks if the Database matches the dbconfig Settings.
  * @returns {boolean}

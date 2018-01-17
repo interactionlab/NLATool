@@ -120,12 +120,7 @@ function postLoadWrittenText(req, res, next) {
         if (!/\S/.test(text)) {
             res.renderVue('loadtext', vueRenderOptions);
         } else {
-            //corenlp.setupCorenlp();
-            //let parsedText = wait.for(corenlp.parse,text);
             let parsedResult = wait.for(corenlp.analyse, text);
-            //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
-            //console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
-            //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 
@@ -194,7 +189,6 @@ function postLoadWrittenText(req, res, next) {
                 }
 
             }
-            corenlp.resetResults();
             res.redirect('/analysis');
         }
     }
@@ -219,5 +213,13 @@ function stringifyForDB(input) {
     return '"' + input + '"';
 }
 
+function saveCoref(corefInfo) {
+    for(let i = 0; i < corefInfo.length; i++){
+        wait.for(dbStub.makeSQLRequest,
+            dbAction.createInsertCommand('corefmentions',
+                ['representative','gender','type','number','animacy'],
+                [-1,corefInfo[i]]))
+    }
+}
 
 module.exports = router;
