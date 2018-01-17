@@ -29,7 +29,7 @@
 
                     <div>
                         <button v-on:click="selectResult">save</button>
-                        <button v-on:click="showall">back</button>
+                        <button v-on:click="showdetail">back</button>
                     </div>
                 </div>
 
@@ -37,7 +37,7 @@
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                         v-on:click="showall">
+                         v-on:click="showdetail">
 
                         <div v-if="typeof researchresult.result !== 'undefined'">
                             {{researchresult.result.name}}
@@ -49,8 +49,8 @@
 
                     <div>
                         <button v-on:click="selectResult">save</button>
+                        <button v-on:click="showallresults">Show All</button>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -73,7 +73,10 @@
             }
         },
         methods: {
-            showall: function () {
+            showallresults: function () {
+                this.$emit('showallresults');
+            },
+            showdetail: function () {
                 this.everythingshow = !this.everythingshow;
             },
             accentuate: function () {
