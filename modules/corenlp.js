@@ -47,13 +47,13 @@ let nlpStatus = {
 let pipeline = null;
 //TODO: check for errors, reset after usage
 let results = {
-    //coref: [],
+    coref: [],
     isSpecial: [],
     text: [],
     ner: [],
     pos: [],
-    offsetBegin:[],
-    offsetEnd:[]
+    offsetBegin: [],
+    offsetEnd: []
 };
 
 exports.getResults = function () {
@@ -79,14 +79,14 @@ exports.isReachable = function (host, callback) {
                 callback(err, reached);
             }
         });
-           /* .catch(function (e) {
-            nlpStatus.reachable = reached;
-            let err = new Error('CoreNlp not reachable' + e);
-            err.status = 502;
-            nlpStatus.error = err;
-            console.log('Got to Error!');
-            callback(err, null);
-        });*/
+        /* .catch(function (e) {
+         nlpStatus.reachable = reached;
+         let err = new Error('CoreNlp not reachable' + e);
+         err.status = 502;
+         nlpStatus.error = err;
+         console.log('Got to Error!');
+         callback(err, null);
+     });*/
     }
 };
 /**
@@ -110,19 +110,19 @@ exports.getAReachableConnection = function () {
 
 
 exports.setupCorenlp = function (language) {
-    if(typeof language === 'undefined'){
+    if (typeof language === 'undefined') {
         language = 'English';
     }
     nlpStatus.connector = new corenlp.ConnectorServer({dsn: nlpStatus.host});
     nlpStatus.props = new corenlp.Properties({
         annotators: 'tokenize,ssplit,pos,lemma,ner,parse,coref'
     });
-    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language , nlpStatus.connector);
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
     pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
 };
 
 exports.resetPipeline = function (language) {
-    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language , nlpStatus.connector);
+    nlpStatus.pipeline = new corenlp.Pipeline(nlpStatus.props, language, nlpStatus.connector);
 };
 
 //TODO: figure out a way to save different usages of interpunctuation to database
@@ -133,21 +133,23 @@ exports.analyse = function (text, callback) {
     console.log(nlpStatus.pipeline.getService());
     nlpStatus.pipeline.annotate(doc).then(doc => {
         let sentences = doc.sentences();
+        results.coref = doc.corefs();
+        console.log('coref Annotation:' + JSON.stringify(corefChains));
         for (let i = 0; i < sentences.length; i++) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
             //console.log(results);
-            //const tree = CoreNLP.util.Tree.fromSentence(sentences[i]);
-            //console.log('the tree: '+tree.dump());
-            for(let j= 0; j < sentences[i].tokens().length; j++){
+            // const tree = CoreNLP.util.Tree.fromSentence(sentences[i]);
+            // console.log('the tree: '+tree.dump());
+            for (let j = 0; j < sentences[i].tokens().length; j++) {
                 results.offsetBegin.push(sentences[i].tokens()[j].characterOffsetBegin());
                 results.offsetEnd.push(sentences[i].tokens()[j].characterOffsetEnd());
             }
             console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
             console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         }
-        const corefChains = doc.corefs();
+        resetResults();
         callback(null, results);
     }).catch(err => {
         callback(err, null);
@@ -178,7 +180,7 @@ exports.resetNlpStatus = function () {
     nlpStatus.connector = null;
 };
 
-exports.resetResults = function () {
+resetResults = function () {
     for (let key in results) {
         results[key] = [];
     }

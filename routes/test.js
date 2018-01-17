@@ -24,64 +24,61 @@ const jsonConfigurator = require('jsonfile');
 const dbconfig = './modules/config.json';
 const wait = require('wait.for');
 
+let vueRenderOptions = {
+    head: {
+        meta: [
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
+            {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
+        ]
+    }
+};
+
+let vueData = {
+   worked: false
+};
 
 router.get('/', function (req, res, next) {
-    res.render('./testview', {title: 'NLA - Natural Language Analyse Tool'});
+    wait.launchFiber(getTest, req, res, next);
 });
 
+function getTest(req,res, next) {
+    dbStub.fiberEstablishConnection();
+    res.renderVue('test', vueData, vueRenderOptions);
+}
 
 router.post('/theFunction', function (req, res) {
-
-    /*
-        var testingFunction = req.testfunction;
-        var table = 'accountdata';
-        var columns = ['id', 'email', 'username', 'pass'];
-        var values = ['eins', 'zwei', 'drei', 'vier'];
-        var valuesToCompare = ['zwei', 'vier', 'fünf'];
-        var oper = ['=', '=', '='];
-        var resultOfSQL = dbAction.createInsertCommand(table, columns, values, valuesToCompare, oper);
-    */
-    let resultOfSQL = '';
-    let jsonOptions = {name: "first", type: "INT"};
-    let columnName = 'Irgendwas';
-    /*columnName = jsonAction.setCharAt(columnName, columnName.length-1, 'A');
-    console.log(notMedia + Tag + 'geänderter String:'+ columnName);*/
-    dbStub.fiberEstablishConnection();
-    dbStub.makeSQLRequest('SELECT * FROM word', function (err, result) {
-        if (err) {
-            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: err});
-        } else {
-            res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: result});
-        }
-    });
-    /*
-    res.render('./testview', {
-        title: 'NLA - Natural Language Analyse Tool',
-        result: JSON.stringify(jsonAction.getSettingsOfOneColumn('documents', 'docID'))
-    });
-    */
-
-//    dbAction.transformColumnToSQL(columnName, jsonOptions);
-//    dbStub.testDBConnection('nlatool', columns, values, valuesToCompare, oper);
-
-    //res.render('./testview', {title: 'NLA - Natural Language Analyse Tool', result: resultOfSQL});
+    wait.launchFiber(test, req,res);
 });
 
+function test(req, res, next) {
+    let querys = [];
+    let transControl = {
+        useId: []
+    };
+    let values = [];
+    values.push('Max');
+    values.push('Musterman');
 
-router.post('/nlp', function (req, res) {
+    values[1] = stringifyForDB(values[1]);
+    for(let i =0; i < 20; i++){
+        values[0] = stringifyForDB(i);
+        querys.push(dbAction.createInsertCommand('accountData',['email', 'username'],values, null, null));
+        transControl.useId.push(-1);
+    }
 
-    let input = req.body.testFunction;
-    console.log(input);
-
-    corenlp.parse(
-        input, 9000, "pos,lemma,ner", "json", function (err, parsedText) {
-            //console.log(JSON.stringify(JSON.parse(parsedText), null, 2));
-            res.render('./testview', {
-                title: 'NLA - Natural Language Analyse Tool',
-                result: JSON.stringify(JSON.parse(parsedText))
-            })
-        });
-
-});
+    wait.for(dbStub.makeTransaction,querys, transControl);
+    vueData.worked = true;
+    res.renderVue('test', vueData, vueRenderOptions);
+}
+/**
+ * Makes sure the Quotas " are set for each word in the sql query.
+ * TODO: Get this function into db_Actions.js
+ * @param input
+ * @returns {string}
+ */
+function stringifyForDB(input) {
+    return '"' + input + '"';
+}
 
 module.exports = router;
