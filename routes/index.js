@@ -47,16 +47,16 @@ let json2;
 let language = 'English';
 
 let vueData = {
-  lang : language
+    lang: language
 };
 
 io.on('connection', function (socket) {
-       console.log('socket check');
-   socket.on('setLanguage', function (language) {
-       console.log('socket check2 ' + language);
-       corenlp.resetPipeline(language);
-       this.language = language;
-   });
+    console.log('socket check');
+    socket.on('setLanguage', function (language) {
+        console.log('socket check2 ' + language);
+        corenlp.resetPipeline(language);
+        this.language = language;
+    });
 });
 
 wait.launchFiber(getJSONConfig);
@@ -70,7 +70,7 @@ router.get('/', function (req, res, next) {
 
     wait.launchFiber(getLoadTextRoutine, req, res, next);
     //let vueData = setVueData();
-    res.renderVue('loadtext', vueData,vueRenderOptions);
+    res.renderVue('loadtext', vueData, vueRenderOptions);
 });
 
 
@@ -131,7 +131,7 @@ function postLoadWrittenText(req, res, next) {
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
             //TODO: make sure German is selected in database, change the button design first
-            let lang = '"'+language+'"';
+            let lang = '"' + language + '"';
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title', 'lang'],
@@ -158,7 +158,7 @@ function postLoadWrittenText(req, res, next) {
                             'isSpecial',
                             'semanticClass',
                             'pos'
-                        ],[
+                        ], [
                             words[i][j],
                             0,
                             parsedResult.ner[i][j],
@@ -176,7 +176,7 @@ function postLoadWrittenText(req, res, next) {
                             'beginOffSet',
                             'EndOffSet',
                             'whitespaceInfo'
-                        ],[
+                        ], [
                             wordInsertResult.insertId,
                             documentInsertResult.insertId,
                             counter,
@@ -194,6 +194,23 @@ function postLoadWrittenText(req, res, next) {
     }
 }
 
+function saveCoref(corefInfo, querys, controlTrans) {
+    console.log(Tag + 'coref Annotation:' + JSON.stringify(corefInfo));
+    for (let i = 0; i < corefInfo.length; i++) {
+        if (corefInfo[i].isRepresentative) {
+            querys.push(dbAction.createInsertCommand('corefmentions',
+                ['representative', 'gender', 'type', 'number', 'animacy'],
+                [-1, corefInfo[i]]));
+            controlTrans.getId[controlTrans.getId.length + i] = true;
+        } else{
+            querys.push(dbAction.createInsertCommand('corefmentions',
+                ['representative', 'gender', 'type', 'number', 'animacy'],
+                [-1, corefInfo[i]]));
+
+        }
+    }
+}
+
 function sendSQL(command) {
     try {
         let result = wait.for(dbStub.makeSQLRequest, command);
@@ -203,6 +220,7 @@ function sendSQL(command) {
     }
 }
 
+
 /**
  * Makes sure the Quotas " are set for each word in the sql query.
  * TODO: Get this function into db_Actions.js
@@ -211,15 +229,6 @@ function sendSQL(command) {
  */
 function stringifyForDB(input) {
     return '"' + input + '"';
-}
-
-function saveCoref(corefInfo) {
-    for(let i = 0; i < corefInfo.length; i++){
-        wait.for(dbStub.makeSQLRequest,
-            dbAction.createInsertCommand('corefmentions',
-                ['representative','gender','type','number','animacy'],
-                [-1,corefInfo[i]]))
-    }
 }
 
 module.exports = router;
