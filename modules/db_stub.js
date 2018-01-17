@@ -197,7 +197,7 @@ exports.makeTransaction = function (querys, controlTrans, callback) {
         connection.beginTransaction();
         console.log(Tag + 'Began Transaction: ')
         for (let i = 0; i < querys.length; i++) {
-            if (controlTrans.getId) {
+            if (controlTrans.getId[i]) {
                 let result = wait.for(makeSQLRequest, querys[i]);
                 let controlResult = {getId: result};
                 results.push(controlResult);
