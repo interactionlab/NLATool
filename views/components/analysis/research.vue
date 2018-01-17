@@ -14,7 +14,8 @@
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
-                               v-bind:index="selectedindex">
+                               v-bind:index="selectedindex"
+                               v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
                                v-else
@@ -55,6 +56,10 @@
             }
         },
         methods: {
+            switchresearchselected: function () {
+                console.log('Show the Selection: ' + this.resultselected)
+                this.resultselected = !this.resultselected
+            },
             searchGoogle: function (query) {
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
