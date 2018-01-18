@@ -40,8 +40,7 @@
 
                 <div class="mdl-cell mdl-cell--12-col"
                      v-else>
-                    <div class="mdl-cell mdl-cell--12-col"
-                         v-bind:class="{researchresulthover: hover}"
+                    <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
@@ -53,22 +52,18 @@
                              v-if="typeof researchresult.result.description !== 'undefined'">
                             {{researchresult.result.description}}
                         </div>
+
                         <div class="mdl-grid">
-                            <div class="mdl-cell mdl-cell--10-col">
+                            <div class="mdl-cell mdl-cell--2-col">
                                 <button class="mdl-button mdl-js-button" v-on:click="selectResult">
                                     <b class="mdc-button">Save</b>
                                 </button>
-
+                            </div>
+                            <div class="mdl-cell mdl-cell--2-col">
                                 <button class="mdl-button mdl-js-button" v-on:click="showallresults">
                                     <b class="mdc-button">Show All</b>
                                 </button>
                             </div>
-                        </div>
-
-
-                        <div>
-                            <button v-on:click="selectResult">save</button>
-                            <button v-on:click="showallresults">Show All</button>
                         </div>
                     </div>
                 </div>
