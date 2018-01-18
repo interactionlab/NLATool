@@ -1,28 +1,33 @@
 <template> <!--editordocument in 8080-->
 
-        <div class="mdl-grid">
-            <!-- Bottons for localisation-->
-            <div class="mdl-cell mdl-cell--10-col">
+    <div class="mdl-layout mdl-js-layout">
 
-                <div v-if="!everythingshow">
+        <main class="mdl-layout__content">
+            <div class="mdl-grid">
+                <div class="mdl-cell mdl-cell--12-col"
+                     v-if="!everythingshow">
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="selectResult">
 
-                        <div><img v-if="typeof researchresult.result.image !== 'undefined'"
-                                  v-bind:src="researchresult.result.image.contentUrl"/>
+                        <div cass="mdl-cell mdl-cell--12-col">
+                            <img v-if="typeof researchresult.result.image !== 'undefined'"
+                                 v-bind:src="researchresult.result.image.contentUrl"/>
                         </div>
 
-                        <div v-if="typeof researchresult.result !== 'undefined'">
+                        <div class="mdl-cell mdl-cell--12-col"
+                             v-if="typeof researchresult.result !== 'undefined'">
                             {{researchresult.result.name}}
                         </div>
 
-                        <div v-if="typeof researchresult.result.description !== 'undefined'">
+                        <div class="mdl-cell mdl-cell--12-col"
+                             v-if="typeof researchresult.result.description !== 'undefined'">
                             {{researchresult.result.description.articleBody}}
                         </div>
 
-                        <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                        <div class="mdl-cell mdl-cell--12-col"
+                             v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
                             {{researchresult.result.detailedDescription.articleBody}}
                         </div>
                     </div>
@@ -33,27 +38,43 @@
                     </div>
                 </div>
 
-                <div v-else>
-                    <div v-bind:class="{researchresulthover: hover}"
+                <div class="mdl-cell mdl-cell--12-col"
+                     v-else>
+                    <div class="mdl-cell mdl-cell--12-col"
+                         v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
-
-                        <div v-if="typeof researchresult.result !== 'undefined'">
+                        <div class="mdl-cell mdl-cell--12-col"
+                             v-if="typeof researchresult.result !== 'undefined'">
                             {{researchresult.result.name}}
                         </div>
-                        <div v-if="typeof researchresult.result.description !== 'undefined'">
+                        <div class="mdl-cell mdl-cell--12-col"
+                             v-if="typeof researchresult.result.description !== 'undefined'">
                             {{researchresult.result.description}}
                         </div>
-                    </div>
+                        <div class="mdl-grid">
+                            <div class="mdl-cell mdl-cell--10-col">
+                                <button class="mdl-button mdl-js-button" v-on:click="selectResult">
+                                    <b class="mdc-button">Save</b>
+                                </button>
 
-                    <div>
-                        <button v-on:click="selectResult">save</button>
-                        <button v-on:click="showallresults">Show All</button>
+                                <button class="mdl-button mdl-js-button" v-on:click="showallresults">
+                                    <b class="mdc-button">Show All</b>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <button v-on:click="selectResult">save</button>
+                            <button v-on:click="showallresults">Show All</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
+    </div>
 </template>
 
 <script>
