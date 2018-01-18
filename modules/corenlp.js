@@ -4,7 +4,7 @@
  * @type {string}
  */
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'db_actions.js: ';
+let Tag = 'corenlp.js: ';
 let sql = 'The resulting SQL Command is:';
 
 //--------------------------------------------------------
@@ -46,15 +46,7 @@ let nlpStatus = {
 };
 let pipeline = null;
 //TODO: check for errors, reset after usage
-let results = {
-    coref: [],
-    isSpecial: [],
-    text: [],
-    ner: [],
-    pos: [],
-    offsetBegin: [],
-    offsetEnd: []
-};
+
 
 exports.getResults = function () {
     return results;
@@ -129,12 +121,23 @@ exports.resetPipeline = function (language) {
 
 exports.analyse = function (text, callback) {
     const doc = new CoreNLP.simple.Document(text);
+    let results = {
+        coref: [],
+        isSpecial: [],
+        text: [],
+        ner: [],
+        pos: [],
+        offsetBegin: [],
+        offsetEnd: []
+    };
     //console.log('got here0' + text);
-    console.log(nlpStatus.pipeline.getService());
+    //console.log(nlpStatus.pipeline.getService());
     nlpStatus.pipeline.annotate(doc).then(doc => {
         let sentences = doc.sentences();
-        results.coref = doc.corefs();
-        console.log('coref Annotation:' + JSON.stringify(corefChains));
+        doc.corefs().forEach(chain =>{
+            results.coref.push(chain.mentions());
+        });
+        //console.log('coref Annotation:' + JSON.stringify(results.coref));
         for (let i = 0; i < sentences.length; i++) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
@@ -146,10 +149,9 @@ exports.analyse = function (text, callback) {
                 results.offsetBegin.push(sentences[i].tokens()[j].characterOffsetBegin());
                 results.offsetEnd.push(sentences[i].tokens()[j].characterOffsetEnd());
             }
-            console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
-            console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         }
-        resetResults();
+        //console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
+        //console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         callback(null, results);
     }).catch(err => {
         callback(err, null);
@@ -196,4 +198,3 @@ exports.positiveNlpStatus = function () {
 function nlpReachability() {
     return nlpStatus.host !== null && nlpStatus.reachable === true && nlpStatus.error === null;
 }
-
