@@ -44,22 +44,10 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <!--TODO: define toggle just for one Button -->
-                    <div v-bind:class="{green: onOff}">
-                        <button class="mdl-button mdl-js-button"
-                                v-on:click="toggleOnOff(), setResearchMode('Info')">
-                            <small class="mdc-button">Information</small>
-                        </button>
-                    </div>
-
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Map</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Statistics</small>
-                    </button>
-                    <button class="mdl-button mdl-js-button">
-                        <small class="mdc-button">Correction</small>
+                    <button v-bind:class="{'activeButton': onOff}"
+                            class="mdl-button mdl-js-button"
+                            v-on:click="setResearchMode('Info')">
+                        <small class="mdc-button">Information</small>
                     </button>
                 </div>
 
@@ -98,9 +86,6 @@
                     'I-ORG': false,
                     'I-MISC': false,
                 },
-                //    classestoresearch: {
-                //        info: false,
-                //        map: false,
                 noteModes: {
                     wordnote: true,
                     globalnote: false
@@ -163,6 +148,24 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
+            changeReseachButton: function (mode) {
+                if (mode == 'Info') {
+                    mode = 'activeButton';
+                    this.onOff.Info = !this.onOff.Map;
+                }
+                if (mode == 'Map') {
+                    mode = 'activeButton';
+                    this.onOff.Map = !this.onOff.Info;
+                }
+                else {
+                    if (mode == 'Info') {
+                        mode = !onOff;
+                    }
+                    if (mode == 'Map') {
+                        mode = !onOff;
+                    }
+                }
+            },
             setResearchMode: function (mode) {
                 this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
@@ -173,7 +176,6 @@
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             }
-
         }
     }
 
