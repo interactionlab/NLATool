@@ -120,23 +120,57 @@ function postLoadWrittenText(req, res, next) {
         if (!/\S/.test(text)) {
             res.renderVue('loadtext', vueRenderOptions);
         } else {
+            let transactionInformation = {
+                querys: [],
+                corefInfo: {},
+                transControl: {
+                    getProper: [],
+                    useProper: []
+                }
+
+            };
             let parsedResult = wait.for(corenlp.analyse, text);
             let words = parsedResult.text;
-            let title = '"' + req.body.title + '"';
+            let title = stringifyForDB(req.body.title);
+            let lang = stringifyForDB(language);
 
             //Insert Statement to initiate a Document
+            transactionInformation.querys.push(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+            transactionInformation.getProper.push(true);
+
+            //-------------------------------------------------------------------------------------!
             let documentInsertResult = wait.for(dbStub.makeSQLRequest,
                 dbAction.createInsertCommand('documents', ['name'], [title], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
             //TODO: make sure German is selected in database, change the button design first
-            let lang = '"' + language + '"';
+            //-------------------------------------------------------------------------------------
+
+            transactionInformation.querys.push('...');
+            transactionInformation.transControl.useProper[transactionInformation.querys.length] = {
+                kindOfQuery: 'insert',
+                table: 'text',
+                columns: ['docID', 'length', 'title', 'lang'],
+                values: [
+                    words.length,
+                    title,
+                    lang],
+                numberOfColumn: 0,
+                ofResult: 0,
+                nameOfProper: 'insertId',
+                toCompare: null,
+                operators: null
+            };
+            //-------------------------------------------------------------------------------------!
             wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title', 'lang'],
                 [documentInsertResult.insertId, words.length, title, lang],
                 null, null));
+            //-------------------------------------------------------------------------------------
+
             req.session.docID = documentInsertResult.insertId;
             req.session.lang = language;
             //TODO: check if word + NER Tag exists already
@@ -151,6 +185,8 @@ function postLoadWrittenText(req, res, next) {
                     parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
                     parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
 
+
+                    //-------------------------------------------------------------------------------------!
                     wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
                         'word',
                         [
@@ -185,30 +221,62 @@ function postLoadWrittenText(req, res, next) {
                             '"-10"'
                         ],
                         null, null));
+                    //-------------------------------------------------------------------------------------
                     counter++;
                 }
-
             }
+            saveCoref(transactionInformation);
+            wait.for(dbStub.makeTransaction(transactionInformation));
             res.redirect('/analysis');
         }
     }
 }
 
-function saveCoref(corefInfo, querys, controlTrans) {
-    console.log(Tag + 'coref Annotation:' + JSON.stringify(corefInfo));
-    for (let i = 0; i < corefInfo.length; i++) {
-        if (corefInfo[i].isRepresentative) {
-            querys.push(dbAction.createInsertCommand('corefmentions',
-                ['representative', 'gender', 'type', 'number', 'animacy'],
-                [-1, corefInfo[i]]));
-            controlTrans.getId[controlTrans.getId.length + i] = true;
-        } else{
-            querys.push(dbAction.createInsertCommand('corefmentions',
-                ['representative', 'gender', 'type', 'number', 'animacy'],
-                [-1, corefInfo[i]]));
-
+function saveCoref(input) {
+    let queryCounter = 0;
+    let representativeIndex = -1;
+    for (let chain in input.corefInfo) {
+        //console.log('Chain: '+ JSON.stringify(corefInfo[chain]) + typeof corefInfo[chain]);
+        for (let mention in input.corefInfo[chain]) {
+            console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
+            if (input.corefInfo[chain][mention].isRepresentativeMention()) {
+                console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
+                input.querys.push(dbAction.createInsertCommand('corefmentions',
+                    ['representative', 'gender', 'type', 'number', 'animacy'],
+                    [-1,
+                        input.corefInfo[chain][mention].gender(),
+                        input.corefInfo[chain][mention].type(),
+                        input.corefInfo[chain][mention].number(),
+                        input.corefInfo[chain][mention].animacy()
+                    ]));
+                input.transControl.getProper[input.transControl.getProper.length + queryCounter] = true;
+                representativeIndex = input.transControl.getProper.length + queryCounter;
+            } else {
+                console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
+                querys.push('...');
+                if (representativeIndex !== -1) {
+                    input.transControl.getProper[input.transControl.useProper.length + queryCounter] =
+                        {
+                            kindOfQuery: 'insert',
+                            table: 'corefmentions',
+                            columns: ['representative', 'gender', 'type', 'number', 'animacy'],
+                            values: [
+                                input.corefInfo[chain][mention].gender(),
+                                input.corefInfo[chain][mention].type(),
+                                input.corefInfo[chain][mention].number(),
+                                input.corefInfo[chain][mention].animacy()],
+                            numberOfColumn: 0,
+                            ofResult: representativeIndex,
+                            nameOfProper: 'insertId',
+                            toCompare: null,
+                            operators: null
+                        };
+                }
+            }
+            queryCounter++;
         }
     }
+    return input;
 }
 
 function sendSQL(command) {

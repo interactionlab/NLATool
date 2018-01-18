@@ -65,7 +65,7 @@ function test(req, res, next) {
         kindOfQuery: 'insert',
         table:'accountData',
         columns: ['email', 'username'],
-        values: [stringifyForDB('97898o')],
+        values: [stringifyForDB('97893gerg8o')],
         numberOfColumn: 1,
         ofResult: 2,
         nameOfProper: 'insertId',
@@ -80,7 +80,7 @@ function test(req, res, next) {
         if (typeof transControl.getProper[i] === 'undefined') {
             transControl.getProper[i] = false;
         }
-        values[0] = stringifyForDB(i+200);
+        values[0] = stringifyForDB(i+300);
         querys.push(dbAction.createInsertCommand('accountData', ['email', 'username'], values, null, null));
     }
     console.log(JSON.stringify(transControl));
