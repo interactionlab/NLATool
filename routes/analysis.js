@@ -71,7 +71,7 @@ let vueData = {
  */
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, docID, indexes) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID+ ' Indexes: ' + JSON.stringify(indexes));
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID + ' Indexes: ' + JSON.stringify(indexes));
         wait.launchFiber(saveWordNote, note, docID, indexes);
     });
     socket.on('updatewordnote', function (noteID, note) {
@@ -275,21 +275,7 @@ function getTextFromDB(docID) {
  */
 function getWordNotes(docID) {
     let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'wordID', 'content'], [docID], ['='])));
-    let tempWord = '';
-    let tempToken = -1;
-    for (let i = 0; i < tempWordNotes.length; i++) {
-        if (typeof tempWordNotes[i].wordID !== 'undefined' || tempWordNotes[i].wordID !== '') {
-            tempToken = binaryTokensSearch(textDB.tokens, 'wordID', tempWordNotes[i].wordID);
-            if (tempToken === -1) {
-                tempWordNotes[i]['word'] = 'Word broke!';
-            } else {
-                tempWordNotes[i]['word'] = textDB.tokens[tempToken].content;
-            }
-        } else {
-            tempWordNotes[i]['word'] = 'Word doesnt exist';
-        }
-    }
+        dbAction.createSelectCommand('notes', ['docID', 'noteID', 'content', 'textIndex1', 'textIndex2'], [docID], ['='])));
     console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
     return tempWordNotes;
 }
