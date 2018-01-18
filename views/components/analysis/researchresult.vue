@@ -62,20 +62,20 @@
                              v-if="typeof researchresult.result.description !== 'undefined'">
                             {{researchresult.result.description}}
                         </div>
-
-                        <div class="mdl-grid">
-                            <div class="mdl-cell mdl-cell--2-col">
-                                <button class="mdl-button mdl-js-button" v-on:click="selectResult">
-                                    <b class="mdc-button">Save</b>
-                                </button>
-                            </div>
-                            <div class="mdl-cell mdl-cell--2-col">
-                                <button class="mdl-button mdl-js-button" v-on:click="showallresults">
-                                    <b class="mdc-button">Show All</b>
-                                </button>
-                            </div>
+                    </div>
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--2-col">
+                            <button class="mdl-button mdl-js-button" v-on:click="selectResult">
+                                <b class="mdc-button">Save</b>
+                            </button>
+                        </div>
+                        <div class="mdl-cell mdl-cell--2-col">
+                            <button class="mdl-button mdl-js-button" v-on:click="showallresults">
+                                <b class="mdc-button">Show All</b>
+                            </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
