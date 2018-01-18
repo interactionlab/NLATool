@@ -6,7 +6,7 @@
              v-if="!editing">
             <div class="mdl-cell--12-col contentColor"
                 v-on:click="jumpMarkText">
-                <p>{{wordnotedb.word}}</p>
+                <p>{{linkedtextfornote}}</p>
             </div>
             <div class="mdl-cell--10-col contentColor">
                 <p v-on:click="edit">{{ wordnotedb.content }}</p>
@@ -37,8 +37,9 @@
 </template>
 <script>
     import newwordnote from './components/analysis/notes/newwordnote.vue';
-
+    import gettokensofselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     export default {
+        mixins:[gettokensofselectedtext],
         props: {
             wordnotedb: Object,
             docid: String,
@@ -51,6 +52,15 @@
                 editing: false,
                 docid: this.docid,
                 tokens:this.tokens
+            }
+        },
+        computed:{
+            linkedtextfornote:function () {
+                let noteRanges = {
+                    start:  this.wordnotedb.textIndex1,
+                    end: this.wordnotedb.textIndex2
+                };
+                return this.generateText(this.gettokensofselectedtext(this.tokens, noteRanges));
             }
         },
         methods: {
