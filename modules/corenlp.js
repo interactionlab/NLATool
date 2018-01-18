@@ -134,7 +134,7 @@ exports.analyse = function (text, callback) {
     nlpStatus.pipeline.annotate(doc).then(doc => {
         let sentences = doc.sentences();
         results.coref = doc.corefs();
-        console.log('coref Annotation:' + JSON.stringify(corefChains));
+        //console.log('coref Annotation:' + JSON.stringify(corefChains));
         for (let i = 0; i < sentences.length; i++) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
