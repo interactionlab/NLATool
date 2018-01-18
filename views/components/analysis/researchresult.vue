@@ -32,9 +32,19 @@
                         </div>
                     </div>
 
-                    <div>
-                        <button v-on:click="selectResult">save</button>
-                        <button v-on:click="showdetail">back</button>
+                    <div class="mdl-grid">
+                        <div class="mdl-cell mdl-cell--2-col">
+                            <button class="mdl-button mdl-js-button"
+                                    v-on:click="selectResult">
+                                <b class="mdc-button">Save</b>
+                            </button>
+                        </div>
+                        <div class="mdl-cell mdl-cell--2-col">
+                            <button class="mdl-button mdl-js-button"
+                                    v-on:click="showdetail">
+                                <b class="mdc-button">Back</b>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
