@@ -9,6 +9,7 @@
                    v-bind:tokens="tokens"
                    v-on:edit="editnote($event)"
                    v-on:back="back($event)"
+                   v-on:jumpmarktext="jumpmarktext($event)"
                    v-on:mouseover="showButns"
                    v-on:mouseout="hideButns">
         </component>
@@ -44,6 +45,10 @@
             }
         },
         methods: {
+            jumpmarktext: function (newSelectedIndexes) {
+                this.selectedindexes = newSelectedIndexes;
+                this.$emit('jumpmarktext', this.selectedindexes);
+            },
             editnote: function (editText) {
                 this.note = editText;
             },
@@ -56,28 +61,28 @@
             },
             back: function (noteToChange) {
                 console.log('got here: 3');
-                console.log('action: '+ noteToChange[1]);
+                console.log('action: ' + noteToChange[1]);
                 if (noteToChange[1] === 0) {
                     //delete
                     let i = 0;
-                    for(i = 0; i < this.notes.length; i++){
-                        if(this.notes[i].noteID === noteToChange[0]){
+                    for (i = 0; i < this.notes.length; i++) {
+                        if (this.notes[i].noteID === noteToChange[0]) {
                             break;
                         }
                     }
-                    this.notes.splice(i,1);
+                    this.notes.splice(i, 1);
                 } else if (noteToChange[1] === 1) {
                     //new
                     this.notes.splice(this.notes.length, 0, noteToChange[2]);
                 } else if (noteToChange[1] === 2) {
                     //update
                     let i = 0;
-                    for(i = 0; i < this.notes.length; i++){
-                        if(this.notes[i].noteID === noteToChange[1]){
+                    for (i = 0; i < this.notes.length; i++) {
+                        if (this.notes[i].noteID === noteToChange[1]) {
                             break;
                         }
                     }
-                    this.notes.splice(i-1,1,noteToChange[2]);
+                    this.notes.splice(i - 1, 1, noteToChange[2]);
                 } else {
 
                 }

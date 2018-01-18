@@ -197,40 +197,60 @@ exports.makeTransaction = function (querys, controlTrans, callback) {
         connection.beginTransaction();
         console.log(Tag + 'Began Transaction: ')
         for (let i = 0; i < querys.length; i++) {
-            if (controlTrans.getId[i]) {
+            if (controlTrans.getProper[i]) {
+                console.log('executing getProper Query');
                 let result = wait.for(makeSQLRequest, querys[i]);
-                let controlResult = {getId: result};
+                let controlResult = {getProper: result};
                 results.push(controlResult);
             } else if (controlTrans.select) {
                 results.push(wait.for(makeSQLRequest, querys[i]));
-            } else if (controlTrans.useId[i] !== -1) {
+            } else if (controlTrans.useProper[i] !== -1) {
                 let newQuery = '';
-                if (controlTrans.useId[i].kindOfQuery === 'insert') {
-
-                    controlTrans.useId[i].values[controlTrans.useId[i].numberOfColumn]
-                        = results[controlTrans.useId[i].ofResult].getID.insertId;
-
+                if (controlTrans.useProper[i].kindOfQuery === 'insert') {
+                    changeValuesForQuery(controlTrans, results, i);
                     newQuery = dbAction.createInsertCommand(
-                        controlTrans.useId[i].columns,
-                        controlTrans.useId[i].values,
-                        controlTrans.useId[i].toCompare,
-                        controlTrans.useId[i].operators);
+                        controlTrans.useProper[i].table,
+                        controlTrans.useProper[i].columns,
+                        controlTrans.useProper[i].values,
+                        controlTrans.useProper[i].toCompare,
+                        controlTrans.useProper[i].operators);
+
                     results.push(wait.for(makeSQLRequest, newQuery));
+                } else if (controlTrans.useProper[i].kindOfQuery === 'select') {
+                    changeValuesForQuery(controlTrans, results, i);
+                } else if (controlTrans.useProper[i].kindOfQuery === 'create') {
+                    changeValuesForQuery(controlTrans, results, i);
+                } else if (controlTrans.useProper[i].kindOfQuery === 'update') {
+                    changeValuesForQuery(controlTrans, results, i);
                 }
 
             } else {
-                console.log(Tag+ 'Executing a normal Query without extras: ');
-                results.push(wait.for(makeSQLRequest,querys[i]));
+                console.log(Tag + 'Executing a normal Query without extras: ');
+                results.push(wait.for(makeSQLRequest, querys[i]));
             }
         }
-        console.log(Tag + 'got to the commit')
+        console.log(Tag + 'got to the commit');
         connection.commit();
     } catch (err) {
-        console.log(Tag+ err);
+        console.log(Tag + err);
         connection.rollback();
-        callback(err, null);
     }
 };
+
+function changeValuesForQuery(controlTrans, results, index) {
+    let tempProperResult = JSON.parse(results[controlTrans.useProper[index].ofResult].getProper)
+    /* console.log(Tag + 'Values: ' + controlTrans.useProper[index].values);
+     console.log(Tag + 'ofResult: ' + controlTrans.useProper[index].ofResult);
+     console.log(Tag + 'Name Of Property: ' + controlTrans.useProper[index].nameOfProper);
+     console.log(Tag + 'Result: ' + results[controlTrans.useProper[index].ofResult].getProper);
+     console.log(Tag + 'New Property: ' + tempProperResult[controlTrans.useProper[index].nameOfProper]);*/
+
+    controlTrans.useProper[index].values[controlTrans.useProper[index].numberOfColumn]
+        = '"' + tempProperResult[controlTrans.useProper[index].nameOfProper] + '"';
+
+    //console.log(Tag + 'Values: ' + controlTrans.useProper[index].values);
+    return controlTrans;
+}
 
 /**
  * Checks if the Database matches the dbconfig Settings.
