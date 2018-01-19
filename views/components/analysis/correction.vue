@@ -5,6 +5,7 @@
             <p v-on:click="showClasses">{{token.semanticClass}}</p>
             <div v-if="showNewClasses">
                 <button v-bind:class="{PERSON: classesToMark.PERSON}"
+                        v-on:click="changeClass(PERSON)"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">PERSONS</small>
                 </button>
@@ -48,7 +49,9 @@
                 this.showNewClasses = !this.showNewClasses;
             },
             changeClass: function (newClass) {
-
+                for(let token in this.tokens){
+                    console.log(token + "gets class" + newClass);
+                }
             }
         }
     }

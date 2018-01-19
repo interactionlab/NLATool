@@ -36,8 +36,8 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
-                    <button v-on:click="correctionMode(), changeMarkerMode('POS')"
-                            class="mdl-button mdl-js-button">
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="setCorrectionMode('Correction'), changeMarkerMode('POS')">
                         <small class="mdc-button">Correction</small>
                     </button>
                 </div>
@@ -86,6 +86,7 @@
                 onOff: false,
                 tokens: this.tokens,
                 selectedindexes: this.selectedindexes,
+                correctionMode: true,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
@@ -116,12 +117,6 @@
                     this.$emit('emitresearch');
                 }
                 this.tool = tool;
-            },
-
-            correctionMode: function () {
-
-                let selectedTokens = this.gettokensofselectedtext(this.tokens, this.selectedindexes);
-                console.log(JSON.stringify(selectedTokens));
             },
 
             allButton: function () {
@@ -185,6 +180,11 @@
                 this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
                 this.$emit('changeresearchrode', [mode]);
+            },
+            setCorrectionMode: function () {
+                console.log('Change to correction mode');
+                this.correctionMode = !this.correctionMode;
+                this.$emit('entercorrectionmode', [this.correctionMode]);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
