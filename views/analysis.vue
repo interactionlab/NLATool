@@ -17,7 +17,8 @@
             <div class="headerRowLight">
                 <component
                         is="toolbar"
-                        v-bind:lang="lang"
+                        v-bind:tokens="vueTokens"
+                        v-bind:selectedindexes="selectedtextindexes"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
@@ -87,10 +88,6 @@
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
-                    'I-PER': false,
-                    'I-LOC': false,
-                    'I-ORG': false,
-                    'I-MISC': false,
                 },
                 selectedtextindexes: {
                     start: -1,
