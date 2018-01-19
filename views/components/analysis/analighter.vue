@@ -15,7 +15,7 @@
 
         props: {
             tokens: Array,
-            selectedindexes: Object
+            selectedindexes: Object,
             showMode: Boolean,
         },
         data: function () {
