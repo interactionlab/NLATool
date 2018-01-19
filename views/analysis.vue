@@ -26,7 +26,7 @@
                         v-on:changeresearchrode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)"
-                        >
+                >
                 </component>
             </div>
 
@@ -61,7 +61,7 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
                             v-bind:showmode="showMode"
-                            >
+                    >
                     </component>
                 </div>
             </div>
@@ -123,10 +123,13 @@
                 console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
-                if(correctionMode === true){
-                this.showMode = 'correction';
-                } else{
-                    this.showMode = 'standardtable';
+                console.log('Checkpoint 1');
+                if (correctionMode === true) {
+                    console.log('Checkpoint 2');
+                    this.showMode = 'correction';
+                } else {
+                    console.log('Checkpoint 3');
+                    this.showMode = 'entitiesview';
                 }
 
             },
@@ -142,10 +145,10 @@
                     this.selectedtextindexes.end = index;
                 }
                 if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    console.log(this.selectedtextindexes.start +' >> ' + this.selectedtextindexes.end-1);
-                    if (this.selectedtextindexes.start > this.selectedtextindexes.end-1) {
-                        let tempstart = this.selectedtextindexes.start+1;
-                        this.selectedtextindexes.start = this.selectedtextindexes.end-1;
+                    console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
+                    if (this.selectedtextindexes.start > this.selectedtextindexes.end - 1) {
+                        let tempstart = this.selectedtextindexes.start + 1;
+                        this.selectedtextindexes.start = this.selectedtextindexes.end - 1;
                         this.selectedtextindexes.end = tempstart;
                     }
                 }

@@ -9,6 +9,7 @@
     import nerVue from './components/analysis/ner.vue';
     import necVue from './components/analysis/nec.vue';
     import correction from './components/analysis/correction.vue';
+    import entitiesview from './components/analysis/entitiesview.vue';
 
 
     export default {
@@ -30,6 +31,7 @@
             nerVue,
             necVue,
             correction,
+            entitiesview
         }
     }
 </script>
