@@ -1,6 +1,6 @@
 <template>
     <div>
-        <component :is="showMode"
+        <component :is="showmode"
                    v-bind:tokens="tokens"
                    v-bind:selectedindexes="selectedindexes"></component>
     </div>
@@ -16,12 +16,12 @@
         props: {
             tokens: Array,
             selectedindexes: Object,
-            showMode: Boolean,
+            showmode: String,
         },
         data: function () {
             return {
                 tokens: this.tokens,
-                showMode: this.showMode,
+                showmode: this.showmode,
                 selectedindexes: this.selectedindexes
             }
         },
