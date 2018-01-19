@@ -48,7 +48,6 @@
                             v-on:click="setResearchMode('Info')">
                         <small class="mdc-button">Information</small>
                     </button>
-                </div>
 
                     <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Map</small>
@@ -74,15 +73,19 @@
     </main>
 </template>
 <script>
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     export default {
+        mixins: [getselectedtext],
         props: {
-            lang: String
+            tokens: Array,
+            selectedindexes: Object
         },
         data: function () {
             return {
                 tool: 'analightertool',
                 onOff: false,
-                lang: this.lang,
+                tokens: this.tokens,
+                selectedindexes: this.selectedindexes,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
@@ -115,8 +118,10 @@
                 this.tool = tool;
             },
 
-            correctionMode: function(){
+            correctionMode: function () {
 
+                let selectedTokens = this.gettokensofselectedtext(this.tokens, this.selectedindexes);
+                console.log(JSON.stringify(selectedTokens));
             },
 
             allButton: function () {
@@ -139,43 +144,22 @@
             },
 
             changeMarkerMode: function (mode) {
-                if (this.lang == 'English') {
-                    if (mode == 'Person') {
-                        mode = 'PERSON';
-                        this.classesToMark.PERSON = !this.classesToMark.PERSON;
-                    }
-                    if (mode == 'Location') {
-                        mode = 'LOCATION';
-                        this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
-                    }
-                    if (mode == 'Organization') {
-                        mode = 'ORGANIZATION';
-                        this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
-                    }
-                    if (mode == 'Misc') {
-                        mode = 'MISC';
-                        this.classesToMark.MISC = !this.classesToMark.MISC;
-                    }
 
+                if (mode == 'Person') {
+                    mode = 'PERSON';
+                    this.classesToMark.PERSON = !this.classesToMark.PERSON;
                 }
-                else if (this.lang == 'German') {
-                    console.log("D2");
-                    if (mode == 'Person') {
-                        mode = 'I-PER';
-                        this.classesToMark["I-PER"] = !this.classesToMark["I-PER"];
-                    }
-                    if (mode == 'Location') {
-                        mode = 'I-LOC';
-                        this.classesToMark["I-LOC"] = !this.classesToMark["I-LOC"];
-                    }
-                    if (mode == 'Organization') {
-                        mode = 'I-ORG';
-                        this.classesToMark["I-ORG"] = !this.classesToMark["I-ORG"];
-                    }
-                    if (mode == 'Misc') {
-                        mode = 'I-MISC';
-                        this.classesToMark["I-MISC"] = !this.classesToMark["I-MISC"];
-                    }
+                if (mode == 'Location') {
+                    mode = 'LOCATION';
+                    this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
+                }
+                if (mode == 'Organization') {
+                    mode = 'ORGANIZATION';
+                    this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
+                }
+                if (mode == 'Misc') {
+                    mode = 'MISC';
+                    this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
