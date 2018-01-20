@@ -269,7 +269,7 @@ function saveCoref(input) {
         for (let mention in input.corefInfo[chain]) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
-                //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
+                console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
 
                 input.querys.push(dbAction.createInsertCommand('corefmentions',
                     ['representative', 'gender', 'type', 'number', 'animacy'],
@@ -279,17 +279,33 @@ function saveCoref(input) {
                         stringifyForDB(input.corefInfo[chain][mention].number()),
                         stringifyForDB(input.corefInfo[chain][mention].animacy())
                     ], null, null));
-                queryCounter++;
-                input.transControl.getProper[queryCounter] = true;
-                representativeIndex = queryCounter;
-                //console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
+                input.transControl.getProper[input.querys.length - 1] = true;
+                representativeIndex = input.querys.length - 1;
+                input.querys.push('---');
+                input.transControl.useProper[input.querys.length - 1] ={
+                    kindOfQuery: 'update',
+                    table: 'textmap',
+                    columns: ['mentionID'],
+                    values: [-1],
+                    numberOfColumns: [0],
+                    ofResults: [representativeIndex],
+                    ofComparingResults: [0],
+                    nameOfPropers: ['insertId'],
+                    nameOfPropersToCompare:['insertId'],
+                    columnsToCompare: ['docID','textIndex','textIndex'],
+                    nrColumnsToCompare:[0],
+                    valuesToCompare: [-1,
+                        stringifyForDB(input.corefInfo[chain][mention].startIndex()-1),
+                        stringifyForDB(input.corefInfo[chain][mention].endIndex()-1)],
+                    operators: ['=','>=','<=']
+                };
+                console.log('Check1: ' + representativeIndex);
             } else {
-                //console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
-                input.querys.push(input.corefInfo[chain][mention].text());
-                queryCounter++;
+                console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
+                input.querys.push(input.corefInfo[chain][mention].text()+'1');
                 if (representativeIndex !== -1) {
-                    //console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
-                    input.transControl.useProper[queryCounter] =
+                    console.log('Check2: '  + representativeIndex);
+                    input.transControl.useProper[input.querys.length - 1] =
                         {
                             kindOfQuery: 'insert',
                             table: 'corefmentions',
@@ -302,9 +318,30 @@ function saveCoref(input) {
                             numberOfColumns: [0],
                             ofResults: [representativeIndex],
                             nameOfPropers: ['insertId'],
+                            getProper: true,
                             toCompare: null,
                             operators: null
                         };
+                    input.querys.push('---');
+                    input.transControl.useProper[input.querys.length - 1] ={
+                        kindOfQuery: 'update',
+                        table: 'textmap',
+                        columns: ['mentionID'],
+                        values: [-1],
+                        numberOfColumns: [0],
+                        ofResults: [input.querys.length - 2],
+                        ofComparingResults: [0],
+                        nameOfPropers: ['insertId'],
+                        nameOfPropersToCompare:['insertId'],
+                        columnsToCompare: ['docID','textIndex','textIndex'],
+                        nrColumnsToCompare:[0],
+                        valuesToCompare: [-1,
+                            stringifyForDB(input.corefInfo[chain][mention].startIndex()-1),
+                            stringifyForDB(input.corefInfo[chain][mention].endIndex()-1)],
+                        operators: ['=','>=','<=']
+                    };
+                } else {
+                    console.log('ERROR: representativeIndex = -1 -> Representative wasnt uploaded!');
                 }
             }
         }
