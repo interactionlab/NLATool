@@ -196,7 +196,7 @@ exports.makeTransaction = function (input) {
         connection.beginTransaction();
         for (let i = 0; i < input.querys.length; i++) {
             if (input.transControl.getProper[i]) {
-                console.log('Checkpoint 1: getProper of: '+ input.querys[i]);
+                //console.log('Checkpoint 1: getProper of: '+ input.querys[i]);
                 let result = wait.for(makeSQLRequest, input.querys[i]);
                 let controlResult = {getProper: result};
                 results.push(controlResult);
