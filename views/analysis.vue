@@ -57,7 +57,8 @@
                             v-bind:notemodes="notemodes"
                             v-bind:persons="persons"
                             v-bind:researchmode="researchmode"
-                            v-bind:selectedindexes="selectedtextindexes">
+                            v-bind:selectedindexes="selectedtextindexes"
+                            v-on:jumpmarktext="selectText2($event)">
                     </component>
                 </div>
             </div>
@@ -148,6 +149,9 @@
                 }
                 console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
 
+            },
+            selectText2:function (newSelectedIndexes) {
+                this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
                 console.log('changing Note Modes: ' + newNoteModes);
