@@ -12,7 +12,7 @@
             <!--Tab values-->
             <div class="mdl-grid">
                 <div class="mdl-tabs__panel is-active " id="analysis-panel">
-                    <button v-on:click="changeMarkerMode('NE')"
+                    <button v-on:click="allButton"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ALL</small>
                     </button>
@@ -22,24 +22,23 @@
                         <small class="mdc-button">PERSONS</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Location')"
+                            v-bind:class="{LOCATION: classesToMark.LOCATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">LOCATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Organization')"
+                            v-bind:class="{ORGANIZATION: classesToMark.ORGANIZATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ORGANIZATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Misc')"
+                            v-bind:class="{MISC: classesToMark.MISC}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('FM')"
-                            class="mdl-button mdl-js-button">
-                        <small class="mdc-button">(FM)</small>
-                    </button>
-                    <button v-on:click="changeMarkerMode('NN')"
-                            class="mdl-button mdl-js-button">
-                        <small class="mdc-button">(NN)</small>
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="setCorrectionMode('Correction'), changeMarkerMode('POS')">
+                        <small class="mdc-button">Correction</small>
                     </button>
                 </div>
 
@@ -48,6 +47,13 @@
                             class="mdl-button mdl-js-button"
                             v-on:click="setResearchMode('Info')">
                         <small class="mdc-button">Information</small>
+                    </button>
+
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Map</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Statistics</small>
                     </button>
                 </div>
 
@@ -67,15 +73,20 @@
     </main>
 </template>
 <script>
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     export default {
+        mixins: [getselectedtext],
         props: {
-            lang: String
+            tokens: Array,
+            selectedindexes: Object
         },
         data: function () {
             return {
                 tool: 'analightertool',
                 onOff: false,
-                lang: this.lang,
+                tokens: this.tokens,
+                selectedindexes: this.selectedindexes,
+                correctionMode: true,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
@@ -94,7 +105,7 @@
         },
         methods: {
             toggleOnOff: function () {
-                console.log('toggleing');
+                console.log('toggling');
                 this.onOff = !this.onOff;
             },
             changetool: function (tool) {
@@ -107,44 +118,43 @@
                 }
                 this.tool = tool;
             },
-            changeMarkerMode: function (mode) {
-                if (this.lang == 'English') {
-                    if (mode == 'Person') {
-                        mode = 'PERSON';
-                        this.classesToMark.PERSON = !this.classesToMark.PERSON;
-                    }
-                    if (mode == 'Location') {
-                        mode = 'LOCATION';
-                        this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
-                    }
-                    if (mode == 'Organization') {
-                        mode = 'ORGANIZATION';
-                        this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
-                    }
-                    if (mode == 'Misc') {
-                        mode = 'MISC';
-                        this.classesToMark.MISC = !this.classesToMark.MISC;
-                    }
 
+            allButton: function () {
+
+                if (this.classesToMark.PERSON === false) {
+                    this.changeMarkerMode('Person');
                 }
-                else if (this.lang == 'German') {
-                    console.log("D2");
-                    if (mode == 'Person') {
-                        mode = 'I-PER';
-                        this.classesToMark["I-PER"] = !this.classesToMark["I-PER"];
-                    }
-                    if (mode == 'Location') {
-                        mode = 'I-LOC';
-                        this.classesToMark["I-LOC"] = !this.classesToMark["I-LOC"];
-                    }
-                    if (mode == 'Organization') {
-                        mode = 'I-ORG';
-                        this.classesToMark["I-ORG"] = !this.classesToMark["I-ORG"];
-                    }
-                    if (mode == 'Misc') {
-                        mode = 'I-MISC';
-                        this.classesToMark["I-MISC"] = !this.classesToMark["I-MISC"];
-                    }
+                if (this.classesToMark.LOCATION === false) {
+                    this.changeMarkerMode('Location');
+                }
+                if (this.classesToMark.ORGANIZATION === false) {
+                    this.changeMarkerMode('Organization');
+                }
+                if (this.classesToMark.MISC === false) {
+                    this.changeMarkerMode('Misc');
+                }
+                for (let key in this.classesToMark) {
+                    this.classesToMark[key] = true;
+                }
+            },
+
+            changeMarkerMode: function (mode) {
+
+                if (mode == 'Person') {
+                    mode = 'PERSON';
+                    this.classesToMark.PERSON = !this.classesToMark.PERSON;
+                }
+                if (mode == 'Location') {
+                    mode = 'LOCATION';
+                    this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
+                }
+                if (mode == 'Organization') {
+                    mode = 'ORGANIZATION';
+                    this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
+                }
+                if (mode == 'Misc') {
+                    mode = 'MISC';
+                    this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
@@ -170,6 +180,11 @@
                 this.onOff = !this.onOff;
                 console.log('got the Event:' + mode);
                 this.$emit('changeresearchrode', [mode]);
+            },
+            setCorrectionMode: function () {
+                console.log('Change to correction mode');
+                this.correctionMode = !this.correctionMode;
+                this.$emit('entercorrectionmode', [this.correctionMode]);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
