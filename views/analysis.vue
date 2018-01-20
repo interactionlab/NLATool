@@ -17,13 +17,16 @@
             <div class="headerRowLight">
                 <component
                         is="toolbar"
-                        v-bind:lang="lang"
+                        v-bind:tokens="vueTokens"
+                        v-bind:selectedindexes="selectedtextindexes"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changeresearchrode="changeResearchMode($event)"
-                        v-on:changenotemode="changeNoteMode($event)">
+                        v-on:changenotemode="changeNoteMode($event)"
+                        v-on:entercorrectionmode="entercorrectionmode($event)"
+                        >
                 </component>
             </div>
 
@@ -55,10 +58,11 @@
                             v-bind:docid="docID"
                             v-bind:notes="notes"
                             v-bind:notemodes="notemodes"
-                            v-bind:persons="persons"
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
-                            v-on:jumpmarktext="selectText2($event)">
+                            v-on:jumpmarktext="selectText2($event)"
+                            v-bind:showmode="showMode"
+                            >
                     </component>
                 </div>
             </div>
@@ -80,18 +84,13 @@
             return {
                 analysisMode: 'analighter',
                 markermode: 'NE',
-                showMode: 'nerVue',
+                showMode: 'correction',
                 researchmode: '',
-                persons: '',
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
-                    'I-PER': false,
-                    'I-LOC': false,
-                    'I-ORG': false,
-                    'I-MISC': false,
                 },
                 selectedtextindexes: {
                     start: -1,
@@ -116,7 +115,6 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
-                //TODO: All button functionalitiy
                 console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
                 console.log('classesToMark: ' + JSON.stringify(mode[1]));
@@ -125,8 +123,13 @@
             test: function () {
                 console.log(JSON.stringify(this.notes));
             },
-            setPersons: function (persons) {
-                this.persons = persons;
+            entercorrectionmode: function (correctionMode) {
+                if(correctionMode === true){
+                this.showMode = 'correction';
+                } else{
+                    this.showMode = 'standardtable';
+                }
+
             },
             changeResearchMode: function (mode) {
                 console.log('analysis: Changing researchmode: ' + mode);

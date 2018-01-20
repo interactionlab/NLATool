@@ -1,32 +1,35 @@
 <template>
     <div>
-        <component :is="showMode" v-bind:persons="persons"></component>
+        <component :is="showmode"
+                   v-bind:tokens="tokens"
+                   v-bind:selectedindexes="selectedindexes"></component>
     </div>
 </template>
 <script>
-    import ner from './mixins/analysis/ner';
-    import ned from './mixins/analysis/ned';
-    import nec from './mixins/analysis/nec';
     import nerVue from './components/analysis/ner.vue';
     import necVue from './components/analysis/nec.vue';
-    import nedVue from './components/analysis/ned.vue';
+    import correction from './components/analysis/correction.vue';
 
 
     export default {
-        mixins: [ner, ned, nec],
-        props: ['tokens', 'markerMode', 'persons'],
+
+        props: {
+            tokens: Array,
+            selectedindexes: Object,
+            showmode: String,
+        },
         data: function () {
             return {
-                showMode: 'nerVue',
                 tokens: this.tokens,
-                persons: this.persons
+                showmode: this.showmode,
+                selectedindexes: this.selectedindexes
             }
         },
         methods: {},
         components: {
             nerVue,
             necVue,
-            nedVue,
+            correction,
         }
     }
 </script>
