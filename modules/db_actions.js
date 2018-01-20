@@ -337,6 +337,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
  * @param table
  * @param columns
  * @param values
+ * @param columnsToCompare
  * @param valuesToCompare
  * @param operators
  * @returns {*}
