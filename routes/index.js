@@ -126,55 +126,52 @@ function postLoadWrittenText(req, res, next) {
                 transControl: {
                     getProper: [],
                     useProper: []
-                }
-
+                },
             };
             let parsedResult = wait.for(corenlp.analyse, text);
             let words = parsedResult.text;
             let title = stringifyForDB(req.body.title);
             let lang = stringifyForDB(language);
-
+            transactionInformation.corefInfo = parsedResult.coref;
             //Insert Statement to initiate a Document
-            transactionInformation.querys.push(dbStub.makeSQLRequest,
-                dbAction.createInsertCommand('documents', ['name'], [title], null, null));
-            transactionInformation.getProper.push(true);
+            transactionInformation.querys.push(dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+            let helpVariable = true;
+            transactionInformation.transControl.getProper.push(helpVariable);
 
             //-------------------------------------------------------------------------------------!
-            let documentInsertResult = wait.for(dbStub.makeSQLRequest,
-                dbAction.createInsertCommand('documents', ['name'], [title], null, null));
-            documentInsertResult = JSON.parse(documentInsertResult);
+            /* let documentInsertResult = wait.for(dbStub.makeSQLRequest,
+                 dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+             documentInsertResult = JSON.parse(documentInsertResult);*/
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             //Inserting Meta Info
             //TODO: make sure German is selected in database, change the button design first
             //-------------------------------------------------------------------------------------
-
             transactionInformation.querys.push('...');
-            transactionInformation.transControl.useProper[transactionInformation.querys.length] = {
+            transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
                 kindOfQuery: 'insert',
                 table: 'text',
                 columns: ['docID', 'length', 'title', 'lang'],
-                values: [
+                values: [-1,
                     words.length,
                     title,
                     lang],
-                numberOfColumn: 0,
-                ofResult: 0,
-                nameOfProper: 'insertId',
+                numberOfColumns: [0],
+                ofResults: [0],
+                nameOfPropers: ['insertId'],
                 toCompare: null,
                 operators: null
             };
             //-------------------------------------------------------------------------------------!
-            wait.for(sendSQL, dbAction.createInsertCommand(
+            /*wait.for(sendSQL, dbAction.createInsertCommand(
                 'text',
                 ['docID', 'length', 'title', 'lang'],
                 [documentInsertResult.insertId, words.length, title, lang],
-                null, null));
+                null, null));*/
             //-------------------------------------------------------------------------------------
 
-            req.session.docID = documentInsertResult.insertId;
+            //req.session.docID = documentInsertResult.insertId;
             req.session.lang = language;
             //TODO: check if word + NER Tag exists already
-
             let wordInsertResult = null;
             let counter = 0;
             for (let i = 0; i < words.length; i++) {
@@ -185,9 +182,7 @@ function postLoadWrittenText(req, res, next) {
                     parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
                     parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
 
-
-                    //-------------------------------------------------------------------------------------!
-                    wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                    transactionInformation.querys.push(dbAction.createInsertCommand(
                         'word',
                         [
                             'content',
@@ -201,79 +196,120 @@ function postLoadWrittenText(req, res, next) {
                             parsedResult.pos[i][j]
                         ],
                         null, null));
+                    transactionInformation.transControl.getProper[transactionInformation.querys.length -1] = true;
 
-                    wordInsertResult = JSON.parse(wordInsertResult);
-                    wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                        'textmap',
-                        [
-                            'wordID',
-                            'docID',
-                            'textIndex',
-                            'beginOffSet',
-                            'EndOffSet',
-                            'whitespaceInfo'
-                        ], [
-                            wordInsertResult.insertId,
-                            documentInsertResult.insertId,
+                    transactionInformation.querys.push('...?');
+                    transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
+                        kindOfQuery: 'insert',
+                        table: 'textmap',
+                        columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
+                        values: [-1, -1,
                             counter,
                             parsedResult.offsetBegin[counter],
                             parsedResult.offsetEnd[counter],
-                            '"-10"'
-                        ],
-                        null, null));
+                            '"-10"'],
+                        numberOfColumns: [0, 1],
+                        ofResults: [0, transactionInformation.querys.length - 2],
+                        nameOfPropers: ['insertId', 'insertId'],
+                        toCompare: null,
+                        operators: null
+                    };
+                    //-------------------------------------------------------------------------------------!
+                    /* wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                         'word',
+                         [
+                             'content',
+                             'isSpecial',
+                             'semanticClass',
+                             'pos'
+                         ], [
+                             words[i][j],
+                             0,
+                             parsedResult.ner[i][j],
+                             parsedResult.pos[i][j]
+                         ],
+                         null, null));
+
+                     wordInsertResult = JSON.parse(wordInsertResult);
+                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
+                         'textmap',
+                         [
+                             'wordID',
+                             'docID',
+                             'textIndex',
+                             'beginOffSet',
+                             'EndOffSet',
+                             'whitespaceInfo'
+                         ], [
+                             wordInsertResult.insertId,
+                             documentInsertResult.insertId,
+                             counter,
+                             parsedResult.offsetBegin[counter],
+                             parsedResult.offsetEnd[counter],
+                             '"-10"'
+                         ],
+                         null, null));*/
                     //-------------------------------------------------------------------------------------
                     counter++;
                 }
             }
-            saveCoref(transactionInformation);
-            wait.for(dbStub.makeTransaction(transactionInformation));
+            transactionInformation = saveCoref(transactionInformation);
+            let transactionResults = dbStub.makeTransaction(transactionInformation);
+            transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
+            req.session.docID = transactionResults[0].getProper.insertId;
+
             res.redirect('/analysis');
         }
     }
 }
 
 function saveCoref(input) {
-    let queryCounter = 0;
+    let queryCounter = input.querys.length - 1;
+    console.log('Checkpoint coref 1:' + queryCounter);
     let representativeIndex = -1;
     for (let chain in input.corefInfo) {
-        //console.log('Chain: '+ JSON.stringify(corefInfo[chain]) + typeof corefInfo[chain]);
+        //console.log('Chain: '+ JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
         for (let mention in input.corefInfo[chain]) {
-            console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
+            //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
                 console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
+
                 input.querys.push(dbAction.createInsertCommand('corefmentions',
                     ['representative', 'gender', 'type', 'number', 'animacy'],
                     [-1,
-                        input.corefInfo[chain][mention].gender(),
-                        input.corefInfo[chain][mention].type(),
-                        input.corefInfo[chain][mention].number(),
-                        input.corefInfo[chain][mention].animacy()
-                    ]));
-                input.transControl.getProper[input.transControl.getProper.length + queryCounter] = true;
-                representativeIndex = input.transControl.getProper.length + queryCounter;
+                        stringifyForDB(input.corefInfo[chain][mention].gender()),
+                        stringifyForDB(input.corefInfo[chain][mention].type()),
+                        stringifyForDB(input.corefInfo[chain][mention].number()),
+                        stringifyForDB(input.corefInfo[chain][mention].animacy())
+                    ], null, null));
+                queryCounter++;
+                input.transControl.getProper[queryCounter] = true;
+                representativeIndex = queryCounter;
+                console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
             } else {
                 console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
-                querys.push('...');
+                input.querys.push(input.corefInfo[chain][mention].text());
+                queryCounter++;
                 if (representativeIndex !== -1) {
-                    input.transControl.getProper[input.transControl.useProper.length + queryCounter] =
+                    console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
+                    input.transControl.useProper[queryCounter] =
                         {
                             kindOfQuery: 'insert',
                             table: 'corefmentions',
                             columns: ['representative', 'gender', 'type', 'number', 'animacy'],
-                            values: [
-                                input.corefInfo[chain][mention].gender(),
-                                input.corefInfo[chain][mention].type(),
-                                input.corefInfo[chain][mention].number(),
-                                input.corefInfo[chain][mention].animacy()],
-                            numberOfColumn: 0,
-                            ofResult: representativeIndex,
-                            nameOfProper: 'insertId',
+                            values: [-1,
+                                stringifyForDB(input.corefInfo[chain][mention].gender()),
+                                stringifyForDB(input.corefInfo[chain][mention].type()),
+                                stringifyForDB(input.corefInfo[chain][mention].number()),
+                                stringifyForDB(input.corefInfo[chain][mention].animacy())],
+                            numberOfColumns: [0],
+                            ofResults: [representativeIndex],
+                            nameOfPropers: ['insertId'],
                             toCompare: null,
                             operators: null
                         };
                 }
             }
-            queryCounter++;
         }
     }
     return input;
