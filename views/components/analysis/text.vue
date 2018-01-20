@@ -37,6 +37,7 @@
             },
             toHighlight: function () {
                 let htmlclass = {};
+                //TODO: scrollTo selectedText if not in scope
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
                     htmlclass['notemark'] = true;
