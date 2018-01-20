@@ -154,6 +154,7 @@ exports.analyse = function (text, callback) {
         //console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         callback(null, results);
     }).catch(err => {
+        console.log('Check Error Handling'+ err);
         callback(err, null);
     });
 };
