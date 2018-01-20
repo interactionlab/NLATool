@@ -262,14 +262,14 @@ function postLoadWrittenText(req, res, next) {
 }
 function saveCoref(input) {
     let queryCounter = input.querys.length - 1;
-    console.log('Checkpoint coref 1:' + queryCounter);
+    //console.log('Checkpoint coref 1:' + queryCounter);
     let representativeIndex = -1;
     for (let chain in input.corefInfo) {
         //console.log('Chain: '+ JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
         for (let mention in input.corefInfo[chain]) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
-                console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
+                //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
 
                 input.querys.push(dbAction.createInsertCommand('corefmentions',
                     ['representative', 'gender', 'type', 'number', 'animacy'],
@@ -282,13 +282,13 @@ function saveCoref(input) {
                 queryCounter++;
                 input.transControl.getProper[queryCounter] = true;
                 representativeIndex = queryCounter;
-                console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
+                //console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
             } else {
-                console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
+                //console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
                 input.querys.push(input.corefInfo[chain][mention].text());
                 queryCounter++;
                 if (representativeIndex !== -1) {
-                    console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
+                    //console.log('Check: ' + queryCounter + ' : ' + representativeIndex);
                     input.transControl.useProper[queryCounter] =
                         {
                             kindOfQuery: 'insert',
