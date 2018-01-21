@@ -15,6 +15,7 @@
         props: {
             token: Object,
             tokens: Array,
+            mentions: Array,
             index: Number,
             classestomark: Object,
             selectedindexes: Object
@@ -23,6 +24,7 @@
             return {
                 token: this.token,
                 tokens: this.tokens,
+                mentions:this.mentions,
                 index: this.index,
                 classestomark: this.classestomark,
                 selectedindexes: this.selectedindexes,
@@ -43,6 +45,14 @@
                     htmlclass['notemark'] = true;
                 } else {
                     htmlclass['notemark'] = false;
+                }
+                //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
+                for(let i = 0; i < this.mentions.length; i++){
+                    //console.log('Checkpoint 2: '+ this.index + ' ==? '+this.mentions[i][0].textIndex );
+                    if(this.index-1 === this.mentions[i][0].textIndex){
+                        //console.log('Checkpoint 2: '+ this.classestomark.coref);
+                        htmlclass['coref'] = this.classestomark.coref;
+                    }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                 htmlclass[this.token.pos] = this.classestomark[this.token.pos];

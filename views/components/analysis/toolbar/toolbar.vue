@@ -36,6 +36,11 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
+                    <button v-on:click="changeMarkerMode('coref')"
+                            v-bind:class="{coref: classesToMark.coref}"
+                            class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Coreference</small>
+                    </button>
                     <button class="mdl-button mdl-js-button"
                             v-on:click="setCorrectionMode('Correction'), changeMarkerMode('POS')">
                         <small class="mdc-button">Correction</small>
@@ -74,6 +79,7 @@
 </template>
 <script>
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+
     export default {
         mixins: [getselectedtext],
         props: {
@@ -92,6 +98,7 @@
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
+                    coref: false,
                     'I-PER': false,
                     'I-LOC': false,
                     'I-ORG': false,
@@ -155,6 +162,15 @@
                 if (mode == 'Misc') {
                     mode = 'MISC';
                     this.classesToMark.MISC = !this.classesToMark.MISC;
+                }
+                if (mode == 'coref') {
+                    mode = 'coref';
+                    if (!this.classesToMark.coref) {
+                        for (let key in this.classesToMark) {
+                            this.classesToMark[key] = false;
+                        }
+                    }
+                    this.classesToMark.coref = !this.classesToMark.coref;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },

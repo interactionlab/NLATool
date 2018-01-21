@@ -196,7 +196,7 @@ exports.makeTransaction = function (input) {
         connection.beginTransaction();
         for (let i = 0; i < input.querys.length; i++) {
             if (input.transControl.getProper[i]) {
-                console.log('Checkpoint 1: getProper of: ' + i + ': ' + input.querys[i]);
+                //console.log('Checkpoint 1: getProper of: ' + i + ': ' + input.querys[i]);
                 let result = wait.for(makeSQLRequest, input.querys[i]);
                 let controlResult = {getProper: result};
                 results.push(controlResult);
@@ -205,7 +205,7 @@ exports.makeTransaction = function (input) {
             } else if (typeof input.transControl.useProper[i] !== 'undefined') {
                 let newQuery = '';
                 if (input.transControl.useProper[i].kindOfQuery === 'insert') {
-                    console.log('Checkpoint 2: ');
+                    //console.log('Checkpoint 2: ');
                     input.transControl = changeValuesForQuery(input.transControl, results, i);
                     newQuery = dbAction.createInsertCommand(
                         input.transControl.useProper[i].table,
@@ -213,7 +213,7 @@ exports.makeTransaction = function (input) {
                         input.transControl.useProper[i].values,
                         input.transControl.useProper[i].toCompare,
                         input.transControl.useProper[i].operators);
-                    console.log('Checkpoint 2.1: ' + i + ': ' + newQuery);
+                    //console.log('Checkpoint 2.1: ' + i + ': ' + newQuery);
                     if (input.transControl.useProper[i].getProper) {
                         let result = wait.for(makeSQLRequest, newQuery);
                         let controlResult = {getProper: result};
@@ -222,17 +222,17 @@ exports.makeTransaction = function (input) {
                         results.push(wait.for(makeSQLRequest, newQuery));
                     }
                 } else if (input.transControl.useProper[i].kindOfQuery === 'select') {
-                    console.log('Checkpoint 3: ');
+                    //console.log('Checkpoint 3: ');
                     input.transControl = changeValuesForQuery(input.transControl, results, i);
                 } else if (input.transControl.useProper[i].kindOfQuery === 'create') {
-                    console.log('Checkpoint 4: ');
+                    //console.log('Checkpoint 4: ');
                     input.transControl = changeValuesForQuery(input.transControl, results, i);
                 } else if (input.transControl.useProper[i].kindOfQuery === 'update') {
-                    console.log('Checkpoint 5: ');
+                    //console.log('Checkpoint 5: ');
                     input.transControl = changeValuesForQuery(input.transControl, results, i);
 
                     for (let j = 0; j < input.transControl.useProper[i].nrColumnsToCompare.length; j++) {
-                        console.log('Check loop here: ' + j);
+                        //console.log('Check loop here: ' + j);
                         let tempProperResult = JSON.parse(results[input.transControl.useProper[i].ofComparingResults[j]].getProper);
 
                         input.transControl.useProper[i].valuesToCompare[input.transControl.useProper[i].nrColumnsToCompare[j]]
@@ -248,7 +248,7 @@ exports.makeTransaction = function (input) {
                     results.push(wait.for(makeSQLRequest, newQuery));
                 }
             } else {
-                console.log('Checkpoint Last: ');
+                //console.log('Checkpoint Last: ');
                 results.push(wait.for(makeSQLRequest, input.querys[i]));
             }
         }
