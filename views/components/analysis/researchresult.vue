@@ -9,7 +9,7 @@
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                         v-on:click="selectResult">
+                         v-on:click="showdetail">
 
                         <div cass="mdl-cell mdl-cell--12-col">
                             <img v-if="typeof researchresult.result.image !== 'undefined'"
@@ -103,6 +103,7 @@
                 this.$emit('showallresults');
             },
             showdetail: function () {
+                console.log('Show the detailed List: ' + this.everythingshow);
                 this.everythingshow = !this.everythingshow;
             },
             accentuate: function () {
