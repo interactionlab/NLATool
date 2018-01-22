@@ -15,6 +15,7 @@
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
+                               v-bind:dochid="docid"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -24,7 +25,8 @@
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
-                               v-on:selectresult="selectResult($event)">
+                               v-bind:dochid="docid"
+                               v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
             </form>
@@ -42,6 +44,7 @@
             researchmode: String,
             selectedindexes: Object,
             tokens: Array,
+            docid: Number,
         },
         data: function () {
             return {
@@ -52,7 +55,8 @@
                 selectedindexes: this.selectedindexes,
                 resultselected: false,
                 selectedresult: {},
-                selectedindex: -1
+                selectedindex: -1,
+                docid: this.docid
             }
         },
         methods: {
@@ -75,7 +79,7 @@
                     this.researchresults.push(response);
                 });
             },
-            selectResult: function (index) {
+            saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
