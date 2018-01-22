@@ -16,6 +16,7 @@
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
                                v-bind:dochid="docid"
+                               v-bind:showallon="true"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -26,6 +27,7 @@
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
                                v-bind:dochid="docid"
+                               v-bind:showallon="false"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
