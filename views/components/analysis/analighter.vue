@@ -2,7 +2,10 @@
     <div>
         <component :is="showmode"
                    v-bind:tokens="tokens"
-                   v-bind:selectedindexes="selectedindexes"></component>
+                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:docid="docid">
+
+        </component>
     </div>
 </template>
 <script>
@@ -18,12 +21,14 @@
             tokens: Array,
             selectedindexes: Object,
             showmode: String,
+            docid: String
         },
         data: function () {
             return {
                 tokens: this.tokens,
                 showmode: this.showmode,
-                selectedindexes: this.selectedindexes
+                selectedindexes: this.selectedindexes,
+                docid: this.docid,
             }
         },
         methods: {},

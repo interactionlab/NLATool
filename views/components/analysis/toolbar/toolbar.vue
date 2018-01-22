@@ -94,10 +94,6 @@
                     ORGANIZATION: false,
                     MISC: false,
                     POS: false,
-                    'I-PER': false,
-                    'I-LOC': false,
-                    'I-ORG': false,
-                    'I-MISC': false,
                 },
                 noteModes: {
                     wordnote: true,
