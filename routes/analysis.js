@@ -71,7 +71,7 @@ let vueData = {
  */
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, docID, indexes) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID+ ' Indexes: ' + JSON.stringify(indexes));
+        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID + ' Indexes: ' + JSON.stringify(indexes));
         wait.launchFiber(saveWordNote, note, docID, indexes);
     });
     socket.on('updatewordnote', function (noteID, note) {
@@ -88,10 +88,27 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
-    socket.on('saveResearchResult', function () {
-        //TODO function like below
+    socket.on('saveresult', function (index, researchresult, docID) {
+        console.log('saved Result: ' )
+        wait.launchFiber(saveResult, index, researchresult, docID);
     });
 });
+
+function saveResult(index, researchresult, docID) {
+    index = stringifyForDB(index);
+    docID = stringifyForDB(docID);
+
+    let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createInsertCommand('searchResults',
+            ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
+            [
+                stringifyForDB(researchresult.result.image.contentUrl),
+                stringifyForDB(researchresult.result.description.articleBody),
+                stringifyForDB(researchresult.result.detailedDescription.articleBody),
+                docID
+            ],
+            null, null)));
+}
 
 /**
  * saves a note associated to a word on the Database.
