@@ -68,7 +68,7 @@
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
-                        <div class="mdl-cell mdl-cell--2-col">
+                        <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button" v-on:click="showallresults">
                                 <b class="mdc-button">Show All</b>
                             </button>
@@ -86,7 +86,8 @@
             researchresult: Object,
             researchresults: Object,
             index: Number,
-            docid: Number
+            docid: Number,
+            showallon: Boolean
         },
         data: function () {
             return {
@@ -95,12 +96,14 @@
                 researchresults: this.researchresults,
                 hover: false,
                 index: this.index,
-                docid: this.docid
+                docid: this.docid,
+                showallon: false
             }
         },
         methods: {
             showallresults: function () {
                 this.$emit('showallresults');
+                this.showallon = false;
             },
             showdetail: function () {
                 console.log('Show the detailed List: ' + this.everythingshow);
@@ -113,6 +116,7 @@
                 let socket = io('http://localhost:8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
+                this.showallon = true;
             }
         }
     }
