@@ -1,9 +1,9 @@
 <template>
     <div>
-        <div v-for="(token,i) in selectedtokens">
-            <p>{{token.content}}</p>
-            <p v-on:click="showClasses(i)">{{token.semanticClass}}</p>
-            <div v-if="shownclassespertoken">
+        <div v-if="selectedtokens.length !== 0">
+            <p>{{selectedtokens[0].content}}</p>
+            <p>{{selectedtokens[0].semanticClass}}</p>
+            <div>
                 <button v-bind:class="{PERSON: true}"
                         v-on:click="changeClass('PERSON')"
                         class="mdl-button mdl-js-button">
@@ -75,9 +75,8 @@
                 this.classesPerToken[index] = !this.classesPerToken[index];
             },
             changeClass: function (newClass) {
-                for (let token in this.selectedtokens) {
-                    console.log(token + "gets class " + newClass);
-                }
+                console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " now is " + newClass);
+               // this.selectedtokens[0].sematicClass = newClass;
             }
         }
     }
