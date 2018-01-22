@@ -35,7 +35,7 @@
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
-                                    v-on:click="selectResult">
+                                    v-on:click="saveResult">
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
@@ -47,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="mdl-cell mdl-cell--12-col"
                      v-else>
                     <div v-bind:class="{researchresulthover: hover}"
