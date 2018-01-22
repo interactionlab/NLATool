@@ -65,7 +65,7 @@
                     </div>
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button" v-on:click="selectResult">
+                            <button class="mdl-button mdl-js-button" v-on:click="saveResult">
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
@@ -86,7 +86,8 @@
         props: {
             researchresult: Object,
             researchresults: Object,
-            index: Number
+            index: Number,
+            docid: Number
         },
         data: function () {
             return {
@@ -94,7 +95,8 @@
                 researchresult: this.researchresult,
                 researchresults: this.researchresults,
                 hover: false,
-                index: this.index
+                index: this.index,
+                docid: this.docid
             }
         },
         methods: {
@@ -107,10 +109,10 @@
             accentuate: function () {
                 this.hover = !this.hover;
             },
-            selectResult: function () {
-                let soket = io('http://localhost:8080');
-                // socket.$emit('selectresult',this.index);
-                this.$emit('selectresult', this.index);
+            saveResult: function () {
+                let socket = io('http://localhost:8080');
+                socket.emit('saveresult', this.index, this.researchresult, this.docid);
+                this.$emit('saveresult', this.index);
             }
         }
     }
