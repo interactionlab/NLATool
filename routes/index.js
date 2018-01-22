@@ -127,9 +127,10 @@ function postLoadWrittenText(req, res, next) {
                     getProper: [],
                     useProper: []
                 },
+                words: []
             };
             let parsedResult = wait.for(corenlp.analyse, text);
-            let words = parsedResult.text;
+            transactionInformation.words = parsedResult.text;
             let title = stringifyForDB(req.body.title);
             let lang = stringifyForDB(language);
             transactionInformation.corefInfo = parsedResult.coref;
@@ -152,7 +153,7 @@ function postLoadWrittenText(req, res, next) {
                 table: 'text',
                 columns: ['docID', 'length', 'title', 'lang'],
                 values: [-1,
-                    words.length,
+                    transactionInformation.words.length,
                     title,
                     lang],
                 numberOfColumns: [0],
@@ -174,9 +175,9 @@ function postLoadWrittenText(req, res, next) {
             //TODO: check if word + NER Tag exists already
             let wordInsertResult = null;
             let counter = 0;
-            for (let i = 0; i < words.length; i++) {
-                for (let j = 0; j < words[i].length; j++) {
-                    words[i][j] = stringifyForDB(words[i][j]);
+            for (let i = 0; i < transactionInformation.words.length; i++) {
+                for (let j = 0; j < transactionInformation.words[i].length; j++) {
+                    transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
                     parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
                     parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
                     parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
@@ -190,13 +191,13 @@ function postLoadWrittenText(req, res, next) {
                             'semanticClass',
                             'pos'
                         ], [
-                            words[i][j],
+                            transactionInformation.words[i][j],
                             0,
                             parsedResult.ner[i][j],
                             parsedResult.pos[i][j]
                         ],
                         null, null));
-                    transactionInformation.transControl.getProper[transactionInformation.querys.length -1] = true;
+                    transactionInformation.transControl.getProper[transactionInformation.querys.length - 1] = true;
                     transactionInformation.querys.push('...?');
                     transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
                         kindOfQuery: 'insert',
@@ -252,7 +253,7 @@ function postLoadWrittenText(req, res, next) {
                     counter++;
                 }
             }
-            transactionInformation = saveCoref(transactionInformation);
+            transactionInformation = saveCoref(transactionInformation, counter);
             let transactionResults = dbStub.makeTransaction(transactionInformation);
             transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
             req.session.docID = transactionResults[0].getProper.insertId;
@@ -260,12 +261,15 @@ function postLoadWrittenText(req, res, next) {
         }
     }
 }
-function saveCoref(input) {
+
+function saveCoref(input, counter) {
     let queryCounter = input.querys.length - 1;
     //console.log('Checkpoint coref 1:' + queryCounter);
     let representativeIndex = -1;
+    let startIndex = 0;
+    let endIndex = 0;
     for (let chain in input.corefInfo) {
-        //console.log('Chain: '+ JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
+        console.log('Chain: ' + JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
         for (let mention in input.corefInfo[chain]) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
@@ -282,7 +286,9 @@ function saveCoref(input) {
                 input.transControl.getProper[input.querys.length - 1] = true;
                 representativeIndex = input.querys.length - 1;
                 input.querys.push('---');
-                input.transControl.useProper[input.querys.length - 1] ={
+                startIndex = getCorefStartIndex(input, chain, mention);
+                endIndex = getCorefEndIndex(input, chain, mention);
+                input.transControl.useProper[input.querys.length - 1] = {
                     kindOfQuery: 'update',
                     table: 'textmap',
                     columns: ['mentionID'],
@@ -291,20 +297,18 @@ function saveCoref(input) {
                     ofResults: [representativeIndex],
                     ofComparingResults: [0],
                     nameOfPropers: ['insertId'],
-                    nameOfPropersToCompare:['insertId'],
-                    columnsToCompare: ['docID','textIndex','textIndex'],
-                    nrColumnsToCompare:[0],
-                    valuesToCompare: [-1,
-                        stringifyForDB(input.corefInfo[chain][mention].startIndex()-1),
-                        stringifyForDB(input.corefInfo[chain][mention].endIndex()-1)],
-                    operators: ['=','>=','<=']
+                    nameOfPropersToCompare: ['insertId'],
+                    columnsToCompare: ['docID', 'textIndex', 'textIndex'],
+                    nrColumnsToCompare: [0],
+                    valuesToCompare: [-1, startIndex, endIndex],
+                    operators: ['=', '>=', '<']
                 };
-                console.log('Check1: ' + representativeIndex);
+                //console.log('Check1: ' + representativeIndex);
             } else {
                 console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
-                input.querys.push(input.corefInfo[chain][mention].text()+'1');
+                input.querys.push(input.corefInfo[chain][mention].text() + '1');
                 if (representativeIndex !== -1) {
-                    console.log('Check2: '  + representativeIndex);
+                    //console.log('Check2: '  + representativeIndex);
                     input.transControl.useProper[input.querys.length - 1] =
                         {
                             kindOfQuery: 'insert',
@@ -323,7 +327,9 @@ function saveCoref(input) {
                             operators: null
                         };
                     input.querys.push('---');
-                    input.transControl.useProper[input.querys.length - 1] ={
+                    startIndex = getCorefStartIndex(input, chain, mention);
+                    endIndex = getCorefEndIndex(input, chain, mention);
+                    input.transControl.useProper[input.querys.length - 1] = {
                         kindOfQuery: 'update',
                         table: 'textmap',
                         columns: ['mentionID'],
@@ -332,13 +338,11 @@ function saveCoref(input) {
                         ofResults: [input.querys.length - 2],
                         ofComparingResults: [0],
                         nameOfPropers: ['insertId'],
-                        nameOfPropersToCompare:['insertId'],
-                        columnsToCompare: ['docID','textIndex','textIndex'],
-                        nrColumnsToCompare:[0],
-                        valuesToCompare: [-1,
-                            stringifyForDB(input.corefInfo[chain][mention].startIndex()-1),
-                            stringifyForDB(input.corefInfo[chain][mention].endIndex()-1)],
-                        operators: ['=','>=','<=']
+                        nameOfPropersToCompare: ['insertId'],
+                        columnsToCompare: ['docID', 'textIndex', 'textIndex'],
+                        nrColumnsToCompare: [0],
+                        valuesToCompare:  [-1, startIndex, endIndex],
+                        operators: ['=', '>=', '<']
                     };
                 } else {
                     console.log('ERROR: representativeIndex = -1 -> Representative wasnt uploaded!');
@@ -349,13 +353,21 @@ function saveCoref(input) {
     return input;
 }
 
-function sendSQL(command) {
-    try {
-        let result = wait.for(dbStub.makeSQLRequest, command);
-        results.push(result);
-    } catch (err) {
-        results.push(err);
+function getCorefStartIndex(input, chain, mention) {
+    let tempMention = input.corefInfo[chain][mention];
+    let textLengthToMention = 0;
+    for (let i = 0; i < tempMention.sentNum()-1; i++) {
+        textLengthToMention = textLengthToMention + input.words[i].length;
     }
+    return stringifyForDB(textLengthToMention + tempMention.startIndex() - 1)
+}
+function getCorefEndIndex(input, chain, mention) {
+    let tempMention = input.corefInfo[chain][mention];
+    let textLengthToMention = 0;
+    for (let i = 0; i < tempMention.sentNum()-1; i++) {
+        textLengthToMention = textLengthToMention + input.words[i].length;
+    }
+    return stringifyForDB(textLengthToMention + tempMention.endIndex() - 1)
 }
 
 
