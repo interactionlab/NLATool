@@ -264,8 +264,8 @@ exports.makeTransaction = function (input) {
 function changeValuesForQuery(transControl, results, index) {
     let tempProperResult = {};
     for (let i = 0; i < transControl.useProper[index].numberOfColumns.length; i++) {
-        console.log(JSON.stringify(results[transControl.useProper[index].ofResults[i]]));
-        console.log(transControl.useProper[index].ofResults[i]);
+        //console.log(JSON.stringify(results[transControl.useProper[index].ofResults[i]]));
+        //console.log(transControl.useProper[index].ofResults[i]);
         tempProperResult = JSON.parse(results[transControl.useProper[index].ofResults[i]].getProper);
         transControl.useProper[index].values[transControl.useProper[index].numberOfColumns[i]]
             = '"' + tempProperResult[transControl.useProper[index].nameOfPropers[i]] + '"';
