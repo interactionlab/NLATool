@@ -89,7 +89,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('saveresult', function (index, researchresult, docID) {
-        console.log('saved Result: ' )
+        console.log('saved Result: ')
         wait.launchFiber(saveResult, index, researchresult, docID);
     });
 });
@@ -97,17 +97,34 @@ io.on('connection', function (socket) {
 function saveResult(index, researchresult, docID) {
     index = stringifyForDB(index);
     docID = stringifyForDB(docID);
-
-    let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createInsertCommand('searchResults',
-            ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
-            [
-                stringifyForDB(researchresult.result.image.contentUrl),
-                stringifyForDB(researchresult.result.description.articleBody),
-                stringifyForDB(researchresult.result.detailedDescription.articleBody),
-                docID
-            ],
-            null, null)));
+    try {
+        if (typeof researchresult.result.image.contentUrl !== 'undefined') {
+            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('searchResults',
+                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
+                    [
+                        stringifyForDB(researchresult.result.image.contentUrl),
+                        stringifyForDB(researchresult.result.description.articleBody),
+                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
+                        docID
+                    ],
+                    null, null)));
+        }
+        else {
+            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('searchResults',
+                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
+                    [
+                        stringifyForDB(researchresult.result.image.contentUrl),
+                        stringifyForDB(researchresult.result.description.articleBody),
+                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
+                        docID
+                    ],
+                    null, null)));
+        }
+    } catch (error){
+        console.log('Could not saved because missing data: ' + error);
+    }
 }
 
 /**
