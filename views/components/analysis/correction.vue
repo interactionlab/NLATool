@@ -37,7 +37,8 @@
         mixins: [getselectedtext],
         props: {
             tokens: Array,
-            selectedindexes: Object
+            selectedindexes: Object,
+            docid: String,
         },
         data: function () {
             return {
@@ -46,7 +47,8 @@
                 selectedtokens: [],
                 selectedindexes: this.selectedindexes,
                 classesPerToken: [],
-                index: 0
+                index: 0,
+                docid: this.docid,
             }
 
         },
@@ -76,7 +78,9 @@
             },
             changeClass: function (newClass) {
                 console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " now is " + newClass);
-               // this.selectedtokens[0].sematicClass = newClass;
+                this.selectedtokens[0].semanticClass = newClass;
+                let socket = io('http://localhost:8080');
+                socket.emit('changeClass', this.selectedtokens[0], this.docid);
             }
         }
     }
