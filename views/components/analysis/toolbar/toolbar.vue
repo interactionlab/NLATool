@@ -161,9 +161,10 @@
                     mode = 'MISC';
                     this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
-                if(mode == 'POS'){
+                if(mode == 'POS') {
                     mode = 'POS';
                     this.classesToMark.POS = !this.classesToMark.POS;
+                }
                 if (mode == 'coref') {
                     mode = 'coref';
                     if (!this.classesToMark.coref) {
@@ -174,7 +175,7 @@
                     this.classesToMark.coref = !this.classesToMark.coref;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
-            }},
+            },
             changeReseachButton: function (mode) {
                 if (mode == 'Info') {
                     mode = 'activeButton';
