@@ -2,9 +2,9 @@
 
     <div class="mdl-layout mdl-js-layout">
 
-        <main class="mdl-layout__content">
+        <main class="mdl-layout__content contentColor">
             <div class="mdl-grid">
-                <div class="mdl-cell mdl-cell--12-col"
+                <div class="mdl-cell mdl-cell--12-col separate"
                      v-if="!everythingshow">
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="mdl-cell mdl-cell--12-col"
+                <div class="mdl-cell mdl-cell--12-col separate"
                      v-else>
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
