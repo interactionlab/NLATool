@@ -327,7 +327,12 @@
       "FOREIGN": "documents"
     },
     "column8": {
-      "name": "textIndex",
+      "name": "startIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column9": {
+      "name": "endIndex",
       "type": "INT",
       "length": "11"
     }
