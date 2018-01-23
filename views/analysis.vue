@@ -42,6 +42,7 @@
                                    v-bind:key="token.wordID"
                                    v-bind:token="token"
                                    v-bind:tokens="vueTokens"
+                                   v-bind:mentions="coref"
                                    v-bind:index="i+1"
                                    v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
@@ -60,6 +61,7 @@
                             v-bind:notemodes="notemodes"
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
+                            v-on:jumpmarktext="selectText2($event)"
                             v-bind:showmode="showMode"
                     >
                     </component>
@@ -86,6 +88,7 @@
                 showMode: 'correction',
                 researchmode: '',
                 classesToMark: {
+                    coref:false,
                     PERSON: false,
                     LOCATION: false,
                     ORGANIZATION: false,
@@ -115,7 +118,7 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (mode) {
-                console.log('Got event to change the marker Mode: ' + mode);
+                //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
                 console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
@@ -155,6 +158,9 @@
                 }
                 console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
 
+            },
+            selectText2:function (newSelectedIndexes) {
+                this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
                 console.log('changing Note Modes: ' + newNoteModes);
