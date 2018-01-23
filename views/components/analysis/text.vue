@@ -15,6 +15,7 @@
         props: {
             token: Object,
             tokens: Array,
+            mentions: Array,
             index: Number,
             classestomark: Object,
             selectedindexes: Object
@@ -23,6 +24,7 @@
             return {
                 token: this.token,
                 tokens: this.tokens,
+                mentions: this.mentions,
                 index: this.index,
                 classestomark: this.classestomark,
                 selectedindexes: this.selectedindexes,
@@ -37,11 +39,21 @@
             },
             toHighlight: function () {
                 let htmlclass = {};
+                //TODO: scrollTo selectedText if not in scope
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
                     htmlclass['notemark'] = true;
                 } else {
                     htmlclass['notemark'] = false;
+                }
+                //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    //console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
+                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
+                    if (this.index - 1 >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
+                        //console.log('Checkpoint 2: '+ this.classestomark.coref);
+                        htmlclass['coref'] = this.classestomark.coref;
+                    }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
 

@@ -263,12 +263,6 @@
       "name": "whitespaceInfo",
       "type": "INT",
       "length": "11"
-    },
-    "column7":{
-      "name":"mentionID",
-      "type":"INT",
-      "length": "11",
-      "FOREIGN": "corefmentions"
     }
   },
   "table7": {
@@ -298,7 +292,8 @@
       "name": "mentionID",
       "type": "INT",
       "length": "11",
-      "PRIMARY": true
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column2": {
       "name": "representative",
@@ -324,6 +319,22 @@
       "name": "animacy",
       "type": "VARCHAR",
       "length": "20"
+    },
+    "column7": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column8": {
+      "name": "startIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column9": {
+      "name": "endIndex",
+      "type": "INT",
+      "length": "11"
     }
   }
 }

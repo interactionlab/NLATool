@@ -177,7 +177,8 @@ exports.makeSQLRequest = function (query, callback) {
         }
     });
     /* } else {
-         var err = 'ERROR: Database not ready for query. Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
+         var err = 'ERROR: Database not ready for query.
+         Either the connection is faulty or the Database cennected to, is not correctly setup! ' +
              'Please check with "getDbStatus" if there is an error.';
          callback(err, null);
      }*/
@@ -187,50 +188,90 @@ exports.makeSQLRequest = function (query, callback) {
 /**
  * Gets a set of querys and commands on what to do between the querys.
  * Needs to be used in a fiber. (wait.for.launchFiber())
- * @param querys
- * @param controlTrans
- * @param callback
+ * @param input
  */
-exports.makeTransaction = function (querys, controlTrans, callback) {
+exports.makeTransaction = function (input) {
     let results = [];
     try {
         connection.beginTransaction();
-        console.log(Tag + 'Began Transaction: ')
-        for (let i = 0; i < querys.length; i++) {
-            if (controlTrans.getId[i]) {
-                let result = wait.for(makeSQLRequest, querys[i]);
-                let controlResult = {getId: result};
+        for (let i = 0; i < input.querys.length; i++) {
+            if (input.transControl.getProper[i]) {
+                //console.log('Checkpoint 1: getProper of: ' + i + ': ' + input.querys[i]);
+                let result = wait.for(makeSQLRequest, input.querys[i]);
+                let controlResult = {getProper: result};
                 results.push(controlResult);
-            } else if (controlTrans.select) {
-                results.push(wait.for(makeSQLRequest, querys[i]));
-            } else if (controlTrans.useId[i] !== -1) {
+            } else if (input.transControl.select) {
+                results.push(wait.for(makeSQLRequest, input.querys[i]));
+            } else if (typeof input.transControl.useProper[i] !== 'undefined') {
                 let newQuery = '';
-                if (controlTrans.useId[i].kindOfQuery === 'insert') {
-
-                    controlTrans.useId[i].values[controlTrans.useId[i].numberOfColumn]
-                        = results[controlTrans.useId[i].ofResult].getID.insertId;
-
+                if (input.transControl.useProper[i].kindOfQuery === 'insert') {
+                    //console.log('Checkpoint 2: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
                     newQuery = dbAction.createInsertCommand(
-                        controlTrans.useId[i].columns,
-                        controlTrans.useId[i].values,
-                        controlTrans.useId[i].toCompare,
-                        controlTrans.useId[i].operators);
+                        input.transControl.useProper[i].table,
+                        input.transControl.useProper[i].columns,
+                        input.transControl.useProper[i].values,
+                        input.transControl.useProper[i].toCompare,
+                        input.transControl.useProper[i].operators);
+                    //console.log('Checkpoint 2.1: ' + i + ': ' + newQuery);
+                    if (input.transControl.useProper[i].getProper) {
+                        let result = wait.for(makeSQLRequest, newQuery);
+                        let controlResult = {getProper: result};
+                        results.push(controlResult);
+                    } else {
+                        results.push(wait.for(makeSQLRequest, newQuery));
+                    }
+                } else if (input.transControl.useProper[i].kindOfQuery === 'select') {
+                    //console.log('Checkpoint 3: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
+                } else if (input.transControl.useProper[i].kindOfQuery === 'create') {
+                    //console.log('Checkpoint 4: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
+                } else if (input.transControl.useProper[i].kindOfQuery === 'update') {
+                    //console.log('Checkpoint 5: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
+
+                    for (let j = 0; j < input.transControl.useProper[i].nrColumnsToCompare.length; j++) {
+                        //console.log('Check loop here: ' + j);
+                        let tempProperResult = JSON.parse(results[input.transControl.useProper[i].ofComparingResults[j]].getProper);
+
+                        input.transControl.useProper[i].valuesToCompare[input.transControl.useProper[i].nrColumnsToCompare[j]]
+                            = '"' + tempProperResult[input.transControl.useProper[i].nameOfPropersToCompare[j]] + '"';
+                    }
+                    newQuery = dbAction.createUpdateCommand(
+                        input.transControl.useProper[i].table,
+                        input.transControl.useProper[i].columns,
+                        input.transControl.useProper[i].values,
+                        input.transControl.useProper[i].columnsToCompare,
+                        input.transControl.useProper[i].valuesToCompare,
+                        input.transControl.useProper[i].operators);
                     results.push(wait.for(makeSQLRequest, newQuery));
                 }
-
             } else {
-                console.log(Tag+ 'Executing a normal Query without extras: ');
-                results.push(wait.for(makeSQLRequest,querys[i]));
+                //console.log('Checkpoint Last: ');
+                results.push(wait.for(makeSQLRequest, input.querys[i]));
             }
         }
-        console.log(Tag + 'got to the commit')
         connection.commit();
+        return results;
     } catch (err) {
-        console.log(Tag+ err);
+        console.log(Tag + err);
         connection.rollback();
-        callback(err, null);
+        return results;
     }
 };
+
+function changeValuesForQuery(transControl, results, index) {
+    let tempProperResult = {};
+    for (let i = 0; i < transControl.useProper[index].numberOfColumns.length; i++) {
+        //console.log(JSON.stringify(results[transControl.useProper[index].ofResults[i]]));
+        //console.log(transControl.useProper[index].ofResults[i]);
+        tempProperResult = JSON.parse(results[transControl.useProper[index].ofResults[i]].getProper);
+        transControl.useProper[index].values[transControl.useProper[index].numberOfColumns[i]]
+            = '"' + tempProperResult[transControl.useProper[index].nameOfPropers[i]] + '"';
+    }
+    return transControl;
+}
 
 /**
  * Checks if the Database matches the dbconfig Settings.
