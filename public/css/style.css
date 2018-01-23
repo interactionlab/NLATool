@@ -109,7 +109,16 @@ pre {
 }
 
 .coref{
-    background: darkmagenta;
+    border-bottom: 2px solid red;
+}
+
+.cRepresentant{
+    border: 2px solid red;
+}
+
+.cReferent{
+    background: darkgrey;
+    border: 2px solid red;
 }
 
 /** Button color */
