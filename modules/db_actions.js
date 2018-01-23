@@ -270,11 +270,11 @@ exports.createLimitedSelectCommand = function (table, columns, start, amount) {
             commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' limit ' + start + ' , ' + amount;
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     } else {
         commandString = commandString + json.database.name;
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
 
@@ -325,7 +325,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
             commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         }
         commandString = commandString + ';';
-        console.log(notMedia + Tag + commandString);
+        //console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Insert Command Creation failed!');
@@ -337,6 +337,7 @@ exports.createInsertCommand = function (table, columns, values, valuesToCompare,
  * @param table
  * @param columns
  * @param values
+ * @param columnsToCompare
  * @param valuesToCompare
  * @param operators
  * @returns {*}

@@ -94,6 +94,7 @@
             },
             jumpMarkText:function () {
                 this.setSelectedRanges();
+                this.$emit('jumpmarktext',this.selectedindexes);
                 //href #selectesindexes.start behavior
             }
         },
