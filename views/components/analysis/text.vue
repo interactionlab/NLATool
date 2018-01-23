@@ -48,8 +48,8 @@
                 }
                 //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
                 for (let i = 0; i < this.mentions[0].length; i++) {
-                    console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
-                    console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
+                    //console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
+                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
                     if (this.index - 1 >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
                         //console.log('Checkpoint 2: '+ this.classestomark.coref);
                         htmlclass['coref'] = this.classestomark.coref;
