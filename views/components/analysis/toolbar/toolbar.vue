@@ -19,7 +19,7 @@
                     <button v-on:click="changeMarkerMode('Person')"
                             v-bind:class="{PERSON: classesToMark.PERSON}"
                             class="mdl-button mdl-js-button">
-                        <small class="mdc-button">PERSONS</small>
+                        <small class="mdc-button">PERSON</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Location')"
                             v-bind:class="{LOCATION: classesToMark.LOCATION}"
@@ -138,9 +138,11 @@
                 if (this.classesToMark.MISC === false) {
                     this.changeMarkerMode('Misc');
                 }
-                for (let key in this.classesToMark) {
-                    this.classesToMark[key] = true;
-                }
+
+                this.classesToMark.PERSON = true;
+                this.classesToMark.LOCATION = true;
+                this.classesToMark.ORGANIZATION = true;
+                this.classesToMark.MISC = true;
             },
 
             changeMarkerMode: function (mode) {
@@ -167,11 +169,6 @@
                 }
                 if (mode == 'coref') {
                     mode = 'coref';
-                    if (!this.classesToMark.coref) {
-                        for (let key in this.classesToMark) {
-                            this.classesToMark[key] = false;
-                        }
-                    }
                     this.classesToMark.coref = !this.classesToMark.coref;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);

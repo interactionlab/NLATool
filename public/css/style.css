@@ -66,27 +66,6 @@ pre {
     background: white;
 }
 
-/**german*/
-.I-PER {
-    background: orangered;
-}
-
-.I-LOC {
-    background: darkseagreen;
-}
-
-.I-ORG {
-    background: deepskyblue;
-}
-
-.I-MISC {
-    background: violet;
-}
-
-.POS {
-    background: navajowhite;
-}
-
 /**english*/
 .PERSON {
     background: orangered;
@@ -109,7 +88,7 @@ pre {
 }
 
 .coref{
-    background: darkmagenta;
+    background: lightsalmon;
 }
 
 /** Button color */
