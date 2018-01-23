@@ -170,6 +170,7 @@ function getAndShowText(req, res) {
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
+        getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         vueData.coref = textDB.coref;
         console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
@@ -193,7 +194,6 @@ function getTextFromDB(docID) {
                 'beginOffSet',
                 'EndOffSet',
                 'whitespaceInfo',
-                'mentionID'
             ],
             [docID], ['='])));
     //console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
@@ -214,7 +214,6 @@ function getTextFromDB(docID) {
             word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
             //console.log(JSON.stringify(word));
             textDB.tokens.push(word[0]);
-            getCorefInfo(textDB.textMap[i].mentionID,i);
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
             textDB.error.push(err);
@@ -224,19 +223,21 @@ function getTextFromDB(docID) {
     //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
 }
 
-function getCorefInfo(mentionID, textIndex) {
-    if (mentionID !== 'NULL' && mentionID !== null && typeof mentionID !== 'undefined') {
+function getCorefInfo(docID) {
+    if (docID !== 'NULL' && docID !== null && typeof docID !== 'undefined') {
         let mention = JSON.parse(wait.for(dbStub.makeSQLRequest,
             dbAction.createSelectCommand('corefmentions',
                 [
+                    'docID',
                     'mentionID',
                     'representative',
                     'gender',
                     'type',
                     'number',
-                    'animacy'
-                ], [mentionID], ['='])));
-        mention[0]['textIndex'] = textIndex;
+                    'animacy',
+                    'startIndex',
+                    'endIndex'
+                ], [docID], ['='])));
         textDB.coref.push(mention);
         //console.log('Mention from db: ' + JSON.stringify(textDB.coref));
     }
