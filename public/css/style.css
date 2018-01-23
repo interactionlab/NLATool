@@ -108,6 +108,10 @@ pre {
     background: darkgrey;
 }
 
+.coref{
+    background: darkmagenta;
+}
+
 /** Button color */
 .mdc-button-container-fill-color {
     color: black;
