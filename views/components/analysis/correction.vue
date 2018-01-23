@@ -2,12 +2,13 @@
     <div>
         <div v-if="selectedtokens.length !== 0">
             <p>{{selectedtokens[0].content}}</p>
-            <p>{{selectedtokens[0].semanticClass}}</p>
+            <p>Current Class: {{selectedtokens[0].semanticClass}}</p>
             <div>
+                <p>Select a new class: </p>
                 <button v-bind:class="{PERSON: true}"
                         v-on:click="changeClass('PERSON')"
                         class="mdl-button mdl-js-button">
-                    <small class="mdc-button">PERSONS</small>
+                    <small class="mdc-button">PERSON</small>
                 </button>
                 <button v-bind:class="{LOCATION: true}"
                         v-on:click="changeClass('LOCATION')"
@@ -25,8 +26,11 @@
                     <small class="mdc-button">MISC</small>
                 </button>
             </div>
-
+         <div v-if="selectedtokens.length === 0">
+             <p>Select a word</p>
+         </div>
         </div>
+
     </div>
 
 </template>
