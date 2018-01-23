@@ -196,7 +196,7 @@ exports.makeTransaction = function (input) {
         connection.beginTransaction();
         for (let i = 0; i < input.querys.length; i++) {
             if (input.transControl.getProper[i]) {
-                //console.log('Checkpoint 1: getProper of: '+ input.querys[i]);
+                //console.log('Checkpoint 1: getProper of: ' + i + ': ' + input.querys[i]);
                 let result = wait.for(makeSQLRequest, input.querys[i]);
                 let controlResult = {getProper: result};
                 results.push(controlResult);
@@ -205,6 +205,7 @@ exports.makeTransaction = function (input) {
             } else if (typeof input.transControl.useProper[i] !== 'undefined') {
                 let newQuery = '';
                 if (input.transControl.useProper[i].kindOfQuery === 'insert') {
+                    //console.log('Checkpoint 2: ');
                     input.transControl = changeValuesForQuery(input.transControl, results, i);
                     newQuery = dbAction.createInsertCommand(
                         input.transControl.useProper[i].table,
@@ -212,15 +213,42 @@ exports.makeTransaction = function (input) {
                         input.transControl.useProper[i].values,
                         input.transControl.useProper[i].toCompare,
                         input.transControl.useProper[i].operators);
-                    results.push(wait.for(makeSQLRequest, newQuery));
+                    //console.log('Checkpoint 2.1: ' + i + ': ' + newQuery);
+                    if (input.transControl.useProper[i].getProper) {
+                        let result = wait.for(makeSQLRequest, newQuery);
+                        let controlResult = {getProper: result};
+                        results.push(controlResult);
+                    } else {
+                        results.push(wait.for(makeSQLRequest, newQuery));
+                    }
                 } else if (input.transControl.useProper[i].kindOfQuery === 'select') {
-                    changeValuesForQuery(input.transControl, results, i);
+                    //console.log('Checkpoint 3: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
                 } else if (input.transControl.useProper[i].kindOfQuery === 'create') {
-                    changeValuesForQuery(input.transControl, results, i);
+                    //console.log('Checkpoint 4: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
                 } else if (input.transControl.useProper[i].kindOfQuery === 'update') {
-                    changeValuesForQuery(input.transControl, results, i);
+                    //console.log('Checkpoint 5: ');
+                    input.transControl = changeValuesForQuery(input.transControl, results, i);
+
+                    for (let j = 0; j < input.transControl.useProper[i].nrColumnsToCompare.length; j++) {
+                        //console.log('Check loop here: ' + j);
+                        let tempProperResult = JSON.parse(results[input.transControl.useProper[i].ofComparingResults[j]].getProper);
+
+                        input.transControl.useProper[i].valuesToCompare[input.transControl.useProper[i].nrColumnsToCompare[j]]
+                            = '"' + tempProperResult[input.transControl.useProper[i].nameOfPropersToCompare[j]] + '"';
+                    }
+                    newQuery = dbAction.createUpdateCommand(
+                        input.transControl.useProper[i].table,
+                        input.transControl.useProper[i].columns,
+                        input.transControl.useProper[i].values,
+                        input.transControl.useProper[i].columnsToCompare,
+                        input.transControl.useProper[i].valuesToCompare,
+                        input.transControl.useProper[i].operators);
+                    results.push(wait.for(makeSQLRequest, newQuery));
                 }
             } else {
+                //console.log('Checkpoint Last: ');
                 results.push(wait.for(makeSQLRequest, input.querys[i]));
             }
         }
@@ -235,7 +263,9 @@ exports.makeTransaction = function (input) {
 
 function changeValuesForQuery(transControl, results, index) {
     let tempProperResult = {};
-    for(let i = 0; i < transControl.useProper[index].numberOfColumns.length; i++){
+    for (let i = 0; i < transControl.useProper[index].numberOfColumns.length; i++) {
+        //console.log(JSON.stringify(results[transControl.useProper[index].ofResults[i]]));
+        //console.log(transControl.useProper[index].ofResults[i]);
         tempProperResult = JSON.parse(results[transControl.useProper[index].ofResults[i]].getProper);
         transControl.useProper[index].values[transControl.useProper[index].numberOfColumns[i]]
             = '"' + tempProperResult[transControl.useProper[index].nameOfPropers[i]] + '"';
