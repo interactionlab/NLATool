@@ -59,6 +59,9 @@
                 htmlclass[this.token.pos] = this.classestomark[this.token.pos];
                 return htmlclass
             },
+            classToHighlightGap:{
+
+            },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
                 //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
