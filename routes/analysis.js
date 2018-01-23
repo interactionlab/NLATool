@@ -29,7 +29,8 @@ let textDB = {
     textMetaData: [],
     tokens: [],
     error: [],
-    text: ''
+    text: '',
+    coref:[]
 };
 
 /**
@@ -60,7 +61,7 @@ let vueData = {
     docID: 293,
     meta: null,
     title: 'NLA - Natural Language Analyse Tool',
-    lang: null
+    coref: null
 };
 
 //--------------------------------------------------------
@@ -184,60 +185,13 @@ function getAndShowText(req, res) {
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
+        getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
-        vueData.lang = req.session.lang;
+        vueData.coref = textDB.coref;
         console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
-}
-
-
-/**
- * Naive way to filter the words of the set of tokens and stringify them.
- */
-function buildText() {
-    let gap = '';
-    let text = '<span class="' + textDB.tokens[0].semanticClass + '">' + textDB.tokens[0].content + '</span>';
-    for (let i = 1; i < textDB.tokens.length; i++) {
-        //textDB.words.push(textDB.tokens[i].content);
-        console.log(textDB.tokens[i - 1]);
-        gap = getWordGap(
-            textDB.tokens[i - 1].offsetEnd,
-            textDB.tokens[i].offsetBegin,
-            textDB.tokens[i - 1].whitespaceInfo);
-        text = text
-            + '<span v-bind:class="{gap: true}">'
-            + gap
-            + '</span>'
-            + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'
-            + textDB.tokens[i].content
-            + '</span>'
-        ;
-    }
-    text = encodeURI(text);
-    console.log(notMedia + Tag + 'Builded Text: ' + text);
-    return text;
-}
-
-/**
- * Determines the kind and length of a gap between the words for rebuilding a text.
- * @param word1OffsetEnd
- * @param word2OffsetBegin
- * @param whitespaceInfo
- * @returns {string}
- */
-function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
-    //default Setting: 1 space * difference between Offsets
-    let gap = '';
-    if (whitespaceInfo === -10) {
-        let dist = word2OffsetBegin - word1OffsetEnd;
-        //console.log(notMedia + Tag + 'Distance: ' + dist + ' ' + word1OffsetEnd + ' ' + word2OffsetBegin);
-        for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
-            gap = gap + ' ';
-        }
-    }
-    return gap;
 }
 
 /**
@@ -254,7 +208,7 @@ function getTextFromDB(docID) {
                 'textIndex',
                 'beginOffSet',
                 'EndOffSet',
-                'whitespaceInfo'
+                'whitespaceInfo',
             ],
             [docID], ['='])));
     //console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
@@ -281,7 +235,27 @@ function getTextFromDB(docID) {
             break;
         }
     }
-    //console.log(notMedia + Tag + 'the current Word List:' + JSON.stringify(textDB.tokens));
+    //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
+}
+
+function getCorefInfo(docID) {
+    if (docID !== 'NULL' && docID !== null && typeof docID !== 'undefined') {
+        let mention = JSON.parse(wait.for(dbStub.makeSQLRequest,
+            dbAction.createSelectCommand('corefmentions',
+                [
+                    'docID',
+                    'mentionID',
+                    'representative',
+                    'gender',
+                    'type',
+                    'number',
+                    'animacy',
+                    'startIndex',
+                    'endIndex'
+                ], [docID], ['='])));
+        textDB.coref.push(mention);
+        //console.log('Mention from db: ' + JSON.stringify(textDB.coref));
+    }
 }
 
 /**
@@ -291,7 +265,7 @@ function getTextFromDB(docID) {
 function getWordNotes(docID) {
     let tempWordNotes = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('notes', ['docID', 'noteID', 'content', 'textIndex1', 'textIndex2'], [docID], ['='])));
-    console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
+    //console.log(notMedia + Tag + 'Notes from DB: ' + JSON.stringify(tempWordNotes));
     return tempWordNotes;
 }
 
@@ -303,7 +277,7 @@ function getWordNotes(docID) {
 function getTextMetaData(docID) {
     textDB.textMetaData = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['='])));
-    console.log(notMedia + Tag + 'Metadata from DB: ' + JSON.stringify(textDB.textMetaData));
+    //console.log(notMedia + Tag + 'Metadata from DB: ' + JSON.stringify(textDB.textMetaData));
     if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].title.length > 0) {
         vueData.title = textDB.textMetaData[0].title;
     } else {
@@ -362,6 +336,53 @@ function binaryTokensSearch(tokens, property, value) {
         }
     }
     return -1;
+}
+
+/**
+ * Naive way to filter the words of the set of tokens and stringify them.
+ */
+function buildText() {
+    let gap = '';
+    let text = '<span class="' + textDB.tokens[0].semanticClass + '">' + textDB.tokens[0].content + '</span>';
+    for (let i = 1; i < textDB.tokens.length; i++) {
+        //textDB.words.push(textDB.tokens[i].content);
+        console.log(textDB.tokens[i - 1]);
+        gap = getWordGap(
+            textDB.tokens[i - 1].offsetEnd,
+            textDB.tokens[i].offsetBegin,
+            textDB.tokens[i - 1].whitespaceInfo);
+        text = text
+            + '<span v-bind:class="{gap: true}">'
+            + gap
+            + '</span>'
+            + '<span v-bind:class="{' + textDB.tokens[i].semanticClass + ':classesToMark.' + textDB.tokens[i].semanticClass + '}">'
+            + textDB.tokens[i].content
+            + '</span>'
+        ;
+    }
+    text = encodeURI(text);
+    console.log(notMedia + Tag + 'Builded Text: ' + text);
+    return text;
+}
+
+/**
+ * Determines the kind and length of a gap between the words for rebuilding a text.
+ * @param word1OffsetEnd
+ * @param word2OffsetBegin
+ * @param whitespaceInfo
+ * @returns {string}
+ */
+function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
+    //default Setting: 1 space * difference between Offsets
+    let gap = '';
+    if (whitespaceInfo === -10) {
+        let dist = word2OffsetBegin - word1OffsetEnd;
+        //console.log(notMedia + Tag + 'Distance: ' + dist + ' ' + word1OffsetEnd + ' ' + word2OffsetBegin);
+        for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
+            gap = gap + ' ';
+        }
+    }
+    return gap;
 }
 
 module.exports = router;
