@@ -274,76 +274,60 @@ function saveCoref(input, counter) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
                 console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
-
-                input.querys.push(dbAction.createInsertCommand('corefmentions',
-                    ['representative', 'gender', 'type', 'number', 'animacy'],
-                    [-1,
+                startIndex = getCorefStartIndex(input, chain, mention);
+                endIndex = getCorefEndIndex(input, chain, mention);
+                input.querys.push('some Representative');
+                input.transControl.useProper[input.querys.length - 1] ={
+                    kindOfQuery: 'insert',
+                    table: 'corefmentions',
+                    columns: ['representative', 'gender', 'type', 'number', 'animacy','docID','startIndex','endIndex'],
+                    values: [-1,
                         stringifyForDB(input.corefInfo[chain][mention].gender()),
                         stringifyForDB(input.corefInfo[chain][mention].type()),
                         stringifyForDB(input.corefInfo[chain][mention].number()),
-                        stringifyForDB(input.corefInfo[chain][mention].animacy())
-                    ], null, null));
-                input.transControl.getProper[input.querys.length - 1] = true;
-                representativeIndex = input.querys.length - 1;
-                input.querys.push('---');
-                startIndex = getCorefStartIndex(input, chain, mention);
-                endIndex = getCorefEndIndex(input, chain, mention);
-                input.transControl.useProper[input.querys.length - 1] = {
-                    kindOfQuery: 'update',
-                    table: 'textmap',
-                    columns: ['mentionID'],
-                    values: [-1],
-                    numberOfColumns: [0],
-                    ofResults: [representativeIndex],
-                    ofComparingResults: [0],
+                        stringifyForDB(input.corefInfo[chain][mention].animacy()),
+                        -1,
+                        startIndex,
+                        endIndex
+                    ],
+                    numberOfColumns: [5],
+                    ofResults: [0],
                     nameOfPropers: ['insertId'],
-                    nameOfPropersToCompare: ['insertId'],
-                    columnsToCompare: ['docID', 'textIndex', 'textIndex'],
-                    nrColumnsToCompare: [0],
-                    valuesToCompare: [-1, startIndex, endIndex],
-                    operators: ['=', '>=', '<']
+                    getProper: true,
+                    toCompare: null,
+                    operators: null
                 };
+                representativeIndex = input.querys.length - 1;
                 //console.log('Check1: ' + representativeIndex);
             } else {
                 console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
-                input.querys.push(input.corefInfo[chain][mention].text() + '1');
+                input.querys.push('Some Referent');
                 if (representativeIndex !== -1) {
                     //console.log('Check2: '  + representativeIndex);
+                    startIndex = getCorefStartIndex(input, chain, mention);
+                    endIndex = getCorefEndIndex(input, chain, mention);
                     input.transControl.useProper[input.querys.length - 1] =
                         {
                             kindOfQuery: 'insert',
                             table: 'corefmentions',
-                            columns: ['representative', 'gender', 'type', 'number', 'animacy'],
+                            columns: ['representative', 'gender', 'type', 'number', 'animacy','docID','startIndex','endIndex'],
                             values: [-1,
                                 stringifyForDB(input.corefInfo[chain][mention].gender()),
                                 stringifyForDB(input.corefInfo[chain][mention].type()),
                                 stringifyForDB(input.corefInfo[chain][mention].number()),
-                                stringifyForDB(input.corefInfo[chain][mention].animacy())],
-                            numberOfColumns: [0],
-                            ofResults: [representativeIndex],
-                            nameOfPropers: ['insertId'],
+                                stringifyForDB(input.corefInfo[chain][mention].animacy()),
+                                -1,
+                                startIndex,
+                                endIndex
+                            ],
+                            numberOfColumns: [0,5],
+                            ofResults: [representativeIndex,0],
+                            nameOfPropers: ['insertId','insertId'],
                             getProper: true,
                             toCompare: null,
                             operators: null
                         };
-                    input.querys.push('---');
-                    startIndex = getCorefStartIndex(input, chain, mention);
-                    endIndex = getCorefEndIndex(input, chain, mention);
-                    input.transControl.useProper[input.querys.length - 1] = {
-                        kindOfQuery: 'update',
-                        table: 'textmap',
-                        columns: ['mentionID'],
-                        values: [-1],
-                        numberOfColumns: [0],
-                        ofResults: [input.querys.length - 2],
-                        ofComparingResults: [0],
-                        nameOfPropers: ['insertId'],
-                        nameOfPropersToCompare: ['insertId'],
-                        columnsToCompare: ['docID', 'textIndex', 'textIndex'],
-                        nrColumnsToCompare: [0],
-                        valuesToCompare:  [-1, startIndex, endIndex],
-                        operators: ['=', '>=', '<']
-                    };
+
                 } else {
                     console.log('ERROR: representativeIndex = -1 -> Representative wasnt uploaded!');
                 }
