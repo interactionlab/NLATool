@@ -18,6 +18,15 @@ module.exports = {
                 }
             }
             return resultingtokens;
+        },
+        filtertokenwithclass: function (tokens, semanticClass) {
+            let resultingtokens = [];
+            for (let i = 0; i < tokens.length; i++) {
+                if (tokens [i].semanticClass === semanticClass) {
+                    resultingtokens.push(tokens [i]);
+                }
+            }
+            return resultingtokens;
         }
     }
 };
