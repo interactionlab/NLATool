@@ -89,10 +89,44 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
-    socket.on('saveResearchResult', function () {
-        //TODO function like below
+    socket.on('saveresult', function (index, researchresult, docID) {
+        console.log('saved Result: ')
+        wait.launchFiber(saveResult, index, researchresult, docID);
     });
 });
+
+function saveResult(index, researchresult, docID) {
+    index = stringifyForDB(index);
+    docID = stringifyForDB(docID);
+    try {
+        if (typeof researchresult.result.image.contentUrl !== 'undefined') {
+            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('searchResults',
+                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
+                    [
+                        stringifyForDB(researchresult.result.image.contentUrl),
+                        stringifyForDB(researchresult.result.description.articleBody),
+                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
+                        docID
+                    ],
+                    null, null)));
+        }
+        else {
+            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+                dbAction.createInsertCommand('searchResults',
+                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
+                    [
+                        stringifyForDB(researchresult.result.image.contentUrl),
+                        stringifyForDB(researchresult.result.description.articleBody),
+                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
+                        docID
+                    ],
+                    null, null)));
+        }
+    } catch (error){
+        console.log('Could not saved because missing data: ' + error);
+    }
+}
 
 /**
  * saves a note associated to a word on the Database.

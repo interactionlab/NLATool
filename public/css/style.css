@@ -24,9 +24,9 @@
 #holder.hover {
     border: 2px dashed #009ACD;
 }
-
+/**hover color*/
 .researchresulthover {
-    background-color: lightsteelblue;
+    background-color: #e8e8e8;
 }
 
 .highlight {
@@ -35,6 +35,11 @@
 
 .headerRowLight {
     background-color: #b3d4fc;
+}
+
+/** separate views */
+.separate {
+    border-bottom: 3px solid #e8e8e8;
 }
 
 /** Account Icon */
