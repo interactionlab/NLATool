@@ -39,9 +39,10 @@
 <script>
     import researchresult from './components/analysis/researchresult.vue';
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+    import filtertoken from './mixins/analysis/filtertoken.js';
 
     export default {
-        mixins: [getselectedtext],
+        mixins: [getselectedtext, filtertoken],
         props: {
             researchmode: String,
             selectedindexes: Object,
@@ -58,7 +59,8 @@
                 resultselected: false,
                 selectedresult: {},
                 selectedindex: -1,
-                docid: this.docid
+                docid: this.docid,
+                keywords: this.keywords
             }
         },
         methods: {
@@ -79,6 +81,8 @@
                     console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
+                    rerankWithKeywors(this.researchresults,this.keywords);
+
                 });
             },
             saveResult: function (index) {
@@ -94,9 +98,11 @@
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                       this.keywords = this.limitedfiltertokens(this.tokens,this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
+
                     }
                 },
                 deep: true
