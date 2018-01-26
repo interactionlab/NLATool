@@ -113,12 +113,19 @@ pre {
 }
 
 .cRepresentant{
-    border: 2px solid red;
+    border-bottom: 2px solid red;
 }
 
 .cReferent{
+    border-bottom: 2px solid blue;
+}
+.cHoverRepresentant{
     background: darkgrey;
     border: 2px solid red;
+}
+.cHoverReferent{
+    background: darkgrey;
+    border-bottom: 2px solid blue;
 }
 
 /** Button color */
