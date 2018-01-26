@@ -85,15 +85,17 @@
                         matches: numberOfMatches[i].matches
                     });
                 }
-                console.log('Sorted Results.' + this.insertionSort(tempresults));
+                console.log('tempresults to sort: ' + JSON.stringify(tempresults));
+                let sortedResults = this.insertionSort(tempresults);
+                console.log('Sorted Results.' + JSON.stringify(sortedResults) + sortedResults.length);
             },
             insertionSort: function (items) {
-                for (let i = 0; i < items.length; i++) {
+                for (let i = 1; i < items.length; i++) {
                     let value = items[i].matches;
-                    for (let j = i - 1; j > -1 && items[j].matches > value; j--) {
+                    for (var j = i - 1; j > -1 && items[j].matches > value; j--) {
                         items[j + 1] = items[j];
                     }
-                    items[j + 1] = value;
+                    items[j + 1] = items[i];
                 }
                 return items;
             },
