@@ -1,11 +1,13 @@
 <template>
     <span v-bind:name="tobejumped"
           v-on:mousedown="startSelection"
-          v-on:mouseup="endSelection">
+          v-on:mouseup="endSelection"
+          v-on:mouseover="tohover = true"
+          v-on:mouseout="stophover">
         <span class="nonPreAlt"
               v-bind:class="toHighlight">{{token.content}}</span
         ><span class="preAlt"
-               v-bind:class="toHighlight">{{getWordGap}}</span>
+               v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
 </template>
 
@@ -18,7 +20,8 @@
             mentions: Array,
             index: Number,
             classestomark: Object,
-            selectedindexes: Object
+            selectedindexes: Object,
+            hoveredchain: Number
         },
         data: function () {
             return {
@@ -28,7 +31,10 @@
                 index: this.index,
                 classestomark: this.classestomark,
                 selectedindexes: this.selectedindexes,
-                htmlclass: {}
+                htmlclass: {},
+                markgap: false,
+                tohover: false,
+                hoveredChain: -1
             }
         },
         computed: {
@@ -39,9 +45,9 @@
             },
             toHighlight: function () {
                 let htmlclass = {};
-                //TODO: scrollTo selectedText if not in scope
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
+
                     htmlclass['notemark'] = true;
                 } else {
                     htmlclass['notemark'] = false;
@@ -50,7 +56,37 @@
                 for (let i = 0; i < this.mentions[0].length; i++) {
                     //console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
                     //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                    if (this.index - 1 >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
+                    //isPart of a Mention:
+                    if ((this.index - 1) >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
+                        //is hovered
+                        if (!this.tohover) {
+                            //is Representant
+                            if (this.mentions[0][i].representative < 0) {
+                                if (this.mentions[0][i].mentionID === this.hoveredchain) {
+                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                } else {
+                                    htmlclass['cRepresentant'] = this.classestomark.coref;
+                                }
+                            } else {
+                                if (this.mentions[0][i].representative === this.hoveredchain) {
+                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                } else {
+                                    htmlclass['cReferent'] = this.classestomark.coref;
+                                }
+                            }
+                        } else {
+                            //is Representant
+                            if (this.mentions[0][i].representative < 0) {
+                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                this.$emit('hoverchain', this.mentions[0][i].mentionID);
+                            } else {
+                                htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                this.$emit('hoverchain', this.mentions[0][i].representative);
+                            }
+                        }
+                        //is nested in more than one mention
+
+
                         //console.log('Checkpoint 2: '+ this.classestomark.coref);
                         htmlclass['coref'] = this.classestomark.coref;
                     }
@@ -59,8 +95,32 @@
                 htmlclass[this.token.pos] = this.classestomark[this.token.pos];
                 return htmlclass
             },
-            classToHighlightGap:{
-
+            classToHighlightGap: function () {
+                let htmlclass = {};
+                //Z1: Standard: no highlight: (highlight semanticClass, no coref)
+                //Z2: no highlight semanticClass, highlight Coref, but not this gap
+                //Z3: highlight coref and this gab bc next word not part of coref mention
+                //Z4: highlight gab if next word part of coref mention
+                //Z5: highlight if user marks next word too
+                try {
+                    if ((this.index) > this.selectedindexes.start
+                        && (this.index) < this.selectedindexes.end) {
+                        htmlclass['notemark'] = true;
+                    } else {
+                        htmlclass['notemark'] = false;
+                    }
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
+                        //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
+                        if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
+                            //console.log('Checkpoint 2: ' + this.classestomark.coref);
+                            htmlclass['coref'] = this.classestomark.coref;
+                        }
+                    }
+                } catch (err) {
+                    console.log('Got out of the array' + err);
+                }
+                return htmlclass;
             },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
@@ -95,14 +155,10 @@
             endSelection: function () {
                 this.$emit('endselection', this.index);
             },
-            markNoteWord: function () {
-                if (this.index >= this.selectedtextindexes.start
-                    && this.index <= this.selectedtextindexes.end) {
-                    this.htmlclass['notemark'] = true;
-                } else {
-                    this.htmlclass['notemark'] = false;
-                }
-            },
+            stophover: function () {
+                this.tohover = false;
+                this.$emit('hoverchain', -1);
+            }
         }
     }
 </script>
