@@ -30,7 +30,7 @@ let textDB = {
     tokens: [],
     error: [],
     text: '',
-    coref:[]
+    coref: []
 };
 
 /**
@@ -123,7 +123,7 @@ function saveResult(index, researchresult, docID) {
                     ],
                     null, null)));
         }
-    } catch (error){
+    } catch (error) {
         console.log('Could not saved because missing data: ' + error);
     }
 }
@@ -246,6 +246,7 @@ function getTextFromDB(docID) {
             word[0]['offsetBegin'] = textDB.textMap[i].beginOffSet;
             word[0]['offsetEnd'] = textDB.textMap[i].EndOffSet;
             word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
+            word[0]['textIndex'] = i;
             //console.log(JSON.stringify(word));
             textDB.tokens.push(word[0]);
         } else {
