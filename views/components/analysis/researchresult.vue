@@ -2,14 +2,14 @@
 
     <div class="mdl-layout mdl-js-layout">
 
-        <main class="mdl-layout__content">
+        <main class="mdl-layout__content contentColor separate">
             <div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                         v-on:click="selectResult">
+                         v-on:click="showdetail">
 
                         <div cass="mdl-cell mdl-cell--12-col">
                             <img v-if="typeof researchresult.result.image !== 'undefined'"
@@ -35,7 +35,7 @@
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
-                                    v-on:click="selectResult">
+                                    v-on:click="saveResult">
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
@@ -47,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="mdl-cell mdl-cell--12-col"
                      v-else>
                     <div v-bind:class="{researchresulthover: hover}"
@@ -65,11 +64,11 @@
                     </div>
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button" v-on:click="selectResult">
+                            <button class="mdl-button mdl-js-button" v-on:click="saveResult">
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
-                        <div class="mdl-cell mdl-cell--2-col">
+                        <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button" v-on:click="showallresults">
                                 <b class="mdc-button">Show All</b>
                             </button>
@@ -86,7 +85,9 @@
         props: {
             researchresult: Object,
             researchresults: Object,
-            index: Number
+            index: Number,
+            docid: Number,
+            showallon: Boolean
         },
         data: function () {
             return {
@@ -94,23 +95,28 @@
                 researchresult: this.researchresult,
                 researchresults: this.researchresults,
                 hover: false,
-                index: this.index
+                index: this.index,
+                docid: this.docid,
+                showallon: false
             }
         },
         methods: {
             showallresults: function () {
                 this.$emit('showallresults');
+                this.showallon = false;
             },
             showdetail: function () {
+                console.log('Show the detailed List: ' + this.everythingshow);
                 this.everythingshow = !this.everythingshow;
             },
             accentuate: function () {
                 this.hover = !this.hover;
             },
-            selectResult: function () {
-                let soket = io('http://localhost:8080');
-                // socket.$emit('selectresult',this.index);
-                this.$emit('selectresult', this.index);
+            saveResult: function () {
+                let socket = io('http://localhost:8080');
+                socket.emit('saveresult', this.index, this.researchresult, this.docid);
+                this.$emit('saveresult', this.index);
+                this.showallon = true;
             }
         }
     }

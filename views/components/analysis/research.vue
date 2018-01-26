@@ -15,6 +15,8 @@
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
+                               v-bind:dochid="docid"
+                               v-bind:showallon="true"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -24,7 +26,9 @@
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
-                               v-on:selectresult="selectResult($event)">
+                               v-bind:dochid="docid"
+                               v-bind:showallon="false"
+                               v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
             </form>
@@ -35,13 +39,15 @@
 <script>
     import researchresult from './components/analysis/researchresult.vue';
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+    import filtertoken from './mixins/analysis/filtertoken.js';
 
     export default {
-        mixins: [getselectedtext],
+        mixins: [getselectedtext, filtertoken],
         props: {
             researchmode: String,
             selectedindexes: Object,
             tokens: Array,
+            docid: Number,
         },
         data: function () {
             return {
@@ -52,7 +58,9 @@
                 selectedindexes: this.selectedindexes,
                 resultselected: false,
                 selectedresult: {},
-                selectedindex: -1
+                selectedindex: -1,
+                docid: this.docid,
+                keywords: this.keywords
             }
         },
         methods: {
@@ -73,9 +81,11 @@
                     console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
+                    rerankWithKeywors(this.researchresults,this.keywords);
+
                 });
             },
-            selectResult: function (index) {
+            saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
@@ -88,9 +98,11 @@
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                       this.keywords = this.limitedfiltertokens(this.tokens,this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
+
                     }
                 },
                 deep: true
