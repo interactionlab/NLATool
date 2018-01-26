@@ -46,6 +46,8 @@
                                    v-bind:index="i+1"
                                    v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
+                                   v-bind:hoveredchain="hoveredChain"
+                                   v-on:hoverchain="hoverChain($event)"
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
                         </component>
@@ -79,8 +81,10 @@
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
     import tex from './components/analysis/text.vue';
+    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
 
     export default {
+        mixins: [getselectedtext],
         data: function () {
             return {
                 analysisMode: 'analighter',
@@ -101,10 +105,15 @@
                 notemodes: {
                     wordnote: true,
                     globalnote: false
-                }
+                },
+                hoveredChain: -1,
+                selectedChain: -1
             }
         },
         methods: {
+            hoverChain:function (chain) {
+                  this.hoveredChain = chain;
+            },
             getAnalighter: function () {
                 console.log('Got clicked1' + this.docID);
                 this.analysisMode = 'analighter';
@@ -152,6 +161,7 @@
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
+
                 console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
 
             },
@@ -161,6 +171,22 @@
             changeNoteMode: function (newNoteModes) {
                 console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
+            },
+            isMentionSelected:function () {
+                let res = -1;
+                for(let i = 0; i < this.coref[0].length; i++){
+                    if(this.selectedindexes.start >= this.coref[0][i].startIndex
+                    && this.selectedindexes.end <= this.coref[0][i].endIndex){
+                        if(this.coref[0][i].representative === -1){
+                            res = coref[0][i].mentionID;
+                            break;
+                        } else{
+                            res = coref[0][i].representative;
+                            break;
+                        }
+                    }
+                }
+                return res;
             }
         },
         components: {
