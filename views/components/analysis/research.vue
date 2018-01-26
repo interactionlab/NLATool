@@ -67,7 +67,7 @@
             rerankWithKeywords: function () {
                 let tempresults = [];
                 let numberOfMatches = [];
-                console.log('Checkpoint 1'+ JSON.stringify(this.researchresults));
+                console.log('Checkpoint 1' + JSON.stringify(this.researchresults));
                 for (let i = 0; i < this.researchresults[0].itemListElement[i].length; i++) {
                     numberOfMatches.push({rank: i, matches: 0})
                     for (let j = 0; j < this.keywords.length; j++) {
@@ -82,6 +82,16 @@
                     });
                 }
                 console.log('Sorted Results.' + this.insertionSort(tempresults));
+            },
+            insertionSort: function (items) {
+                for (let i = 0; i < items.length; i++) {
+                    let value = items[i].matches;
+                    for (let j = i - 1; j > -1 && items[j].matches > value; j--) {
+                        items[j + 1] = items[j];
+                    }
+                    items[j + 1] = value;
+                }
+                return items;
             },
             switchresearchselected: function () {
                 console.log('Show the Selection: ' + this.resultselected)
