@@ -64,6 +64,25 @@
             }
         },
         methods: {
+            rerankWithKeywords: function () {
+                let tempresults = [];
+                let numberOfMatches = [];
+                console.log('Checkpoint 1'+ JSON.stringify(this.researchresults));
+                for (let i = 0; i < this.researchresults[0].itemListElement[i].length; i++) {
+                    numberOfMatches.push({rank: i, matches: 0})
+                    for (let j = 0; j < this.keywords.length; j++) {
+                        if (this.researchresults[0].itemListElement[i].detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
+                            numberOfMatches[i].matches = numberOfMatches + 1;
+                        }
+                    }
+                    tempresults.push({
+                        result: this.researchresults[0].itemListElement[i],
+                        rank: i,
+                        matches: numberOfMatches[i].matches
+                    });
+                }
+                console.log('Sorted Results.' + this.insertionSort(tempresults));
+            },
             switchresearchselected: function () {
                 console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
@@ -78,10 +97,10 @@
                 };
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
-                    console.log('Response for Research: ' + JSON.stringify(response));
+                    //console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
-                    rerankWithKeywors(this.researchresults,this.keywords);
+                    this.rerankWithKeywords();
 
                 });
             },
@@ -98,11 +117,11 @@
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
-                       this.keywords = this.limitedfiltertokens(this.tokens,this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
+                        this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
+                        console.log('Keywords: ' + JSON.stringify(this.keywords));
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
-
                     }
                 },
                 deep: true
