@@ -67,12 +67,16 @@
             rerankWithKeywords: function () {
                 let tempresults = [];
                 let numberOfMatches = [];
-                console.log('Checkpoint 1' + JSON.stringify(this.researchresults));
-                for (let i = 0; i < this.researchresults[0].itemListElement[i].length; i++) {
-                    numberOfMatches.push({rank: i, matches: 0})
+                console.log('Checkpoint 1' + JSON.stringify(this.researchresults[0].itemListElement));
+                for (let i = 0; i < this.researchresults[0].itemListElement.length; i++) {
+                    numberOfMatches.push({rank: i, matches: 0});
                     for (let j = 0; j < this.keywords.length; j++) {
-                        if (this.researchresults[0].itemListElement[i].detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
-                            numberOfMatches[i].matches = numberOfMatches + 1;
+                        try {
+                            if (this.researchresults[0].itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
+                                numberOfMatches[i].matches = numberOfMatches[i].matches + 1;
+                            }
+                        } catch (err) {
+                            console.log('Detailed Description: ' + err + i)
                         }
                     }
                     tempresults.push({
@@ -110,6 +114,7 @@
                     //console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
+                    console.log('Results: ' + JSON.stringify(this.researchresults));
                     this.rerankWithKeywords();
 
                 });
