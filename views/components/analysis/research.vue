@@ -68,6 +68,41 @@
             }
         },
         methods: {
+            rerankWithKeywords: function () {
+                let tempresults = [];
+                let numberOfMatches = [];
+                console.log('Checkpoint 1' + JSON.stringify(this.researchresults[0].itemListElement));
+                for (let i = 0; i < this.researchresults[0].itemListElement.length; i++) {
+                    numberOfMatches.push({rank: i, matches: 0});
+                    for (let j = 0; j < this.keywords.length; j++) {
+                        try {
+                            if (this.researchresults[0].itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
+                                numberOfMatches[i].matches = numberOfMatches[i].matches + 1;
+                            }
+                        } catch (err) {
+                            console.log('Detailed Description: ' + err + i)
+                        }
+                    }
+                    tempresults.push({
+                        result: this.researchresults[0].itemListElement[i],
+                        rank: i,
+                        matches: numberOfMatches[i].matches
+                    });
+                }
+                console.log('tempresults to sort: ' + JSON.stringify(tempresults));
+                let sortedResults = this.insertionSort(tempresults);
+                console.log('Sorted Results.' + JSON.stringify(sortedResults) + sortedResults.length);
+            },
+            insertionSort: function (items) {
+                for (let i = 1; i < items.length; i++) {
+                    let value = items[i].matches;
+                    for (var j = i - 1; j > -1 && items[j].matches > value; j--) {
+                        items[j + 1] = items[j];
+                    }
+                    items[j + 1] = items[i];
+                }
+                return items;
+            },
             switchresearchselected: function () {
                 console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
@@ -82,11 +117,11 @@
                 };
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
-                    console.log('Response for Research: ' + JSON.stringify(response));
+                    //console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
                     rerankWithKeywors(this.researchresults, this.keywords);
-
+                    console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
             saveResult: function (index) {
@@ -112,10 +147,10 @@
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                         this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
+                        console.log('Keywords: ' + JSON.stringify(this.keywords));
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
-
                     }
                 },
                 deep: true

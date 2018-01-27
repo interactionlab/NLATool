@@ -1,19 +1,19 @@
 module.exports = {
     methods: {
-        limitedfiltertokens: function (tokens, token, index) {
+        limitedfiltertokens: function (tokens, token) {
             let resultingtokens = [];
             let i = 0;
             let j = 0;
-            if (index - 20 > 0) {
-                i = index - 20;
+            if (token.textIndex - 20 > 0) {
+                i = token.textIndex - 20;
             }
-            if (index + 20 < tokens.length) {
-                j = index + 20;
+            if (token.textIndex + 20 < tokens.length) {
+                j = token.textIndex + 20;
             } else {
                 j = tokens.length;
             }
             for (i; i < j; i++) {
-                if (tokens [i].semanticClass === token.semanticClass) {
+                if (tokens [i].semanticClass === token.semanticClass || tokens[i].pos === token.pos) {
                     resultingtokens.push(tokens [i]);
                 }
             }
