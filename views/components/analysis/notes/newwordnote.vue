@@ -1,9 +1,9 @@
 <template>
-    <div class="mdl-grid">
+    <div class="mdl-grid textfieldCorrection newwordnote">
         <p class="mdl-cell mdl-cell--12-col"
            v-on:click="jumpMarkText">{{selectedtext}}</p>
         <form class="mdl-cell mdl-cell--8-col">
-            <div class="mdl-textfield mdl-js-textfield">
+            <div class="mdl-textfield mdl-js-textfield textfieldCorrection">
                 <component is="autotextarea"
                            class="mdl-textfield__input inputFieldNote contentColor"
                            v-bind:inputtext="newnote"
@@ -66,15 +66,14 @@
                     && this.selectedindexes.end !== -1) {
                     let socket = io('http://localhost:8080');
                     if (typeof this.wordnotedb === 'undefined') {
-                        console.log('got here: 0');
                         socket.emit('savewordnote', newnote, this.docid, this.selectedindexes);
-                        console.log('got here: 1');
                         //TODO: get noteID from DB in callback and correct it while/after render in the background
                         let tempNote = {
                             docID: this.docid,
                             noteID: -1,
                             content: newnote,
-                            word: this.selectedtext
+                            textIndex1: this.selectedindexes.start,
+                            textIndex2: this.selectedindexes.end
                         };
                         this.newnote = '';
                         this.selectedindexes = {};
