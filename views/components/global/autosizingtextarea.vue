@@ -1,5 +1,5 @@
 <template>
-    <textarea class="mdl-textfield__input inputFieldNote contentColor"
+    <textarea
               v-model="inputtext"
               v-on:keyup.enter="submitIt"
               id="textbox"
