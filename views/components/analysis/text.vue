@@ -125,8 +125,7 @@
                                         htmlclass['cHoverRepresentant'] = this.classestomark.coref;
                                     } else if (this.mentions[0][i].mentionID === this.selectedchain) {
                                         htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                    }
-                                    else {
+                                    } else {
                                         htmlclass['cRepresentant'] = this.classestomark.coref;
                                     }
                                 } else {
@@ -134,10 +133,12 @@
                                         htmlclass['cHoverReferent'] = this.classestomark.coref;
                                     } else if (this.mentions[0][i].representative === this.selectedchain) {
                                         htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                    }
-                                    else {
+                                    } else {
                                         htmlclass['cReferent'] = this.classestomark.coref;
                                     }
+                                }
+                                if (this.checkIfNested()) {
+                                    htmlclass['nested'] = this.classestomark.coref;
                                 }
                             } else {
                                 //is Representant
@@ -182,7 +183,18 @@
             }
         },
         methods: {
+            checkIfNested: function () {
+                for (let i = 0; i < this.nestedmentions.fullyNested.length; i++) {
+                    for (let j = 0; j < this.mentions[0].length; j++) {
+                        if (this.index === this.mentions[0][j].mentionID
+                            && this.index === this.nestedmentions.fullyNested[i].inner) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
 
+            },
             startSelection: function () {
                 console.log('mouse pressed at: ' + this.index - 1);
                 this.$emit('startselection', this.index - 1);
