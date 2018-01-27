@@ -21,7 +21,9 @@
             index: Number,
             classestomark: Object,
             selectedindexes: Object,
-            hoveredchain: Number
+            hoveredchain: Number,
+            selectedchain: Number,
+            nestedmentions: Object
         },
         data: function () {
             return {
@@ -34,7 +36,9 @@
                 htmlclass: {},
                 markgap: false,
                 tohover: false,
-                hoveredChain: -1
+                hoveredchain: this.hoveredchain,
+                selectedchain: this.selectedchain,
+                nestedmentions: this.nestedmentions
             }
         },
         computed: {
@@ -63,13 +67,19 @@
                             if (this.mentions[0][i].representative < 0) {
                                 if (this.mentions[0][i].mentionID === this.hoveredchain) {
                                     htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                } else {
+                                } else if (this.mentions[0][i].mentionID === this.selectedchain) {
+                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                }
+                                else {
                                     htmlclass['cRepresentant'] = this.classestomark.coref;
                                 }
                             } else {
                                 if (this.mentions[0][i].representative === this.hoveredchain) {
                                     htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                } else {
+                                } else if (this.mentions[0][i].representative === this.selectedchain) {
+                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                }
+                                else {
                                     htmlclass['cReferent'] = this.classestomark.coref;
                                 }
                             }
@@ -113,13 +123,19 @@
                                 if (this.mentions[0][i].representative < 0) {
                                     if (this.mentions[0][i].mentionID === this.hoveredchain) {
                                         htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else {
+                                    } else if (this.mentions[0][i].mentionID === this.selectedchain) {
+                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                    }
+                                    else {
                                         htmlclass['cRepresentant'] = this.classestomark.coref;
                                     }
                                 } else {
                                     if (this.mentions[0][i].representative === this.hoveredchain) {
                                         htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    } else {
+                                    } else if (this.mentions[0][i].representative === this.selectedchain) {
+                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                    }
+                                    else {
                                         htmlclass['cReferent'] = this.classestomark.coref;
                                     }
                                 }
