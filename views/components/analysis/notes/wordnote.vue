@@ -9,7 +9,7 @@
                 <p>{{linkedtextfornote}}</p>
             </div>
             <div class="mdl-cell--10-col contentColor">
-                <p v-on:click="edit">{{ wordnotedb.content }}</p>
+                <p v-on:click="edit">{{wordnotedb.content}}</p>
             </div>
             <div class="mdl-cell mdl-cell--2-col contentColor"
                  v-show="ishovered">

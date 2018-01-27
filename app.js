@@ -48,6 +48,7 @@ const vueOptions = {
                 {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
                 {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
                 {script: 'https://unpkg.com/vuex'},
+                {script: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
                 {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-blue.min.css'},
                 {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
                 {style: '/css/style.css'},
