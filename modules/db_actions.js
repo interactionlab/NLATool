@@ -280,8 +280,34 @@ exports.createLimitedSelectCommand = function (table, columns, start, amount) {
 
 
 };
-exports.createInnerJoinSelectCommand = function (table1, table2, joinCondition) {
-    let commandString = 'SELECT ' + table1 + ' INNER JOIN ' + table2 + ' ' + joinCondition;
+/*
+input:{
+    tables:[],
+    columns:[{
+        column: nameOfColumn,
+        value: 'value'   //if not a select
+    }] || *,
+
+    condition:[
+        {
+            value1: ...,
+            value2: ...,
+            operator: ...,
+        },...],
+    kindOfJoin: ['Inner','cross','none',...]
+
+}
+ */
+exports.createInnerJoinSelectCommand = function (input) {
+    let commandString = 'SELECT ';
+    if (input.columns === '*') {
+        commandString = input.columns + ' INNER JOIN ';
+    } else{
+        for(let i = 0; i < input.columns.length; i++){
+            commandString = commandString + input.columns[i] + ', ';
+        }
+        commandString = commandString + input.kindOfJoin;
+    }
     return commandString;
 };
 
