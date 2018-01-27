@@ -1,21 +1,21 @@
 <template>
     <div class="mdl-grid">
         <p class="mdl-cell mdl-cell--12-col"
-            v-on:click="jumpMarkText">{{selectedtext}}</p>
+           v-on:click="jumpMarkText">{{selectedtext}}</p>
         <form class="mdl-cell mdl-cell--8-col">
             <div class="mdl-textfield mdl-js-textfield">
-                <textarea class="mdl-textfield__input contentColor"
-                          v-model="newnote"
-                          v-on:keyup.enter="save"
-                          id="textbox"
-                          type="text"
-                          rows="1">
-                </textarea>
+                <component is="autotextarea"
+                           class="mdl-textfield__input inputFieldNote contentColor"
+                           v-bind:inputtext="newnote"
+                           v-bind:submitit="submitit"
+                           v-on:submitit="save($event)"
+                           >
+                </component>
             </div>
         </form>
         <div class="mdl-cell mdl-cell--4-col">
             <button class="mdl-button "
-                    v-on:click="save">Save
+                    v-on:click="save2">Save
             </button>
             <button class="mdl-button "
                     v-on:click="back">Back
@@ -30,8 +30,13 @@
 </template>
 <script>
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+    import autotextarea from './components/global/autosizingtextarea.vue';
+
     export default {
         mixins: [getselectedtext],
+        components: {
+            autotextarea
+        },
         props: {
             selectedindexes: Object,
             docid: String,
@@ -46,14 +51,15 @@
                 newnote: this.newnote,
                 wordnotedb: this.wordnotedb,
                 selectedtext: '',
-                tokens:this.tokens
+                tokens: this.tokens,
+                submitit: false
             }
         },
         methods: {
             back: function () {
-                this.$emit('back',[-10,-10,-10]);
+                this.$emit('back', [-10, -10, -10]);
             },
-            save: function () {
+            save: function (newnote) {
                 console.log('DOCID: ' + this.docid + ' : ' + this.selectedindexes);
                 if (typeof this.selectedindexes !== 'undefined'
                     && this.selectedindexes.start !== -1
@@ -61,25 +67,29 @@
                     let socket = io('http://localhost:8080');
                     if (typeof this.wordnotedb === 'undefined') {
                         console.log('got here: 0');
-                        socket.emit('savewordnote', this.newnote, this.docid, this.selectedindexes);
+                        socket.emit('savewordnote', newnote, this.docid, this.selectedindexes);
                         console.log('got here: 1');
                         //TODO: get noteID from DB in callback and correct it while/after render in the background
                         let tempNote = {
                             docID: this.docid,
                             noteID: -1,
-                            content: this.newnote,
+                            content: newnote,
                             word: this.selectedtext
                         };
                         this.newnote = '';
-                        this.selectedindexes = {}
+                        this.selectedindexes = {};
                         console.log('got here: 2');
                         this.$emit('back', [-1, 1, tempNote]);
                     } else {
-                        socket.emit('updatewordnote', this.wordnotedb.noteID, this.newnote);
-                        this.wordnotedb.content = this.newnote;
+                        socket.emit('updatewordnote', this.wordnotedb.noteID, newnote);
+                        this.wordnotedb.content = newnote;
                         this.$emit('back', [this.wordnotedb.noteID, 2, this.wordnotedb]);
                     }
                 }
+                this.submitit = false;
+            },
+            save2:function () {
+                this.submitit = true;
             },
             deleting: function () {
                 if (typeof this.selectedindexes !== 'undefined'
@@ -90,7 +100,7 @@
                     this.$emit('back', this.wordnotedb.nodeID, 0);
                 }
             },
-            jumpMarkText:function () {
+            jumpMarkText: function () {
                 //href bahavior for #selectedindexes.start
             }
         },
