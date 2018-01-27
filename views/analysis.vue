@@ -26,7 +26,7 @@
                         v-on:changeresearchrode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)"
-                        >
+                >
                 </component>
             </div>
 
@@ -46,7 +46,7 @@
                                    v-bind:index="i+1"
                                    v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="hoveredChain"
+                                   v-bind:hoveredchain="corefChainInfo.hoveredChain"
                                    v-on:hoverchain="hoverChain($event)"
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
@@ -63,9 +63,10 @@
                             v-bind:notemodes="notemodes"
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
-                            v-on:jumpmarktext="selectText2($event)"
+                            v-bind:corefChainInfo="corefChainInfo"
                             v-bind:showmode="showMode"
-                            >
+                            v-on:jumpmarktext="selectText2($event)"
+                    >
                     </component>
                 </div>
             </div>
@@ -81,10 +82,8 @@
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
     import tex from './components/analysis/text.vue';
-    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
 
     export default {
-        mixins: [getselectedtext],
         data: function () {
             return {
                 analysisMode: 'analighter',
@@ -92,7 +91,7 @@
                 showMode: 'correction',
                 researchmode: '',
                 classesToMark: {
-                    coref:false,
+                    coref: false,
                     PERSON: false,
                     LOCATION: false,
                     ORGANIZATION: false,
@@ -106,13 +105,19 @@
                     wordnote: true,
                     globalnote: false
                 },
-                hoveredChain: -1,
-                selectedChain: -1
+                corefChainInfo: {
+                    hoveredChain: -1,
+                    selectedChain: -1,
+                    nestedMention: {
+                        fullyNested: [],
+                        nested: []
+                    }
+                }
             }
         },
         methods: {
-            hoverChain:function (chain) {
-                  this.hoveredChain = chain;
+            hoverChain: function (chain) {
+                this.hoveredChain = chain;
             },
             getAnalighter: function () {
                 console.log('Got clicked1' + this.docID);
@@ -135,9 +140,9 @@
                 console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
-                if(correctionMode === true){
-                this.showMode = 'correction';
-                } else{
+                if (correctionMode === true) {
+                    this.showMode = 'correction';
+                } else {
                     this.showMode = 'standardtable';
                 }
 
@@ -154,10 +159,10 @@
                     this.selectedtextindexes.end = index;
                 }
                 if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    console.log(this.selectedtextindexes.start +' >> ' + this.selectedtextindexes.end-1);
-                    if (this.selectedtextindexes.start > this.selectedtextindexes.end-1) {
-                        let tempstart = this.selectedtextindexes.start+1;
-                        this.selectedtextindexes.start = this.selectedtextindexes.end-1;
+                    console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
+                    if (this.selectedtextindexes.start > this.selectedtextindexes.end - 1) {
+                        let tempstart = this.selectedtextindexes.start + 1;
+                        this.selectedtextindexes.start = this.selectedtextindexes.end - 1;
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
@@ -165,28 +170,72 @@
                 console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
 
             },
-            selectText2:function (newSelectedIndexes) {
+            selectText2: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
                 console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
-            isMentionSelected:function () {
-                let res = -1;
-                for(let i = 0; i < this.coref[0].length; i++){
-                    if(this.selectedindexes.start >= this.coref[0][i].startIndex
-                    && this.selectedindexes.end <= this.coref[0][i].endIndex){
-                        if(this.coref[0][i].representative === -1){
-                            res = coref[0][i].mentionID;
-                            break;
-                        } else{
-                            res = coref[0][i].representative;
-                            break;
+        },
+        computed: {
+            nestedChains: function () {
+                for (let i = 0; i < coref[0].length; i++) {
+                    for (let j = i + 1; j < coref[0].length - (i + 1); j++) {
+                        if (coref[0][i].startIndex >= coref[0][j].startIndex
+                            && coref[0][i].startIndex <= coref[0][j].endIndex) {
+                            if (coref[0][i].endIndex <= coref[0][j].endIndex) {
+                                // i Mention is in j Mention
+                                this.corefChainInfo.nestedMention.fullyNested.push({
+                                    inner: coref[0][i].mentionID,
+                                    outer: coref[0][j].mentionID
+                                });
+                            } else {
+                                // i Mention starts after j Mention starts
+                                this.corefChainInfo.nestedMention.nested.push({
+                                    first: coref[0][j].mentionID,
+                                    second: coref[0][i].mentionID
+                                });
+                            }
+                        } else if (coref[0][j].startIndex >= coref[0][i].startIndex
+                            && coref[0][j].startIndex <= coref[0][i].endIndex) {
+                            if (coref[0][j].endIndex <= coref[0][i].endIndex) {
+                                // j Mention is in i Mention
+                                this.corefChainInfo.nestedMention.fullyNested.push({
+                                    inner: coref[0][j].mentionID,
+                                    outer: coref[0][i].mentionID
+                                });
+                            } else {
+                                // j Mention starts after i Mention starts
+                                this.corefChainInfo.nestedMention.nested.push({
+                                    first: coref[0][i].mentionID,
+                                    second: coref[0][j].mentionID
+                                });
+                            }
                         }
                     }
                 }
-                return res;
+            }
+        },
+        watch: {
+            selectedindexes: {
+                handler: function () {
+                    if (this.selectedindexes.start !== -1 && this.selectedindexes.end !== -1) {
+                        for (let i = 0; i < this.coref[0].length; i++) {
+                            if (this.selectedindexes.start >= this.coref[0][i].startIndex
+                                && this.selectedindexes.end <= this.coref[0][i].endIndex) {
+                                if (this.coref[0][i].representative === -1) {
+                                    this.corefChainInfo.selectedChain = coref[0][i].mentionID;
+                                    break;
+                                } else {
+                                    this.corefChainInfo.selectedChain = coref[0][i].representative;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                },
+                deep: true
             }
         },
         components: {

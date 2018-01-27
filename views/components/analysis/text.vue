@@ -47,7 +47,6 @@
                 let htmlclass = {};
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
-
                     htmlclass['notemark'] = true;
                 } else {
                     htmlclass['notemark'] = false;
@@ -85,10 +84,6 @@
                             }
                         }
                         //is nested in more than one mention
-
-
-                        //console.log('Checkpoint 2: '+ this.classestomark.coref);
-                        htmlclass['coref'] = this.classestomark.coref;
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
@@ -113,8 +108,31 @@
                         //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
                         //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
                         if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                            //console.log('Checkpoint 2: ' + this.classestomark.coref);
-                            htmlclass['coref'] = this.classestomark.coref;
+                            if (!this.tohover) {
+                                //is Representant
+                                if (this.mentions[0][i].representative < 0) {
+                                    if (this.mentions[0][i].mentionID === this.hoveredchain) {
+                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                    } else {
+                                        htmlclass['cRepresentant'] = this.classestomark.coref;
+                                    }
+                                } else {
+                                    if (this.mentions[0][i].representative === this.hoveredchain) {
+                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                    } else {
+                                        htmlclass['cReferent'] = this.classestomark.coref;
+                                    }
+                                }
+                            } else {
+                                //is Representant
+                                if (this.mentions[0][i].representative < 0) {
+                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                    this.$emit('hoverchain', this.mentions[0][i].mentionID);
+                                } else {
+                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                    this.$emit('hoverchain', this.mentions[0][i].representative);
+                                }
+                            }
                         }
                     }
                 } catch (err) {
@@ -148,6 +166,7 @@
             }
         },
         methods: {
+
             startSelection: function () {
                 console.log('mouse pressed at: ' + this.index - 1);
                 this.$emit('startselection', this.index - 1);
