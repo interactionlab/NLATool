@@ -140,6 +140,9 @@ pre {
     background: yellow;
     border-bottom: 2px solid red;
 }
+.nested{
+    font-weight: bold;
+}
 /** Button color */
 .mdc-button-container-fill-color {
     color: black;
