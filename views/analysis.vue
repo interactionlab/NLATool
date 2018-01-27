@@ -46,7 +46,9 @@
                                    v-bind:index="i+1"
                                    v-bind:selectedindexes="selectedtextindexes"
                                    v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="corefChainInfo.hoveredChain"
+                                   v-bind:hoveredchain="hoveredChain"
+                                   v-bind:nestedmentions="nestedChains"
+                                   v-bind:selectedchain="selectedChain"
                                    v-on:hoverchain="hoverChain($event)"
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)">
@@ -63,7 +65,7 @@
                             v-bind:notemodes="notemodes"
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
-                            v-bind:corefChainInfo="corefChainInfo"
+                            v-bind:selectedchain="selectedChain"
                             v-bind:showmode="showMode"
                             v-on:jumpmarktext="selectText2($event)"
                     >
@@ -105,16 +107,12 @@
                     wordnote: true,
                     globalnote: false
                 },
-                corefChainInfo: {
-                    hoveredChain: -1,
-                    selectedChain: -1,
-                    nestedMention: {
-                        fullyNested: [],
-                        nested: []
-                    }
-                }
+                hoveredChain: -1,
+                selectedChain: -1,
+
             }
-        },
+        }
+        ,
         methods: {
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
@@ -180,60 +178,82 @@
         },
         computed: {
             nestedChains: function () {
-                for (let i = 0; i < coref[0].length; i++) {
-                    for (let j = i + 1; j < coref[0].length - (i + 1); j++) {
-                        if (coref[0][i].startIndex >= coref[0][j].startIndex
-                            && coref[0][i].startIndex <= coref[0][j].endIndex) {
-                            if (coref[0][i].endIndex <= coref[0][j].endIndex) {
-                                // i Mention is in j Mention
-                                this.corefChainInfo.nestedMention.fullyNested.push({
-                                    inner: coref[0][i].mentionID,
-                                    outer: coref[0][j].mentionID
-                                });
-                            } else {
-                                // i Mention starts after j Mention starts
-                                this.corefChainInfo.nestedMention.nested.push({
-                                    first: coref[0][j].mentionID,
-                                    second: coref[0][i].mentionID
-                                });
-                            }
-                        } else if (coref[0][j].startIndex >= coref[0][i].startIndex
-                            && coref[0][j].startIndex <= coref[0][i].endIndex) {
-                            if (coref[0][j].endIndex <= coref[0][i].endIndex) {
-                                // j Mention is in i Mention
-                                this.corefChainInfo.nestedMention.fullyNested.push({
-                                    inner: coref[0][j].mentionID,
-                                    outer: coref[0][i].mentionID
-                                });
-                            } else {
-                                // j Mention starts after i Mention starts
-                                this.corefChainInfo.nestedMention.nested.push({
-                                    first: coref[0][i].mentionID,
-                                    second: coref[0][j].mentionID
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        watch: {
-            selectedindexes: {
-                handler: function () {
-                    if (this.selectedindexes.start !== -1 && this.selectedindexes.end !== -1) {
-                        for (let i = 0; i < this.coref[0].length; i++) {
-                            if (this.selectedindexes.start >= this.coref[0][i].startIndex
-                                && this.selectedindexes.end <= this.coref[0][i].endIndex) {
-                                if (this.coref[0][i].representative === -1) {
-                                    this.corefChainInfo.selectedChain = coref[0][i].mentionID;
-                                    break;
+                let nestedMentions = {
+                    fullyNested: [],
+                    nested: []
+                };
+                try {
+                    console.log('Trying to find nested coref Chains:');
+
+                    for (let i = 0; i < this.coref[0].length; i++) {
+                        for (let j = i + 1; j < this.coref[0].length - (i + 1); j++) {
+                            if (this.coref[0][i].startIndex >= this.coref[0][j].startIndex
+                                && this.coref[0][i].startIndex <= this.coref[0][j].endIndex) {
+                                if (this.coref[0][i].endIndex <= this.coref[0][j].endIndex) {
+                                    // i Mention is in j Mention
+                                    nestedMentions.fullyNested.push({
+                                        inner: this.coref[0][i].mentionID,
+                                        outer: this.coref[0][j].mentionID
+                                    });
+                                    console.log('Found one!');
                                 } else {
-                                    this.corefChainInfo.selectedChain = coref[0][i].representative;
-                                    break;
+                                    // i Mention starts after j Mention starts
+                                    nestedMentions.nested.push({
+                                        first: this.coref[0][j].mentionID,
+                                        second: this.coref[0][i].mentionID
+                                    });
+                                    console.log('Found 2!');
+                                }
+                            } else if (this.coref[0][j].startIndex >= this.coref[0][i].startIndex
+                                && this.coref[0][j].startIndex <= this.coref[0][i].endIndex) {
+                                if (this.coref[0][j].endIndex <= this.coref[0][i].endIndex) {
+                                    // j Mention is in i Mention
+                                    nestedMentions.fullyNested.push({
+                                        inner: this.coref[0][j].mentionID,
+                                        outer: this.coref[0][i].mentionID
+                                    });
+                                    console.log('Found 3!' + i + ':' + j);
+                                } else {
+                                    // j Mention starts after i Mention starts
+                                    nestedMentions.nested.push({
+                                        first: this.coref[0][i].mentionID,
+                                        second: this.coref[0][j].mentionID
+                                    });
+                                    console.log('Found 4!' + i + ':' + j);
                                 }
                             }
                         }
                     }
+                    return nestedMentions;
+                }
+                catch
+                    (err) {
+                    console.log('nested Chains Recognition failed:' + err);
+                    return nestedMentions;
+                }
+            }
+        },
+        watch: {
+            selectedtextindexes: {
+                handler: function (newSelectedIndexes) {
+                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                        for (let i = 0; i < this.coref[0].length; i++) {
+                            if (newSelectedIndexes.start >= this.coref[0][i].startIndex
+                                && newSelectedIndexes.end <= this.coref[0][i].endIndex) {
+                                if (this.coref[0][i].representative === -1) {
+                                    this.selectedChain = this.coref[0][i].mentionID;
+                                    break;
+                                } else {
+                                    this.selectedChain = this.coref[0][i].representative;
+                                    break;
+                                }
+                            } else {
+                                this.selectedChain = -1;
+                            }
+                        }
+                    }
+                    console.log('Watcher got new selected Chain: ' + this.selectedChain);
                 },
                 deep: true
             }

@@ -132,7 +132,14 @@ pre {
     background: darkgrey;
     border-bottom: 2px solid blue;
 }
-
+.cSelectedRepresentant{
+    background: yellow;
+    border-bottom: 2px solid red;
+}
+.cSelectedReferent{
+    background: yellow;
+    border-bottom: 2px solid red;
+}
 /** Button color */
 .mdc-button-container-fill-color {
     color: black;
