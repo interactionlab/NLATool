@@ -314,6 +314,7 @@ function resetTextDB() {
     textDB.tokens = [];
     textDB.words = [];
     textDB.textMetaData = [];
+    textDB.coref = [];
 }
 
 /**
