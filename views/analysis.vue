@@ -66,6 +66,7 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
                             v-bind:selectedchain="selectedChain"
+                            v-bind:mentions="coref"
                             v-bind:showmode="showMode"
                             v-on:jumpmarktext="selectText2($event)"
                     >

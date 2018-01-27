@@ -1,5 +1,5 @@
 <template>
-    <div class="contentColor"
+    <div class="contentColor separate"
          v-on:mouseover="showButns"
          v-on:mouseout="hideButns">
         <div class="mdl-grid"

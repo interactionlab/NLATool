@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mdl-cell mdl-cell--12-col contentColor">
+        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
             <input v-on:keydown.enter="searchGoogle(selectedtext)"
                    v-model="selectedtext"
@@ -10,7 +10,7 @@
         <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
-                <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col" id="resultfield">
+                <div class="mdl-cell mdl-cell--12-col" id="resultfield">
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
@@ -48,6 +48,8 @@
             selectedindexes: Object,
             tokens: Array,
             docid: Number,
+            selectedchain: Number,
+            mentions: Array
         },
         data: function () {
             return {
@@ -60,7 +62,9 @@
                 selectedresult: {},
                 selectedindex: -1,
                 docid: this.docid,
-                keywords: this.keywords
+                keywords: this.keywords,
+                selectedchain: this.selectedchain,
+                mentions: this.mentions
             }
         },
         methods: {
@@ -81,7 +85,7 @@
                     console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
-                    rerankWithKeywors(this.researchresults,this.keywords);
+                    rerankWithKeywors(this.researchresults, this.keywords);
 
                 });
             },
@@ -90,15 +94,24 @@
                 this.selectedindex = index;
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
                 this.selectedresult = this.researchresults[0].itemListElement[index];
+            },
+        },
+        computed: {
+            representant: function () {
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    if(this.selectedchain === this.mentions[0][i].mentionID){
+                        this.selectedindexes.start = this.mentions[0][i].startIndex;
+                        this.selectedindexes.end = this.mentions[0][i].endIndex;
+                    }
+                }
             }
         },
-        computed: {},
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
-                       this.keywords = this.limitedfiltertokens(this.tokens,this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
+                        this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);
