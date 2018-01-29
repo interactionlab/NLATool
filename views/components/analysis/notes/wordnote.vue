@@ -51,7 +51,7 @@
                 ishovered: false,
                 editing: false,
                 docid: this.docid,
-                tokens:this.tokens 
+                tokens:this.tokens
             }
         },
         computed:{

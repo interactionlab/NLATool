@@ -286,14 +286,15 @@ input:{
     columns:[{
         column: nameOfColumn,
         value: 'value'   //if not a select
+        alias
     }] || *,
 
-    condition:[
+    conditions:
         {
-            value1: ...,
-            value2: ...,
-            operator: ...,
-        },...],
+            column: [],
+            value: [],
+            operator: [],
+        },
     kindOfJoin: ['Inner','cross','none',...]
 
 }
@@ -302,14 +303,22 @@ exports.createInnerJoinSelectCommand = function (input) {
     let commandString = 'SELECT ';
     if (input.columns === '*') {
         commandString = input.columns + ' INNER JOIN ';
-    } else{
-        for(let i = 0; i < input.columns.length; i++){
-            commandString = commandString + input.columns[i] + ', ';
+    } else {
+        commandString = commandString + input.columns[0].column;
+        for (let i = 1; i < input.columns.length; i++) {
+            commandString = commandString + ', ' + input.columns[i].column;
+            if (typeof input.columns[i].alias !== 'undefined' && input.columns[i].alias !== null) {
+                commandString = commandString + ' as ' + input.columns[i].alias;
+            }
         }
         commandString = commandString + input.kindOfJoin;
+        if (typeof input.conditions !== 'undefined' && input.conditions !== null) {
+            commandString = commandString +
+                createWhereQuery(input.conditions.columns, input.conditions.values, input.conditions.operators);
+        }
     }
     return commandString;
-};
+}
 
 exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2, operators) {
     let queryString = 'ON';
@@ -318,6 +327,7 @@ exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2,
             queryString = queryString + ' ' + valuesToCompare1[i] + ' ' + operators [i] + ' ' + valuesToCompare2[i];
         }
     }
+    return queryString;
 };
 
 /**
