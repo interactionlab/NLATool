@@ -93,6 +93,9 @@ io.on('connection', function (socket) {
         console.log('saved Result: ')
         wait.launchFiber(saveResult, index, researchresult, docID);
     });
+    socket.on('changeClass', function (tokenToEdit, docID) {
+        wait.launchFiber(changeClass, tokenToEdit, docID);
+    });
 });
 
 function saveResult(index, researchresult, docID) {
@@ -144,6 +147,18 @@ function saveWordNote(note, docID, indexes) {
             ['docID', 'content', 'textIndex1', 'textIndex2'],
             [docID, note, indexes.start, indexes.end],
             null, null)));
+}
+
+function changeClass(tokenToEdit, docID) {
+    docID = stringifyForDB(docID);
+    let classUpdate = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createUpdateCommand('word',
+            ['semanticClass'],
+            [stringifyForDB(tokenToEdit.semanticClass)],
+            ['wordID'],
+            [stringifyForDB(tokenToEdit.wordID)],
+            ['=']
+            )));
 }
 
 /**
