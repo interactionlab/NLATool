@@ -99,6 +99,7 @@
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
+                    POS: false
                 },
                 selectedtextindexes: {
                     start: -1,
