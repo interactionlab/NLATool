@@ -133,7 +133,7 @@
             changeMarkerMode: function (mode) {
                 //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-                console.log('classesToMark: ' + JSON.stringify(mode[1]));
+              //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
             },
             test: function () {

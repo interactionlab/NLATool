@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-if="selectedtokens.length !== 0">
-            <p>{{selectedtokens[0].content}}</p>
-            <p>Current Class: {{selectedtokens[0].semanticClass}}</p>
+        <div v-if="selectedtokens.length !== 0" class="mdl-grid">
+            <p class="mdl-cell mdl-cell--6-col">{{selectedtokens[0].content}}</p>
+            <p class="mdl-cell mdl-cell--6-col">Current Class: {{selectedtokens[0].semanticClass}}</p>
             <div>
                 <p>Select a new class: </p>
                 <button v-bind:class="{PERSON: true}"
