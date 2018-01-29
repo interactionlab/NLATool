@@ -19,7 +19,7 @@
                     <button v-on:click="changeMarkerMode('Person')"
                             v-bind:class="{PERSON: classesToMark.PERSON}"
                             class="mdl-button mdl-js-button">
-                        <small class="mdc-button">PERSONS</small>
+                        <small class="mdc-button">PERSON</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Location')"
                             v-bind:class="{LOCATION: classesToMark.LOCATION}"
@@ -42,7 +42,8 @@
                         <small class="mdc-button">Coreference</small>
                     </button>
                     <button class="mdl-button mdl-js-button"
-                            v-on:click="setCorrectionMode('Correction'), changeMarkerMode('POS')">
+                            v-on:click="setCorrectionMode()"
+                            v-bind:class="{POS: classesToMark.POS}">
                         <small class="mdc-button">Correction</small>
                     </button>
                 </div>
@@ -93,17 +94,14 @@
                 onOff: false,
                 tokens: this.tokens,
                 selectedindexes: this.selectedindexes,
-                correctionMode: true,
+                correctionMode: false,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
+                    POS: false,
                     coref: false,
-                    'I-PER': false,
-                    'I-LOC': false,
-                    'I-ORG': false,
-                    'I-MISC': false,
                 },
                 noteModes: {
                     wordnote: true,
@@ -141,9 +139,11 @@
                 if (this.classesToMark.MISC === false) {
                     this.changeMarkerMode('Misc');
                 }
-                for (let key in this.classesToMark) {
-                    this.classesToMark[key] = true;
-                }
+
+                this.classesToMark.PERSON = true;
+                this.classesToMark.LOCATION = true;
+                this.classesToMark.ORGANIZATION = true;
+                this.classesToMark.MISC = true;
             },
 
             changeMarkerMode: function (mode) {
@@ -164,13 +164,12 @@
                     mode = 'MISC';
                     this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
+                if(mode == 'POS') {
+                    mode = 'POS';
+                    this.classesToMark.POS = !this.classesToMark.POS;
+                }
                 if (mode == 'coref') {
                     mode = 'coref';
-                    if (!this.classesToMark.coref) {
-                        for (let key in this.classesToMark) {
-                            this.classesToMark[key] = false;
-                        }
-                    }
                     this.classesToMark.coref = !this.classesToMark.coref;
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
@@ -199,9 +198,11 @@
                 this.$emit('changeresearchrode', [mode]);
             },
             setCorrectionMode: function () {
-                console.log('Change to correction mode');
+                //TODO: check if on or off
                 this.correctionMode = !this.correctionMode;
-                this.$emit('entercorrectionmode', [this.correctionMode]);
+                this.classesToMark.POS = !this.classesToMark.POS;
+                console.log('Correction Mode is ' + this.correctionMode);
+                this.$emit('entercorrectionmode', this.correctionMode);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
