@@ -143,7 +143,7 @@
                 if (correctionMode === true) {
                     this.showMode = 'correction';
                 } else {
-                    this.showMode = 'standardtable';
+                    this.showMode = 'entitiesview';
                 }
 
             },

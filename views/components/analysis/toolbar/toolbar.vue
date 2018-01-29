@@ -198,11 +198,12 @@
                 this.$emit('changeresearchrode', [mode]);
             },
             setCorrectionMode: function () {
-                //TODO: check if on or off
+                //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
                 this.classesToMark.POS = !this.classesToMark.POS;
                 console.log('Correction Mode is ' + this.correctionMode);
                 this.$emit('entercorrectionmode', this.correctionMode);
+                this.$emit('changemarkermode', ['POS', this.classesToMark]);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
