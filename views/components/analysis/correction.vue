@@ -1,10 +1,10 @@
 <template>
     <div>
         <div v-if="selectedtokens.length !== 0" class="mdl-grid">
-            <p class="mdl-cell mdl-cell--6-col">{{selectedtokens[0].content}}</p>
+            <p class="mdl-cell mdl-cell--4-col" v-bind:class="semclassofselected">{{selectedtokens[0].content}}</p>
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{selectedtokens[0].semanticClass}}</p>
             <div>
-                <p>Select a new class: </p>
+                <p class="mdl-cell mdl-cell--6-col">Make a selection: </p>
                 <button v-bind:class="{PERSON: true}"
                         v-on:click="changeClass('PERSON')"
                         class="mdl-button mdl-js-button">
@@ -25,6 +25,20 @@
                         v-on:click="changeClass('MISC')">
                     <small class="mdc-button">MISC</small>
                 </button>
+                <button v-bind:class="{POS: true}"
+                        class="mdl-button mdl-js-button"
+                        v-on:click="changeClass('O')">
+                    <small class="mdc-button">Discard class</small>
+                </button>
+
+                <!--<div class="mdc-switch contentColor" style="border: white 2px">-->
+                    <!--<input v-on:click="toggleSuggestions()" type="checkbox" id="basic-switch" class="mdc-switch__native-control" />-->
+                    <!--<div class="mdc-switch__background">-->
+                        <!--<div class="mdc-switch__knob"></div>-->
+                    <!--</div>-->
+                <!--<label for="basic-switch" class="mdc-switch-label">Show suggestions</label>-->
+                <!--</div>-->
+
             </div>
          <div v-if="selectedtokens.length === 0">
              <p>Select a word</p>
@@ -53,6 +67,7 @@
                 classesPerToken: [],
                 index: 0,
                 docid: this.docid,
+                suggestions: false
             }
 
         },
@@ -72,6 +87,11 @@
             shownclassespertoken:function () {
                 console.log('Checkpoint shownclassespertoken: ');
                 return this.classesPerToken[this.index];
+            },
+            semclassofselected: function () {
+                let tokenClass = {};
+                tokenClass[this.selectedtokens[0].semanticClass] = true;
+                return tokenClass;
             }
         },
         methods: {
@@ -85,6 +105,11 @@
                 this.selectedtokens[0].semanticClass = newClass;
                 let socket = io('http://localhost:8080');
                 socket.emit('changeClass', this.selectedtokens[0], this.docid);
+            },
+            toggleSuggestions: function () {
+                this.suggestions = !this.suggestions;
+                console.log("Sugg" + this.suggestions);
+                this.$emit('toggleSuggestions', this.suggestions);
             }
         }
     }
