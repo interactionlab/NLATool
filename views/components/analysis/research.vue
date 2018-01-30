@@ -90,7 +90,10 @@
 
                 }
                 console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
+                console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
                 numberOfMatches = this.insertionSort(numberOfMatches);
+                numberOfMatches.reverse();
+                console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
                 for (let i = 0; i < numberOfMatches.length; i++) {
                     for (let j = 0; j < tempresults.length; j++) {
                         if (numberOfMatches[i] === tempresults[j].matches) {
