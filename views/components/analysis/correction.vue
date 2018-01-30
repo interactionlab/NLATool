@@ -31,6 +31,8 @@
                     <small class="mdc-button">Discard class</small>
                 </button>
 
+                <p class="mdl-cell mdl-cell--6-col">Or select a <span v-bind:class="{POS:true}">suggested</span> word</p>
+
                 <!--<div class="mdc-switch contentColor" style="border: white 2px">-->
                     <!--<input v-on:click="toggleSuggestions()" type="checkbox" id="basic-switch" class="mdc-switch__native-control" />-->
                     <!--<div class="mdc-switch__background">-->
