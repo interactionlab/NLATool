@@ -12,7 +12,7 @@
             <!--Tab values-->
             <div class="mdl-grid">
                 <div class="mdl-tabs__panel is-active " id="analysis-panel">
-                    <button v-on:click="allButton"
+                    <button v-on:click="allButton()"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ALL</small>
                     </button>
@@ -95,6 +95,7 @@
                 tokens: this.tokens,
                 selectedindexes: this.selectedindexes,
                 correctionMode: false,
+                allActive: false,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
@@ -127,6 +128,10 @@
 
             allButton: function () {
 
+                if(this.allActive === false){
+
+                    this.allActive = true;
+
                 if (this.classesToMark.PERSON === false) {
                     this.changeMarkerMode('Person');
                 }
@@ -144,6 +149,18 @@
                 this.classesToMark.LOCATION = true;
                 this.classesToMark.ORGANIZATION = true;
                 this.classesToMark.MISC = true;
+                }else{
+                    this.changeMarkerMode('Person');
+                    this.classesToMark.PERSON = false;
+                    this.changeMarkerMode('Location');
+                    this.classesToMark.LOCATION = false;
+                    this.changeMarkerMode('Organization');
+                    this.classesToMark.ORGANIZATION = false;
+                    this.changeMarkerMode('Misc');
+                    this.classesToMark.MISC = false;
+
+                    this.allActive = false;
+                }
             },
 
             changeMarkerMode: function (mode) {
