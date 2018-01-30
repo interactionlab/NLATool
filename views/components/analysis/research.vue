@@ -90,10 +90,13 @@
 
                 }
                 console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
-                tempresults = this.insertionSort(tempresults);
-                this.researchresults = [];
-                for (let i = 1; i < tempresults.length; i++) {
-                    this.researchresults.push(tempresults[i].result);
+                numberOfMatches = this.insertionSort(numberOfMatches);
+                for (let i = 0; i < numberOfMatches.length; i++) {
+                    for (let j = 0; j < tempresults.length; j++) {
+                        if (numberOfMatches[i] === tempresults[j].matches) {
+                            this.researchresults.push(tempresults[j].result);
+                        }
+                    }
                 }
                 console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
             },
