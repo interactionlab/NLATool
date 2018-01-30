@@ -21,7 +21,7 @@
                     </component>
                     <component is="researchresult"
                                v-else
-                               v-for="(researchresult,index) in researchresults[0].itemListElement"
+                               v-for="(researchresult,index) in researchresults"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
                                v-bind:index="index"
@@ -68,15 +68,15 @@
             }
         },
         methods: {
-            rerankWithKeywords: function () {
+            rerankWithKeywords: function (response) {
                 let tempresults = [];
                 let numberOfMatches = [];
-                console.log('Checkpoint 1' + JSON.stringify(this.researchresults[0].itemListElement));
-                for (let i = 0; i < this.researchresults[0].itemListElement.length; i++) {
+                console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
+                for (let i = 0; i < response.itemListElement.length; i++) {
                     numberOfMatches.push({rank: i, matches: 0});
                     for (let j = 0; j < this.keywords.length; j++) {
                         try {
-                            if (this.researchresults[0].itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
+                            if (response.itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
                                 numberOfMatches[i].matches = numberOfMatches[i].matches + 1;
                             }
                         } catch (err) {
@@ -84,17 +84,21 @@
                         }
                     }
                     tempresults.push({
-                        result: this.researchresults[0].itemListElement[i],
+                        result: response.itemListElement[i],
                         rank: i,
                         matches: numberOfMatches[i].matches
                     });
                 }
-                console.log('tempresults to sort: ' + JSON.stringify(tempresults));
-                let sortedResults = this.insertionSort(tempresults);
-                console.log('Sorted Results.' + JSON.stringify(sortedResults) + sortedResults.length);
+                console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
+                tempresults = this.insertionSort(tempresults);
+                this.researchresults = [];
+                for (let i = 1; i < tempresults.length; i++) {
+                    this.researchresults.push(tempresults[i].result);
+                }
+                console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
             },
             insertionSort: function (items) {
-                for (let i = 1; i < items.length; i++) {
+                for (let i = 0; i < items.length; i++) {
                     let value = items[i].matches;
                     for (var j = i - 1; j > -1 && items[j].matches > value; j--) {
                         items[j + 1] = items[j];
@@ -118,17 +122,15 @@
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
                     //console.log('Response for Research: ' + JSON.stringify(response));
-                    this.researchresults.pop();
-                    this.researchresults.push(response);
-                    this.rerankWithKeywords();
+                    this.rerankWithKeywords(response);
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
             saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
-                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
-                this.selectedresult = this.researchresults[0].itemListElement[index];
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
+                this.selectedresult = this.researchresults[index];
             },
         },
         computed: {},
