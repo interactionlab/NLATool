@@ -16,7 +16,7 @@
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
                                v-bind:dochid="docid"
-                               v-bind:showallon="true"
+                               v-bind:showallon="resultselected"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -27,7 +27,7 @@
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
                                v-bind:dochid="docid"
-                               v-bind:showallon="false"
+                               v-bind:showallon="resultselected"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -64,7 +64,7 @@
                 docid: this.docid,
                 keywords: this.keywords,
                 selectedchain: this.selectedchain,
-                mentions: this.mentions
+                mentions: this.mentions,
             }
         },
         methods: {
@@ -120,7 +120,7 @@
                     //console.log('Response for Research: ' + JSON.stringify(response));
                     this.researchresults.pop();
                     this.researchresults.push(response);
-                    rerankWithKeywors(this.researchresults, this.keywords);
+                    this.rerankWithKeywords();
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
