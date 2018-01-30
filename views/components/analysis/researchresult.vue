@@ -98,7 +98,7 @@
                 hover: false,
                 index: this.index,
                 docid: this.docid,
-                showallon: false
+                showallon: this.showallon
             }
         },
         methods: {
