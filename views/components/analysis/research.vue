@@ -131,16 +131,7 @@
                 this.selectedresult = this.researchresults[0].itemListElement[index];
             },
         },
-        computed: {
-            representant: function () {
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    if(this.selectedchain === this.mentions[0][i].mentionID){
-                        this.selectedindexes.start = this.mentions[0][i].startIndex;
-                        this.selectedindexes.end = this.mentions[0][i].endIndex;
-                    }
-                }
-            }
-        },
+        computed: {},
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
@@ -155,6 +146,20 @@
                 },
                 deep: true
             },
+            selectedchain: {
+                handler: function (newselectedChain) {
+                    console.log('Selected Chain1: '+newselectedChain);
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (newselectedChain === this.mentions[0][i].mentionID) {
+                            this.selectedindexes.start = this.mentions[0][i].startIndex;
+                            this.selectedindexes.end = this.mentions[0][i].endIndex;
+                        }
+                    }
+                    console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
+                },
+                deep: true
+            },
+
             researchmode: function (mode) {
                 //if (mode === 'Info') {
                 console.log('researchmode was changed to:' + mode);
