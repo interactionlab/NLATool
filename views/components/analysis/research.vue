@@ -73,11 +73,11 @@
                 let numberOfMatches = [];
                 console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
                 for (let i = 0; i < response.itemListElement.length; i++) {
-                    numberOfMatches.push({rank: i, matches: 0});
+                    numberOfMatches.push(0);
                     for (let j = 0; j < this.keywords.length; j++) {
                         try {
                             if (response.itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
-                                numberOfMatches[i].matches = numberOfMatches[i].matches + 1;
+                                numberOfMatches[i] = numberOfMatches[i] + 1;
                             }
                         } catch (err) {
                             console.log('Detailed Description: ' + err + i)
@@ -85,9 +85,9 @@
                     }
                     tempresults.push({
                         result: response.itemListElement[i],
-                        rank: i,
-                        matches: numberOfMatches[i].matches
+                        matches: numberOfMatches[i]
                     });
+
                 }
                 console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
                 tempresults = this.insertionSort(tempresults);
@@ -99,11 +99,11 @@
             },
             insertionSort: function (items) {
                 for (let i = 0; i < items.length; i++) {
-                    let value = items[i].matches;
-                    for (var j = i - 1; j > -1 && items[j].matches > value; j--) {
+                    let value = items[i];
+                    for (var j = i - 1; j > -1 && items[j] > value; j--) {
                         items[j + 1] = items[j];
                     }
-                    items[j + 1] = items[i];
+                    items[j + 1] = value;
                 }
                 return items;
             },
