@@ -148,14 +148,14 @@
             },
             selectedchain: {
                 handler: function (newselectedChain) {
-                    console.log('Selected Chain1: '+newselectedChain);
+                    //console.log('Selected Chain1: '+newselectedChain);
                     for (let i = 0; i < this.mentions[0].length; i++) {
                         if (newselectedChain === this.mentions[0][i].mentionID) {
                             this.selectedindexes.start = this.mentions[0][i].startIndex;
                             this.selectedindexes.end = this.mentions[0][i].endIndex;
                         }
                     }
-                    console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
+                    //console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
                 },
                 deep: true
             },
