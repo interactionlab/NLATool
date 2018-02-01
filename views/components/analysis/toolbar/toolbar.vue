@@ -54,7 +54,7 @@
                             v-on:click="setResearchMode('Info')">
                         <small class="mdc-button">Information</small>
                     </button>
-                    <!-- TODO add buttons if needed
+                    <!-- TODO: add buttons if needed
                                         <button class="mdl-button mdl-js-button">
                                             <small class="mdc-button">Map</small>
                                         </button>
