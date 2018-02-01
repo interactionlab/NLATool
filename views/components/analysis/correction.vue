@@ -42,9 +42,6 @@
                 <!--</div>-->
 
             </div>
-         <div v-if="selectedtokens.length === 0">
-             <p>Select a word</p>
-         </div>
         </div>
 
     </div>
