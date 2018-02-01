@@ -68,6 +68,7 @@
                             v-bind:selectedchain="selectedChain"
                             v-bind:mentions="coref"
                             v-bind:showmode="showMode"
+                            v-bind:classestomark="classesToMark"
                             v-on:jumpmarktext="selectText2($event)"
                     >
                     </component>
@@ -91,7 +92,7 @@
             return {
                 analysisMode: 'analighter',
                 markermode: 'NE',
-                showMode: 'correction',
+                showMode: 'entitiesview',
                 researchmode: '',
                 classesToMark: {
                     coref: false,
