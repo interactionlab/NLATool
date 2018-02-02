@@ -54,28 +54,24 @@
                             v-on:click="setResearchMode('Info')">
                         <small class="mdc-button">Information</small>
                     </button>
-                    <!-- TODO add buttons if needed
-                                        <button class="mdl-button mdl-js-button">
-                                            <small class="mdc-button">Map</small>
-                                        </button>
-                                        <button class="mdl-button mdl-js-button">
-                                            <small class="mdc-button">Statistics</small>
-                                        </button>
-                                    </div>
-                    -->
-                    <div class="mdl-tabs__panel " id="notes-panel">
-                        <!--No Tab Value needed-->
-                        <button class="mdl-button mdl-js-button"
-                                v-on:click="toggleNoteMode">
-                            <small class="mdc-button">Word Notes</small>
-                        </button>
-                        <button class="mdl-button mdl-js-button"
-                                v-on:click="toggleNoteMode">
-                            <small class="mdc-button">Global Notes</small>
-                        </button>
-                    </div>
+                    <button class="mdl-button mdl-js-button">
+                        <small class="mdc-button">Map</small>
+                    </button>
+                </div>
+
+                <div class="mdl-tabs__panel " id="notes-panel">
+                    <!--No Tab Value needed-->
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Word Notes</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Global Notes</small>
+                    </button>
                 </div>
             </div>
+        </div>
         </div>
     </main>
 </template>
@@ -164,7 +160,7 @@
                     mode = 'MISC';
                     this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
-                if(mode == 'POS') {
+                if (mode == 'POS') {
                     mode = 'POS';
                     this.classesToMark.POS = !this.classesToMark.POS;
                 }
