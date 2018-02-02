@@ -166,13 +166,6 @@
                 },
                 deep: true
             },
-
-            researchmode: function (mode) {
-                //if (mode === 'Info') {
-                console.log('researchmode was changed to:' + mode);
-                this.searchGoogle('Taylor Swift');
-                //}
-            }
         },
         components: {
             researchresult
