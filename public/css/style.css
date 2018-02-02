@@ -66,6 +66,10 @@ pre {
     white-space: normal;
 }
 
+.specialBracket{
+    font-weight: bold;
+
+}
 /**Toggle Bottons */
 .activeButton {
     background: white;
@@ -138,11 +142,22 @@ pre {
 }
 .cSelectedReferent{
     background: yellow;
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid blue;
 }
 .nested{
     font-weight: bold;
 }
+.mentionBegin{
+    border-left: 2px solid red;
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+.mentionEnd{
+    border-right: 2px solid red;
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
 /** Button color */
 .mdc-button-container-fill-color {
     color: black;
