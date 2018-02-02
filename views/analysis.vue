@@ -238,16 +238,69 @@
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
                     console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    let priorisizedFound = false;
+                    let nested = false;
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                         for (let i = 0; i < this.coref[0].length; i++) {
+                            if (priorisizedFound) {
+                                break;
+                            }
                             if (newSelectedIndexes.start >= this.coref[0][i].startIndex
                                 && newSelectedIndexes.end <= this.coref[0][i].endIndex) {
-                                if (this.coref[0][i].representative === -1) {
-                                    this.selectedChain = this.coref[0][i].mentionID;
-                                    break;
-                                } else {
-                                    this.selectedChain = this.coref[0][i].representative;
-                                    break;
+                                for (let j = 0; j < this.nestedChains.fullyNested.length; j++) {
+                                    if (this.nestedChains.fullyNested[j].inner === this.coref[0][i].mentionID) {
+                                        if (this.coref[0][i].representative === -1) {
+                                            this.selectedChain = this.coref[0][i].mentionID;
+                                            priorisizedFound = true;
+                                            nested = true;
+                                            break;
+                                        } else {
+                                            this.selectedChain = this.coref[0][i].representative;
+                                            priorisizedFound = true;
+                                            nested = true;
+                                            break;
+                                        }
+                                    } else if (this.nestedChains.fullyNested[j].outer === this.coref[0][i].mentionID) {
+                                        if (this.coref[0][i].representative === -1) {
+                                            this.selectedChain = this.coref[0][i].mentionID;
+                                            nested = true;
+                                        } else {
+                                            this.selectedChain = this.coref[0][i].representative;
+                                            nested = true;
+                                        }
+                                    }
+                                }
+                                for (let j = 0; j < this.nestedChains.nested.length; j++) {
+                                    if (this.nestedChains.nested[j].second === this.coref[0][i].mentionID) {
+                                        if (this.coref[0][i].representative === -1) {
+                                            this.selectedChain = this.coref[0][i].mentionID;
+                                            priorisizedFound = true;
+                                            nested = true;
+                                            break;
+                                        } else {
+                                            this.selectedChain = this.coref[0][i].representative;
+                                            priorisizedFound = true;
+                                            nested = true;
+                                            break;
+                                        }
+                                    } else if (this.nestedChains.nested[j].first === this.coref[0][i].mentionID) {
+                                        if (this.coref[0][i].representative === -1) {
+                                            this.selectedChain = this.coref[0][i].mentionID;
+                                            nested = true;
+                                        } else {
+                                            this.selectedChain = this.coref[0][i].representative;
+                                            nested = true;
+                                        }
+                                    }
+                                }
+                                if (!nested) {
+                                    if (this.coref[0][i].representative === -1) {
+                                        this.selectedChain = this.coref[0][i].mentionID;
+                                        break;
+                                    } else {
+                                        this.selectedChain = this.coref[0][i].representative;
+                                        break;
+                                    }
                                 }
                             } else {
                                 this.selectedChain = -1;
