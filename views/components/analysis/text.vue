@@ -8,10 +8,10 @@
               v-bind:class="toHighlight">{{beginBrackets}}</span
         ><span class="nonPreAlt"
                v-bind:class="toHighlight">{{token.content}}</span
-        ><span class="nonPreAlt specialBracket"
-               v-bind:class="toHighlight">{{endBrackets}}</span
-        ><span class="preAlt "
-               v-bind:class="classToHighlightGap">{{getWordGap}}</span>
+    ><span class="nonPreAlt specialBracket"
+           v-bind:class="toHighlight">{{endBrackets}}</span
+    ><span class="preAlt "
+           v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
 </template>
 
@@ -168,29 +168,31 @@
                 let resultingBrackets = '';
                 let bracket = '[';
                 let nested = false;
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    if (this.index === this.mentions[0][i].startIndex+1) {
-                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
-                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
+                if (this.classestomark.coref) {
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (this.index === this.mentions[0][i].startIndex + 1) {
+                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
                             }
-                        }
-                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
-                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
+                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
                             }
-                        }
-                        if (!nested) {
-                            resultingBrackets = resultingBrackets + bracket;
-                            nested = false;
+                            if (!nested) {
+                                resultingBrackets = resultingBrackets + bracket;
+                                nested = false;
+                            }
                         }
                     }
                 }
@@ -200,29 +202,31 @@
                 let resultingBrackets = '';
                 let bracket = ']';
                 let nested = false;
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    if (this.index === this.mentions[0][i].endIndex) {
-                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
-                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
+                if (this.classestomark.coref) {
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (this.index === this.mentions[0][i].endIndex) {
+                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
                             }
-                        }
-                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
-                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = true;
+                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
                             }
-                        }
-                        if (!nested) {
-                            resultingBrackets = resultingBrackets + bracket;
-                            nested = false;
+                            if (!nested) {
+                                resultingBrackets = resultingBrackets + bracket;
+                                nested = false;
+                            }
                         }
                     }
                 }
