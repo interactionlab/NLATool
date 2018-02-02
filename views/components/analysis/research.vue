@@ -87,7 +87,6 @@
                         result: response.itemListElement[i],
                         matches: numberOfMatches[i]
                     });
-
                 }
                 console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
                 console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
