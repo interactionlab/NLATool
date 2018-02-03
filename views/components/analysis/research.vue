@@ -7,7 +7,8 @@
                    class="mdl-textfield__input"/>
         </div>
         <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div class="mdl-cell mdl-cell--12-col contentColor">
+        <div
+             class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
@@ -33,6 +34,9 @@
                 </div>
             </form>
         </div>
+        <component is="map">
+
+        </component>
     </div>
 </template>
 
@@ -40,6 +44,7 @@
     import researchresult from './components/analysis/researchresult.vue';
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     import filtertoken from './mixins/analysis/filtertoken.js';
+    import map from './components/analysis/map.vue';
 
     export default {
         mixins: [getselectedtext, filtertoken],
@@ -168,7 +173,8 @@
             },
         },
         components: {
-            researchresult
+            researchresult,
+            map
         }
     }
 </script>
