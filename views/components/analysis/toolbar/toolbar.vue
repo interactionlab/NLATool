@@ -177,12 +177,12 @@
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
             setResearchMode: function (mode) {
-                if (mode === 'info') {
+                if (mode == 'info') {
                     mode = 'activeButton';
                     this.researchModes.info = true;
                     this.researchModes.map = false;
                 }
-                else if (mode === 'map') {
+                else if (mode == 'map') {
                     mode = 'activeButton';
                     this.researchModes.map = true;
                     this.researchModes.info = false;
