@@ -25,7 +25,9 @@ module.exports = {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
                 if (tokens [i].semanticClass === semanticClass) {
+                    if(resultingtokens.indexOf(tokens[i].content === -1)){
                     resultingtokens.push(tokens [i]);
+                }
                 }
             }
             return resultingtokens;
