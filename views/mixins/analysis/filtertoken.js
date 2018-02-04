@@ -13,7 +13,9 @@ module.exports = {
                 j = tokens.length;
             }
             for (i; i < j; i++) {
-                if (tokens [i].semanticClass === token.semanticClass || tokens[i].pos === token.pos) {
+                if ((tokens [i].semanticClass === token.semanticClass
+                    || tokens[i].pos === token.pos)
+                    && tokens[i].offsetBegin !== token.offsetBegin) {
                     resultingtokens.push(tokens [i]);
                 }
             }
