@@ -54,7 +54,6 @@
                             v-on:click="setResearchMode('info')">
                         <small class="mdc-button">Information</small>
                     </button>
-
                     <button v-bind:class="{'activeButton': researchModes.map}"
                             class="mdl-button mdl-js-button"
                             v-on:click="setResearchMode('map')">
@@ -106,7 +105,7 @@
                     wordnote: true,
                     globalnote: false
                 },
-                researchModes:{
+                researchModes: {
                     info: true,
                     map: false
                 }
@@ -130,28 +129,28 @@
 
             allButton: function () {
 
-                if(this.allActive === false){
+                if (this.allActive === false) {
 
                     this.allActive = true;
 
-                if (this.classesToMark.PERSON === false) {
-                    this.changeMarkerMode('Person');
-                }
-                if (this.classesToMark.LOCATION === false) {
-                    this.changeMarkerMode('Location');
-                }
-                if (this.classesToMark.ORGANIZATION === false) {
-                    this.changeMarkerMode('Organization');
-                }
-                if (this.classesToMark.MISC === false) {
-                    this.changeMarkerMode('Misc');
-                }
+                    if (this.classesToMark.PERSON === false) {
+                        this.changeMarkerMode('Person');
+                    }
+                    if (this.classesToMark.LOCATION === false) {
+                        this.changeMarkerMode('Location');
+                    }
+                    if (this.classesToMark.ORGANIZATION === false) {
+                        this.changeMarkerMode('Organization');
+                    }
+                    if (this.classesToMark.MISC === false) {
+                        this.changeMarkerMode('Misc');
+                    }
 
-                this.classesToMark.PERSON = true;
-                this.classesToMark.LOCATION = true;
-                this.classesToMark.ORGANIZATION = true;
-                this.classesToMark.MISC = true;
-                }else{
+                    this.classesToMark.PERSON = true;
+                    this.classesToMark.LOCATION = true;
+                    this.classesToMark.ORGANIZATION = true;
+                    this.classesToMark.MISC = true;
+                } else {
                     this.changeMarkerMode('Person');
                     this.classesToMark.PERSON = false;
                     this.changeMarkerMode('Location');
