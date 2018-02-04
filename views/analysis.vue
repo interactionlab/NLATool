@@ -23,7 +23,7 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchrode="changeResearchMode($event)"
+                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)"
                 >
@@ -68,6 +68,7 @@
                             v-bind:selectedchain="selectedChain"
                             v-bind:mentions="coref"
                             v-bind:showmode="showMode"
+                            v-bind:classestomark="classesToMark"
                             v-on:jumpmarktext="selectText2($event)"
                     >
                     </component>
@@ -91,7 +92,7 @@
             return {
                 analysisMode: 'analighter',
                 markermode: 'NE',
-                showMode: 'correction',
+                showMode: 'entitiesview',
                 researchmode: '',
                 classesToMark: {
                     coref: false,
@@ -99,6 +100,7 @@
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
+                    POS: false
                 },
                 selectedtextindexes: {
                     start: -1,
@@ -132,7 +134,7 @@
             changeMarkerMode: function (mode) {
                 //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-                console.log('classesToMark: ' + JSON.stringify(mode[1]));
+              //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
             },
             test: function () {
@@ -142,7 +144,7 @@
                 if (correctionMode === true) {
                     this.showMode = 'correction';
                 } else {
-                    this.showMode = 'standardtable';
+                    this.showMode = 'entitiesview';
                 }
 
             },

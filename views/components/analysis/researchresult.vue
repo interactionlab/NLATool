@@ -32,6 +32,7 @@
                         </div>
                     </div>
 
+
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
@@ -97,7 +98,7 @@
                 hover: false,
                 index: this.index,
                 docid: this.docid,
-                showallon: false
+                showallon: this.showallon
             }
         },
         methods: {

@@ -104,7 +104,16 @@
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                htmlclass[this.token.pos] = this.classestomark[this.token.pos];
+
+                let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
+
+                if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
+
+                    htmlclass['POS'] = this.classestomark['POS'];
+                    //console.log(JSON.stringify(this.classestomark));
+                } else{
+                    //console.log("else" + JSON.stringify(this.classestomark));
+                }
                 return htmlclass
             },
             classToHighlightGap: function () {
