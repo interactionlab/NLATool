@@ -13,7 +13,9 @@ module.exports = {
                 j = tokens.length;
             }
             for (i; i < j; i++) {
-                if (tokens [i].semanticClass === token.semanticClass || tokens[i].pos === token.pos) {
+                if ((tokens [i].semanticClass === token.semanticClass
+                    || tokens[i].pos === token.pos)
+                    && tokens[i].offsetBegin !== token.offsetBegin) {
                     resultingtokens.push(tokens [i]);
                 }
             }
@@ -23,7 +25,9 @@ module.exports = {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
                 if (tokens [i].semanticClass === semanticClass) {
+                    if(resultingtokens.indexOf(tokens[i].content === -1)){
                     resultingtokens.push(tokens [i]);
+                }
                 }
             }
             return resultingtokens;

@@ -343,7 +343,7 @@ function getCorefStartIndex(input, chain, mention) {
     for (let i = 0; i < tempMention.sentNum()-1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
-    return stringifyForDB(textLengthToMention + tempMention.startIndex() - 1)
+    return stringifyForDB(textLengthToMention + tempMention.startIndex() - 1);
 }
 function getCorefEndIndex(input, chain, mention) {
     let tempMention = input.corefInfo[chain][mention];
@@ -351,7 +351,7 @@ function getCorefEndIndex(input, chain, mention) {
     for (let i = 0; i < tempMention.sentNum()-1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
-    return stringifyForDB(textLengthToMention + tempMention.endIndex() - 1)
+    return stringifyForDB(textLengthToMention + tempMention.endIndex() - 1);
 }
 
 
