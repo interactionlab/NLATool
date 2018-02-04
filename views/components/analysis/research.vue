@@ -34,9 +34,6 @@
                 </div>
             </form>
         </div>
-        <component is="map">
-
-        </component>
     </div>
 </template>
 
@@ -44,7 +41,6 @@
     import researchresult from './components/analysis/researchresult.vue';
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     import filtertoken from './mixins/analysis/filtertoken.js';
-    import map from './components/analysis/map.vue';
 
     export default {
         mixins: [getselectedtext, filtertoken],
@@ -173,8 +169,7 @@
             },
         },
         components: {
-            researchresult,
-            map
+            researchresult
         }
     }
 </script>
