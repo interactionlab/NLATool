@@ -3,7 +3,8 @@
         <component :is="showmode"
                    v-bind:tokens="tokens"
                    v-bind:selectedindexes="selectedindexes"
-                   v-bind:docid="docid">
+                   v-bind:docid="docid"
+                   v-bind:classestomark="classestomark">
 
         </component>
     </div>
@@ -21,7 +22,8 @@
             tokens: Array,
             selectedindexes: Object,
             showmode: String,
-            docid: String
+            docid: String,
+            classestomark: Object,
         },
         data: function () {
             return {
@@ -29,6 +31,7 @@
                 showmode: this.showmode,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,
+                classestomark: this.classestomark
             }
         },
         methods: {},

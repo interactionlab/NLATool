@@ -12,7 +12,7 @@
             <!--Tab values-->
             <div class="mdl-grid">
                 <div class="mdl-tabs__panel is-active " id="analysis-panel">
-                    <button v-on:click="allButton"
+                    <button v-on:click="allButton()"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ALL</small>
                     </button>
@@ -54,6 +54,7 @@
                             v-on:click="setResearchMode('info')">
                         <small class="mdc-button">Information</small>
                     </button>
+<<<<<<< HEAD
                     <button v-bind:class="{'activeButton': researchModes.map}"
                             class="mdl-button mdl-js-button"
                             v-on:click="setResearchMode('map')">
@@ -71,6 +72,28 @@
                             v-on:click="toggleNoteMode">
                         <small class="mdc-button">Global Notes</small>
                     </button>
+=======
+                    <!-- TODO: add buttons if needed
+                                        <button class="mdl-button mdl-js-button">
+                                            <small class="mdc-button">Map</small>
+                                        </button>
+                                        <button class="mdl-button mdl-js-button">
+                                            <small class="mdc-button">Statistics</small>
+                                        </button>
+                                    </div>
+                    -->
+                    <div class="mdl-tabs__panel " id="notes-panel">
+                        <!--No Tab Value needed-->
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleNoteMode">
+                            <small class="mdc-button">Word Notes</small>
+                        </button>
+                        <button class="mdl-button mdl-js-button"
+                                v-on:click="toggleNoteMode">
+                            <small class="mdc-button">Global Notes</small>
+                        </button>
+                    </div>
+>>>>>>> 417981d030d33ba18c31de823b3a49e32d332d73
                 </div>
             </div>
         </div>
@@ -93,6 +116,7 @@
                 selectedindexes:
                 this.selectedindexes,
                 correctionMode: false,
+                allActive: false,
                 classesToMark: {
                     PERSON: false,
                     LOCATION: false,
@@ -129,6 +153,10 @@
 
             allButton: function () {
 
+                if(this.allActive === false){
+
+                    this.allActive = true;
+
                 if (this.classesToMark.PERSON === false) {
                     this.changeMarkerMode('Person');
                 }
@@ -146,6 +174,18 @@
                 this.classesToMark.LOCATION = true;
                 this.classesToMark.ORGANIZATION = true;
                 this.classesToMark.MISC = true;
+                }else{
+                    this.changeMarkerMode('Person');
+                    this.classesToMark.PERSON = false;
+                    this.changeMarkerMode('Location');
+                    this.classesToMark.LOCATION = false;
+                    this.changeMarkerMode('Organization');
+                    this.classesToMark.ORGANIZATION = false;
+                    this.changeMarkerMode('Misc');
+                    this.classesToMark.MISC = false;
+
+                    this.allActive = false;
+                }
             },
 
             changeMarkerMode: function (mode) {
