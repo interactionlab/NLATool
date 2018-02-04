@@ -9,17 +9,7 @@
 
 <script>
     export default {
-        props:{
-
-        },
-        data:function () {
-            return{
-
-            }
-        },
-        methods:{
-
-        }
+        name: "map"
     }
 </script>
 

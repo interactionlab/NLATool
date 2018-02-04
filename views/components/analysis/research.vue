@@ -8,7 +8,7 @@
         </div>
         <!-- TODO remove Taylor Swift at the end. That is our default value -->
         <div
-             class="mdl-cell mdl-cell--12-col contentColor">
+                class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
@@ -139,7 +139,9 @@
                 this.selectedresult = this.researchresults[index];
             },
         },
-        computed: {},
+        computed: {
+
+        },
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
