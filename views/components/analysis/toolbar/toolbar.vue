@@ -49,31 +49,29 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button v-bind:class="{'activeButton': onOff}"
+                    <button v-bind:class="{'activeButton': researchModes.info}"
                             class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('Info')">
+                            v-on:click="setResearchMode('info')">
                         <small class="mdc-button">Information</small>
                     </button>
-                    <!-- TODO: add buttons if needed
-                                        <button class="mdl-button mdl-js-button">
-                                            <small class="mdc-button">Map</small>
-                                        </button>
-                                        <button class="mdl-button mdl-js-button">
-                                            <small class="mdc-button">Statistics</small>
-                                        </button>
-                                    </div>
-                    -->
-                    <div class="mdl-tabs__panel " id="notes-panel">
-                        <!--No Tab Value needed-->
-                        <button class="mdl-button mdl-js-button"
-                                v-on:click="toggleNoteMode">
-                            <small class="mdc-button">Word Notes</small>
-                        </button>
-                        <button class="mdl-button mdl-js-button"
-                                v-on:click="toggleNoteMode">
-                            <small class="mdc-button">Global Notes</small>
-                        </button>
-                    </div>
+
+                    <button v-bind:class="{'activeButton': researchModes.map}"
+                            class="mdl-button mdl-js-button"
+                            v-on:click="setResearchMode('map')">
+                        <small class="mdc-button">Map</small>
+                    </button>
+                </div>
+
+                <div class="mdl-tabs__panel " id="notes-panel">
+                    <!--No Tab Value needed-->
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Word Notes</small>
+                    </button>
+                    <button class="mdl-button mdl-js-button"
+                            v-on:click="toggleNoteMode">
+                        <small class="mdc-button">Global Notes</small>
+                    </button>
                 </div>
             </div>
         </div>
@@ -107,6 +105,10 @@
                 noteModes: {
                     wordnote: true,
                     globalnote: false
+                },
+                researchModes:{
+                    info: true,
+                    map: false
                 }
             }
         },
@@ -181,7 +183,7 @@
                     mode = 'MISC';
                     this.classesToMark.MISC = !this.classesToMark.MISC;
                 }
-                if(mode == 'POS') {
+                if (mode == 'POS') {
                     mode = 'POS';
                     this.classesToMark.POS = !this.classesToMark.POS;
                 }
@@ -191,28 +193,18 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            changeReseachButton: function (mode) {
-                if (mode == 'Info') {
-                    mode = 'activeButton';
-                    this.onOff.Info = !this.onOff.Map;
-                }
-                if (mode == 'Map') {
-                    mode = 'activeButton';
-                    this.onOff.Map = !this.onOff.Info;
-                }
-                else {
-                    if (mode == 'Info') {
-                        mode = !onOff;
-                    }
-                    if (mode == 'Map') {
-                        mode = !onOff;
-                    }
-                }
-            },
             setResearchMode: function (mode) {
-                this.onOff = !this.onOff;
-                console.log('got the Event:' + mode);
-                this.$emit('changeresearchrode', [mode]);
+                if (mode == 'info') {
+                    mode = 'activeButton';
+                    this.researchModes.info = true;
+                    this.researchModes.map = false;
+                }
+                else if (mode == 'map') {
+                    mode = 'activeButton';
+                    this.researchModes.map = true;
+                    this.researchModes.info = false;
+                }
+                this.$emit('changeresearchmode', [mode]);
             },
             setCorrectionMode: function () {
                 //TODO: proper check if on or off, when word is selected
@@ -226,8 +218,14 @@
                 this.noteModes.wordnote = !this.noteModes.wordnote;
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
+            },
+            toggleReseachMode: function () {
+                this.researchModes.onOffInfo = !this.researchModes.onOffInfo;
+                this.researchModes.onOffMap = !this.researchModes.onOffMap;
+            },
+            setMapMode: function () {
+                this.onOff = !this.onOff;
             }
         }
     }
-
 </script>

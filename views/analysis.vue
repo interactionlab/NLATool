@@ -23,7 +23,7 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchrode="changeResearchMode($event)"
+                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)"
                 >
