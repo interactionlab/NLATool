@@ -7,7 +7,8 @@
                    class="mdl-textfield__input"/>
         </div>
         <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div class="mdl-cell mdl-cell--12-col contentColor">
+        <div
+                class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
@@ -16,18 +17,18 @@
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
                                v-bind:dochid="docid"
-                               v-bind:showallon="true"
+                               v-bind:showallon="resultselected"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
                                v-else
-                               v-for="(researchresult,index) in researchresults[0].itemListElement"
+                               v-for="(researchresult,index) in researchresults"
                                v-bind:researchresult="researchresult"
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
                                v-bind:dochid="docid"
-                               v-bind:showallon="false"
+                               v-bind:showallon="resultselected"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -64,42 +65,51 @@
                 docid: this.docid,
                 keywords: this.keywords,
                 selectedchain: this.selectedchain,
-                mentions: this.mentions
+                mentions: this.mentions,
             }
         },
         methods: {
-            rerankWithKeywords: function () {
+            rerankWithKeywords: function (response) {
                 let tempresults = [];
                 let numberOfMatches = [];
-                console.log('Checkpoint 1' + JSON.stringify(this.researchresults[0].itemListElement));
-                for (let i = 0; i < this.researchresults[0].itemListElement.length; i++) {
-                    numberOfMatches.push({rank: i, matches: 0});
+                console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
+                for (let i = 0; i < response.itemListElement.length; i++) {
+                    numberOfMatches.push(0);
                     for (let j = 0; j < this.keywords.length; j++) {
                         try {
-                            if (this.researchresults[0].itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
-                                numberOfMatches[i].matches = numberOfMatches[i].matches + 1;
+                            if (response.itemListElement[i].result.detailedDescription.articleBody.indexOf(this.keywords[j].content) > -1) {
+                                numberOfMatches[i] = numberOfMatches[i] + 1;
                             }
                         } catch (err) {
                             console.log('Detailed Description: ' + err + i)
                         }
                     }
                     tempresults.push({
-                        result: this.researchresults[0].itemListElement[i],
-                        rank: i,
-                        matches: numberOfMatches[i].matches
+                        result: response.itemListElement[i],
+                        matches: numberOfMatches[i]
                     });
                 }
-                console.log('tempresults to sort: ' + JSON.stringify(tempresults));
-                let sortedResults = this.insertionSort(tempresults);
-                console.log('Sorted Results.' + JSON.stringify(sortedResults) + sortedResults.length);
+                console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
+                console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
+                numberOfMatches = this.insertionSort(numberOfMatches);
+                numberOfMatches.reverse();
+                console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
+                for (let i = 0; i < numberOfMatches.length; i++) {
+                    for (let j = 0; j < tempresults.length; j++) {
+                        if (numberOfMatches[i] === tempresults[j].matches) {
+                            this.researchresults.push(tempresults[j].result);
+                        }
+                    }
+                }
+                console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
             },
             insertionSort: function (items) {
-                for (let i = 1; i < items.length; i++) {
-                    let value = items[i].matches;
-                    for (var j = i - 1; j > -1 && items[j].matches > value; j--) {
+                for (let i = 0; i < items.length; i++) {
+                    let value = items[i];
+                    for (var j = i - 1; j > -1 && items[j] > value; j--) {
                         items[j + 1] = items[j];
                     }
-                    items[j + 1] = items[i];
+                    items[j + 1] = value;
                 }
                 return items;
             },
@@ -118,28 +128,19 @@
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
                     //console.log('Response for Research: ' + JSON.stringify(response));
-                    this.researchresults.pop();
-                    this.researchresults.push(response);
-                    rerankWithKeywors(this.researchresults, this.keywords);
+                    this.rerankWithKeywords(response);
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
             saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
-                console.log('selected Result is: ' + JSON.stringify(this.researchresults[0].itemListElement[index]) + index);
-                this.selectedresult = this.researchresults[0].itemListElement[index];
+                console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
+                this.selectedresult = this.researchresults[index];
             },
         },
         computed: {
-            representant: function () {
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    if(this.selectedchain === this.mentions[0][i].mentionID){
-                        this.selectedindexes.start = this.mentions[0][i].startIndex;
-                        this.selectedindexes.end = this.mentions[0][i].endIndex;
-                    }
-                }
-            }
+
         },
         watch: {
             selectedindexes: {
@@ -155,12 +156,19 @@
                 },
                 deep: true
             },
-            researchmode: function (mode) {
-                //if (mode === 'Info') {
-                console.log('researchmode was changed to:' + mode);
-                this.searchGoogle('Taylor Swift');
-                //}
-            }
+            selectedchain: {
+                handler: function (newselectedChain) {
+                    //console.log('Selected Chain1: '+newselectedChain);
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (newselectedChain === this.mentions[0][i].mentionID) {
+                            this.selectedindexes.start = this.mentions[0][i].startIndex;
+                            this.selectedindexes.end = this.mentions[0][i].endIndex;
+                        }
+                    }
+                    //console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
+                },
+                deep: true
+            },
         },
         components: {
             researchresult

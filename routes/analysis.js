@@ -42,7 +42,8 @@ let vueRenderOptions = {
     head: {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {script: 'https://code.jquery.com/jquery-3.2.1.min.js'}
+            {script: 'https://code.jquery.com/jquery-3.2.1.min.js'},
+
         ]
     }
 };
@@ -92,6 +93,9 @@ io.on('connection', function (socket) {
     socket.on('saveresult', function (index, researchresult, docID) {
         console.log('saved Result: ')
         wait.launchFiber(saveResult, index, researchresult, docID);
+    });
+    socket.on('changeClass', function (tokenToEdit, docID) {
+        wait.launchFiber(changeClass, tokenToEdit, docID);
     });
 });
 
@@ -144,6 +148,18 @@ function saveWordNote(note, docID, indexes) {
             ['docID', 'content', 'textIndex1', 'textIndex2'],
             [docID, note, indexes.start, indexes.end],
             null, null)));
+}
+
+function changeClass(tokenToEdit, docID) {
+    docID = stringifyForDB(docID);
+    let classUpdate = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createUpdateCommand('word',
+            ['semanticClass'],
+            [stringifyForDB(tokenToEdit.semanticClass)],
+            ['wordID'],
+            [stringifyForDB(tokenToEdit.wordID)],
+            ['=']
+        )));
 }
 
 /**
@@ -249,7 +265,7 @@ function getTextFromDB(docID) {
                 word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
                 //console.log(JSON.stringify(word));
                 textDB.tokens.push(word[0]);
-            }catch (err){
+            } catch (err) {
                 console.log(err);
             }
         } else {
