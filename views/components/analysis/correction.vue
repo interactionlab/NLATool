@@ -1,29 +1,49 @@
 <template>
     <div>
-        <div v-for="token in tokens">
-            <p>{{token.content}}</p>
-            <p v-on:click="showClasses">{{token.semanticClass}}</p>
-            <div v-if="showNewClasses">
-                <button v-bind:class="{PERSON: classesToMark.PERSON}"
-                        v-on:click="changeClass(PERSON)"
+        <div v-if="selectedtokens.length !== 0" class="mdl-grid">
+            <p class="mdl-cell mdl-cell--4-col" v-bind:class="semclassofselected">{{selectedtokens[0].content}}</p>
+            <p class="mdl-cell mdl-cell--6-col">Current Class: {{selectedtokens[0].semanticClass}}</p>
+            <div>
+                <p class="mdl-cell mdl-cell--6-col">Make a selection: </p>
+                <button v-bind:class="{PERSON: true}"
+                        v-on:click="changeClass('PERSON')"
                         class="mdl-button mdl-js-button">
-                    <small class="mdc-button">PERSONS</small>
+                    <small class="mdc-button">PERSON</small>
                 </button>
-                <button v-bind:class="{LOCATION: classesToMark.LOCATION}"
+                <button v-bind:class="{LOCATION: true}"
+                        v-on:click="changeClass('LOCATION')"
                         class="mdl-button mdl-js-button">
                     <small class="mdc-button">LOCATION</small>
                 </button>
-                <button v-bind:class="{ORGANIZATION: classesToMark.ORGANIZATION}"
-                        class="mdl-button mdl-js-button">
+                <button v-bind:class="{ORGANIZATION: true}"
+                        class="mdl-button mdl-js-button"
+                        v-on:click="changeClass('ORGANIZATION')">
                     <small class="mdc-button">ORGANIZATION</small>
                 </button>
-                <button v-bind:class="{MISC: classesToMark.MISC}"
-                        class="mdl-button mdl-js-button">
+                <button v-bind:class="{MISC: true}"
+                        class="mdl-button mdl-js-button"
+                        v-on:click="changeClass('MISC')">
                     <small class="mdc-button">MISC</small>
                 </button>
-            </div>
+                <button v-bind:class="{POS: true}"
+                        class="mdl-button mdl-js-button"
+                        v-on:click="changeClass('O')">
+                    <small class="mdc-button">Discard class</small>
+                </button>
 
+                <p class="mdl-cell mdl-cell--6-col">Or select a <span v-bind:class="{POS:true}">suggested</span> word</p>
+
+                <!--<div class="mdc-switch contentColor" style="border: white 2px">-->
+                    <!--<input v-on:click="toggleSuggestions()" type="checkbox" id="basic-switch" class="mdc-switch__native-control" />-->
+                    <!--<div class="mdc-switch__background">-->
+                        <!--<div class="mdc-switch__knob"></div>-->
+                    <!--</div>-->
+                <!--<label for="basic-switch" class="mdc-switch-label">Show suggestions</label>-->
+                <!--</div>-->
+
+            </div>
         </div>
+
     </div>
 
 </template>
@@ -34,24 +54,61 @@
         mixins: [getselectedtext],
         props: {
             tokens: Array,
-            selectedindexes: Object
+            selectedindexes: Object,
+            docid: String,
         },
         data: function () {
-            return{
+            return {
                 showNewClasses: false,
                 tokens: this.tokens,
-                selectedindexes: this.selectedindexes
+                selectedtokens: [],
+                selectedindexes: this.selectedindexes,
+                classesPerToken: [],
+                index: 0,
+                docid: this.docid,
+                suggestions: false
             }
 
         },
-        methods:{
-            showClasses: function () {
-                this.showNewClasses = !this.showNewClasses;
+        watch: {
+            selectedindexes: {
+                handler: function (newselectedindexes) {
+                    this.selectedtokens =
+                        this.gettokensofselectedtext(this.tokens, newselectedindexes);
+                    for(let i = 0; i < this.selectedtokens.length; i++){
+                        this.classesPerToken[i] = false;
+                    }
+                },
+                deep: true
+            }
+        },
+        computed:{
+            shownclassespertoken:function () {
+                console.log('Checkpoint shownclassespertoken: ');
+                return this.classesPerToken[this.index];
+            },
+            semclassofselected: function () {
+                let tokenClass = {};
+                tokenClass[this.selectedtokens[0].semanticClass] = true;
+                return tokenClass;
+            }
+        },
+        methods: {
+            showClasses: function (index) {
+                console.log('Index for shown classes: '+index);
+                this.index = index;
+                this.classesPerToken[index] = !this.classesPerToken[index];
             },
             changeClass: function (newClass) {
-                for(let token in this.tokens){
-                    console.log(token + "gets class" + newClass);
-                }
+                console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " now is " + newClass);
+                this.selectedtokens[0].semanticClass = newClass;
+                let socket = io('http://localhost:8080');
+                socket.emit('changeClass', this.selectedtokens[0], this.docid);
+            },
+            toggleSuggestions: function () {
+                this.suggestions = !this.suggestions;
+                console.log("Sugg" + this.suggestions);
+                this.$emit('toggleSuggestions', this.suggestions);
             }
         }
     }
