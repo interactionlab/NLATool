@@ -1,19 +1,26 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-
         <main class="mdl-layout__content contentColor separate">
             <div class="mdl-grid">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
+
+                    <google-map name="example"></google-map>
+
+
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
 
-                        <div cass="mdl-cell mdl-cell--12-col">
+                        <div v-if="!showmap" class="mdl-cell mdl-cell--12-col">
                             <img v-if="typeof researchresult.result.image !== 'undefined'"
                                  v-bind:src="researchresult.result.image.contentUrl"/>
+                        </div>
+
+                        <div v-else class="mdl-cell mdl-cell--12-col">
+                            <googlemap name="example"> </googlemap>
                         </div>
 
                         <div class="mdl-cell mdl-cell--12-col"
@@ -82,6 +89,7 @@
 </template>
 
 <script>
+    import googlemap from './components/analysis/googlemap.vue';
     export default {
         props: {
             researchresult: Object,
@@ -92,6 +100,7 @@
         },
         data: function () {
             return {
+                showmap: true,
                 everythingshow: true,
                 researchresult: this.researchresult,
                 researchresults: this.researchresults,
@@ -119,6 +128,9 @@
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
             }
+        },
+        components: {
+            googlemap
         }
     }
 </script>
