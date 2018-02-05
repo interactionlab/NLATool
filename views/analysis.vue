@@ -186,8 +186,6 @@
                     nested: []
                 };
                 try {
-                    console.log('Trying to find nested coref Chains:');
-
                     for (let i = 0; i < this.coref[0].length; i++) {
                         for (let j = i + 1; j < this.coref[0].length - (i + 1); j++) {
                             if (this.coref[0][i].startIndex >= this.coref[0][j].startIndex
@@ -198,14 +196,12 @@
                                         inner: this.coref[0][i].mentionID,
                                         outer: this.coref[0][j].mentionID
                                     });
-                                    console.log('Found one!');
                                 } else {
                                     // i Mention starts after j Mention starts
                                     nestedMentions.nested.push({
                                         first: this.coref[0][j].mentionID,
                                         second: this.coref[0][i].mentionID
                                     });
-                                    console.log('Found 2!');
                                 }
                             } else if (this.coref[0][j].startIndex >= this.coref[0][i].startIndex
                                 && this.coref[0][j].startIndex <= this.coref[0][i].endIndex) {
@@ -215,14 +211,12 @@
                                         inner: this.coref[0][j].mentionID,
                                         outer: this.coref[0][i].mentionID
                                     });
-                                    console.log('Found 3!' + i + ':' + j);
                                 } else {
                                     // j Mention starts after i Mention starts
                                     nestedMentions.nested.push({
                                         first: this.coref[0][i].mentionID,
                                         second: this.coref[0][j].mentionID
                                     });
-                                    console.log('Found 4!' + i + ':' + j);
                                 }
                             }
                         }
