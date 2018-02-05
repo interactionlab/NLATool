@@ -6,12 +6,12 @@
                    v-model="selectedtext"
                    class="mdl-textfield__input"/>
         </div>
-        <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div
-                class="mdl-cell mdl-cell--12-col contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
+                    <div class="google-map" :id="googlemap"></div>
+
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
@@ -43,6 +43,13 @@
     import filtertoken from './mixins/analysis/filtertoken.js';
 
     export default {
+        name: 'google-map',
+        props: ['name'],
+        data: function () {
+            return {
+                googlemap: this.name + "-map",
+            }
+        },
         mixins: [getselectedtext, filtertoken],
         props: {
             researchmode: String,
