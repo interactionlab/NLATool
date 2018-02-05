@@ -43,6 +43,7 @@ let vueRenderOptions = {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://code.jquery.com/jquery-3.2.1.min.js'},
+            {script: 'src=”https://maps.googleapis.com/maps/api/js?key=AIzaSyCILXEEId8MKt4qxS7V-XACNfyxUSgrdPk'}
 
         ]
     }
