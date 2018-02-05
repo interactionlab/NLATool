@@ -10,7 +10,6 @@
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
-                    <div class="google-map" :id="googlemap"></div>
 
                     <component is="researchresult"
                                v-if="resultselected"
@@ -43,13 +42,7 @@
     import filtertoken from './mixins/analysis/filtertoken.js';
 
     export default {
-        name: 'google-map',
-        props: ['name'],
-        data: function () {
-            return {
-                googlemap: this.name + "-map",
-            }
-        },
+
         mixins: [getselectedtext, filtertoken],
         props: {
             researchmode: String,
