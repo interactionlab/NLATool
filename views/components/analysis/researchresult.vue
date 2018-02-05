@@ -6,36 +6,37 @@
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
 
-                    <google-map name="example"></google-map>
+                    <component is="googlemap" v-bind:name="index"></component>
 
 
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
+                        <div class="mdl-grid" v-if="typeof researchresult.result !== 'undefined' ">
+                            <div v-if="!showmap" class="mdl-cell mdl-cell--12-col">
+                                <img v-if="typeof researchresult.result.image !== 'undefined'"
+                                     v-bind:src="researchresult.result.image.contentUrl"/>
+                            </div>
 
-                        <div v-if="!showmap" class="mdl-cell mdl-cell--12-col">
-                            <img v-if="typeof researchresult.result.image !== 'undefined'"
-                                 v-bind:src="researchresult.result.image.contentUrl"/>
-                        </div>
+                            <div v-else class="mdl-cell mdl-cell--12-col">
+                                <googlemap name="example"></googlemap>
+                            </div>
 
-                        <div v-else class="mdl-cell mdl-cell--12-col">
-                            <googlemap name="example"> </googlemap>
-                        </div>
+                            <div class="mdl-cell mdl-cell--12-col"
+                                 v-if="typeof researchresult.result !== 'undefined'">
+                                {{researchresult.result.name}}
+                            </div>
 
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result !== 'undefined'">
-                            {{researchresult.result.name}}
-                        </div>
+                            <div class="mdl-cell mdl-cell--12-col"
+                                 v-if="typeof researchresult.result.description !== 'undefined'">
+                                {{researchresult.result.description.articleBody}}
+                            </div>
 
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result.description !== 'undefined'">
-                            {{researchresult.result.description.articleBody}}
-                        </div>
-
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                            {{researchresult.result.detailedDescription.articleBody}}
+                            <div class="mdl-cell mdl-cell--12-col"
+                                 v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                {{researchresult.result.detailedDescription.articleBody}}
+                            </div>
                         </div>
                     </div>
 
@@ -90,6 +91,7 @@
 
 <script>
     import googlemap from './components/analysis/googlemap.vue';
+
     export default {
         props: {
             researchresult: Object,
