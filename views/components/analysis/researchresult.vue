@@ -6,40 +6,36 @@
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
 
-                    <component is="googlemap" v-bind:name="index"></component>
-
-
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
                         <div class="mdl-grid" v-if="typeof researchresult.result !== 'undefined' ">
-                            <div v-if="!showmap" class="mdl-cell mdl-cell--12-col">
+
+                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col graybox">
                                 <img v-if="typeof researchresult.result.image !== 'undefined'"
                                      v-bind:src="researchresult.result.image.contentUrl"/>
                             </div>
 
-                            <div v-else class="mdl-cell mdl-cell--12-col">
-                                <googlemap name="example"></googlemap>
+                            <div v-else class="mdl-cell mdl-cell--4-col graybox">
+                                <component is="googlemap" v-bind:name="index"></component>
                             </div>
 
-                            <div class="mdl-cell mdl-cell--12-col"
-                                 v-if="typeof researchresult.result !== 'undefined'">
-                                {{researchresult.result.name}}
-                            </div>
 
-                            <div class="mdl-cell mdl-cell--12-col"
-                                 v-if="typeof researchresult.result.description !== 'undefined'">
-                                {{researchresult.result.description.articleBody}}
-                            </div>
+                            <div class="mdl-cell mdl-cell--8-col">
+                                <div v-if="typeof researchresult.result !== 'undefined'">
+                                    {{researchresult.result.name}}
+                                </div>
+                                <div v-if="typeof researchresult.result.description !== 'undefined'">
+                                    {{researchresult.result.description.articleBody}}
+                                </div>
 
-                            <div class="mdl-cell mdl-cell--12-col"
-                                 v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                {{researchresult.result.detailedDescription.articleBody}}
+                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                    {{researchresult.result.detailedDescription.articleBody}}
+                                </div>
                             </div>
                         </div>
                     </div>
-
 
                     <div class="mdl-grid">
                         <div class="mdl-cell mdl-cell--2-col">
@@ -68,7 +64,7 @@
                         </div>
                         <div class="mdl-cell mdl-cell--12-col"
                              v-if="typeof researchresult.result.description !== 'undefined'">
-                            {{researchresult.result.description}}
+                            {{researchresult.result.description.articleBody}}
                         </div>
                     </div>
                     <div class="mdl-grid">
@@ -102,7 +98,7 @@
         },
         data: function () {
             return {
-                showmap: true,
+                showimage: false,
                 everythingshow: true,
                 researchresult: this.researchresult,
                 researchresults: this.researchresults,
