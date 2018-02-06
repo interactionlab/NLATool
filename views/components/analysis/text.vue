@@ -4,10 +4,14 @@
           v-on:mouseup="endSelection"
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
-        <span class="nonPreAlt"
-              v-bind:class="toHighlight">{{token.content}}</span
-        ><span class="preAlt"
-               v-bind:class="classToHighlightGap">{{getWordGap}}</span>
+        <span class="nonPreAlt specialBracket"
+              v-bind:class="toHighlight">{{beginBrackets}}</span
+        ><span class="nonPreAlt"
+               v-bind:class="toHighlight">{{token.content}}</span
+    ><span class="nonPreAlt specialBracket"
+           v-bind:class="toHighlight">{{endBrackets}}</span
+    ><span class="preAlt "
+           v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
 </template>
 
@@ -23,7 +27,8 @@
             selectedindexes: Object,
             hoveredchain: Number,
             selectedchain: Number,
-            nestedmentions: Object
+            nestedmentions: Object,
+            endOfMentions: Object
         },
         data: function () {
             return {
@@ -38,7 +43,9 @@
                 tohover: false,
                 hoveredchain: this.hoveredchain,
                 selectedchain: this.selectedchain,
-                nestedmentions: this.nestedmentions
+                nestedmentions: this.nestedmentions,
+                color: this.color,
+                endOfMentions: this.endOfMentions
             }
         },
         computed: {
@@ -165,6 +172,143 @@
                     console.log('Got out of the array' + err);
                 }
                 return htmlclass;
+            },
+            beginBrackets: function () {
+                let resultingBrackets = '';
+                let bracket = '[';
+                let nested = false;
+                if (this.classestomark.coref) {
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (this.index === this.mentions[0][i].startIndex + 1) {
+                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
+                            }
+                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
+                            }
+                            if (!nested) {
+                                resultingBrackets = resultingBrackets + bracket;
+                                nested = false;
+                            }
+                        }
+                    }
+                }
+                return resultingBrackets;
+            },
+            endBrackets: function () {
+                let resultingBrackets = '';
+                let bracket = ']';
+                let nested = false;
+                if (this.classestomark.coref) {
+                    for (let i = 0; i < this.mentions[0].length; i++) {
+                        if (this.index === this.mentions[0][i].endIndex) {
+                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
+                            }
+                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                    resultingBrackets = resultingBrackets + bracket;
+                                    nested = true;
+                                }
+                            }
+                            if (!nested) {
+                                resultingBrackets = resultingBrackets + bracket;
+                                nested = false;
+                            }
+                        }
+                    }
+                }
+                return resultingBrackets;
+            },
+            mentionBoundaries: function () {
+                let color = ['red', 'blue', 'green', 'yellow', 'violet', 'lightPink', 'grey', 'orange', 'Chocolate'];
+                let style = [];
+
+                let nested = false;
+                let shadowLeft = [];
+                let shadowRight = [];
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    if (this.index === this.mentions[0][i].startIndex) {
+                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                shadowLeft.push('0 0 0 1px black');
+                                shadowLeft.push('0 0 0 1px white');
+                                nested = true;
+                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                shadowLeft.push('0 0 0 1px black');
+                                nested = true;
+                            }
+                        }
+                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                shadowLeft.push('0 0 0 1px black');
+                                nested = true;
+                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                shadowLeft.push('0 0 0 1px black');
+                                nested = true;
+                            }
+                        }
+                        if (!nested) {
+                            shadowLeft.push('0 0 0 1px black');
+                            nested = false;
+                        }
+                    } else if (this.index === this.mentions[0][i].endIndex) {
+                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
+                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
+                                shadowRight.push('0 0 0 1px black');
+                                shadowRight.push('0 0 0 1px white');
+                                nested = true;
+                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
+                                shadowRight.push('0 0 0 1px black');
+                                nested = true;
+                            }
+                        }
+                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
+                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
+                                shadowRight.push('0 0 0 1px black');
+                                nested = true;
+                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
+                                shadowRight.push('0 0 0 1px black');
+                                nested = true;
+                            }
+                        }
+                        if (!nested) {
+                            shadowRight.push('0 0 0 1px black');
+                            nested = false;
+                        }
+                    }
+                }
+                style.push({'border-bottom-left-radius': '2px'});
+                style.push({'border-top-left-radius': '2px'});
+                style.push({'border-bottom-right-radius': '2px'});
+                style.push({'border-top-right-radius': '2px'});
+                //console.log('Joined shadows'+shadowLeft.join(', '));
+                style.push({'box-shadow': shadowLeft.join(', ')});
+                style.push({'box-shadow': shadowRight.join(', ')});
+                console.log('style for borders: ' + JSON.stringify(style));
+                return style;
+
             },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
