@@ -24,6 +24,9 @@
                             <div class="mdl-cell mdl-cell--8-col">
                                 <div v-if="typeof researchresult.result !== 'undefined'">
                                     {{researchresult.result.name}}
+                                    <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                                        <i class="material-icons">edit</i>
+                                    </button>
                                 </div>
                                 <div v-if="typeof researchresult.result.description !== 'undefined'">
                                     {{researchresult.result.description.articleBody}}
