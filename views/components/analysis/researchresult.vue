@@ -21,7 +21,6 @@
                                 <component is="googlemap" v-bind:name="index"></component>
                             </div>
 
-
                             <div class="mdl-cell mdl-cell--8-col">
                                 <div v-if="typeof researchresult.result !== 'undefined'">
                                     {{researchresult.result.name}}
