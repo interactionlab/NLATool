@@ -2,7 +2,7 @@
 
     <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content contentColor separate">
-            <div class="mdl-grid">
+            <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
 
@@ -10,8 +10,9 @@
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
-                        <div class="mdl-grid" v-if="typeof researchresult.result !== 'undefined' ">
-                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col">
+                        <div class="mdl-grid deleteSpaces"
+                             v-if="typeof researchresult.result !== 'undefined' ">
+                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col graybox">
                                 <img v-if="typeof researchresult.result.image !== 'undefined'"
                                      v-bind:src="researchresult.result.image.contentUrl"/>
                             </div>
@@ -20,12 +21,12 @@
                                 <component is="googlemap" v-bind:name="index"></component>
                             </div>
 
-                            <div class="mdl-grid mdl-cell mdl-cell--8-col">
-                                <div class="mdl-cell mdl-cell--10-col"
+                            <div class="mdl-grid mdl-cell mdl-cell--8-col deleteSpaces">
+                                <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
                                     {{researchresult.result.name}}
                                 </div>
-                                <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                                <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
                                     <i class="material-icons">edit</i>
                                 </button>
                             </div>
@@ -44,7 +45,7 @@
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
                                     v-on:click="saveResult">
-                                <b class="mdc-button">Save</b>
+                                <b class="mdc-button" >Save</b>
                             </button>
                         </div>
                         <div class="mdl-cell mdl-cell--2-col">
@@ -55,6 +56,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="mdl-cell mdl-cell--12-col"
                      v-else>
                     <div v-bind:class="{researchresulthover: hover}"
@@ -70,14 +72,16 @@
                             {{researchresult.result.description.articleBody}}
                         </div>
                     </div>
-                    <div class="mdl-grid">
+                    <div class="mdl-grid" style="margin: 0px">
                         <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button" v-on:click="saveResult">
+                            <button class="mdl-button mdl-js-button"
+                                    v-on:click="saveResult">
                                 <b class="mdc-button">Save</b>
                             </button>
                         </div>
                         <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button" v-on:click="showallresults">
+                            <button class="mdl-button mdl-js-button"
+                                    v-on:click="showallresults">
                                 <b class="mdc-button">Show All</b>
                             </button>
                         </div>
