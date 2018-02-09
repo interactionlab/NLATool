@@ -11,30 +11,31 @@
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
                         <div class="mdl-grid" v-if="typeof researchresult.result !== 'undefined' ">
-
-                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col graybox">
+                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col">
                                 <img v-if="typeof researchresult.result.image !== 'undefined'"
                                      v-bind:src="researchresult.result.image.contentUrl"/>
                             </div>
 
-                            <div v-else class="mdl-cell mdl-cell--4-col graybox">
+                            <div v-else class="mdl-cell mdl-cell--4-col">
                                 <component is="googlemap" v-bind:name="index"></component>
                             </div>
 
-                            <div class="mdl-cell mdl-cell--8-col">
-                                <div v-if="typeof researchresult.result !== 'undefined'">
+                            <div class="mdl-grid mdl-cell mdl-cell--8-col">
+                                <div class="mdl-cell mdl-cell--10-col"
+                                     v-if="typeof researchresult.result !== 'undefined'">
                                     {{researchresult.result.name}}
-                                    <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-                                        <i class="material-icons">edit</i>
-                                    </button>
                                 </div>
-                                <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                    {{researchresult.result.description.articleBody}}
-                                </div>
+                                <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                            </div>
 
-                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                    {{researchresult.result.detailedDescription.articleBody}}
-                                </div>
+                            <div v-if="typeof researchresult.result.description !== 'undefined'">
+                                {{researchresult.result.description.articleBody}}
+                            </div>
+
+                            <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                {{researchresult.result.detailedDescription.articleBody}}
                             </div>
                         </div>
                     </div>
