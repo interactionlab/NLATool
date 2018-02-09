@@ -26,7 +26,8 @@
                                      v-if="typeof researchresult.result !== 'undefined'">
                                     {{researchresult.result.name}}
                                 </div>
-                                <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
+                                <div class="mdl-layout-spacer"></div>
+                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
                                     <i class="material-icons">edit</i>
                                 </button>
                             </div>
