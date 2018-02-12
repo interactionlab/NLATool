@@ -66,6 +66,7 @@
                 keywords: this.keywords,
                 selectedchain: this.selectedchain,
                 mentions: this.mentions,
+                mapcoordinates: []
             }
         },
         methods: {
@@ -138,6 +139,19 @@
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
                 this.selectedresult = this.researchresults[index];
             },
+            getMapCoordinates: function(){
+                let service_url = 'https://www.gps-coordinates.net/api/';
+
+                for(let i = 0; i < this.researchresults.length; i ++){
+                    service_url = service_url + this.researchresults[i].name;
+                    $.getJSON(service_url, (response) => {}).done((response)=> {
+                        console.log('Coordinates: '+response);
+                        this.mapcoordinates.push({x:response.latitude, y: response.longitude});
+                    })
+
+                }
+
+            }
         },
         computed: {
 
