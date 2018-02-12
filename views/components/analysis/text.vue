@@ -48,6 +48,7 @@
                 endOfMentions: this.endOfMentions
             }
         },
+
         computed: {
             tobejumped: function () {
                 if (this.index === this.selectedindexes.start) {
@@ -111,7 +112,7 @@
 
                     htmlclass['POS'] = this.classestomark['POS'];
                     //console.log(JSON.stringify(this.classestomark));
-                } else{
+                } else {
                     //console.log("else" + JSON.stringify(this.classestomark));
                 }
                 return htmlclass
@@ -336,6 +337,7 @@
             }
         },
         methods: {
+
             checkIfNested: function () {
                 for (let i = 0; i < this.nestedmentions.fullyNested.length; i++) {
                     for (let j = 0; j < this.mentions[0].length; j++) {
