@@ -54,11 +54,6 @@
                             v-on:click="setResearchMode('info')">
                         <small class="mdc-button">Information</small>
                     </button>
-                    <button v-bind:class="{'activeButton': researchModes.map}"
-                            class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('map')">
-                        <small class="mdc-button">Map</small>
-                    </button>
                 </div>
 
                 <div class="mdl-tabs__panel " id="notes-panel">
@@ -106,8 +101,7 @@
                     globalnote: false
                 },
                 researchModes: {
-                    info: true,
-                    map: false
+                    info: true
                 }
             }
         },
@@ -196,12 +190,6 @@
                 if (mode == 'info') {
                     mode = 'activeButton';
                     this.researchModes.info = true;
-                    this.researchModes.map = false;
-                }
-                else if (mode == 'map') {
-                    mode = 'activeButton';
-                    this.researchModes.map = true;
-                    this.researchModes.info = false;
                 }
                 this.$emit('changeresearchmode', [mode]);
             },
@@ -220,10 +208,6 @@
             },
             toggleReseachMode: function () {
                 this.researchModes.onOffInfo = !this.researchModes.onOffInfo;
-                this.researchModes.onOffMap = !this.researchModes.onOffMap;
-            },
-            setMapMode: function () {
-                this.onOff = !this.onOff;
             }
         }
     }
