@@ -17,6 +17,7 @@
                                v-bind:index="selectedindex"
                                v-bind:dochid="docid"
                                v-bind:showallon="resultselected"
+                               v-bind:mapcoordinates="mapcoordinates"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -28,6 +29,7 @@
                                v-bind:researchresults="researchresults"
                                v-bind:dochid="docid"
                                v-bind:showallon="resultselected"
+                               v-bind:mapcoordinates="mapcoordinates"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -130,6 +132,7 @@
                 }).done((response) => {
                     //console.log('Response for Research: ' + JSON.stringify(response));
                     this.rerankWithKeywords(response);
+                    this.getMapCoordinates();
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
@@ -139,23 +142,20 @@
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
                 this.selectedresult = this.researchresults[index];
             },
-            getMapCoordinates: function(){
+            getMapCoordinates: function () {
                 let service_url = 'https://www.gps-coordinates.net/api/';
 
-                for(let i = 0; i < this.researchresults.length; i ++){
+                for (let i = 0; i < this.researchresults.length; i++) {
                     service_url = service_url + this.researchresults[i].name;
-                    $.getJSON(service_url, (response) => {}).done((response)=> {
-                        console.log('Coordinates: '+response);
-                        this.mapcoordinates.push({x:response.latitude, y: response.longitude});
-                    })
-
+                    xhttp.open("GET", service_url, true);
+                    xhttp.send();
+                    xhttp.responseText;
+                    console.log("Get MapURL respinse: " + xhttp.responseText);
+                    this.mapcoordinates.push({x: response.latitude, y: response.longitude});
                 }
-
             }
         },
-        computed: {
-
-        },
+        computed: {},
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
@@ -172,14 +172,12 @@
             },
             selectedchain: {
                 handler: function (newselectedChain) {
-                    //console.log('Selected Chain1: '+newselectedChain);
                     for (let i = 0; i < this.mentions[0].length; i++) {
                         if (newselectedChain === this.mentions[0][i].mentionID) {
                             this.selectedindexes.start = this.mentions[0][i].startIndex;
                             this.selectedindexes.end = this.mentions[0][i].endIndex;
                         }
                     }
-                    //console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
                 },
                 deep: true
             },

@@ -18,7 +18,9 @@
                             </div>
 
                             <div v-else class="mdl-cell mdl-cell--4-col">
-                                <component is="googlemap" v-bind:name="index"></component>
+                                <component is="googlemap"
+                                           v-bind:mapcoordinates="mapcoordinates"
+                                           v-bind:index="index"></component>
                             </div>
 
                             <div class="mdl-grid mdl-cell mdl-cell--8-col deleteSpaces">
@@ -102,7 +104,8 @@
             researchresults: Object,
             index: Number,
             docid: Number,
-            showallon: Boolean
+            showallon: Boolean,
+            mapcoordinates: Array
         },
         data: function () {
             return {
@@ -113,7 +116,8 @@
                 hover: false,
                 index: this.index,
                 docid: this.docid,
-                showallon: this.showallon
+                showallon: this.showallon,
+                mapcoordinates: this.mapcoordinates
             }
         },
         methods: {
