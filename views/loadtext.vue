@@ -13,16 +13,6 @@
             <form action="/loadWrittenText" method="post">
 
                 <div class="mdl-grid">
-                    <!-- Buttons for localisation-->
-                    <div class="mdl-cell mdl-cell--10-col" style="text-align: right">
-                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageEnglish">
-                            <b class="mdc-button">English</b>
-                        </button>
-
-                        <button class="mdl-button mdl-js-button" v-on:click="setLanguageGerman">
-                            <b class="mdc-button">German</b>
-                        </button>
-                    </div>
                     <!-- Textfield for title-->
                     <div class="mdl-grid mdl-cell mdl-cell--6-col">
                         <div class="mdl-layout-spacer"></div>
@@ -74,19 +64,8 @@
             headernavbar,
 
         }, methods: {
-            //TODO: toggling in forms shows differes as usual
             toggleOnOff: function () {
                 this.onOff = !this.onOff;
-            },
-            setLanguageGerman: function () {
-                console.log('Set lang to German');
-                let socket = io('http://localhost:8090');
-                socket.emit('setLanguage', 'German');
-            },
-            setLanguageEnglish: function () {
-                console.log('Set lang to English');
-                let socket = io('http://localhost:8090');
-                socket.emit('setLanguage', 'English');
             }
         }
     }
