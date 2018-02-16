@@ -15,7 +15,7 @@
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
-                               v-bind:dochid="docid"
+                               v-bind:docid="docid"
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
                                v-on:showallresults="switchresearchselected">
@@ -27,7 +27,7 @@
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
-                               v-bind:dochid="docid"
+                               v-bind:docid="docid"
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
                                v-on:saveresult="saveResult($event)">
