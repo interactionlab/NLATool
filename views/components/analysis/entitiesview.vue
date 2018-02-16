@@ -1,31 +1,41 @@
 <template>
     <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.PERSON === true">
-            <dl>
-                <dt>PERSON</dt>
-                <dd v-for="key in this.persons"><span v-bind:class="{PERSON:true}">{{key.content}}</span></dd>
-            </dl>
+            <span>PERSON</span>
+            <ul class="demo-list-item mdl-list" v-for="key in this.persons">
+                <span class="mdl-list__item-primary-content" v-bind:class="{PERSON:true}">
+                    {{key.content}}
+                </span>
+            </ul>
         </div>
+
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.LOCATION === true">
-            <dl>
-                <dt>LOCATION</dt>
-                <dd v-for="key in this.locations"><span v-bind:class="{LOCATION:true}">{{key.content}}</span></dd>
-            </dl>
+            <span>LOCATION</span>
+            <ul class="demo-list-item mdl-list" v-for="key in this.locations">
+                <span class="mdl-list__item-primary-content" v-bind:class="{LOCATION:true}">
+                    {{key.content}}
+                </span>
+            </ul>
         </div>
+
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.ORGANIZATION === true">
-            <dl>
-                <dt>ORGANIZATION</dt>
-                <dd v-for="key in this.organizations"><span v-bind:class="{ORGANIZATION:true}">{{key.content}}</span></dd>
-            </dl>
+            <span>ORGANIZATION</span>
+            <ul class="demo-list-item mdl-list" v-for="key in this.organizations">
+                <span class="mdl-list__item-primary-content" v-bind:class="{ORGANIZATION:true}">
+                    {{key.content}}
+                </span>
+            </ul>
         </div>
+
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.MISC === true">
-            <dl>
-                <dt>MISC</dt>
-                <dd v-for="key in this.miscs"><span v-bind:class="{MISC:true}">{{key.content}}</span></dd>
-            </dl>
+            <span>MISC</span>
+            <ul class="demo-list-item mdl-list" v-for="key in this.miscs">
+                <span class="mdl-list__item-primary-content" v-bind:class="{MISC:true}">
+                    {{key.content}}
+                </span>
+            </ul>
         </div>
     </div>
-
 </template>
 <script>
 
