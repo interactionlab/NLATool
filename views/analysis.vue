@@ -1,6 +1,5 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <!-- Header:-->
         <component
                 is="mainheader"
                 v-bind:title="title"
@@ -25,8 +24,7 @@
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)"
-                >
+                        v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
 
@@ -69,8 +67,7 @@
                             v-bind:mentions="coref"
                             v-bind:showmode="showMode"
                             v-bind:classestomark="classesToMark"
-                            v-on:jumpmarktext="selectText2($event)"
-                    >
+                            v-on:jumpmarktext="selectText2($event)">
                     </component>
                 </div>
             </div>
@@ -111,11 +108,10 @@
                     globalnote: false
                 },
                 hoveredChain: -1,
-                selectedChain: -1,
+                selectedChain: -1
 
             }
-        }
-        ,
+        },
         methods: {
             hoverChain: function (chain) {
                 this.hoveredChain = chain;

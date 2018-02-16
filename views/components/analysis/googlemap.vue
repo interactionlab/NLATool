@@ -4,14 +4,19 @@
 
 <script>
     export default {
-        props: ['name'],
+        props: {
+            index: String,
+            mapcoordinates: Array
+        },
+
         data: function () {
             return {
-                googlemapname: this.name + "-map",
+                googlemapname: this.index + "-map",
                 mapoptions: {
                     zoom: 14,
-                    center: new google.map.LatLng(51.501527, -0.1921837)
-                }
+                    center: '',
+                },
+                mapcoordinates: this.mapcoordinates
             }
         },
         mounted() {
@@ -23,9 +28,18 @@
             };
             const map = new google.maps.Map(element, options);
         },
-        methods:{
-            setmapcoordinates: function (x,y) {
+        methods: {
+            setmapcoordinates: function (x, y) {
                 this.mapoptions.center = new google.map.LatLng(x, y);
+
+            }
+        },
+        watch: {
+            mapcoordinates: {
+                handler: function (newmapcoordinates) {
+                    this.setmapcoordinates(newmapcoordinates[this.index].x, newmapcoordinates[this.index].y);
+                }
+
             }
         }
     }
