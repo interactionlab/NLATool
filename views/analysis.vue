@@ -140,9 +140,6 @@
                 //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
             },
-            test: function () {
-                console.log(JSON.stringify(this.notes));
-            },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
                     this.showMode = 'correction';
@@ -219,7 +216,7 @@
                 let startSlice = 0;
                 for (let i = 0; i < this.numberOfColumns; i++) {
 
-                    this.splitted[i] = this.tokens.slice(startSlice, startSlice + splitPoint);
+                    this.splitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
                     startSlice = startSlice + splitPoint;
                 }
                 if (startSlice < this.tokens.length) {
@@ -227,11 +224,9 @@
                 }
                 console.log('splitted Tokens:' + JSON.stringify(this.splitted));
             },
-            cumputeNumberOfColumns: function () {
-                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
-                if (this.numberOfColumns < 1) {
-                    this.numberOfColumns = 1;
-                }
+            computeNumberOfColumns: function () {
+                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth)+1;
+                console.log('screenValues:' + JSON.stringify(this.screenOptions));
                 console.log('colQuantity:' + this.numberOfColumns);
             },
             setTokens: function (newTokens) {
@@ -250,13 +245,14 @@
             },
             resize: function () {
                 this.setScreenOptions();
-                this.cumputeNumberOfColumns();
+                this.computeNumberOfColumns();
                 this.splitTokens();
                 this.setColumnSize(this.numberOfColumns)
             }
         },
         mounted(){
             window.addEventListener('resize',this.resize);
+            this.resize();
         },
         beforeDestroy(){
             window.removeAllListeners();

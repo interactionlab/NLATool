@@ -26,16 +26,16 @@
             </div>
         </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor" v-on:click="test">
+        <div class="mdl-cell mdl-cell--6-col contentColor">
             <component
-                    :is="analysisMode"
+                    :is="analysismode"
                     v-bind:tokens="tokens"
                     v-bind:docid="docid"
                     v-bind:notes="notes"
                     v-bind:notemodes="notemodes"
                     v-bind:researchmode="researchmode"
                     v-bind:selectedindexes="selectedindexes"
-                    v-bind:selectedchain="selectedChain"
+                    v-bind:selectedchain="selectedchain"
                     v-bind:mentions="mentions"
                     v-bind:showmode="showmode"
                     v-bind:classestomark="classestomark"
@@ -99,6 +99,9 @@
             },
             endselection:function(index){
                 this.$emit('endselection', index);
+            },
+            selectText2:function (newSelectedIndexes) {
+                this.$emit('jumpmarktext', newSelectedIndexes)
             }
         },
 
