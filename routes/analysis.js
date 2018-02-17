@@ -92,7 +92,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('saveresult', function (index, researchresult, docID) {
-        console.log('saved Result: ')
+        console.log('saved Result: ');
         wait.launchFiber(saveResult, index, researchresult, docID);
     });
     socket.on('changeClass', function (tokenToEdit, docID) {

@@ -47,7 +47,7 @@
 
         mixins: [getselectedtext, filtertoken],
         props: {
-            researchmode: String,
+
             selectedindexes: Object,
             tokens: Array,
             docid: Number,
@@ -57,7 +57,6 @@
         data: function () {
             return {
                 researchresults: [''],
-                researchmode: this.researchmode,
                 tokens: this.tokens,
                 selectedtext: '',
                 selectedindexes: this.selectedindexes,

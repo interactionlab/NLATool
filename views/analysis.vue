@@ -22,7 +22,6 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
@@ -61,7 +60,6 @@
                             v-bind:docid="docID"
                             v-bind:notes="notes"
                             v-bind:notemodes="notemodes"
-                            v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
                             v-bind:selectedchain="selectedChain"
                             v-bind:mentions="coref"
@@ -90,7 +88,6 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'entitiesview',
-                researchmode: '',
                 classesToMark: {
                     coref: false,
                     PERSON: false,
@@ -143,10 +140,6 @@
                     this.showMode = 'entitiesview';
                 }
 
-            },
-            changeResearchMode: function (mode) {
-                console.log('analysis: Changing researchmode: ' + mode);
-                this.researchmode = mode;
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
