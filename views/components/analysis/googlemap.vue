@@ -26,7 +26,7 @@
                 zoom: 14,
                 center: new google.maps.LatLng(51.501527, -0.1921837)
             };
-            var map = new google.maps.Map(element, mapOptions);
+            var map = new google.maps.Map(element, this.mapoptions);
         },
         methods: {
             setmapcoordinates: function (x, y) {
