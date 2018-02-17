@@ -21,12 +21,12 @@
         },
         mounted() {
             console.log('MapName: ' + this.googlemapname);
-            const element = document.getElementById(this.googlemapname);
-            const mapoptions = {
+            var element = document.getElementById(this.googlemapname);
+            this.mapoptions = {
                 zoom: 14,
                 center: new google.maps.LatLng(51.501527, -0.1921837)
             };
-            const map = new google.maps.Map(element, options);
+            var map = new google.maps.Map(element, mapOptions);
         },
         methods: {
             setmapcoordinates: function (x, y) {

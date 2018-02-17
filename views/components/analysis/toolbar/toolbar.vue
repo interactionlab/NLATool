@@ -49,9 +49,7 @@
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button v-bind:class="{'activeButton': researchModes.info}"
-                            class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('info')">
+                    <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Information</small>
                     </button>
                 </div>
@@ -100,9 +98,7 @@
                     wordnote: true,
                     globalnote: false
                 },
-                researchModes: {
-                    info: true
-                }
+
             }
         },
         methods: {
@@ -186,13 +182,7 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            setResearchMode: function (mode) {
-                if (mode == 'info') {
-                    mode = 'activeButton';
-                    this.researchModes.info = true;
-                }
-                this.$emit('changeresearchmode', [mode]);
-            },
+
             setCorrectionMode: function () {
                 //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
@@ -206,9 +196,7 @@
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             },
-            toggleReseachMode: function () {
-                this.researchModes.onOffInfo = !this.researchModes.onOffInfo;
-            }
+
         }
     }
 </script>
