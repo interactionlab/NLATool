@@ -14,7 +14,7 @@ module.exports = {
             }
             for (i; i < j; i++) {
                 if ((tokens [i].semanticClass === token.semanticClass
-                    || tokens[i].pos === token.pos)
+                        || tokens[i].pos === token.pos)
                     && tokens[i].offsetBegin !== token.offsetBegin) {
                     resultingtokens.push(tokens [i]);
                 }
@@ -25,9 +25,15 @@ module.exports = {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
                 if (tokens [i].semanticClass === semanticClass) {
-                    if(resultingtokens.indexOf(tokens[i].content === -1)){
-                    resultingtokens.push(tokens [i]);
-                }
+                    // TODO: String match doesn't work
+                    if (resultingtokens.indexOf(tokens[i].content === -1)) {
+                        //merging entities of same classes e.g. first + last name
+                        if (tokens[i - 1].semanticClass === tokens[i].semanticClass) {
+                            resultingtokens[resultingtokens.length - 1] = tokens[i - 1].content + " " + tokens[i].content;
+                        } else {
+                            resultingtokens.push(tokens[i]);
+                        }
+                    }
                 }
             }
             return resultingtokens;
