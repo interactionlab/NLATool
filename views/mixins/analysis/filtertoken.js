@@ -24,16 +24,22 @@ module.exports = {
         filtertokenwithclass: function (tokens, semanticClass) {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
+                console.log(tokens[i].content + ", " + semanticClass + ": " + resultingtokens);
                 if (tokens [i].semanticClass === semanticClass) {
+                    let content = tokens[i].content;
                     // TODO: String match doesn't work
-                    if (resultingtokens.indexOf(tokens[i].content === -1)) {
+                   // if (resultingtokens.indexOf(tokens[i].content === -1)) {
                         //merging entities of same classes e.g. first + last name
-                        if (tokens[i - 1].semanticClass === tokens[i].semanticClass) {
-                            resultingtokens[resultingtokens.length - 1] = tokens[i - 1].content + " " + tokens[i].content;
+                        if (i >= 1) {
+                            if (tokens[i - 1].semanticClass === tokens[i].semanticClass) {
+                                resultingtokens[resultingtokens.length - 1] = resultingtokens[resultingtokens.length - 1]+ " " + content;
+                            } else {
+                                resultingtokens.push(content);
+                            }
                         } else {
-                            resultingtokens.push(tokens[i]);
+                            resultingtokens.push(content);
                         }
-                    }
+                    //}
                 }
             }
             return resultingtokens;
