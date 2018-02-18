@@ -44,17 +44,17 @@
                         </div>
                     </div>
 
-                    <div class="mdl-grid">
+                    <div class="mdl-grid deleteSpaces">
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
                                     v-on:click="saveResult">
-                                <b class="mdc-button" >Save</b>
+                                <i class="mdc-button">Save</i>
                             </button>
                         </div>
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
                                     v-on:click="showdetail">
-                                <b class="mdc-button">Back</b>
+                                <i class="mdc-button">Back</i>
                             </button>
                         </div>
                     </div>
@@ -75,17 +75,17 @@
                             {{researchresult.result.description.articleBody}}
                         </div>
                     </div>
-                    <div class="mdl-grid" style="margin: 0px">
+                    <div class="mdl-grid deleteSpaces">
                         <div class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
                                     v-on:click="saveResult">
-                                <b class="mdc-button">Save</b>
+                                <i class="mdc-button">Save</i>
                             </button>
                         </div>
                         <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
                             <button class="mdl-button mdl-js-button"
                                     v-on:click="showallresults">
-                                <b class="mdc-button">Show All</b>
+                                <i class="mdc-button">Show All</i>
                             </button>
                         </div>
                     </div>
