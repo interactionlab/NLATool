@@ -1,6 +1,5 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <!-- Header:-->
         <component
                 is="mainheader"
                 v-bind:title="title"
@@ -23,10 +22,8 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)"
-                >
+                        v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
 
@@ -63,14 +60,12 @@
                             v-bind:docid="docID"
                             v-bind:notes="notes"
                             v-bind:notemodes="notemodes"
-                            v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedtextindexes"
                             v-bind:selectedchain="selectedChain"
                             v-bind:mentions="coref"
                             v-bind:showmode="showMode"
                             v-bind:classestomark="classesToMark"
-                            v-on:jumpmarktext="selectText2($event)"
-                    >
+                            v-on:jumpmarktext="selectText2($event)">
                     </component>
                 </div>
             </div>
@@ -93,7 +88,6 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'entitiesview',
-                researchmode: '',
                 classesToMark: {
                     coref: false,
                     PERSON: false,
@@ -111,11 +105,10 @@
                     globalnote: false
                 },
                 hoveredChain: -1,
-                selectedChain: -1,
+                selectedChain: -1
 
             }
-        }
-        ,
+        },
         methods: {
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
@@ -147,10 +140,6 @@
                     this.showMode = 'entitiesview';
                 }
 
-            },
-            changeResearchMode: function (mode) {
-                console.log('analysis: Changing researchmode: ' + mode);
-                this.researchmode = mode;
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
