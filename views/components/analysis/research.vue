@@ -6,18 +6,18 @@
                    v-model="selectedtext"
                    class="mdl-textfield__input"/>
         </div>
-        <!-- TODO remove Taylor Swift at the end. That is our default value -->
-        <div
-                class="mdl-cell mdl-cell--12-col contentColor">
+        <div class="mdl-cell mdl-cell--12-col contentColor">
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
+
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
                                v-bind:index="selectedindex"
-                               v-bind:dochid="docid"
+                               v-bind:docid="docid"
                                v-bind:showallon="resultselected"
+                               v-bind:mapcoordinates="mapcoordinates"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -27,8 +27,9 @@
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:researchresults="researchresults"
-                               v-bind:dochid="docid"
+                               v-bind:docid="docid"
                                v-bind:showallon="resultselected"
+                               v-bind:mapcoordinates="mapcoordinates"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -43,9 +44,10 @@
     import filtertoken from './mixins/analysis/filtertoken.js';
 
     export default {
+
         mixins: [getselectedtext, filtertoken],
         props: {
-            researchmode: String,
+
             selectedindexes: Object,
             tokens: Array,
             docid: Number,
@@ -55,7 +57,6 @@
         data: function () {
             return {
                 researchresults: [''],
-                researchmode: this.researchmode,
                 tokens: this.tokens,
                 selectedtext: '',
                 selectedindexes: this.selectedindexes,
@@ -66,6 +67,7 @@
                 keywords: this.keywords,
                 selectedchain: this.selectedchain,
                 mentions: this.mentions,
+                mapcoordinates: []
             }
         },
         methods: {
@@ -129,6 +131,7 @@
                 }).done((response) => {
                     //console.log('Response for Research: ' + JSON.stringify(response));
                     this.rerankWithKeywords(response);
+                    this.getMapCoordinates();
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
@@ -138,10 +141,20 @@
                 console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
                 this.selectedresult = this.researchresults[index];
             },
-        },
-        computed: {
+            getMapCoordinates: function () {
+                let service_url = 'https://www.gps-coordinates.net/api/';
 
+                for (let i = 0; i < this.researchresults.length; i++) {
+                    service_url = service_url + this.researchresults[i].name;
+                    xhttp.open("GET", service_url, true);
+                    xhttp.send();
+                    xhttp.responseText;
+                    console.log("Get MapURL respinse: " + xhttp.responseText);
+                    this.mapcoordinates.push({x: response.latitude, y: response.longitude});
+                }
+            }
         },
+        computed: {},
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
@@ -158,14 +171,12 @@
             },
             selectedchain: {
                 handler: function (newselectedChain) {
-                    //console.log('Selected Chain1: '+newselectedChain);
                     for (let i = 0; i < this.mentions[0].length; i++) {
                         if (newselectedChain === this.mentions[0][i].mentionID) {
                             this.selectedindexes.start = this.mentions[0][i].startIndex;
                             this.selectedindexes.end = this.mentions[0][i].endIndex;
                         }
                     }
-                    //console.log('Selected Chain2: ' + JSON.stringify(this.selectedindexes));
                 },
                 deep: true
             },
