@@ -43,7 +43,7 @@
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
                                v-bind:nestedmentions="nestedChains"
-                               v-bind:analysemode="analysisMode"
+                               v-bind:analysismode="analysisMode"
                                v-bind:docid="docID"
                                v-bind:notes="notes"
                                v-bind:notemodes="notemodes"
@@ -107,6 +107,7 @@
                 },
                 numberOfColumns: -1,
                 splitted: [],
+                tokenstoshow: [],
                 columnsize: {
                     'mdl-cell--1-col': false,
                     'mdl-cell--2-col': false,
@@ -115,6 +116,11 @@
                     'mdl-cell--8-col': false,
                     'mdl-cell--10-col': false,
                     'mdl-cell--12-col': true,
+                },
+                textcolumnposition: {
+                    start: -1,
+                    end: -1,
+                    difference: -1
                 },
                 tokens: [1]
             }
@@ -188,34 +194,54 @@
                     case (columnQuantity >= 12):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--1-col"] = true;
+                        this.showTokens(12, 12);
                         break;
                     case (columnQuantity < 12 && columnQuantity >= 6):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--2-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
                         break;
                     case (columnQuantity < 6 && columnQuantity >= 3):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--4-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
                         break;
                     case (columnQuantity < 3 && columnQuantity >= 2):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--6-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
                         break;
                     case (columnQuantity < 2 && columnQuantity >= 1):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
                         break;
                     default:
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
                         break;
                 }
+            },
+            showTokens: function (difference, end) {
+                if (end > this.splitted.length-1) {
+                    this.tokenstoshow = this.splitted.slice(0, this.splitted.length-1);
+                    this.textcolumnposition.end = this.splitted.length-1;
+                } else {
+                    if (end - difference >= 0) {
+                        this.tokenstoshow = this.splitted.slice(end - difference, end);
+                    } else {
+                        this.tokenstoshow = this.splitted.slice(0, end + (difference - end));
+                    }
+                    this.textcolumnposition.end = end;
+                }
+                this.textcolumnposition.difference = difference;
             },
             splitTokens: function () {
                 let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns);
                 let startSlice = 0;
+                this.splitted = [];
                 for (let i = 0; i < this.numberOfColumns; i++) {
-
                     this.splitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
                     startSlice = startSlice + splitPoint;
                 }
@@ -224,8 +250,19 @@
                 }
                 console.log('splitted Tokens:' + JSON.stringify(this.splitted));
             },
+            splitTokens2: function () {
+                this.splitted = [];
+                if (this.screenOptions.screenHeight > this.screenOptions.maxColumnHeight) {
+
+                } else {
+                    this.splitted.push(this.tokens);
+                }
+            },
             computeNumberOfColumns: function () {
-                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth)+1;
+                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
+                if (this.numberOfColumns === 0) {
+                    this.numberOfColumns++;
+                }
                 console.log('screenValues:' + JSON.stringify(this.screenOptions));
                 console.log('colQuantity:' + this.numberOfColumns);
             },
@@ -236,7 +273,7 @@
                 console.log('changing Screensizes:');
                 this.screenOptions = {
                     screenWidth: window.innerWidth,
-                    screenHeight: window.innerHeight,
+                    screenHeight: window.outerHeight,
                     minimumColumnWidth: 650,
                     minimColumnHeight: 650,
                     maxColumnWidth: 1300,
@@ -250,11 +287,11 @@
                 this.setColumnSize(this.numberOfColumns)
             }
         },
-        mounted(){
-            window.addEventListener('resize',this.resize);
+        mounted() {
+            window.addEventListener('resize', this.resize);
             this.resize();
         },
-        beforeDestroy(){
+        beforeDestroy() {
             window.removeAllListeners();
         },
         computed: {
