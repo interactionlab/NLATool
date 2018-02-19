@@ -13,15 +13,15 @@
                            v-bind:token="token"
                            v-bind:tokens="tokens"
                            v-bind:mentions="mentions"
-                           v-bind:index="i+1"
+                           v-bind:index="generatetrueindex(i+1)"
                            v-bind:selectedindexes="selectedindexes"
                            v-bind:classestomark="classestomark"
                            v-bind:hoveredchain="hoveredchain"
                            v-bind:nestedmentions="nestedmentions"
                            v-bind:selectedchain="selectedchain"
                            v-on:hoverchain="hoverChain($event)"
-                           v-on:startselection="selectText($event)"
-                           v-on:endselection="selectText($event)">
+                           v-on:startselection="startselection($event)"
+                           v-on:endselection="endselection($event)">
                 </component>
             </div>
         </div>
@@ -102,9 +102,18 @@
             },
             selectText2:function (newSelectedIndexes) {
                 this.$emit('jumpmarktext', newSelectedIndexes)
+            },
+            generatetrueindex:function (wordIndex) {
+                let i;
+                for(i = 0; i < this.colindex; i++){
+                    wordIndex = wordIndex + this.splitted[i].length-1;
+                }
+                if(i >= 1){
+                    return wordIndex -1;
+                }
+                return wordIndex;
             }
         },
-
         components:{
             tex,
             research,
