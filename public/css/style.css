@@ -46,6 +46,12 @@
     border: double #000;
 }
 
+.demo-list-item {
+    width: 100px;
+    padding: 0%;
+    position: relative;
+}
+
 #holder {
     border: 1px solid #ccc;
     width: 300px;
