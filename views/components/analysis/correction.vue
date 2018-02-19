@@ -83,10 +83,6 @@
             }
         },
         computed:{
-            shownclassespertoken:function () {
-                console.log('Checkpoint shownclassespertoken: ');
-                return this.classesPerToken[this.index];
-            },
             semclassofselected: function () {
                 let tokenClass = {};
                 tokenClass[this.selectedtokens[0].semanticClass] = true;
@@ -95,7 +91,6 @@
         },
         methods: {
             showClasses: function (index) {
-                console.log('Index for shown classes: '+index);
                 this.index = index;
                 this.classesPerToken[index] = !this.classesPerToken[index];
             },
@@ -107,7 +102,6 @@
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;
-                console.log("Sugg" + this.suggestions);
                 this.$emit('toggleSuggestions', this.suggestions);
             }
         }
