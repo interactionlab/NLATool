@@ -1,7 +1,7 @@
 <template>
     <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.PERSON === true">
-            <span>PERSON</span>
+            <span>PERSON ({{this.persons.length}})</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.persons">
                 <span class="mdl-list__item-primary-content" v-bind:class="{PERSON:true}">
                     {{key}}
@@ -10,7 +10,7 @@
         </div>
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.LOCATION === true">
-            <span>LOCATION</span>
+            <span>LOCATION ({{this.locations.length}})</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.locations">
                 <span class="mdl-list__item-primary-content" v-bind:class="{LOCATION:true}">
                     {{key}}
@@ -19,7 +19,7 @@
         </div>
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.ORGANIZATION === true">
-            <span>ORGANIZATION</span>
+            <span>ORGANIZATION ({{this.organizations.length}})</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.organizations">
                 <span class="mdl-list__item-primary-content" v-bind:class="{ORGANIZATION:true}">
                     {{key}}
@@ -28,7 +28,7 @@
         </div>
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.MISC === true">
-            <span>MISC</span>
+            <span>MISC ({{this.miscs.length}})</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.miscs">
                 <span class="mdl-list__item-primary-content" v-bind:class="{MISC:true}">
                     {{key}}
