@@ -22,9 +22,27 @@ module.exports = {
             return resultingtokens;
         },
 
-        onlyUnique: function (value,index,self) {
-          return self.indexOf(value) === index;
-        },
+        uniqCount: function (arr){
+
+                let a = [], b = [], prev;
+
+                arr.sort();
+                for ( let i = 0; i < arr.length; i++ ) {
+                    if ( arr[i] !== prev ) {
+                        a.push(arr[i]);
+                        b.push(1);
+                    } else {
+                        b[b.length-1]++;
+                    }
+                    prev = arr[i];
+                }
+
+                for(let j = 0; j < a.length; j++ ){
+                    a[j] = a[j] + " (" + b[j] + ")";
+                }
+
+                return a;
+            },
 
         filtertokenwithclass: function (tokens, semanticClass) {
             let resultingtokens = [];
@@ -44,7 +62,8 @@ module.exports = {
                 }
             }
             //Uniq array
-            return resultingtokens.filter((v,i,a) => a.indexOf(v) === i);
+            //return resultingtokens.filter((v,i,a) => a.indexOf(v) === i);
+            return this.uniqCount(resultingtokens);
         }
     }
 };
