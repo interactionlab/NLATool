@@ -4,7 +4,7 @@
             <span>PERSON</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.persons">
                 <span class="mdl-list__item-primary-content" v-bind:class="{PERSON:true}">
-                    {{key.content}}
+                    {{key}}
                 </span>
             </ul>
         </div>
@@ -13,7 +13,7 @@
             <span>LOCATION</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.locations">
                 <span class="mdl-list__item-primary-content" v-bind:class="{LOCATION:true}">
-                    {{key.content}}
+                    {{key}}
                 </span>
             </ul>
         </div>
@@ -22,7 +22,7 @@
             <span>ORGANIZATION</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.organizations">
                 <span class="mdl-list__item-primary-content" v-bind:class="{ORGANIZATION:true}">
-                    {{key.content}}
+                    {{key}}
                 </span>
             </ul>
         </div>
@@ -31,7 +31,7 @@
             <span>MISC</span>
             <ul class="demo-list-item mdl-list" v-for="key in this.miscs">
                 <span class="mdl-list__item-primary-content" v-bind:class="{MISC:true}">
-                    {{key.content}}
+                    {{key}}
                 </span>
             </ul>
         </div>
