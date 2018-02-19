@@ -38,7 +38,7 @@ module.exports = {
                 }
 
                 for(let j = 0; j < a.length; j++ ){
-                    a[j] = a[j] + " (" + b[j] + ")";
+                    a[j] = a[j] + " (" + b[j] + "x)";
                 }
 
                 return a;
