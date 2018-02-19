@@ -29,63 +29,48 @@
                 >
                 </component>
             </div>
-
             <div class="mdl-grid">
-                <!--left grid for text stuff -->
-                <div class="mdl-cell mdl-cell--6-col contentColor">
-                    <div class="mdl-grid"
-                         id="textWindow"
-                         ref="textWindow"
-                         style="width: 100%">
-                        <component is="tex"
-                                   v-for="(token,i) in vueTokens"
-                                   v-bind:key="token.wordID"
-                                   v-bind:token="token"
-                                   v-bind:tokens="vueTokens"
-                                   v-bind:mentions="coref"
-                                   v-bind:index="i+1"
-                                   v-bind:selectedindexes="selectedtextindexes"
-                                   v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="hoveredChain"
-                                   v-bind:nestedmentions="nestedChains"
-                                   v-bind:selectedchain="selectedChain"
-                                   v-on:hoverchain="hoverChain($event)"
-                                   v-on:startselection="selectText($event,0)"
-                                   v-on:endselection="selectText($event,1)">
-                        </component>
-                    </div>
-                </div>
-                <!--right grid for result stuff -->
-                <div class="mdl-cell mdl-cell--6-col contentColor" v-on:click="test">
-                    <component
-                            :is="analysisMode"
-                            v-bind:tokens="vueTokens"
-                            v-bind:docid="docID"
-                            v-bind:notes="notes"
-                            v-bind:notemodes="notemodes"
-                            v-bind:researchmode="researchmode"
-                            v-bind:selectedindexes="selectedtextindexes"
-                            v-bind:selectedchain="selectedChain"
-                            v-bind:mentions="coref"
-                            v-bind:showmode="showMode"
-                            v-bind:classestomark="classesToMark"
-                            v-on:jumpmarktext="selectText2($event)"
+                <div class="mdl-cell"
+                     v-for="(col, colIndex) in splitted"
+                     v-bind:class="columnsize">
+                    <component is="textfeatureviewport"
+                               v-bind:col="col"
+                               v-bind:colindex="colIndex"
+                               v-bind:splitted="splitted"
+                               v-bind:tokens="vueTokens"
+                               v-bind:mentions="coref"
+                               v-bind:selectedindexes="selectedtextindexes"
+                               v-bind:classestomark="classesToMark"
+                               v-bind:hoveredchain="hoveredChain"
+                               v-bind:nestedmentions="nestedChains"
+                               v-bind:analysismode="analysisMode"
+                               v-bind:docid="docID"
+                               v-bind:notes="notes"
+                               v-bind:notemodes="notemodes"
+                               v-bind:researchmode="researchmode"
+                               v-bind:selectedchain="selectedChain"
+                               v-bind:showmode="showMode"
+                               v-on:hoverchain="hoverChain($event)"
+                               v-on:startselection="selectText($event,0)"
+                               v-on:endselection="selectText($event,1)"
+                               v-on:jumpmarktext="selectText2($event)"
                     >
                     </component>
                 </div>
             </div>
         </main>
+        <component is="variablehelper"
+                   v-bind:tokens="vueTokens"
+                   v-on:resize="setTokens($event)">
+        </component>
     </div>
 </template>
 <script>
-    import research from './components/analysis/research.vue';
-    import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import toolbar from './components/analysis/toolbar/toolbar.vue';
-    import analighter from './components/analysis/analighter.vue';
-    import markjs from './components/analysis/mark.vue';
-    import tex from './components/analysis/text.vue';
+    import variablehelper from './components/global/variablehelper.vue';
+    import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
 
     export default {
         data: function () {
@@ -112,10 +97,34 @@
                 },
                 hoveredChain: -1,
                 selectedChain: -1,
-
+                screenOptions: {
+                    screenWidth: -1,
+                    screenHeight: -1,
+                    minimumColumnWidth: 400,
+                    minimColumnHeight: 500,
+                    maxColumnWidth: 800,
+                    maxColumnHeight: -1
+                },
+                numberOfColumns: -1,
+                splitted: [],
+                tokenstoshow: [],
+                columnsize: {
+                    'mdl-cell--1-col': false,
+                    'mdl-cell--2-col': false,
+                    'mdl-cell--4-col': false,
+                    'mdl-cell--6-col': false,
+                    'mdl-cell--8-col': false,
+                    'mdl-cell--10-col': false,
+                    'mdl-cell--12-col': true,
+                },
+                textcolumnposition: {
+                    start: -1,
+                    end: -1,
+                    difference: -1
+                },
+                tokens: [1]
             }
-        }
-        ,
+        },
         methods: {
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
@@ -134,11 +143,8 @@
             changeMarkerMode: function (mode) {
                 //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-              //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
+                //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
-            },
-            test: function () {
-                console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
@@ -178,8 +184,118 @@
                 console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
+            setColumnSizeFalse: function () {
+                for (let theClass in this.columnsize) {
+                    this.columnsize[theClass] = false;
+                }
+            },
+            setColumnSize: function (columnQuantity) {
+                switch (true) {
+                    case (columnQuantity >= 12):
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--1-col"] = true;
+                        this.showTokens(12, 12);
+                        break;
+                    case (columnQuantity < 12 && columnQuantity >= 6):
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--2-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
+                        break;
+                    case (columnQuantity < 6 && columnQuantity >= 3):
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--4-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
+                        break;
+                    case (columnQuantity < 3 && columnQuantity >= 2):
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--6-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
+                        break;
+                    case (columnQuantity < 2 && columnQuantity >= 1):
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--12-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
+                        break;
+                    default:
+                        this.setColumnSizeFalse();
+                        this.columnsize["mdl-cell--12-col"] = true;
+                        this.showTokens(columnQuantity, columnQuantity);
+                        break;
+                }
+            },
+            showTokens: function (difference, end) {
+                if (end > this.splitted.length-1) {
+                    this.tokenstoshow = this.splitted.slice(0, this.splitted.length-1);
+                    this.textcolumnposition.end = this.splitted.length-1;
+                } else {
+                    if (end - difference >= 0) {
+                        this.tokenstoshow = this.splitted.slice(end - difference, end);
+                    } else {
+                        this.tokenstoshow = this.splitted.slice(0, end + (difference - end));
+                    }
+                    this.textcolumnposition.end = end;
+                }
+                this.textcolumnposition.difference = difference;
+            },
+            splitTokens: function () {
+                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns);
+                let startSlice = 0;
+                this.splitted = [];
+                for (let i = 0; i < this.numberOfColumns; i++) {
+                    this.splitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
+                    startSlice = startSlice + splitPoint;
+                }
+                if (startSlice < this.tokens.length) {
+                    this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
+                }
+                console.log('splitted Tokens:' + JSON.stringify(this.splitted));
+            },
+            splitTokens2: function () {
+                this.splitted = [];
+                if (this.screenOptions.screenHeight > this.screenOptions.maxColumnHeight) {
+
+                } else {
+                    this.splitted.push(this.tokens);
+                }
+            },
+            computeNumberOfColumns: function () {
+                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
+                if (this.numberOfColumns === 0) {
+                    this.numberOfColumns++;
+                }
+                console.log('screenValues:' + JSON.stringify(this.screenOptions));
+                console.log('colQuantity:' + this.numberOfColumns);
+            },
+            setTokens: function (newTokens) {
+                this.tokens = newTokens;
+            },
+            setScreenOptions: function () {
+                console.log('changing Screensizes:');
+                this.screenOptions = {
+                    screenWidth: window.innerWidth,
+                    screenHeight: window.outerHeight,
+                    minimumColumnWidth: 650,
+                    minimColumnHeight: 650,
+                    maxColumnWidth: 1300,
+                    maxColumnHeight: window.innerHeight
+                };
+            },
+            resize: function () {
+                this.setScreenOptions();
+                this.computeNumberOfColumns();
+                this.splitTokens();
+                this.setColumnSize(this.numberOfColumns)
+            }
+        },
+        mounted() {
+            window.addEventListener('resize', this.resize);
+            this.resize();
+        },
+        beforeDestroy() {
+            window.removeAllListeners();
         },
         computed: {
+
             nestedChains: function () {
                 let nestedMentions = {
                     fullyNested: [],
@@ -293,7 +409,7 @@
                                             nested = true;
                                         }
                                     }
-                                } 
+                                }
                                 if (!nested) {
                                     if (this.coref[0][i].representative === -1) {
                                         this.selectedChain = this.coref[0][i].mentionID;
@@ -315,11 +431,8 @@
             mainheader,
             headernavbar,
             toolbar,
-            research,
-            notes,
-            analighter,
-            markjs,
-            tex
+            variablehelper,
+            textfeatureviewport
         }
     }
 </script>
