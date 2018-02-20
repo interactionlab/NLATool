@@ -14,23 +14,33 @@ module.exports = {
             }
             for (i; i < j; i++) {
                 if ((tokens [i].semanticClass === token.semanticClass
-                    || tokens[i].pos === token.pos)
+                        || tokens[i].pos === token.pos)
                     && tokens[i].offsetBegin !== token.offsetBegin) {
                     resultingtokens.push(tokens [i]);
                 }
             }
             return resultingtokens;
         },
+
         filtertokenwithclass: function (tokens, semanticClass) {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
                 if (tokens [i].semanticClass === semanticClass) {
-                    if(resultingtokens.indexOf(tokens[i].content === -1)){
-                    resultingtokens.push(tokens [i]);
-                }
+                    let content = tokens[i].content;
+                    //merging entities of same classes e.g. first + last name
+                    if (i >= 1) {
+                        if (tokens[i - 1].semanticClass === tokens[i].semanticClass) {
+                            resultingtokens[resultingtokens.length - 1] = resultingtokens[resultingtokens.length - 1] + " " + content;
+                        } else {
+                            resultingtokens.push(content);
+                        }
+                    } else {
+                        resultingtokens.push(content);
+                    }
                 }
             }
-            return resultingtokens;
+            //Uniq array
+            return resultingtokens.filter((v,i,a) => a.indexOf(v) === i);
         }
     }
 };
