@@ -20,7 +20,9 @@
                             <div v-else class="mdl-cell mdl-cell--4-col">
                                 <component is="googlemap"
                                            v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="index"></component>
+                                           v-bind:index="index">
+                                    
+                                </component>
                             </div>
 
                             <div class="mdl-grid mdl-cell mdl-cell--8-col deleteSpaces">
