@@ -4,7 +4,14 @@
         <component is="researchresult"
                    v-if="this.classestomark.PERSON === true"
                    v-for="(researchresult,index) in person"
-                   >
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
+                   v-bind:researchresults="researchresults"
+                   v-bind:docid="docid"
+                   v-bind:showallon="resultselected"
+                   v-bind:mapcoordinates="mapcoordinates"
+                   v-on:saveresult="saveResult($event)">
         </component>
 
 
@@ -37,12 +44,14 @@
         mixins: [filtertokenwithclass, requests],
         props: {
             tokens: Array,
-            classestomark: Object
+            classestomark: Object,
+            docid: Number,
         },
         data: function () {
             return {
                 tokens: this.tokens,
-                classestomark: this.classestomark
+                classestomark: this.classestomark,
+                docid: this.docid,
             }
         },
         methods: {
