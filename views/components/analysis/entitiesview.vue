@@ -40,6 +40,7 @@
 <script>
 
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
+    import researchresult from './mixins/analysis/researchresult.vue';
 
     export default {
         mixins: [filtertokenwithclass],
@@ -67,6 +68,7 @@
             miscs: function () {
                 return this.filtertokenwithclass(this.tokens, 'MISC');
             },
+            researchresult
         }
         ,
         methods: {}

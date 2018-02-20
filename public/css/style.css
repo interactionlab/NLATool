@@ -1,3 +1,35 @@
+@media screen and (min-width: 720px) {
+    body{
+        font-size: 1em;
+        line-height: 1.3;
+    }
+}
+@media screen and (min-width: 1080px) {
+    body{
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
+}
+@media screen and (min-width: 1920px) {
+    body{
+        font-size: 1.4em;
+        line-height: 1.9;
+    }
+}
+@media screen and (min-width: 3840px) {
+    body{
+        font-size: 1.6em;
+        line-height: 2.2;
+    }
+}
+@media screen and (min-width: 7680px) {
+    body{
+        font-size: 2em;
+        line-height: 2.6;
+    }
+}
+
+
 .mdl-layout__content {
     background-color: #e8e8e8;
 }

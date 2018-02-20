@@ -282,7 +282,7 @@
                                             nested = true;
                                         }
                                     }
-                                } 
+                                }
                                 if (!nested) {
                                     if (this.coref[0][i].representative === -1) {
                                         this.selectedChain = this.coref[0][i].mentionID;
