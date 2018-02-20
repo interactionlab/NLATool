@@ -108,9 +108,7 @@
                 for(i = 0; i < this.colindex; i++){
                     wordIndex = wordIndex + this.splitted[i].length-1;
                 }
-                if(i >= 1){
-                    return wordIndex -1;
-                }
+
                 return wordIndex;
             }
         },
