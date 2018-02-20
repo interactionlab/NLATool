@@ -3,35 +3,31 @@
         <span>PERSON</span>
         <component is="researchresult"
                    v-if="this.classestomark.PERSON === true"
-                   v-for="(researchresult,index) in person"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:researchresults="researchresults"
-                   v-bind:docid="docid"
-                   v-bind:showallon="resultselected"
-                   v-bind:mapcoordinates="mapcoordinates"
-                   v-on:saveresult="saveResult($event)">
+                   v-for="(researchresult,index) in persons"
+        >
         </component>
 
+        <span>LOCATION</span>
+        <component is="researchresult"
+                   v-if="this.classestomark.LOCATION === true"
+                   v-for="(researchresult,index) in locations"
+        >
+        </component>
 
-        <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.ORGANIZATION === true">
-            <span>ORGANIZATION</span>
-            <ul class="demo-list-item mdl-list" v-for="key in organizations">
-                <span class="mdl-list__item-primary-content" v-bind:class="{ORGANIZATION:true}">
-                    {{key}}
-                </span>
-            </ul>
-        </div>
+        <span>ORGANIZATION</span>
+        <component is="researchresult"
+                   v-if="this.classestomark.ORGANIZATION === true"
+                   v-for="(researchresult,index) in organizations"
+        >
+        </component>
 
-        <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.MISC === true">
-            <span>MISC</span>
-            <ul class="demo-list-item mdl-list" v-for="key in miscs">
-                <span class="mdl-list__item-primary-content" v-bind:class="{MISC:true}">
-                    {{key}}
-                </span>
-            </ul>
-        </div>
+        <span>MISC</span>
+        <component is="researchresult"
+                   v-if="this.classestomark.MISC === true"
+                   v-for="(researchresult,index) in miscs"
+        >
+        </component>
+
     </div>
 </template>
 <script>
@@ -64,22 +60,27 @@
                 return tokensResults;
             },
             saveResult: function () {
-                console.log('TODO: Save ' );
+                console.log('TODO: Save ');
             }
         },
         computed: {
             persons: function () {
                 return this.researchTokensOfClass('PERSON');
             },
+            locations: function () {
+                return this.researchTokensOfClass('LOCATION');
+            },
             organizations: function () {
                 return this.researchTokensOfClass('ORGANIZATION');
             },
             miscs: function () {
                 return this.researchTokensOfClass('MISC');
-            },
-
+            }
+        },
+        components: {
             researchresult,
             requests
-        },
+        }
     }
+
 </script>
