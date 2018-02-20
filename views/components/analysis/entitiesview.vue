@@ -2,21 +2,12 @@
     <div class="mdl-grid">
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.PERSON === true">
             <span>PERSON</span>
-            <ul class="demo-list-item mdl-list" v-for="key in this.persons">
-                <span class="mdl-list__item-primary-content" v-bind:class="{PERSON:true}">
-                    {{key}}
-                </span>
-            </ul>
+            <component is="researchresult"
+            v-for="(researchresult,index) in researchresults">
+
+            </component>
         </div>
 
-        <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.LOCATION === true">
-            <span>LOCATION</span>
-            <ul class="demo-list-item mdl-list" v-for="key in this.locations">
-                <span class="mdl-list__item-primary-content" v-bind:class="{LOCATION:true}">
-                    {{key}}
-                </span>
-            </ul>
-        </div>
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.ORGANIZATION === true">
             <span>ORGANIZATION</span>
@@ -40,10 +31,11 @@
 <script>
 
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
-    import researchresult from './mixins/analysis/researchresult.vue';
+    import researchresult from './components/analysis/researchresult.vue';
+    import requests from './mixins/requests.js';
 
     export default {
-        mixins: [filtertokenwithclass],
+        mixins: [filtertokenwithclass, requests],
         props: {
             tokens: Array,
             classestomark: Object
@@ -53,11 +45,12 @@
                 tokens: this.tokens,
                 classestomark: this.classestomark
             }
-
         },
         computed: {
             persons: function () {
-                return this.filtertokenwithclass(this.tokens, 'PERSON');
+                this.searchgoogle
+                this.filtertokenwithclass(this.tokens, 'PERSON');
+
             },
             locations: function () {
                 return this.filtertokenwithclass(this.tokens, 'LOCATION');
@@ -68,9 +61,9 @@
             miscs: function () {
                 return this.filtertokenwithclass(this.tokens, 'MISC');
             },
-            researchresult
-        }
-        ,
+            researchresult,
+            requests
+        },
         methods: {}
     }
 </script>
