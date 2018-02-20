@@ -1,25 +1,33 @@
 module.exports = {
+    data: function() {
+        return{
+            searchGoogleResults: []
+        }
+    },
     methods: {
-        searchGoogle: function (query, limit) {
+        searchGoogle: function (querys, limit) {
             if (limit < 1) {
                 return null;
             }
             let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-            let params = {
-                'query': query,
-                'limit': limit,
-                'indent': true,
-                'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
-            };
-            $.getJSON(service_url + '?callback=?', params, (response) => {
-            }).done((response) => {
-                if (limit > 1) {
-                    return this.rerankWithKeywords();
-                } else {
-                    //console.log('Response for Research: ' + JSON.stringify(response));
-                    return response;
-                }
-            });
+            this.searchGoogleResults = [];
+            for (let i = 0; i < querys; i++) {
+                let params = {
+                    'query': querys[i],
+                    'limit': limit,
+                    'indent': true,
+                    'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
+                };
+                $.getJSON(service_url + '?callback=?', params, (response) => {
+                }).done((response) => {
+                    if (limit > 1) {
+                        this.searchGoogleResults.push(this.rerankWithKeywords(response));
+                    } else {
+                        //console.log('Response for Research: ' + JSON.stringify(response));
+                        this.searchGoogleResults.push(response);
+                    }
+                });
+            }
         },
         rerankWithKeywords: function (response) {
             let tempresults = [];
