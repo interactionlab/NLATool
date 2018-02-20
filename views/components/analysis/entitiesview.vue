@@ -1,17 +1,16 @@
 <template>
-    <div class="mdl-grid">
-        <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.PERSON === true">
-            <span>PERSON</span>
-            <component is="researchresult"
-            v-for="(researchresult,index) in researchresults">
-
-            </component>
-        </div>
+    <div>
+        <span>PERSON</span>
+        <component is="researchresult"
+                   v-if="this.classestomark.PERSON === true"
+                   v-for="(researchresult,index) in person"
+                   >
+        </component>
 
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.ORGANIZATION === true">
             <span>ORGANIZATION</span>
-            <ul class="demo-list-item mdl-list" v-for="key in this.organizations">
+            <ul class="demo-list-item mdl-list" v-for="key in organizations">
                 <span class="mdl-list__item-primary-content" v-bind:class="{ORGANIZATION:true}">
                     {{key}}
                 </span>
@@ -20,7 +19,7 @@
 
         <div class="mdl-cell mdl-cell--3-col" v-if="this.classestomark.MISC === true">
             <span>MISC</span>
-            <ul class="demo-list-item mdl-list" v-for="key in this.miscs">
+            <ul class="demo-list-item mdl-list" v-for="key in miscs">
                 <span class="mdl-list__item-primary-content" v-bind:class="{MISC:true}">
                     {{key}}
                 </span>
@@ -46,24 +45,32 @@
                 classestomark: this.classestomark
             }
         },
+        methods: {
+            researchTokensOfClass: function (semClass) {
+                let tokensResults = [];
+                let tokens = this.filtertokenwithclass(this.tokens, semClass);
+                for (let i = 0; i < tokens.length; i++) {
+                    tokensResults.push(this.searchGoogle(tokens[i]));
+                }
+                return tokensResults;
+            },
+            saveResult: function () {
+                console.log('TODO: Save ' );
+            }
+        },
         computed: {
             persons: function () {
-                this.searchgoogle
-                this.filtertokenwithclass(this.tokens, 'PERSON');
-
-            },
-            locations: function () {
-                return this.filtertokenwithclass(this.tokens, 'LOCATION');
+                return this.researchTokensOfClass('PERSON');
             },
             organizations: function () {
-                return this.filtertokenwithclass(this.tokens, 'ORGANIZATION');
+                return this.researchTokensOfClass('ORGANIZATION');
             },
             miscs: function () {
-                return this.filtertokenwithclass(this.tokens, 'MISC');
+                return this.researchTokensOfClass('MISC');
             },
+
             researchresult,
             requests
         },
-        methods: {}
     }
 </script>
