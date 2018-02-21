@@ -8,29 +8,40 @@
                    v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-on:saveresult="saveResult($event)"
-        >
+                   v-on:saveresult="saveResult($event)">
         </component>
 
         <span>LOCATION</span>
         <component is="researchresult"
-                   v-if="classestomark.LOCATION === true"
                    v-for="(researchresult,index) in LOCATION"
-        >
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
         </component>
 
         <span>ORGANIZATION</span>
         <component is="researchresult"
-                   v-if="classestomark.ORGANIZATION === true"
                    v-for="(researchresult,index) in ORGANIZATION"
-        >
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
         </component>
 
         <span>MISC</span>
         <component is="researchresult"
-                   v-if="classestomark.MISC === true"
                    v-for="(researchresult,index) in MISC"
-        >
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
         </component>
     </div>
 </template>
@@ -99,12 +110,20 @@
         computed: {},
         mounted() {
             this.researchTokensOfClass('PERSON');
+            this.researchTokensOfClass('LOCATION');
+            this.researchTokensOfClass('ORGANIZATION');
+            this.researchTokensOfClass('MISC');
+
         },
         watch: {
             classestomark: {
                 handler: function (newclassestomark) {
                     if (newclassestomark.PERSON) {
                         this.researchTokensOfClass('PERSON');
+
+                    } else if (newclassestomark.LOCATION){
+                        this.researchTokensOfClass('LOCATION');
+
                     }
                 },
                 deep: true
