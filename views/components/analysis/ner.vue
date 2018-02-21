@@ -8,7 +8,7 @@
 </template>
 <script>
     export default {
-        props:['persons'],
+        props:['PERSON'],
         data: function () {
             return{
             }
