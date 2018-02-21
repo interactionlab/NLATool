@@ -122,7 +122,6 @@
             this.researchTokensOfClass('MISC');
         },
         watch: {
-
         },
         components: {
             researchresult,

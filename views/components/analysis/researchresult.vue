@@ -12,20 +12,7 @@
                          v-on:click="showdetail">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
-                            <div v-if="showimage" class="mdl-cell mdl-cell--4-col graybox">
-                                <img v-if="typeof researchresult.result.image !== 'undefined'"
-                                     v-bind:src="researchresult.result.image.contentUrl"/>
-                            </div>
-
-                            <div v-else class="mdl-cell mdl-cell--4-col">
-                                <component is="googlemap"
-                                           v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="index">
-
-                                </component>
-                            </div>
-
-                            <div class="mdl-grid mdl-cell mdl-cell--8-col deleteSpaces">
+                            <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
                                     {{sortedtoken + ' -> '+ researchresult.result.name}}
@@ -35,6 +22,19 @@
                                     <i class="material-icons">edit</i>
                                 </button>
                             </div>
+                            <div class="mdl-cell mdl-cell--6-col">
+                                <img v-if="typeof researchresult.result.image !== 'undefined'"
+                                     v-bind:src="researchresult.result.image.contentUrl"/>
+                            </div>
+
+                            <div class="mdl-cell mdl-cell--6-col">
+                                <component is="googlemap"
+                                           v-bind:mapcoordinates="mapcoordinates"
+                                           v-bind:index="index">
+                                </component>
+                            </div>
+
+
 
                             <div v-if="typeof researchresult.result.description !== 'undefined'">
                                 {{researchresult.result.description.articleBody}}
