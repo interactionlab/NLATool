@@ -1,52 +1,22 @@
 <template>
     <div>
-        <span>PERSON</span>
+        <div>PERSON</div>
         <component is="researchresult"
+                   v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:sortedtoken="sortedtokens[index]"
                    v-on:saveresult="saveResult($event)">
         </component>
+        <!-- TODO: right index for sortedtoken-->
 
-        <span>LOCATION</span>
-        <component is="researchresult"
-                   v-for="(researchresult,index) in LOCATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
-        <span>ORGANIZATION</span>
-        <component is="researchresult"
-                   v-for="(researchresult,index) in ORGANIZATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
-        <span>MISC</span>
-        <component is="researchresult"
-                   v-for="(researchresult,index) in MISC"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-on:saveresult="saveResult($event)">
-        </component>
     </div>
 </template>
 <script>
-
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
     import requests from './mixins/requests.js';
@@ -67,16 +37,18 @@
                 tokens: this.tokens,
                 classestomark: this.classestomark,
                 docid: this.docid,
-                researchresults: []
+                researchresults: [],
+                sortedtokens:[]
             }
         },
         methods: {
             researchTokensOfClass: function (semClass) {
+                this[semClass] = [];
                 let tokensResults = [];
-                let tokens = this.filtertokenwithclass(this.tokens, semClass);
-                console.log('all tokens of: ' + semClass + ' are: ' + tokens);
-                for (let i = 0; i < tokens.length; i++) {
-                    this.searchGoogle(tokens[i], 1, semClass);
+                this.sortedtokens = this.filtertokenwithclass(this.tokens, semClass);
+                console.log('all tokens of: ' + semClass + ' are: ' + this.sortedtokens);
+                for (let i = 0; i < this.sortedtokens.length; i++) {
+                    this.searchGoogle(this.sortedtokens[i], 1, semClass);
                 }
                 console.log('Token results: ' + JSON.stringify(this.researchresults));
             },
@@ -116,18 +88,7 @@
 
         },
         watch: {
-            classestomark: {
-                handler: function (newclassestomark) {
-                    if (newclassestomark.PERSON) {
-                        this.researchTokensOfClass('PERSON');
 
-                    } else if (newclassestomark.LOCATION){
-                        this.researchTokensOfClass('LOCATION');
-
-                    }
-                },
-                deep: true
-            }
         },
         components: {
             researchresult,
