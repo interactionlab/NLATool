@@ -1,7 +1,7 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content contentColor separate">
+        <main class="mdl-layout__content deleteSpaces contentColor separate" style="right: inherit">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
@@ -21,14 +21,14 @@
                                 <component is="googlemap"
                                            v-bind:mapcoordinates="mapcoordinates"
                                            v-bind:index="index">
-                                    
+
                                 </component>
                             </div>
 
                             <div class="mdl-grid mdl-cell mdl-cell--8-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
-                                    {{researchresult.result.name}}
+                                    {{sortedtoken + ' -> '+ researchresult.result.name}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
@@ -106,7 +106,8 @@
             index: Number,
             docid: Number,
             showallon: Boolean,
-            mapcoordinates: Array
+            mapcoordinates: Array,
+            sortedtoken:String
         },
         data: function () {
             return {
@@ -117,7 +118,8 @@
                 index: this.index,
                 docid: this.docid,
                 showallon: this.showallon,
-                mapcoordinates: this.mapcoordinates
+                mapcoordinates: this.mapcoordinates,
+                sortedtoken:this.sortedtoken
             }
         },
         methods: {
