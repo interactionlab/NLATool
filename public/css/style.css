@@ -127,7 +127,9 @@ pre {
 .activeButton {
     background: white;
 }
-
+.PERSON_BORDERD{
+    border: orangered 1px solid;
+}
 /**english*/
 .PERSON {
     background: orangered;
