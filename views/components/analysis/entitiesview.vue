@@ -2,7 +2,6 @@
     <div>
         <span>PERSON</span>
         <component is="researchresult"
-
                    v-for="(researchresult,index) in PERSON"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
@@ -94,7 +93,7 @@
             },
 
             saveResults: function () {
-                console.log('Trying to save but not implemented. sorry^^');
+                console.log('TODO: Trying to save but not implemented.');
             }
         },
         computed: {},
