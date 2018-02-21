@@ -4,7 +4,7 @@
         <main class="mdl-layout__content deleteSpaces contentColor separate" style="right: inherit">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col"
-                     v-if="!everythingshow">
+                     v-if="everythingshow">
 
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
