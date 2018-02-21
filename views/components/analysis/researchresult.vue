@@ -6,7 +6,7 @@
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="!everythingshow">
 
-                    <div v-bind:class="{researchresulthover: hover}"
+                    <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
                          v-on:click="showdetail">
@@ -33,7 +33,6 @@
                                            v-bind:index="index">
                                 </component>
                             </div>
-
 
 
                             <div v-if="typeof researchresult.result.description !== 'undefined'">
@@ -107,7 +106,8 @@
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
-            sortedtoken:String
+            sortedtoken: String,
+            semclass: String
         },
         data: function () {
             return {
@@ -119,30 +119,47 @@
                 docid: this.docid,
                 showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
-                sortedtoken:this.sortedtoken
+                sortedtoken: this.sortedtoken,
+                semclass: this.semclass
             }
         },
         methods: {
             showallresults: function () {
                 this.$emit('showallresults');
                 this.showallon = false;
+                console.log('showallrults semclas: ' + this.semclass);
             },
             showdetail: function () {
                 console.log('Show the detailed List: ' + this.everythingshow);
                 this.everythingshow = !this.everythingshow;
+                console.log('showallrults showdetail: ' + this.semclass);
             },
             accentuate: function () {
                 this.hover = !this.hover;
+                console.log('showallrults accentuate: ' + this.semclass);
             },
             saveResult: function () {
                 let socket = io('http://localhost:8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
+                console.log('showallrults saveResult: ' + this.semclass);
             }
         },
         components: {
             googlemap
+        },
+        computed: {
+            generalstyleclass: function () {
+                let htmlclass = {
+                    researchresulthover: this.hover
+                };
+                htmlclass[this.semclass] = true;
+                if (this.semclass === 'PERSON_BORDERED') {
+                    htmlclass['PERSON_BORDERED'] = true;
+                }
+                return htmlclass;
+            }
         }
     }
 </script>

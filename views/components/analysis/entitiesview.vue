@@ -10,6 +10,7 @@
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -22,6 +23,7 @@
                    v-bind:index="index2"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:semclass="'PERSON_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -69,6 +71,7 @@
                 LOCATION: [],
                 ORGANIZATION: [],
                 MISC: [],
+                borderedClasses:['PERSON_BORDERED',],
                 tokens: this.tokens,
                 classestomark: this.classestomark,
                 docid: this.docid,
