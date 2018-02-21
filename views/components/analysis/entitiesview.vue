@@ -12,8 +12,43 @@
                    v-bind:sortedtoken="sortedtokens[index]"
                    v-on:saveresult="saveResult($event)">
         </component>
-        <!-- TODO: right index for sortedtoken-->
 
+        <div>LOCATION</div>
+        <component is="researchresult"
+                   v-if="classestomark.LOCATION"
+                   v-for="(researchresult2,index2) in LOCATION"
+                   v-bind:researchresult="researchresult2"
+                   v-bind:key="index2"
+                   v-bind:index="index2"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+
+        <div>ORGANIZATION</div>
+        <component is="researchresult"
+                   v-if="classestomark.ORGANIZATION"
+                   v-for="(researchresult3,index3) in ORGANIZATION"
+                   v-bind:researchresult="researchresult3"
+                   v-bind:key="index3"
+                   v-bind:index="index3"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+
+        <div>MISC</div>
+        <component is="researchresult"
+                   v-if="classestomark.MISC"
+                   v-for="(researchresult4,index4) in MISC"
+                   v-bind:researchresult="researchresult4"
+                   v-bind:key="index4"
+                   v-bind:index="index4"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+        <!-- TODO: right index for sortedtoken-->
     </div>
 </template>
 <script>
@@ -85,7 +120,6 @@
             this.researchTokensOfClass('LOCATION');
             this.researchTokensOfClass('ORGANIZATION');
             this.researchTokensOfClass('MISC');
-
         },
         watch: {
 
