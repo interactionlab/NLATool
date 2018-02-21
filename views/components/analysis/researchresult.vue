@@ -103,7 +103,6 @@
     export default {
         props: {
             researchresult: Object,
-            researchresults: Object,
             index: Number,
             docid: Number,
             showallon: Boolean,
@@ -114,7 +113,6 @@
                 showimage: false,
                 everythingshow: true,
                 researchresult: this.researchresult,
-                researchresults: this.researchresults,
                 hover: false,
                 index: this.index,
                 docid: this.docid,
