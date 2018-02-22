@@ -29,7 +29,6 @@
     }
 }
 
-
 .mdl-layout__content {
     background-color: #e8e8e8;
 }
@@ -127,7 +126,11 @@ pre {
 .activeButton {
     background: white;
 }
-
+/** Formation for semantic Class names */
+.semClassFormate{
+    padding: 10px 10px 0px 10px;
+    font-weight: bold;
+}
 /** semantic Class highlight for results */
 .PERSON_BORDERED{
     border: orangered 3px solid;
