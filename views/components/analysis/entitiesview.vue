@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>PERSON</div>
+        <div class="semClassFormate">PERSON</div>
         <component is="researchresult"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
@@ -14,7 +14,7 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div>LOCATION</div>
+        <div class="semClassFormate">LOCATION</div>
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult2,index2) in LOCATION"
@@ -27,7 +27,7 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div>ORGANIZATION</div>
+        <div class="semClassFormate">ORGANIZATION</div>
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult3,index3) in ORGANIZATION"
@@ -40,7 +40,7 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div>MISC</div>
+        <div class="semClassFormate">MISC</div>
         <component is="researchresult"
                    v-if="classestomark.MISC"
                    v-for="(researchresult4,index4) in MISC"
