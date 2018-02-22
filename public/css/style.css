@@ -127,10 +127,25 @@ pre {
 .activeButton {
     background: white;
 }
+
+/** semantic Class highlight for results */
 .PERSON_BORDERED{
-    border: orangered 1px solid;
+    border: orangered 3px solid;
+    padding: 10px 10px 10px 10px;
 }
-/**english*/
+.LOCATION_BORDERED{
+    border: darkseagreen 3px solid;
+    padding: 10px 10px 10px 10px;
+}
+.ORGANIZATION_BORDERED{
+    border: deepskyblue 3px solid;
+    padding: 10px 10px 10px 10px;
+}
+.MISC_BORDERED{
+    border: violet 3px solid;
+    padding: 10px 10px 10px 10px;
+}
+/**semantic Class highlight in Text*/
 .PERSON {
     background: orangered;
 }
