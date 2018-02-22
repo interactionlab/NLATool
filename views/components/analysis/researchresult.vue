@@ -44,21 +44,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="mdl-grid deleteSpaces">
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="saveResult">
-                                <i class="mdc-button">Save</i>
-                            </button>
-                        </div>
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="showdetail">
-                                <i class="mdc-button">Back</i>
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="mdl-cell mdl-cell--12-col"
