@@ -23,7 +23,7 @@
                    v-bind:index="index2"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'PERSON_BORDERED'"
+                   v-bind:semclass="'LOCATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -36,6 +36,7 @@
                    v-bind:index="index3"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -48,6 +49,7 @@
                    v-bind:index="index4"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:semclass="'MISC_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
         <!-- TODO: right index for sortedtoken-->
