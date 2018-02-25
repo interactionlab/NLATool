@@ -26,45 +26,46 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <div class="scopeButton icon-arrow-left"
-                 v-on:click="changeScope(true)"></div>
-            <div class="mdl-grid">
-                <div class="mdl-cell"
-                     v-for="(col, colIndex) in tokenstoshow"
-                     v-bind:class="columnsize">
-                    <component id="textfeatureviewport"
-                               is="textfeatureviewport"
-                               v-bind:col="col"
-                               v-bind:colindex="colIndex"
-                               v-bind:splitted="splitted"
-                               v-bind:tokenstoshow="tokenstoshow"
-                               v-bind:textcolumnposition="textcolumnposition"
-                               v-bind:tokens="vueTokens"
-                               v-bind:mentions="coref"
-                               v-bind:selectedindexes="selectedtextindexes"
-                               v-bind:classestomark="classesToMark"
-                               v-bind:hoveredchain="hoveredChain"
-                               v-bind:nestedmentions="nestedChains"
-                               v-bind:analysismode="analysisMode"
-                               v-bind:docid="docID"
-                               v-bind:notes="notes"
-                               v-bind:notemodes="notemodes"
-                               v-bind:researchmode="researchmode"
-                               v-bind:selectedchain="selectedChain"
-                               v-bind:showmode="showMode"
-                               v-on:hoverchain="hoverChain($event)"
-                               v-on:startselection="selectText($event,0)"
-                               v-on:endselection="selectText($event,1)"
-                               v-on:jumpmarktext="selectText2($event)"
-                    >
-                    </component>
+            <div class="mainbox">
+                <div class="scopeButton icon-arrow-left"
+                     v-on:click="changeScope(true)"></div>
+                <div class="mdl-grid mainbox">
+                    <div class="mdl-cell"
+                         v-for="(col, colIndex) in tokenstoshow"
+                         v-bind:class="columnsize">
+                        <component id="textfeatureviewport"
+                                   is="textfeatureviewport"
+                                   v-bind:col="col"
+                                   v-bind:colindex="colIndex"
+                                   v-bind:splitted="splitted"
+                                   v-bind:tokenstoshow="tokenstoshow"
+                                   v-bind:textcolumnposition="textcolumnposition"
+                                   v-bind:tokens="vueTokens"
+                                   v-bind:mentions="coref"
+                                   v-bind:selectedindexes="selectedtextindexes"
+                                   v-bind:classestomark="classesToMark"
+                                   v-bind:hoveredchain="hoveredChain"
+                                   v-bind:nestedmentions="nestedChains"
+                                   v-bind:analysismode="analysisMode"
+                                   v-bind:docid="docID"
+                                   v-bind:notes="notes"
+                                   v-bind:notemodes="notemodes"
+                                   v-bind:researchmode="researchmode"
+                                   v-bind:selectedchain="selectedChain"
+                                   v-bind:showmode="showMode"
+                                   v-on:hoverchain="hoverChain($event)"
+                                   v-on:startselection="selectText($event,0)"
+                                   v-on:endselection="selectText($event,1)"
+                                   v-on:jumpmarktext="selectText2($event)"
+                        >
+                        </component>
+                    </div>
+                </div>
+                <div class="scopeButton icon-arrow-right"
+                     id="forwardScopeButton"
+                     v-on:click="changeScope(false)">
                 </div>
             </div>
-            <div class="scopeButton icon-arrow-right"
-                 id="forwardScopeButton"
-                 v-on:click="changeScope(false)">
-            </div>
-
         </main>
         <component is="variablehelper"
                    v-bind:tokens="vueTokens"
