@@ -161,7 +161,6 @@
                 console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
-<<<<<<< HEAD
             setColumnSizeFalse: function () {
                 for (let theClass in this.columnsize) {
                     this.columnsize[theClass] = false;
@@ -306,8 +305,6 @@
         },
         beforeDestroy() {
             window.removeAllListeners();
-=======
->>>>>>> extendedresearch
         },
         computed: {
             nestedChains: function () {
