@@ -29,48 +29,44 @@
                 >
                 </component>
             </div>
-            <div class="mdl-grid">
 
-                <button class="mdl-cell mdl-cell--1-col"
-                        v-on:click="changeScope(true)">
-                    back
-                </button>
-                <div class="mdl-grid mdl-cell mdl-cell--10-col">
-                    <div class="mdl-cell"
-                         v-for="(col, colIndex) in tokenstoshow"
-                         v-bind:class="columnsize">
-                        <component id="textfeatureviewport"
-                                   is="textfeatureviewport"
-                                   v-bind:col="col"
-                                   v-bind:colindex="colIndex"
-                                   v-bind:splitted="splitted"
-                                   v-bind:textcolumnposition="textcolumnposition"
-                                   v-bind:tokens="vueTokens"
-                                   v-bind:mentions="coref"
-                                   v-bind:selectedindexes="selectedtextindexes"
-                                   v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="hoveredChain"
-                                   v-bind:nestedmentions="nestedChains"
-                                   v-bind:analysismode="analysisMode"
-                                   v-bind:docid="docID"
-                                   v-bind:notes="notes"
-                                   v-bind:notemodes="notemodes"
-                                   v-bind:researchmode="researchmode"
-                                   v-bind:selectedchain="selectedChain"
-                                   v-bind:showmode="showMode"
-                                   v-on:hoverchain="hoverChain($event)"
-                                   v-on:startselection="selectText($event,0)"
-                                   v-on:endselection="selectText($event,1)"
-                                   v-on:jumpmarktext="selectText2($event)"
-                        >
-                        </component>
-                    </div>
+            <div class="scopeButton icon-arrow-left"
+                    v-on:click="changeScope(true)"></div>
+            <div class="mdl-grid">
+                <div class="mdl-cell"
+                     v-for="(col, colIndex) in tokenstoshow"
+                     v-bind:class="columnsize">
+                    <component id="textfeatureviewport"
+                               is="textfeatureviewport"
+                               v-bind:col="col"
+                               v-bind:colindex="colIndex"
+                               v-bind:splitted="splitted"
+                               v-bind:textcolumnposition="textcolumnposition"
+                               v-bind:tokens="vueTokens"
+                               v-bind:mentions="coref"
+                               v-bind:selectedindexes="selectedtextindexes"
+                               v-bind:classestomark="classesToMark"
+                               v-bind:hoveredchain="hoveredChain"
+                               v-bind:nestedmentions="nestedChains"
+                               v-bind:analysismode="analysisMode"
+                               v-bind:docid="docID"
+                               v-bind:notes="notes"
+                               v-bind:notemodes="notemodes"
+                               v-bind:researchmode="researchmode"
+                               v-bind:selectedchain="selectedChain"
+                               v-bind:showmode="showMode"
+                               v-on:hoverchain="hoverChain($event)"
+                               v-on:startselection="selectText($event,0)"
+                               v-on:endselection="selectText($event,1)"
+                               v-on:jumpmarktext="selectText2($event)"
+                    >
+                    </component>
                 </div>
-                <button class="mdl-cell mdl-cell--1-col"
-                        v-on:click="changeScope(false)">
-                    forward
-                </button>
             </div>
+            <div class="scopeButton icon-arrow-right"
+                    id="forwardScopeButton"
+                    v-on:click="changeScope(false)"></div>
+
         </main>
         <component is="variablehelper"
                    v-bind:tokens="vueTokens"
@@ -207,32 +203,32 @@
                     case (columnQuantity >= 12):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--1-col"] = true;
-                        this.showTokens(12, 12);
+                        this.showTokens(12, 13);
                         break;
                     case (columnQuantity < 12 && columnQuantity >= 6):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--2-col"] = true;
-                        this.showTokens(columnQuantity, 6);
+                        this.showTokens(columnQuantity, 7);
                         break;
                     case (columnQuantity < 6 && columnQuantity >= 3):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--4-col"] = true;
-                        this.showTokens(columnQuantity, 3);
+                        this.showTokens(columnQuantity, 5);
                         break;
                     case (columnQuantity < 3 && columnQuantity >= 2):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--6-col"] = true;
-                        this.showTokens(columnQuantity, 2);
+                        this.showTokens(columnQuantity, 3);
                         break;
                     case (columnQuantity < 2 && columnQuantity >= 1):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, 1);
+                        this.showTokens(columnQuantity, 2);
                         break;
                     default:
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, columnQuantity+1);
                         break;
                 }
             },
@@ -241,7 +237,7 @@
                 let newtokenstoshow = [];
                 console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
                 if (end > this.splitted.length) {
-                    newtokenstoshow = this.splitted.slice(0, this.splitted.length - 1);
+                    newtokenstoshow = this.splitted.slice(0, this.splitted.length);
                     for (let i = 0; i < newtokenstoshow.length; i++) {
                         this.tokenstoshow.push(newtokenstoshow[i]);
                     }
@@ -250,7 +246,7 @@
                     console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
-                        newtokenstoshow = this.splitted.slice((end + 1) - difference, end);
+                        newtokenstoshow = this.splitted.slice((end+1) - difference, end);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
@@ -268,6 +264,7 @@
                 }
                 this.textcolumnposition.difference = difference;
                 console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
+                console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
                 console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
             },
             changeScope: function (direction) {

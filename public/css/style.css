@@ -1,34 +1,197 @@
 @media screen and (min-width: 720px) {
-    body{
+    body {
         font-size: 1em;
         line-height: 1.3;
     }
-}
-@media screen and (min-width: 1080px) {
-    body{
-        font-size: 1.2em;
-        line-height: 1.6;
+
+    .mdl-button {
+        font-size: 14px;
+        height: 36px;
     }
-}
-@media screen and (min-width: 1920px) {
-    body{
-        font-size: 1.4em;
-        line-height: 1.9;
+
+    .-mdl-menu__item {
+        font-size: 14px;
+        height: 36px;
     }
-}
-@media screen and (min-width: 3840px) {
-    body{
-        font-size: 1.6em;
-        line-height: 2.2;
+
+    .mdl-layout-title {
+        font-size: 20px;
     }
-}
-@media screen and (min-width: 7680px) {
-    body{
-        font-size: 2em;
-        line-height: 2.6;
+
+    .mdl-navigation__link {
+        font-size: 14px;
+    }
+
+    .mdl-tabs__tab {
+        font-size: 14px;
+        height: 48px;
+        line-height: 48px;
+    }
+
+    .mdl-tabs__tab-bar {
+        height: 48px;
+    }
+
+    .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active::after {
+        height: 2px;
     }
 }
 
+@media screen and (min-width: 1080px) {
+    body {
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
+
+    .mdl-button {
+        font-size: 16px;
+        height: 36px;
+    }
+
+    .-mdl-menu__item {
+        font-size: 16px;
+        height: 36px;
+    }
+
+    .mdl-layout-title {
+        font-size: 22px;
+    }
+
+    .mdl-navigation__link {
+        font-size: 16px;
+    }
+
+    .mdl-tabs__tab {
+        font-size: 16px;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .mdl-tabs__tab-bar {
+        height: 50px;
+    }
+
+    .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active::after {
+        height: 3px;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    body {
+        font-size: 1.4em;
+        line-height: 1.9;
+    }
+
+    .mdl-button {
+        font-size: 18px;
+        height: 38px;
+    }
+
+    .-mdl-menu__item {
+        font-size: 18px;
+        height: 38px;
+    }
+
+    .mdl-layout-title {
+        font-size: 24px;
+    }
+
+    .mdl-navigation__link {
+        font-size: 18px;
+    }
+
+    .mdl-tabs__tab {
+        font-size: 18px;
+        height: 52px;
+        line-height: 52px;
+    }
+
+    .mdl-tabs__tab-bar {
+        height: 52px;
+    }
+
+    .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active::after {
+        height: 4px;
+    }
+}
+
+@media screen and (min-width: 3840px) {
+    body {
+        font-size: 1.6em;
+        line-height: 2.2;
+    }
+
+    .mdl-button {
+        font-size: 22px;
+        height: 42px;
+    }
+
+    .-mdl-menu__item {
+        font-size: 22px;
+        height: 42px;
+    }
+
+    .mdl-layout-title {
+        font-size: 26px;
+    }
+
+    .mdl-navigation__link {
+        font-size: 22px;
+    }
+
+    .mdl-tabs__tab {
+        font-size: 22px;
+        height: 56px;
+        line-height: 56px;
+    }
+
+    .mdl-tabs__tab-bar {
+        height: 56px;
+    }
+
+    .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active::after {
+        height: 5px;
+    }
+}
+
+@media screen and (min-width: 7680px) {
+    body {
+        font-size: 2em;
+        line-height: 2.6;
+    }
+
+    .mdl-button {
+        font-size: 24px;
+        height: 45px;
+    }
+
+    .-mdl-menu__item {
+        font-size: 24px;
+        height: 45px;
+    }
+
+    .mdl-layout-title {
+        font-size: 28px;
+    }
+
+    .mdl-navigation__link {
+        font-size: 24px;
+    }
+
+    .mdl-tabs__tab {
+        font-size: 24px;
+        height: 58px;
+        line-height: 58px;
+    }
+
+    .mdl-tabs__tab-bar {
+        height: 58px;
+    }
+
+    .mdl-tabs.is-upgraded .mdl-tabs__tab.is-active::after {
+        height: 6px;
+    }
+}
 
 .mdl-layout__content {
     background-color: #e8e8e8;
@@ -226,7 +389,19 @@ pre {
     background: #dddddd;
 }
 
-#textfeatureviewport{
+.scopeButton{
+    width: 20px;
+    height: 100%;
+    position: fixed;
+    left: 5px;
+    font-size: 70px;
+    line-height: 100%;
+
+}
+#forwardScopeButton{
+    left: 95%;
+}
+#textfeatureviewport {
     height: 100%;
 
 }
