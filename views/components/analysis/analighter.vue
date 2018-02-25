@@ -6,7 +6,8 @@
                    v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
-                   v-bind:classestomark="classestomark">
+                   v-bind:classestomark="classestomark"
+                   v-on:togglesemanticlass="togglesemanticlass($event)">
 
         </component>
     </div>
@@ -40,7 +41,11 @@
                 colindex:this.colindex
             }
         },
-        methods: {},
+        methods: {
+            togglesemanticlass:function (newClassesToMark) {
+                this.$emit('togglesemanticlass',newClassesToMark);
+            }
+        },
         components: {
             nerVue,
             necVue,

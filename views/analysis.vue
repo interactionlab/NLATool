@@ -18,6 +18,7 @@
                         is="toolbar"
                         v-bind:tokens="vueTokens"
                         v-bind:selectedindexes="selectedtextindexes"
+                        v-bind:classestomark="classesToMark"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
@@ -57,6 +58,7 @@
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)"
                                    v-on:jumpmarktext="selectText2($event)"
+                                   v-on:togglesemanticlass="changeMarkerMode($event)"
                         >
                         </component>
                     </div>
@@ -214,7 +216,7 @@
                     case (columnQuantity < 12 && columnQuantity >= 6):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--2-col"] = true;
-                        this.showTokens(columnQuantity, 7);
+                        this.showTokens(columnQuantity, 6);
                         break;
                     case (columnQuantity < 6 && columnQuantity >= 3):
                         this.setColumnSizeFalse();
@@ -288,7 +290,7 @@
                 }
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns);
+                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns)+1;
                 let startSlice = 0;
                 this.splitted = [];
                 for (let i = 0; i < this.numberOfColumns; i++) {
