@@ -27,7 +27,7 @@
                 </component>
             </div>
             <div class="scopeButton icon-arrow-left"
-                    v-on:click="changeScope(true)"></div>
+                 v-on:click="changeScope(true)"></div>
             <div class="mdl-grid">
                 <div class="mdl-cell"
                      v-for="(col, colIndex) in tokenstoshow"
@@ -60,10 +60,15 @@
                 </div>
             </div>
             <div class="scopeButton icon-arrow-right"
-                    id="forwardScopeButton"
-                    v-on:click="changeScope(false)"></div>
+                 id="forwardScopeButton"
+                 v-on:click="changeScope(false)">
+            </div>
 
         </main>
+        <component is="variablehelper"
+                   v-bind:tokens="vueTokens"
+                   v-on:resize="setTokens($event)">
+        </component>
     </div>
 </template>
 <script>
@@ -75,6 +80,8 @@
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
     import tex from './components/analysis/text.vue';
+    import variablehelper from './components/global/variablehelper.vue';
+    import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
 
     export default {
         data: function () {
@@ -82,6 +89,7 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'entitiesview',
+                researchmode: '',
                 classesToMark: {
                     coref: false,
                     PERSON: false,
@@ -99,11 +107,39 @@
                     globalnote: false
                 },
                 hoveredChain: -1,
-                selectedChain: -1
-
+                selectedChain: -1,
+                screenOptions: {
+                    screenWidth: -1,
+                    screenHeight: -1,
+                    minimumColumnWidth: 400,
+                    minimColumnHeight: 500,
+                    maxColumnWidth: 800,
+                    maxColumnHeight: -1
+                },
+                numberOfColumns: -1,
+                splitted: [],
+                tokenstoshow: [],
+                columnsize: {
+                    'mdl-cell--1-col': false,
+                    'mdl-cell--2-col': false,
+                    'mdl-cell--4-col': false,
+                    'mdl-cell--6-col': false,
+                    'mdl-cell--8-col': false,
+                    'mdl-cell--10-col': false,
+                    'mdl-cell--12-col': true,
+                },
+                textcolumnposition: {
+                    start: -1,
+                    end: -1,
+                    difference: -1
+                },
+                tokens: [1]
             }
         },
         methods: {
+            setTokens: function (newTokens) {
+                this.tokens = newTokens;
+            },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
             },
@@ -121,7 +157,7 @@
             changeMarkerMode: function (mode) {
                 //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-              //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
+                //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
             },
             test: function () {
@@ -196,7 +232,7 @@
                     default:
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity+1);
+                        this.showTokens(columnQuantity, columnQuantity + 1);
                         break;
                 }
             },
@@ -214,7 +250,7 @@
                     console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
-                        newtokenstoshow = this.splitted.slice((end+1) - difference, end);
+                        newtokenstoshow = this.splitted.slice((end + 1) - difference, end);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
@@ -277,9 +313,6 @@
                 }
                 console.log('screenValues:' + JSON.stringify(this.screenOptions));
                 console.log('colQuantity:' + this.numberOfColumns);
-            },
-            setTokens: function (newTokens) {
-                this.tokens = newTokens;
             },
             setScreenOptions: function () {
                 console.log('changing Screensizes:');
@@ -446,7 +479,9 @@
             notes,
             analighter,
             markjs,
-            tex
+            tex,
+            variablehelper,
+            textfeatureviewport
         }
     }
 </script>
