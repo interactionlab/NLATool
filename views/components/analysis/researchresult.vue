@@ -9,7 +9,7 @@
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                         v-on:click="showdetail">
+                         v-on:click="showSource">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
@@ -18,7 +18,8 @@
                                     {{sortedtoken + ' -> '+ researchresult.result.name}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
-                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
+                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                                        v-on:click="editResearch">
                                     <i class="material-icons">edit</i>
                                 </button>
                             </div>
@@ -129,6 +130,19 @@
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
                 console.log('showallrults saveResult: ' + this.semclass);
+            },
+            showSource: function () {
+                console.log('Trying to show the source:');
+                try {
+                    let url = this.researchresult.result.detailedDescription.url;
+                    let win = window.open(url, '_blank');
+                    win.focus();
+                } catch (err) {
+                    console.log('Showing the source of Article failed: ' + err);
+                }
+            },
+            editResearch:function () {
+
             }
         },
         components: {
