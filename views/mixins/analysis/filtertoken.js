@@ -22,10 +22,6 @@ module.exports = {
             return resultingtokens;
         },
 
-        onlyUnique: function (value,index,self) {
-          return self.indexOf(value) === index;
-        },
-
         filtertokenwithclass: function (tokens, semanticClass) {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
