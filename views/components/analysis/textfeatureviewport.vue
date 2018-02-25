@@ -41,6 +41,7 @@
                     v-bind:mentions="mentions"
                     v-bind:showmode="showmode"
                     v-bind:classestomark="classestomark"
+                    v-on:togglesemanticlass="togglesemanticlass($event)"
                     v-on:jumpmarktext="selectText2($event)">
             </component>
         </div>
@@ -126,7 +127,11 @@
                 //console.log('The col Index here is:' + this.colindex);
                 //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
-            }
+            },
+            togglesemanticlass:function (semClass) {
+                this.classestomark[semClass] = !this.classestomark[semClass];
+                this.$emit('togglesemanticlass',this.classestomark);
+            },
         },
         components: {
             tex,
