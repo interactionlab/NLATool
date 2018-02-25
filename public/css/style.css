@@ -435,7 +435,9 @@ pre {
 }
 #textfeatureviewport {
     height: 100%;
-
+}
+.mainbox{
+    height: 100%;
 }
 
 /**
