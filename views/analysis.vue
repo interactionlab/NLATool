@@ -37,6 +37,7 @@
                                v-bind:col="col"
                                v-bind:colindex="colIndex"
                                v-bind:splitted="splitted"
+                               v-bind:tokenstoshow="tokenstoshow"
                                v-bind:textcolumnposition="textcolumnposition"
                                v-bind:tokens="vueTokens"
                                v-bind:mentions="coref"

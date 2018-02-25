@@ -2,6 +2,8 @@
     <div>
         <component :is="showmode"
                    v-bind:tokens="tokens"
+                   v-bind:colindex="colindex"
+                   v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark">
@@ -24,6 +26,8 @@
             showmode: String,
             docid: String,
             classestomark: Object,
+            tokenstoshow:Array,
+            colindex:Number
         },
         data: function () {
             return {
@@ -31,7 +35,9 @@
                 showmode: this.showmode,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,
-                classestomark: this.classestomark
+                classestomark: this.classestomark,
+                tokenstoshow:this.tokenstoshow,
+                colindex:this.colindex
             }
         },
         methods: {},
