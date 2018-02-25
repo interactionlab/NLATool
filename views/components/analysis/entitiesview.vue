@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="semClassFormate">PERSON</div>
+        <div class="semClassFormate"
+            v-on:click="togglesemanticlass('PERSON')">PERSON</div>
         <component is="researchresult"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
@@ -14,7 +15,8 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div class="semClassFormate">LOCATION</div>
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('LOCATION')">LOCATION</div>
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult2,index2) in LOCATION"
@@ -27,7 +29,8 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div class="semClassFormate">ORGANIZATION</div>
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION</div>
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult3,index3) in ORGANIZATION"
@@ -40,7 +43,8 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
-        <div class="semClassFormate">MISC</div>
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('MISC')">MISC</div>
         <component is="researchresult"
                    v-if="classestomark.MISC"
                    v-for="(researchresult4,index4) in MISC"
@@ -90,11 +94,11 @@
                 this[semClass] = [];
                 let tokensResults = [];
                 this.sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass);
-                console.log('all tokens of: ' + semClass + ' are: ' + this.sortedtokens);
+                //console.log('all tokens of: ' + semClass + ' are: ' + this.sortedtokens);
                 for (let i = 0; i < this.sortedtokens.length; i++) {
                     this.searchGoogle(this.sortedtokens[i], 1, semClass);
                 }
-                console.log('Token results: ' + JSON.stringify(this.researchresults));
+                //console.log('Token results: ' + JSON.stringify(this.researchresults));
             },
             searchGoogle: function (query, limit, semClass) {
                 if (limit < 1) {
@@ -118,7 +122,10 @@
                     }
                 });
             },
-
+            togglesemanticlass:function (semClass) {
+                this.classestomark[semClass] = !this.classestomark[semClass];
+                this.$emit('togglesemanticlass',[semClass,this.classestomark]);
+            },
             saveResults: function () {
                 console.log('TODO: Trying to save but not implemented.');
             }
