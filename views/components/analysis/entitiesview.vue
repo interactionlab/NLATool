@@ -65,7 +65,9 @@
         props: {
             tokens: Array,
             classestomark: Object,
-            docid: Number
+            docid: Number,
+            tokenstoshow:Array,
+            colindex:Number
         },
         data: function () {
             return {
@@ -78,14 +80,16 @@
                 classestomark: this.classestomark,
                 docid: this.docid,
                 researchresults: [],
-                sortedtokens:[]
+                sortedtokens:[],
+                tokenstoshow:this.tokenstoshow,
+                colindex:this.colindex
             }
         },
         methods: {
             researchTokensOfClass: function (semClass) {
                 this[semClass] = [];
                 let tokensResults = [];
-                this.sortedtokens = this.filtertokenwithclass(this.tokens, semClass);
+                this.sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass);
                 console.log('all tokens of: ' + semClass + ' are: ' + this.sortedtokens);
                 for (let i = 0; i < this.sortedtokens.length; i++) {
                     this.searchGoogle(this.sortedtokens[i], 1, semClass);

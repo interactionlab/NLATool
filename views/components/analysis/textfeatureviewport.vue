@@ -30,6 +30,8 @@
             <component
                     :is="analysismode"
                     v-bind:tokens="tokens"
+                    v-bind:tokenstoshow="tokenstoshow"
+                    v-bind:colindex="colindex"
                     v-bind:docid="docid"
                     v-bind:notes="notes"
                     v-bind:notemodes="notemodes"
@@ -69,7 +71,8 @@
             researchmode: String,
             analysismode: String,
             docid: Number,
-            textcolumnposition: Number
+            textcolumnposition: Number,
+            tokenstoshow:Array
         },
         data: function () {
             return {
@@ -89,7 +92,8 @@
                 researchmode: this.researchmode,
                 analysismode: this.analysismode,
                 docid: this.docid,
-                textcolumnposition: this.textcolumnposition
+                textcolumnposition: this.textcolumnposition,
+                tokenstoshow:this.tokenstoshow
             }
         },
         methods: {
