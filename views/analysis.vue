@@ -33,7 +33,8 @@
                 <div class="mdl-cell"
                      v-for="(col, colIndex) in splitted"
                      v-bind:class="columnsize">
-                    <component is="textfeatureviewport"
+                    <component id="textfeatureviewport"
+                            is="textfeatureviewport"
                                v-bind:col="col"
                                v-bind:colindex="colIndex"
                                v-bind:splitted="splitted"
