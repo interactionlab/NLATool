@@ -43,7 +43,8 @@
         props: {
             wordnotedb: Object,
             docid: String,
-            tokens:Object
+            tokens:Object,
+            selectedindexes:Object
         },
         data: function () {
             return {
@@ -51,7 +52,8 @@
                 ishovered: false,
                 editing: false,
                 docid: this.docid,
-                tokens:this.tokens
+                tokens:this.tokens,
+                selectedindexes: this.selectedindexes
             }
         },
         computed:{
