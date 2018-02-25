@@ -3,7 +3,10 @@
         font-size: 1em;
         line-height: 1.3;
     }
-
+    p{
+        font-size: 1em;
+        line-height: 1.3;
+    }
     .mdl-button {
         font-size: 14px;
         height: 36px;
@@ -42,7 +45,10 @@
         font-size: 1.2em;
         line-height: 1.6;
     }
-
+    p{
+        font-size: 1.2em;
+        line-height: 1.6;
+    }
     .mdl-button {
         font-size: 16px;
         height: 36px;
@@ -81,7 +87,10 @@
         font-size: 1.4em;
         line-height: 1.9;
     }
-
+    p{
+        font-size: 1.4em;
+        line-height: 1.9;
+    }
     .mdl-button {
         font-size: 18px;
         height: 38px;
@@ -121,6 +130,10 @@
         line-height: 2.2;
     }
 
+    p{
+        font-size: 1.6em;
+        line-height: 2.2;
+    }
     .mdl-button {
         font-size: 22px;
         height: 42px;
@@ -156,6 +169,10 @@
 
 @media screen and (min-width: 7680px) {
     body {
+        font-size: 2em;
+        line-height: 2.6;
+    }
+    p{
         font-size: 2em;
         line-height: 2.6;
     }
