@@ -43,6 +43,7 @@ let vueRenderOptions = {
         meta: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {script: 'https://code.jquery.com/jquery-3.2.1.min.js'},
+            {script: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCILXEEId8MKt4qxS7V-XACNfyxUSgrdPk'}
 
         ]
     }
@@ -91,7 +92,7 @@ io.on('connection', function (socket) {
         });
     });
     socket.on('saveresult', function (index, researchresult, docID) {
-        console.log('saved Result: ')
+        console.log('saved Result: ');
         wait.launchFiber(saveResult, index, researchresult, docID);
     });
     socket.on('changeClass', function (tokenToEdit, docID) {

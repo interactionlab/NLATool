@@ -1,6 +1,5 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <!-- Header:-->
         <component
                 is="mainheader"
                 v-bind:title="title"
@@ -23,13 +22,10 @@
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)"
-                >
+                        v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-
             <div class="scopeButton icon-arrow-left"
                     v-on:click="changeScope(true)"></div>
             <div class="mdl-grid">
@@ -68,18 +64,17 @@
                     v-on:click="changeScope(false)"></div>
 
         </main>
-        <component is="variablehelper"
-                   v-bind:tokens="vueTokens"
-                   v-on:resize="setTokens($event)">
-        </component>
     </div>
 </template>
 <script>
+    import research from './components/analysis/research.vue';
+    import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import toolbar from './components/analysis/toolbar/toolbar.vue';
-    import variablehelper from './components/global/variablehelper.vue';
-    import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
+    import analighter from './components/analysis/analighter.vue';
+    import markjs from './components/analysis/mark.vue';
+    import tex from './components/analysis/text.vue';
 
     export default {
         data: function () {
@@ -87,7 +82,6 @@
                 analysisMode: 'analighter',
                 markermode: 'NE',
                 showMode: 'entitiesview',
-                researchmode: '',
                 classesToMark: {
                     coref: false,
                     PERSON: false,
@@ -105,33 +99,8 @@
                     globalnote: false
                 },
                 hoveredChain: -1,
-                selectedChain: -1,
-                screenOptions: {
-                    screenWidth: -1,
-                    screenHeight: -1,
-                    minimumColumnWidth: 400,
-                    minimColumnHeight: 500,
-                    maxColumnWidth: 800,
-                    maxColumnHeight: -1
-                },
-                numberOfColumns: -1,
-                splitted: [],
-                tokenstoshow: [],
-                columnsize: {
-                    'mdl-cell--1-col': false,
-                    'mdl-cell--2-col': false,
-                    'mdl-cell--4-col': false,
-                    'mdl-cell--6-col': false,
-                    'mdl-cell--8-col': false,
-                    'mdl-cell--10-col': false,
-                    'mdl-cell--12-col': true,
-                },
-                textcolumnposition: {
-                    start: -1,
-                    end: -1,
-                    difference: -1
-                },
-                tokens: [1]
+                selectedChain: -1
+
             }
         },
         methods: {
@@ -152,8 +121,11 @@
             changeMarkerMode: function (mode) {
                 //console.log('Got event to change the marker Mode: ' + mode);
                 this.markermode = mode;
-                //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
+              //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
+            },
+            test: function () {
+                console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
@@ -162,10 +134,6 @@
                     this.showMode = 'entitiesview';
                 }
 
-            },
-            changeResearchMode: function (mode) {
-                console.log('analysis: Changing researchmode: ' + mode);
-                this.researchmode = mode;
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
@@ -193,6 +161,7 @@
                 console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
+<<<<<<< HEAD
             setColumnSizeFalse: function () {
                 for (let theClass in this.columnsize) {
                     this.columnsize[theClass] = false;
@@ -337,9 +306,10 @@
         },
         beforeDestroy() {
             window.removeAllListeners();
+=======
+>>>>>>> extendedresearch
         },
         computed: {
-
             nestedChains: function () {
                 let nestedMentions = {
                     fullyNested: [],
@@ -475,8 +445,11 @@
             mainheader,
             headernavbar,
             toolbar,
-            variablehelper,
-            textfeatureviewport
+            research,
+            notes,
+            analighter,
+            markjs,
+            tex
         }
     }
 </script>
