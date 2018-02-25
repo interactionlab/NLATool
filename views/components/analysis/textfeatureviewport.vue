@@ -109,8 +109,8 @@
             generatetrueindex: function (wordIndex) {
                 let i;
                 let j = 0;
-                console.log('the wordIndex Input is:' + wordIndex);
-                console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
+                //console.log('the wordIndex Input is:' + wordIndex);
+                //console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
                 for (let k = 0; k < this.textcolumnposition.start; k++) {
                     wordIndex = wordIndex + this.splitted[k].length;
                 }
@@ -119,8 +119,8 @@
                     j++;
                 }
                 wordIndex = wordIndex + j;
-                console.log('The col Index here is:' + this.colindex);
-                console.log('The final Index is: ' + wordIndex);
+                //console.log('The col Index here is:' + this.colindex);
+                //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
             }
         },
