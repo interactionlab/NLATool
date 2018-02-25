@@ -69,6 +69,7 @@
             researchmode: String,
             analysismode: String,
             docid: Number,
+            textcolumnposition: Number
         },
         data: function () {
             return {
@@ -87,7 +88,8 @@
                 notemodes: this.notemodes,
                 researchmode: this.researchmode,
                 analysismode: this.analysismode,
-                docid: this.docid
+                docid: this.docid,
+                textcolumnposition: this.textcolumnposition
             }
         },
         methods: {
@@ -106,15 +108,19 @@
             },
             generatetrueindex: function (wordIndex) {
                 let i;
-                //console.log('the wodIndex Input is:' +wordIndex);
-                for (i = 0; i < this.colindex; i++) {
+                let j = 0;
+                console.log('the wordIndex Input is:' + wordIndex);
+                console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
+                for (let k = 0; k < this.textcolumnposition.start; k++) {
+                    wordIndex = wordIndex + this.splitted[k].length;
+                }
+                for (i = this.textcolumnposition.start; i < (this.colindex + this.textcolumnposition.start); i++) {
                     wordIndex = wordIndex + this.splitted[i].length - 1;
+                    j++;
                 }
-                if(this.colindex){
-                    wordIndex = wordIndex +i;
-                }
-                //console.log('The col Index here is:' + this.colindex);
-                //console.log('The final Index is: ' + wordIndex);
+                wordIndex = wordIndex + j;
+                console.log('The col Index here is:' + this.colindex);
+                console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
             }
         },
