@@ -27,10 +27,10 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <div class="mainbox">
+            <div class="height100">
                 <div class="scopeButton icon-arrow-left"
                      v-on:click="changeScope(true)"></div>
-                <div class="mdl-grid mainbox">
+                <div class="mdl-grid height100">
                     <div class="mdl-cell"
                          v-for="(col, colIndex) in tokenstoshow"
                          v-bind:class="columnsize">
