@@ -1,14 +1,17 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor">
-        <component is="wordnote"
+        <component class="height100"
+                   is="wordnote"
                    v-for="wordnotedb in notes"
                    v-bind:wordnotedb="wordnotedb"
                    v-bind:key="wordnotedb.noteID"
                    v-bind:ishovered="ishovered"
                    v-bind:docid="docid"
                    v-bind:tokens="tokens"
+                   v-bind:selectedindexes="selectedindexes"
                    v-on:edit="editnote($event)"
                    v-on:back="back($event)"
+                   v-on:deletenote="deletenote($event)"
                    v-on:jumpmarktext="jumpmarktext($event)"
                    v-on:mouseover="showButns"
                    v-on:mouseout="hideButns">
@@ -45,6 +48,13 @@
             }
         },
         methods: {
+            deletenote:function (noteId) {
+                for(let i = 0; i < this.notes.length; i++){
+                    if(this.notes[i].noteID === noteId){
+                        this.notes.splice(i, 1);
+                    }
+                }
+            },
             jumpmarktext: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
                 this.$emit('jumpmarktext', this.selectedindexes);
