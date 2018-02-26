@@ -312,19 +312,19 @@ pre {
 }
 /** semantic Class highlight for results */
 .PERSON_BORDERED{
-    border: #ff6666 3px solid;
+    border-left: #ff6666 4px solid;
     padding: 10px 10px 10px 10px;
 }
 .LOCATION_BORDERED{
-    border:  #8cd98c 3px solid;
+    border-left:  #8cd98c 4px solid;
     padding: 10px 10px 10px 10px;
 }
 .ORGANIZATION_BORDERED{
-    border:  #66a3ff 3px solid;
+    border-left:  #66a3ff 4px solid;
     padding: 10px 10px 10px 10px;
 }
 .MISC_BORDERED{
-    border: #e699ff 3px solid;
+    border-left: #e699ff 4px solid;
     padding: 10px 10px 10px 10px;
 }
 /**semantic Class highlight in Text*/
