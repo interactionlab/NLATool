@@ -30,33 +30,46 @@
                 </component>
             </div>
             <div class="mdl-grid">
-                <div class="mdl-cell"
-                     v-for="(col, colIndex) in splitted"
-                     v-bind:class="columnsize">
-                    <component is="textfeatureviewport"
-                               v-bind:col="col"
-                               v-bind:colindex="colIndex"
-                               v-bind:splitted="splitted"
-                               v-bind:tokens="vueTokens"
-                               v-bind:mentions="coref"
-                               v-bind:selectedindexes="selectedtextindexes"
-                               v-bind:classestomark="classesToMark"
-                               v-bind:hoveredchain="hoveredChain"
-                               v-bind:nestedmentions="nestedChains"
-                               v-bind:analysismode="analysisMode"
-                               v-bind:docid="docID"
-                               v-bind:notes="notes"
-                               v-bind:notemodes="notemodes"
-                               v-bind:researchmode="researchmode"
-                               v-bind:selectedchain="selectedChain"
-                               v-bind:showmode="showMode"
-                               v-on:hoverchain="hoverChain($event)"
-                               v-on:startselection="selectText($event,0)"
-                               v-on:endselection="selectText($event,1)"
-                               v-on:jumpmarktext="selectText2($event)"
-                    >
-                    </component>
+
+                <button class="mdl-cell mdl-cell--1-col"
+                        v-on:click="changeScope(true)">
+                    back
+                </button>
+                <div class="mdl-grid mdl-cell mdl-cell--10-col">
+                    <div class="mdl-cell"
+                         v-for="(col, colIndex) in tokenstoshow"
+                         v-bind:class="columnsize">
+                        <component id="textfeatureviewport"
+                                   is="textfeatureviewport"
+                                   v-bind:col="col"
+                                   v-bind:colindex="colIndex"
+                                   v-bind:splitted="splitted"
+                                   v-bind:textcolumnposition="textcolumnposition"
+                                   v-bind:tokens="vueTokens"
+                                   v-bind:mentions="coref"
+                                   v-bind:selectedindexes="selectedtextindexes"
+                                   v-bind:classestomark="classesToMark"
+                                   v-bind:hoveredchain="hoveredChain"
+                                   v-bind:nestedmentions="nestedChains"
+                                   v-bind:analysismode="analysisMode"
+                                   v-bind:docid="docID"
+                                   v-bind:notes="notes"
+                                   v-bind:notemodes="notemodes"
+                                   v-bind:researchmode="researchmode"
+                                   v-bind:selectedchain="selectedChain"
+                                   v-bind:showmode="showMode"
+                                   v-on:hoverchain="hoverChain($event)"
+                                   v-on:startselection="selectText($event,0)"
+                                   v-on:endselection="selectText($event,1)"
+                                   v-on:jumpmarktext="selectText2($event)"
+                        >
+                        </component>
+                    </div>
                 </div>
+                <button class="mdl-cell mdl-cell--1-col"
+                        v-on:click="changeScope(false)">
+                    forward
+                </button>
             </div>
         </main>
         <component is="variablehelper"
@@ -199,22 +212,22 @@
                     case (columnQuantity < 12 && columnQuantity >= 6):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--2-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, 6);
                         break;
                     case (columnQuantity < 6 && columnQuantity >= 3):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--4-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, 3);
                         break;
                     case (columnQuantity < 3 && columnQuantity >= 2):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--6-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, 2);
                         break;
                     case (columnQuantity < 2 && columnQuantity >= 1):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, 1);
                         break;
                     default:
                         this.setColumnSizeFalse();
@@ -224,18 +237,52 @@
                 }
             },
             showTokens: function (difference, end) {
-                if (end > this.splitted.length-1) {
-                    this.tokenstoshow = this.splitted.slice(0, this.splitted.length-1);
-                    this.textcolumnposition.end = this.splitted.length-1;
+                this.tokenstoshow = [];
+                let newtokenstoshow = [];
+                console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
+                if (end > this.splitted.length) {
+                    newtokenstoshow = this.splitted.slice(0, this.splitted.length - 1);
+                    for (let i = 0; i < newtokenstoshow.length; i++) {
+                        this.tokenstoshow.push(newtokenstoshow[i]);
+                    }
+                    this.textcolumnposition.end = this.splitted.length - 1;
+                    this.textcolumnposition.start = 0;
+                    console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
-                        this.tokenstoshow = this.splitted.slice(end - difference, end);
+                        newtokenstoshow = this.splitted.slice((end + 1) - difference, end);
+                        for (let i = 0; i < newtokenstoshow.length; i++) {
+                            this.tokenstoshow.push(newtokenstoshow[i]);
+                        }
+                        this.textcolumnposition.start = (end + 1) - difference;
+                        console.log('Got here2');
                     } else {
-                        this.tokenstoshow = this.splitted.slice(0, end + (difference - end));
+                        console.log('Got here3');
+                        newtokenstoshow = this.splitted.slice(0, end);
+                        for (let i = 0; i < newtokenstoshow.length; i++) {
+                            this.tokenstoshow.push(newtokenstoshow[i]);
+                        }
+                        this.textcolumnposition.start = 0;
                     }
                     this.textcolumnposition.end = end;
                 }
                 this.textcolumnposition.difference = difference;
+                console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
+                console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
+            },
+            changeScope: function (direction) {
+                console.log('changing Scope: Check 0 ' + direction);
+                if (direction) {
+                    if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
+                        console.log('changing Scope: Check 1');
+                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
+                    }
+                } else if (!direction) {
+                    if (this.textcolumnposition.end < this.splitted.length) {
+                        console.log('changing Scope: Check 2');
+                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
+                    }
+                }
             },
             splitTokens: function () {
                 let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns);

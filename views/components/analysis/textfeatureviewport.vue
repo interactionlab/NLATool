@@ -50,26 +50,28 @@
     import notes from './components/analysis/notes/notes.vue';
     import analighter from './components/analysis/analighter.vue';
     import tex from './components/analysis/text.vue';
+
     export default {
-        props:{
+        props: {
             col: Array,
             colindex: Number,
             splitted: Array,
-            tokens:Array,
+            tokens: Array,
             notes: Array,
             mentions: Array,
             nestedmentions: Array,
-            selectedindexes:Object,
+            selectedindexes: Object,
             selectedchain: Number,
             hoveredchain: Number,
             classestomark: Object,
             showmode: String,
-            notemodes:Object,
+            notemodes: Object,
             researchmode: String,
             analysismode: String,
             docid: Number,
+            textcolumnposition: Number
         },
-        data:function () {
+        data: function () {
             return {
                 col: this.col,
                 colindex: this.colindex,
@@ -86,35 +88,43 @@
                 notemodes: this.notemodes,
                 researchmode: this.researchmode,
                 analysismode: this.analysismode,
-                docid: this.docid
+                docid: this.docid,
+                textcolumnposition: this.textcolumnposition
             }
         },
-        methods:{
+        methods: {
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
                 this.$emit('hoverchain', chain);
             },
-            startselection:function(index){
-               this.$emit('startselection', index);
+            startselection: function (index) {
+                this.$emit('startselection', index);
             },
-            endselection:function(index){
+            endselection: function (index) {
                 this.$emit('endselection', index);
             },
-            selectText2:function (newSelectedIndexes) {
+            selectText2: function (newSelectedIndexes) {
                 this.$emit('jumpmarktext', newSelectedIndexes)
             },
-            generatetrueindex:function (wordIndex) {
+            generatetrueindex: function (wordIndex) {
                 let i;
-                for(i = 0; i < this.colindex; i++){
-                    wordIndex = wordIndex + this.splitted[i].length-1;
+                let j = 0;
+                //console.log('the wordIndex Input is:' + wordIndex);
+                //console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
+                for (let k = 0; k < this.textcolumnposition.start; k++) {
+                    wordIndex = wordIndex + this.splitted[k].length;
                 }
-                if(i >= 1){
-                    return wordIndex -1;
+                for (i = this.textcolumnposition.start; i < (this.colindex + this.textcolumnposition.start); i++) {
+                    wordIndex = wordIndex + this.splitted[i].length - 1;
+                    j++;
                 }
+                wordIndex = wordIndex + j;
+                //console.log('The col Index here is:' + this.colindex);
+                //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
             }
         },
-        components:{
+        components: {
             tex,
             research,
             analighter,
