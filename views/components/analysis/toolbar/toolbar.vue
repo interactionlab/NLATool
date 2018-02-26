@@ -167,7 +167,6 @@
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             },
-
         }
     }
 </script>
