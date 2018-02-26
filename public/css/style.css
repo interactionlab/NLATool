@@ -312,40 +312,40 @@ pre {
 }
 /** semantic Class highlight for results */
 .PERSON_BORDERED{
-    border: orangered 3px solid;
+    border: #ff6666 3px solid;
     padding: 10px 10px 10px 10px;
 }
 .LOCATION_BORDERED{
-    border: darkseagreen 3px solid;
+    border:  #8cd98c 3px solid;
     padding: 10px 10px 10px 10px;
 }
 .ORGANIZATION_BORDERED{
-    border: deepskyblue 3px solid;
+    border:  #66a3ff 3px solid;
     padding: 10px 10px 10px 10px;
 }
 .MISC_BORDERED{
-    border: violet 3px solid;
+    border: #e699ff 3px solid;
     padding: 10px 10px 10px 10px;
 }
 /**semantic Class highlight in Text*/
 .PERSON {
-    background: orangered;
+    background: #ff6666;
 }
 
 .LOCATION {
-    background: darkseagreen;
+    background:  #8cd98c;
 }
 
 .ORGANIZATION {
-    background: deepskyblue;
+    background:  #66a3ff;
 }
 
 .MISC {
-    background: violet;
+    background: #e699ff;
 }
 
 .POS {
-    background: lightgrey;
+    background: #d9d9d9;
 }
 
 .coref {
@@ -361,12 +361,12 @@ pre {
 }
 
 .cHoverRepresentant {
-    background: darkgrey;
+    background:  #a6a6a6;
     border-bottom: 2px solid red;
 }
 
 .cHoverReferent {
-    background: darkgrey;
+    background:  #a6a6a6;
     border-bottom: 2px solid blue;
 }
 
