@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('PERSON')">PERSON</div>
+             v-on:click="togglesemanticlass('PERSON')">PERSON ({{this.sortedtokens[0].length}})</div>
 
         <component is="researchresult"
                    v-if="classestomark.PERSON"
@@ -11,13 +11,13 @@
                    v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:sortedtoken="sortedtokens[0][index]"
                    v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('LOCATION')">LOCATION</div>
+             v-on:click="togglesemanticlass('LOCATION')">LOCATION ({{this.sortedtokens[1].length}})</div>
 
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
@@ -27,6 +27,7 @@
                    v-bind:index="index2"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:sortedtoken="sortedtokens[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -42,6 +43,7 @@
                    v-bind:index="index3"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:sortedtoken="sortedtokens[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -57,6 +59,7 @@
                    v-bind:index="index4"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
+                   v-bind:sortedtoken="sortedtokens[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -95,13 +98,14 @@
             }
         },
         methods: {
-            researchTokensOfClass: function (semClass) {
+            researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
                 let tokensResults = [];
-                this.sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass);
-                //console.log('all tokens of: ' + semClass + ' are: ' + this.sortedtokens);
-                for (let i = 0; i < this.sortedtokens.length; i++) {
-                    this.searchGoogle(this.sortedtokens[i], 1, semClass);
+                this.sortedtokens.push( this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
+                console.log('all tokens of: '+ semClass + JSON.stringify(this.sortedtokens[index]));
+                for (let i = 0; i < this.sortedtokens[index].length; i++) {
+                    console.log('input: '+this.sortedtokens[index][i].name);
+                    this.searchGoogle(this.sortedtokens[index][i].name, 1, semClass);
                 }
                 //console.log('Token results: ' + JSON.stringify(this.researchresults));
             },
@@ -138,10 +142,10 @@
         },
         computed: {},
         mounted() {
-            this.researchTokensOfClass('PERSON');
-            this.researchTokensOfClass('LOCATION');
-            this.researchTokensOfClass('ORGANIZATION');
-            this.researchTokensOfClass('MISC');
+            this.researchTokensOfClass('PERSON',0);
+            this.researchTokensOfClass('LOCATION',1);
+            this.researchTokensOfClass('ORGANIZATION',2);
+            this.researchTokensOfClass('MISC',3);
         },
         watch: {},
         components: {
