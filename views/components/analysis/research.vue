@@ -132,6 +132,16 @@
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
+            makeCORSSecureRequest:function (url, success) {
+                let connectionParams = {
+                    type: 'GET',
+                    url: url,
+                    success: success,
+                    dataType: 'JSON',
+                };
+                let sth = new XMLHttpRequest();
+                return $.ajax(connectionParams);
+            },
             saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
