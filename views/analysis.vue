@@ -91,7 +91,6 @@
         data: function () {
             return {
                 analysisMode: 'analighter',
-                markermode: 'NE',
                 showMode: 'entitiesview',
                 researchmode: '',
                 classesToMark: {
@@ -137,7 +136,8 @@
                     end: -1,
                     difference: -1
                 },
-                tokens: [1]
+                tokens: [1],
+                splittNotes:[]
             }
         },
         methods: {
@@ -158,11 +158,9 @@
             getResearch: function () {
                 this.analysisMode = 'research';
             },
-            changeMarkerMode: function (mode) {
-                //console.log('Got event to change the marker Mode: ' + mode);
-                this.markermode = mode;
-                //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
-                this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
+            changeMarkerMode: function (newClassesToMark) {
+                 console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
+                this.classesToMark = newClassesToMark;
             },
             test: function () {
                 console.log(JSON.stringify(this.notes));
@@ -286,6 +284,13 @@
                     if (this.textcolumnposition.end < this.splitted.length) {
                         console.log('changing Scope: Check 2');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
+                    }
+                }
+            },
+            splitNotes:function () {
+                for(let i = 0; i < this.splitted; i++){
+                    for(let j = 0; j < this.notes; j++){
+                        if(this.splitted[i][this.splitted[i].length-1] === 0){}
                     }
                 }
             },
