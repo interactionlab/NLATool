@@ -226,6 +226,11 @@ pre {
     background: #dddddd;
 }
 
+#textfeatureviewport{
+    height: 100%;
+
+}
+
 /**
 Background color for Buttons
 .mdl-button--raised{
