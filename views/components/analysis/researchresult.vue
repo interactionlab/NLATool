@@ -8,8 +8,7 @@
 
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate"
-                         v-on:click="showSource">
+                         v-on:mouseover="accentuate">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
@@ -21,6 +20,10 @@
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-on:click="editResearch">
                                     <i class="material-icons">edit</i>
+                                </button>
+                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                                        v-on:click="showSource">
+                                    info
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
