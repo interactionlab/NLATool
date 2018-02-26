@@ -23,7 +23,7 @@
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-on:click="showSource">
-                                    info
+                                    <i class="material-icons">public</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
