@@ -63,8 +63,6 @@
                    v-bind:semclass="'MISC_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
-        <div class="semClassFormate"
-             v-on:click="togglesemanticlass('coref')">coref</div>
     </div>
 </template>
 <script>
