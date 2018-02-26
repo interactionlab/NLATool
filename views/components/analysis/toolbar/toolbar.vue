@@ -17,47 +17,40 @@
                         <small class="mdc-button">ALL</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Person')"
-                            v-bind:class="{PERSON: classesToMark.PERSON}"
+                            v-bind:class="{PERSON: classestomark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSON</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Location')"
-                            v-bind:class="{LOCATION: classesToMark.LOCATION}"
+                            v-bind:class="{LOCATION: classestomark.LOCATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">LOCATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Organization')"
-                            v-bind:class="{ORGANIZATION: classesToMark.ORGANIZATION}"
+                            v-bind:class="{ORGANIZATION: classestomark.ORGANIZATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ORGANIZATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('Misc')"
-                            v-bind:class="{MISC: classesToMark.MISC}"
+                            v-bind:class="{MISC: classestomark.MISC}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
                     <button v-on:click="changeMarkerMode('coref')"
-                            v-bind:class="{coref: classesToMark.coref}"
+                            v-bind:class="{coref: classestomark.coref}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">Coreference</small>
                     </button>
                     <button class="mdl-button mdl-js-button"
                             v-on:click="setCorrectionMode()"
-                            v-bind:class="{POS: classesToMark.POS}">
+                            v-bind:class="{POS: classestomark.POS}">
                         <small class="mdc-button">Correction</small>
                     </button>
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
-                    <button v-bind:class="{'activeButton': researchModes.info}"
-                            class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('info')">
+                    <button class="mdl-button mdl-js-button">
                         <small class="mdc-button">Information</small>
-                    </button>
-                    <button v-bind:class="{'activeButton': researchModes.map}"
-                            class="mdl-button mdl-js-button"
-                            v-on:click="setResearchMode('map')">
-                        <small class="mdc-button">Map</small>
                     </button>
                 </div>
 
@@ -83,7 +76,8 @@
         mixins: [getselectedtext],
         props: {
             tokens: Array,
-            selectedindexes: Object
+            selectedindexes: Object,
+            classestomark:Object
         },
         data: function () {
             return {
@@ -93,22 +87,12 @@
                 selectedindexes: this.selectedindexes,
                 correctionMode: false,
                 allActive: false,
-                classesToMark: {
-                    PERSON: false,
-                    LOCATION: false,
-                    ORGANIZATION: false,
-                    MISC: false,
-                    POS: false,
-                    coref: false,
-                },
+                classestomark: this.classestomark,
                 noteModes: {
                     wordnote: true,
                     globalnote: false
                 },
-                researchModes: {
-                    info: true,
-                    map: false
-                }
+
             }
         },
         methods: {
@@ -192,19 +176,7 @@
                 }
                 this.$emit('changemarkermode', [mode, this.classesToMark]);
             },
-            setResearchMode: function (mode) {
-                if (mode == 'info') {
-                    mode = 'activeButton';
-                    this.researchModes.info = true;
-                    this.researchModes.map = false;
-                }
-                else if (mode == 'map') {
-                    mode = 'activeButton';
-                    this.researchModes.map = true;
-                    this.researchModes.info = false;
-                }
-                this.$emit('changeresearchmode', [mode]);
-            },
+
             setCorrectionMode: function () {
                 //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
@@ -218,13 +190,7 @@
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             },
-            toggleReseachMode: function () {
-                this.researchModes.onOffInfo = !this.researchModes.onOffInfo;
-                this.researchModes.onOffMap = !this.researchModes.onOffMap;
-            },
-            setMapMode: function () {
-                this.onOff = !this.onOff;
-            }
+
         }
     }
 </script>
