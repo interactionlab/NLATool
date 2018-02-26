@@ -1,6 +1,5 @@
 <template>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-        <!-- Header:-->
         <component
                 is="mainheader"
                 v-bind:title="title"
@@ -19,23 +18,19 @@
                         is="toolbar"
                         v-bind:tokens="vueTokens"
                         v-bind:selectedindexes="selectedtextindexes"
+                        v-bind:classestomark="classesToMark"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changeresearchmode="changeResearchMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)"
-                >
+                        v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <div class="mdl-grid">
-
-                <button class="mdl-cell mdl-cell--1-col"
-                        v-on:click="changeScope(true)">
-                    back
-                </button>
-                <div class="mdl-grid mdl-cell mdl-cell--10-col">
+            <div class="height100">
+                <div class="scopeButton icon-arrow-left"
+                     v-on:click="changeScope(true)"></div>
+                <div class="mdl-grid height100">
                     <div class="mdl-cell"
                          v-for="(col, colIndex) in tokenstoshow"
                          v-bind:class="columnsize">
@@ -44,6 +39,7 @@
                                    v-bind:col="col"
                                    v-bind:colindex="colIndex"
                                    v-bind:splitted="splitted"
+                                   v-bind:tokenstoshow="tokenstoshow"
                                    v-bind:textcolumnposition="textcolumnposition"
                                    v-bind:tokens="vueTokens"
                                    v-bind:mentions="coref"
@@ -62,14 +58,15 @@
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)"
                                    v-on:jumpmarktext="selectText2($event)"
+                                   v-on:togglesemanticlass="changeMarkerMode($event)"
                         >
                         </component>
                     </div>
                 </div>
-                <button class="mdl-cell mdl-cell--1-col"
-                        v-on:click="changeScope(false)">
-                    forward
-                </button>
+                <div class="scopeButton icon-arrow-right"
+                     id="forwardScopeButton"
+                     v-on:click="changeScope(false)">
+                </div>
             </div>
         </main>
         <component is="variablehelper"
@@ -79,9 +76,14 @@
     </div>
 </template>
 <script>
+    import research from './components/analysis/research.vue';
+    import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import toolbar from './components/analysis/toolbar/toolbar.vue';
+    import analighter from './components/analysis/analighter.vue';
+    import markjs from './components/analysis/mark.vue';
+    import tex from './components/analysis/text.vue';
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
 
@@ -139,6 +141,9 @@
             }
         },
         methods: {
+            setTokens: function (newTokens) {
+                this.tokens = newTokens;
+            },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
             },
@@ -159,6 +164,9 @@
                 //  console.log('classesToMark: ' + JSON.stringify(mode[1]));
                 this.classesToMark[mode[0]] = !this.classesToMark[mode[0]];
             },
+            test: function () {
+                console.log(JSON.stringify(this.notes));
+            },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
                     this.showMode = 'correction';
@@ -166,10 +174,6 @@
                     this.showMode = 'entitiesview';
                 }
 
-            },
-            changeResearchMode: function (mode) {
-                console.log('analysis: Changing researchmode: ' + mode);
-                this.researchmode = mode;
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
@@ -207,7 +211,7 @@
                     case (columnQuantity >= 12):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--1-col"] = true;
-                        this.showTokens(12, 12);
+                        this.showTokens(12, 13);
                         break;
                     case (columnQuantity < 12 && columnQuantity >= 6):
                         this.setColumnSizeFalse();
@@ -217,22 +221,22 @@
                     case (columnQuantity < 6 && columnQuantity >= 3):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--4-col"] = true;
-                        this.showTokens(columnQuantity, 3);
+                        this.showTokens(columnQuantity, 5);
                         break;
                     case (columnQuantity < 3 && columnQuantity >= 2):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--6-col"] = true;
-                        this.showTokens(columnQuantity, 2);
+                        this.showTokens(columnQuantity, 3);
                         break;
                     case (columnQuantity < 2 && columnQuantity >= 1):
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, 1);
+                        this.showTokens(columnQuantity, 2);
                         break;
                     default:
                         this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity);
+                        this.showTokens(columnQuantity, columnQuantity + 1);
                         break;
                 }
             },
@@ -241,7 +245,7 @@
                 let newtokenstoshow = [];
                 console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
                 if (end > this.splitted.length) {
-                    newtokenstoshow = this.splitted.slice(0, this.splitted.length - 1);
+                    newtokenstoshow = this.splitted.slice(0, this.splitted.length);
                     for (let i = 0; i < newtokenstoshow.length; i++) {
                         this.tokenstoshow.push(newtokenstoshow[i]);
                     }
@@ -268,6 +272,7 @@
                 }
                 this.textcolumnposition.difference = difference;
                 console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
+                console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
                 console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
             },
             changeScope: function (direction) {
@@ -285,7 +290,7 @@
                 }
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns);
+                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns)+1;
                 let startSlice = 0;
                 this.splitted = [];
                 for (let i = 0; i < this.numberOfColumns; i++) {
@@ -313,9 +318,6 @@
                 console.log('screenValues:' + JSON.stringify(this.screenOptions));
                 console.log('colQuantity:' + this.numberOfColumns);
             },
-            setTokens: function (newTokens) {
-                this.tokens = newTokens;
-            },
             setScreenOptions: function () {
                 console.log('changing Screensizes:');
                 this.screenOptions = {
@@ -342,7 +344,6 @@
             window.removeAllListeners();
         },
         computed: {
-
             nestedChains: function () {
                 let nestedMentions = {
                     fullyNested: [],
@@ -478,6 +479,11 @@
             mainheader,
             headernavbar,
             toolbar,
+            research,
+            notes,
+            analighter,
+            markjs,
+            tex,
             variablehelper,
             textfeatureviewport
         }

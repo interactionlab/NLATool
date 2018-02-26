@@ -30,6 +30,8 @@
             <component
                     :is="analysismode"
                     v-bind:tokens="tokens"
+                    v-bind:tokenstoshow="tokenstoshow"
+                    v-bind:colindex="colindex"
                     v-bind:docid="docid"
                     v-bind:notes="notes"
                     v-bind:notemodes="notemodes"
@@ -39,6 +41,7 @@
                     v-bind:mentions="mentions"
                     v-bind:showmode="showmode"
                     v-bind:classestomark="classestomark"
+                    v-on:togglesemanticlass="togglesemanticlass($event)"
                     v-on:jumpmarktext="selectText2($event)">
             </component>
         </div>
@@ -69,7 +72,8 @@
             researchmode: String,
             analysismode: String,
             docid: Number,
-            textcolumnposition: Number
+            textcolumnposition: Number,
+            tokenstoshow:Array
         },
         data: function () {
             return {
@@ -89,7 +93,8 @@
                 researchmode: this.researchmode,
                 analysismode: this.analysismode,
                 docid: this.docid,
-                textcolumnposition: this.textcolumnposition
+                textcolumnposition: this.textcolumnposition,
+                tokenstoshow:this.tokenstoshow
             }
         },
         methods: {
@@ -122,7 +127,11 @@
                 //console.log('The col Index here is:' + this.colindex);
                 //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
-            }
+            },
+            togglesemanticlass:function (semClass) {
+                this.classestomark[semClass] = !this.classestomark[semClass];
+                this.$emit('togglesemanticlass',this.classestomark);
+            },
         },
         components: {
             tex,
