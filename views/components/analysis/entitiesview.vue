@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="semClassFormate"
-            v-on:click="togglesemanticlass('PERSON')">PERSON</div>
+             v-on:click="togglesemanticlass('PERSON')">PERSON</div>
+
         <component is="researchresult"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
@@ -17,6 +18,7 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('LOCATION')">LOCATION</div>
+
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult2,index2) in LOCATION"
@@ -31,6 +33,7 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION</div>
+
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult3,index3) in ORGANIZATION"
@@ -45,6 +48,7 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('MISC')">MISC</div>
+
         <component is="researchresult"
                    v-if="classestomark.MISC"
                    v-for="(researchresult4,index4) in MISC"
@@ -56,7 +60,8 @@
                    v-bind:semclass="'MISC_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
-        <!-- TODO: right index for sortedtoken-->
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('coref')">coref</div>
     </div>
 </template>
 <script>
@@ -70,8 +75,8 @@
             tokens: Array,
             classestomark: Object,
             docid: Number,
-            tokenstoshow:Array,
-            colindex:Number
+            tokenstoshow: Array,
+            colindex: Number
         },
         data: function () {
             return {
@@ -79,14 +84,14 @@
                 LOCATION: [],
                 ORGANIZATION: [],
                 MISC: [],
-                borderedClasses:['PERSON_BORDERED',],
+                borderedClasses: ['PERSON_BORDERED',],
                 tokens: this.tokens,
                 classestomark: this.classestomark,
                 docid: this.docid,
                 researchresults: [],
-                sortedtokens:[],
-                tokenstoshow:this.tokenstoshow,
-                colindex:this.colindex
+                sortedtokens: [],
+                tokenstoshow: this.tokenstoshow,
+                colindex: this.colindex
             }
         },
         methods: {
@@ -122,9 +127,10 @@
                     }
                 });
             },
-            togglesemanticlass:function (semClass) {
+            togglesemanticlass: function (semClass) {
+
                 this.classestomark[semClass] = !this.classestomark[semClass];
-                this.$emit('togglesemanticlass',[semClass,this.classestomark]);
+                this.$emit('togglesemanticlass', this.classestomark);
             },
             saveResults: function () {
                 console.log('TODO: Trying to save but not implemented.');
@@ -137,8 +143,7 @@
             this.researchTokensOfClass('ORGANIZATION');
             this.researchTokensOfClass('MISC');
         },
-        watch: {
-        },
+        watch: {},
         components: {
             researchresult,
             requests

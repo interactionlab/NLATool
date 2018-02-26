@@ -16,22 +16,22 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ALL</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('Person')"
+                    <button v-on:click="changeMarkerMode('PERSON')"
                             v-bind:class="{PERSON: classestomark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSON</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('Location')"
+                    <button v-on:click="changeMarkerMode('LOCATION')"
                             v-bind:class="{LOCATION: classestomark.LOCATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">LOCATION</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('Organization')"
+                    <button v-on:click="changeMarkerMode('ORGANIZATION')"
                             v-bind:class="{ORGANIZATION: classestomark.ORGANIZATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ORGANIZATION</small>
                     </button>
-                    <button v-on:click="changeMarkerMode('Misc')"
+                    <button v-on:click="changeMarkerMode('MISC')"
                             v-bind:class="{MISC: classestomark.MISC}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
@@ -117,32 +117,32 @@
 
                     this.allActive = true;
 
-                    if (this.classesToMark.PERSON === false) {
-                        this.changeMarkerMode('Person');
+                    if (this.classestomark.PERSON === false) {
+                        this.changeMarkerMode('PERSON');
                     }
-                    if (this.classesToMark.LOCATION === false) {
-                        this.changeMarkerMode('Location');
+                    if (this.classestomark.LOCATION === false) {
+                        this.changeMarkerMode('LOCATION');
                     }
-                    if (this.classesToMark.ORGANIZATION === false) {
-                        this.changeMarkerMode('Organization');
+                    if (this.classestomark.ORGANIZATION === false) {
+                        this.changeMarkerMode('ORGANIZATION');
                     }
-                    if (this.classesToMark.MISC === false) {
-                        this.changeMarkerMode('Misc');
+                    if (this.classestomark.MISC === false) {
+                        this.changeMarkerMode('MISC');
                     }
 
-                    this.classesToMark.PERSON = true;
-                    this.classesToMark.LOCATION = true;
-                    this.classesToMark.ORGANIZATION = true;
-                    this.classesToMark.MISC = true;
+                    this.classestomark.PERSON = true;
+                    this.classestomark.LOCATION = true;
+                    this.classestomark.ORGANIZATION = true;
+                    this.classestomark.MISC = true;
                 } else {
-                    this.changeMarkerMode('Person');
-                    this.classesToMark.PERSON = false;
-                    this.changeMarkerMode('Location');
-                    this.classesToMark.LOCATION = false;
-                    this.changeMarkerMode('Organization');
-                    this.classesToMark.ORGANIZATION = false;
-                    this.changeMarkerMode('Misc');
-                    this.classesToMark.MISC = false;
+                    this.changeMarkerMode('PERSON');
+                    this.classestomark.PERSON = false;
+                    this.changeMarkerMode('LOCATION');
+                    this.classestomark.LOCATION = false;
+                    this.changeMarkerMode('ORGANIZATION');
+                    this.classestomark.ORGANIZATION = false;
+                    this.changeMarkerMode('MISC');
+                    this.classestomark.MISC = false;
 
                     this.allActive = false;
                 }
@@ -150,47 +150,23 @@
 
             changeMarkerMode: function (mode) {
 
-                if (mode == 'Person') {
-                    mode = 'PERSON';
-                    this.classesToMark.PERSON = !this.classesToMark.PERSON;
-                }
-                if (mode == 'Location') {
-                    mode = 'LOCATION';
-                    this.classesToMark.LOCATION = !this.classesToMark.LOCATION;
-                }
-                if (mode == 'Organization') {
-                    mode = 'ORGANIZATION';
-                    this.classesToMark.ORGANIZATION = !this.classesToMark.ORGANIZATION;
-                }
-                if (mode == 'Misc') {
-                    mode = 'MISC';
-                    this.classesToMark.MISC = !this.classesToMark.MISC;
-                }
-                if (mode == 'POS') {
-                    mode = 'POS';
-                    this.classesToMark.POS = !this.classesToMark.POS;
-                }
-                if (mode == 'coref') {
-                    mode = 'coref';
-                    this.classesToMark.coref = !this.classesToMark.coref;
-                }
-                this.$emit('changemarkermode', [mode, this.classesToMark]);
+                this.classestomark[mode] = !this.classestomark[mode];
+                this.$emit('changemarkermode', this.classestomark);
             },
 
             setCorrectionMode: function () {
                 //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
-                this.classesToMark.POS = !this.classesToMark.POS;
+                this.classestomark.POS = !this.classestomark.POS;
                 console.log('Correction Mode is ' + this.correctionMode);
                 this.$emit('entercorrectionmode', this.correctionMode);
-                this.$emit('changemarkermode', ['POS', this.classesToMark]);
+                this.$emit('changemarkermode', ['POS', this.classestomark]);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;
                 this.noteModes.globalnote = !this.noteModes.globalnote;
                 this.$emit('changenotemode', this.noteModes);
             },
-
         }
     }
 </script>
