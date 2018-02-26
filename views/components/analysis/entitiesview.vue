@@ -1,6 +1,6 @@
 <template>
     <div class="mdl-grid deleteSpaces">
-        <div class="mdl-cell mdl-cell--10-col deleteSpaces"> </div>
+        <div class="mdl-cell mdl-cell--10-col deleteSpaces"></div>
         <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
             <i class="material-icons">settings</i>
         </button>
