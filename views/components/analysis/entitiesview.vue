@@ -33,7 +33,7 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION</div>
+             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION ({{this.sortedtokens[2].length}})</div>
 
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
@@ -49,7 +49,7 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('MISC')">MISC</div>
+             v-on:click="togglesemanticlass('MISC')">MISC ({{this.sortedtokens[3].length}})</div>
 
         <component is="researchresult"
                    v-if="classestomark.MISC"
