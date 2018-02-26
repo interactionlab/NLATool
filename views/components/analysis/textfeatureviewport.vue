@@ -128,9 +128,9 @@
                 //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
             },
-            togglesemanticlass:function (semClass) {
-                this.classestomark[semClass] = !this.classestomark[semClass];
-                this.$emit('togglesemanticlass',this.classestomark);
+            togglesemanticlass:function (newClassesToMark) {
+                console.log('Checkpoint 1: ' + JSON.stringify(newClassesToMark));
+                this.$emit('togglesemanticlass',newClassesToMark);
             },
         },
         components: {
