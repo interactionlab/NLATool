@@ -43,6 +43,7 @@
         },
         methods: {
             togglesemanticlass:function (newClassesToMark) {
+                console.log('Checkpoint 1: ' + JSON.stringify(newClassesToMark));
                 this.$emit('togglesemanticlass',newClassesToMark);
             }
         },
