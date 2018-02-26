@@ -149,7 +149,6 @@
             },
 
             changeMarkerMode: function (mode) {
-
                 this.classestomark[mode] = !this.classestomark[mode];
                 this.$emit('changemarkermode', this.classestomark);
             },
