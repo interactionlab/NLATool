@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-cell mdl-cell--12-col contentColor">
+    <div class="mdl-cell mdl-cell--12-col contentColor height100">
         <component :is="noteMode"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
