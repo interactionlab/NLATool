@@ -57,7 +57,7 @@ module.exports = {
                 }
             }
 
-            console.log(this.uniqCount((resultingtokens)));
+            //console.log(this.uniqCount((resultingtokens)));
 
             //Uniq array
             return this.uniqCount(resultingtokens);

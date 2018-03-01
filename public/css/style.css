@@ -439,16 +439,11 @@ pre {
 }
 
 .scopeButton{
-    width: 20px;
-    height: 100%;
-    position: fixed;
-    left: 5px;
-    font-size: 70px;
-    line-height: 100%;
-
+    font-size: 20px;
+    display:inline-block;
 }
-#forwardScopeButton{
-    left: 99%;
+#textviewsettings{
+    display:inline-block;
 }
 #textfeatureviewport {
     height: 100%;

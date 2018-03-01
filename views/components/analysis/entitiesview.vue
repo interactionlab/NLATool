@@ -102,9 +102,9 @@
                 this[semClass] = [];
                 let tokensResults = [];
                 this.sortedtokens.push( this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
-                console.log('all tokens of: '+ semClass + JSON.stringify(this.sortedtokens[index]));
+                //console.log('all tokens of: '+ semClass + JSON.stringify(this.sortedtokens[index]));
                 for (let i = 0; i < this.sortedtokens[index].length; i++) {
-                    console.log('input: '+this.sortedtokens[index][i].name);
+                    //console.log('input: '+this.sortedtokens[index][i].name);
                     this.searchGoogle(this.sortedtokens[index][i].name, 1, semClass);
                 }
                 //console.log('Token results: ' + JSON.stringify(this.researchresults));
@@ -127,7 +127,7 @@
                     } else {
                         //console.log('Response for Research: ' + JSON.stringify(response));
                         this[semClass].push(response.itemListElement[0]);
-                        console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
+                        //console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
                     }
                 });
             },
@@ -137,7 +137,7 @@
                 this.$emit('togglesemanticlass', this.classestomark);
             },
             saveResults: function () {
-                console.log('TODO: Trying to save but not implemented.');
+                //console.log('TODO: Trying to save but not implemented.');
             }
         },
         computed: {},
