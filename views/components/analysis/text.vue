@@ -169,6 +169,14 @@
                             }
                         }
                     }
+
+                    //TODO: check for consistency
+
+                        if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
+                            htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                        }
+
+
                 } catch (err) {
                     console.log('Got out of the array' + err);
                 }
