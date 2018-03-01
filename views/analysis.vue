@@ -27,13 +27,16 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
+            <component is="textviewcontrol"
+                       v-on:changescope="changeScope($event)"
+                       v-on:setnumberofcolumns="setNumberOfColumns($event)">
+            </component>
             <div class="height100">
-                <div class="scopeButton icon-arrow-left"
-                     v-on:click="changeScope(true)"></div>
                 <div class="mdl-grid height100">
-                    <div class="mdl-cell"
+                    <div
                          v-for="(col, colIndex) in tokenstoshow"
-                         v-bind:class="columnsize">
+
+                         v-bind:style="columnsize2">
                         <component id="textfeatureviewport"
                                    is="textfeatureviewport"
                                    v-bind:col="col"
@@ -58,14 +61,9 @@
                                    v-on:startselection="selectText($event,0)"
                                    v-on:endselection="selectText($event,1)"
                                    v-on:jumpmarktext="selectText2($event)"
-                                   v-on:togglesemanticlass="changeMarkerMode($event)"
-                        >
+                                   v-on:togglesemanticlass="changeMarkerMode($event)">
                         </component>
                     </div>
-                </div>
-                <div class="scopeButton icon-arrow-right"
-                     id="forwardScopeButton"
-                     v-on:click="changeScope(false)">
                 </div>
             </div>
         </main>
@@ -81,6 +79,7 @@
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import toolbar from './components/analysis/toolbar/toolbar.vue';
+    import textviewcontrol from './components/analysis/toolbar/textviewcontrol.vue';
     import analighter from './components/analysis/analighter.vue';
     import markjs from './components/analysis/mark.vue';
     import tex from './components/analysis/text.vue';
@@ -125,19 +124,25 @@
                 columnsize: {
                     'mdl-cell--1-col': false,
                     'mdl-cell--2-col': false,
+                    'mdl-cell--3-col': false,
                     'mdl-cell--4-col': false,
+                    'mdl-cell--5-col': false,
                     'mdl-cell--6-col': false,
+                    'mdl-cell--7-col': false,
                     'mdl-cell--8-col': false,
+                    'mdl-cell--9-col': false,
                     'mdl-cell--10-col': false,
+                    'mdl-cell--11-col': false,
                     'mdl-cell--12-col': true,
                 },
+                columnsize2: {width: 'calc(100% - 16px)'},
                 textcolumnposition: {
                     start: -1,
                     end: -1,
                     difference: -1
                 },
                 tokens: [1],
-                splittNotes:[]
+                splittNotes: []
             }
         },
         methods: {
@@ -148,7 +153,7 @@
                 this.hoveredChain = chain;
             },
             getAnalighter: function () {
-                console.log('Got clicked1' + this.docID);
+                //console.log('Got clicked1' + this.docID);
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
@@ -159,11 +164,11 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (newClassesToMark) {
-                 console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
+                //console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
                 this.classesToMark = newClassesToMark;
             },
             test: function () {
-                console.log(JSON.stringify(this.notes));
+                //console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
@@ -189,14 +194,14 @@
                     }
                 }
 
-                console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
+                //console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
 
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
-                console.log('changing Note Modes: ' + newNoteModes);
+                //console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
             setColumnSizeFalse: function () {
@@ -204,44 +209,46 @@
                     this.columnsize[theClass] = false;
                 }
             },
-            setColumnSize: function (columnQuantity) {
+            setColumnSize2: function () {
+                let tempSize = 100/ this.numberOfColumns;
+                this.columnsize2 = {width: 'calc(' + tempSize + '% - 16px)'};
+                //console.log('css Command: ' + this.columnsize2.width);
+                this.showTokens(this.numberOfColumns, this.numberOfColumns);
+
+            },
+            setColumnSize: function () {
+                this.setColumnSizeFalse();
                 switch (true) {
-                    case (columnQuantity >= 12):
-                        this.setColumnSizeFalse();
+                    case (this.numberOfColumns >= 12):
                         this.columnsize["mdl-cell--1-col"] = true;
-                        this.showTokens(12, 13);
+                        this.showTokens(12, this.numberOfColumns);
                         break;
-                    case (columnQuantity < 12 && columnQuantity >= 6):
-                        this.setColumnSizeFalse();
+                    case (this.numberOfColumns < 12 && this.numberOfColumns >= 6):
                         this.columnsize["mdl-cell--2-col"] = true;
-                        this.showTokens(columnQuantity, 6);
+                        this.showTokens(6, this.numberOfColumns);
                         break;
-                    case (columnQuantity < 6 && columnQuantity >= 3):
-                        this.setColumnSizeFalse();
+                    case (this.numberOfColumns < 6 && this.numberOfColumns >= 3):
                         this.columnsize["mdl-cell--4-col"] = true;
-                        this.showTokens(columnQuantity, 5);
+                        this.showTokens(3, this.numberOfColumns);
                         break;
-                    case (columnQuantity < 3 && columnQuantity >= 2):
-                        this.setColumnSizeFalse();
+                    case (this.numberOfColumns < 3 && this.numberOfColumns >= 2):
                         this.columnsize["mdl-cell--6-col"] = true;
-                        this.showTokens(columnQuantity, 3);
+                        this.showTokens(2, this.numberOfColumns);
                         break;
-                    case (columnQuantity < 2 && columnQuantity >= 1):
-                        this.setColumnSizeFalse();
+                    case (this.numberOfColumns < 2 && this.numberOfColumns >= 1):
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, 2);
+                        this.showTokens(1, this.numberOfColumns);
                         break;
                     default:
-                        this.setColumnSizeFalse();
                         this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(columnQuantity, columnQuantity + 1);
+                        this.showTokens(1, this.numberOfColumns);
                         break;
                 }
             },
             showTokens: function (difference, end) {
                 this.tokenstoshow = [];
                 let newtokenstoshow = [];
-                console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
+                //console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
                 if (end > this.splitted.length) {
                     newtokenstoshow = this.splitted.slice(0, this.splitted.length);
                     for (let i = 0; i < newtokenstoshow.length; i++) {
@@ -249,53 +256,55 @@
                     }
                     this.textcolumnposition.end = this.splitted.length - 1;
                     this.textcolumnposition.start = 0;
-                    console.log('Got here1');
+                    //console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
-                        newtokenstoshow = this.splitted.slice((end + 1) - difference, end);
+                        newtokenstoshow = this.splitted.slice(end - difference, end);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
-                        this.textcolumnposition.start = (end + 1) - difference;
-                        console.log('Got here2');
+                        this.textcolumnposition.start = end - difference;
+                        //console.log('Got here2');
                     } else {
-                        console.log('Got here3');
-                        newtokenstoshow = this.splitted.slice(0, end);
+                        newtokenstoshow = this.splitted.slice(0, difference);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
                         this.textcolumnposition.start = 0;
+                        //console.log('Got here3');
                     }
                     this.textcolumnposition.end = end;
                 }
                 this.textcolumnposition.difference = difference;
-                console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
-                console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
-                console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
+                //console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
+                //console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
+                //console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
             },
             changeScope: function (direction) {
-                console.log('changing Scope: Check 0 ' + direction);
+                //console.log('changing Scope: Check 0 ' + direction);
                 if (direction) {
                     if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
-                        console.log('changing Scope: Check 1');
+                        //console.log('changing Scope: Check 1');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
                     }
                 } else if (!direction) {
                     if (this.textcolumnposition.end < this.splitted.length) {
-                        console.log('changing Scope: Check 2');
+                        //console.log('changing Scope: Check 2');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
                     }
                 }
             },
-            splitNotes:function () {
-                for(let i = 0; i < this.splitted; i++){
-                    for(let j = 0; j < this.notes; j++){
-                        if(this.splitted[i][this.splitted[i].length-1] === 0){}
+            splitNotes: function () {
+                for (let i = 0; i < this.splitted; i++) {
+                    for (let j = 0; j < this.notes; j++) {
+                        if (this.splitted[i][this.splitted[i].length - 1] === 0) {
+                        }
                     }
                 }
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns)+1;
+                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns) + 1;
+                //console.log('new splitpoint is: ' + splitPoint);
                 let startSlice = 0;
                 this.splitted = [];
                 for (let i = 0; i < this.numberOfColumns; i++) {
@@ -305,7 +314,7 @@
                 if (startSlice < this.tokens.length) {
                     this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
                 }
-                console.log('splitted Tokens:' + JSON.stringify(this.splitted));
+                //console.log('splitted Tokens:' + JSON.stringify(this.splitted));
             },
             splitTokens2: function () {
                 this.splitted = [];
@@ -320,8 +329,17 @@
                 if (this.numberOfColumns === 0) {
                     this.numberOfColumns++;
                 }
-                console.log('screenValues:' + JSON.stringify(this.screenOptions));
-                console.log('colQuantity:' + this.numberOfColumns);
+                //console.log('screenValues:' + JSON.stringify(this.screenOptions));
+                //console.log('colQuantity:' + this.numberOfColumns);
+            },
+            setNumberOfColumns: function (number) {
+                if (number > 0) {
+                    this.numberOfColumns = number;
+                    this.splitTokens();
+                    this.setColumnSize2();
+                } else {
+                    this.resize();
+                }
             },
             setScreenOptions: function () {
                 console.log('changing Screensizes:');
@@ -338,7 +356,7 @@
                 this.setScreenOptions();
                 this.computeNumberOfColumns();
                 this.splitTokens();
-                this.setColumnSize(this.numberOfColumns)
+                this.setColumnSize2();
             }
         },
         mounted() {
@@ -402,7 +420,7 @@
         watch: {
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
+                    //console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     let priorisizedFound = false;
                     let nested = false;
                     this.selectedChain = -1;
@@ -411,8 +429,8 @@
                             if (priorisizedFound) {
                                 break;
                             }
-                            console.log(newSelectedIndexes.start + '>=' + this.coref[0][i].startIndex);
-                            console.log(newSelectedIndexes.end + '<=' + this.coref[0][i].endIndex);
+                            //console.log(newSelectedIndexes.start + '>=' + this.coref[0][i].startIndex);
+                            //console.log(newSelectedIndexes.end + '<=' + this.coref[0][i].endIndex);
                             if (newSelectedIndexes.start >= this.coref[0][i].startIndex
                                 && newSelectedIndexes.end <= this.coref[0][i].endIndex) {
                                 for (let j = 0; j < this.nestedChains.fullyNested.length; j++) {
@@ -430,11 +448,11 @@
                                         }
                                     } else if (this.nestedChains.fullyNested[j].outer === this.coref[0][i].mentionID) {
                                         if (this.coref[0][i].representative === -1) {
-                                            console.log('outer Check1');
+                                            //console.log('outer Check1');
                                             this.selectedChain = this.coref[0][i].mentionID;
                                             nested = true;
                                         } else {
-                                            console.log('outer Check2');
+                                            //console.log('outer Check2');
                                             this.selectedChain = this.coref[0][i].representative;
                                             nested = true;
                                         }
@@ -475,7 +493,7 @@
                             }
                         }
                     }
-                    console.log('Watcher got new selected Chain: ' + this.selectedChain);
+                    //console.log('Watcher got new selected Chain: ' + this.selectedChain);
                 },
                 deep: true
             }
@@ -490,7 +508,8 @@
             markjs,
             tex,
             variablehelper,
-            textfeatureviewport
+            textfeatureviewport,
+            textviewcontrol
         }
     }
 </script>
