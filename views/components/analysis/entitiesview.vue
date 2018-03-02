@@ -2,13 +2,12 @@
     <div>
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('PERSON')">
-            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces ">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
-                   class="material-icons ">keyboard_arrow_down</i>
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
-
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces ">
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON</b>
             </button>
         </div>
