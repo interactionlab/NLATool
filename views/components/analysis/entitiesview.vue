@@ -1,81 +1,83 @@
 <template>
-    <div class="mdl-grid deleteSpaces">
-        <div class="mdl-cell mdl-cell--10-col deleteSpaces"></div>
-        <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
-            <i class="material-icons">settings</i>
-        </button>
-        <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces">
-            <i class="material-icons">settings</i>
-        </button>
-    </div>
-    <div class="semClassFormate"
-         v-on:click="togglesemanticlass('PERSON')">PERSON
+    <div>
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('PERSON')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces ">
+                <i v-if="classestomark.PERSON"
+                   class="material-icons ">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces ">
+                <b class="mdc-button snapbtn">PERSON</b>
+            </button>
+        </div>
+
+        <component is="researchresult"
+                   v-if="classestomark.PERSON"
+                   v-for="(researchresult,index) in PERSON"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:semclass="borderedClasses[0]"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('LOCATION')">LOCATION
+        </div>
+
+        <component is="researchresult"
+                   v-if="classestomark.LOCATION"
+                   v-for="(researchresult2,index2) in LOCATION"
+                   v-bind:researchresult="researchresult2"
+                   v-bind:key="index2"
+                   v-bind:index="index2"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-bind:semclass="'LOCATION_BORDERED'"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION
+        </div>
+
+        <component is="researchresult"
+                   v-if="classestomark.ORGANIZATION"
+                   v-for="(researchresult3,index3) in ORGANIZATION"
+                   v-bind:researchresult="researchresult3"
+                   v-bind:key="index3"
+                   v-bind:index="index3"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-bind:semclass="'ORGANIZATION_BORDERED'"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('MISC')">MISC
+        </div>
+
+        <component is="researchresult"
+                   v-if="classestomark.MISC"
+                   v-for="(researchresult4,index4) in MISC"
+                   v-bind:researchresult="researchresult4"
+                   v-bind:key="index4"
+                   v-bind:index="index4"
+                   v-bind:docid="docid"
+                   v-bind:showallon="true"
+                   v-bind:semclass="'MISC_BORDERED'"
+                   v-on:saveresult="saveResult($event)">
+        </component>
+        <div class="semClassFormate"
+             v-on:click="togglesemanticlass('coref')">coref
+        </div>
     </div>
 
-    <component is="researchresult"
-               v-if="classestomark.PERSON"
-               v-for="(researchresult,index) in PERSON"
-               v-bind:researchresult="researchresult"
-               v-bind:key="index"
-               v-bind:index="index"
-               v-bind:docid="docid"
-               v-bind:showallon="true"
-               v-bind:sortedtoken="sortedtokens[index]"
-               v-bind:semclass="borderedClasses[0]"
-               v-on:saveresult="saveResult($event)">
-    </component>
-
-    <div class="semClassFormate"
-         v-on:click="togglesemanticlass('LOCATION')">LOCATION
-    </div>
-
-    <component is="researchresult"
-               v-if="classestomark.LOCATION"
-               v-for="(researchresult2,index2) in LOCATION"
-               v-bind:researchresult="researchresult2"
-               v-bind:key="index2"
-               v-bind:index="index2"
-               v-bind:docid="docid"
-               v-bind:showallon="true"
-               v-bind:semclass="'LOCATION_BORDERED'"
-               v-on:saveresult="saveResult($event)">
-    </component>
-
-    <div class="semClassFormate"
-         v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION
-    </div>
-
-    <component is="researchresult"
-               v-if="classestomark.ORGANIZATION"
-               v-for="(researchresult3,index3) in ORGANIZATION"
-               v-bind:researchresult="researchresult3"
-               v-bind:key="index3"
-               v-bind:index="index3"
-               v-bind:docid="docid"
-               v-bind:showallon="true"
-               v-bind:semclass="'ORGANIZATION_BORDERED'"
-               v-on:saveresult="saveResult($event)">
-    </component>
-
-    <div class="semClassFormate"
-         v-on:click="togglesemanticlass('MISC')">MISC
-    </div>
-
-    <component is="researchresult"
-               v-if="classestomark.MISC"
-               v-for="(researchresult4,index4) in MISC"
-               v-bind:researchresult="researchresult4"
-               v-bind:key="index4"
-               v-bind:index="index4"
-               v-bind:docid="docid"
-               v-bind:showallon="true"
-               v-bind:semclass="'MISC_BORDERED'"
-               v-on:saveresult="saveResult($event)">
-    </component>
-    <div class="semClassFormate"
-         v-on:click="togglesemanticlass('coref')">coref
-    </div>
-    </div>
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
@@ -90,6 +92,7 @@
             docid: Number,
             tokenstoshow: Array,
             colindex: Number
+
         },
         data: function () {
             return {
