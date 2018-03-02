@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--TODO after one open close period the button changed font-size-->
+        <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('PERSON')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
@@ -27,55 +27,79 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('LOCATION')">LOCATION
+             v-on:click="togglesemanticlass('LOCATION')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.LOCATION"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">LOCATION</b>
+            </button>
         </div>
 
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
-                   v-for="(researchresult2,index2) in LOCATION"
-                   v-bind:researchresult="researchresult2"
-                   v-bind:key="index2"
-                   v-bind:index="index2"
+                   v-for="(researchresult,index) in LOCATION"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'LOCATION_BORDERED'"
+                   v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION
+             v-on:click="togglesemanticlass('ORGANIZATION')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.ORGANIZATION"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">ORGANIZATION</b>
+            </button>
         </div>
 
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
-                   v-for="(researchresult3,index3) in ORGANIZATION"
-                   v-bind:researchresult="researchresult3"
-                   v-bind:key="index3"
-                   v-bind:index="index3"
+                   v-for="(researchresult,index) in ORGANIZATION"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'ORGANIZATION_BORDERED'"
+                   v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('MISC')">MISC
+             v-on:click="togglesemanticlass('MISC')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.MISC"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">MISC</b>
+            </button>
         </div>
 
         <component is="researchresult"
                    v-if="classestomark.MISC"
-                   v-for="(researchresult4,index4) in MISC"
-                   v-bind:researchresult="researchresult4"
-                   v-bind:key="index4"
-                   v-bind:index="index4"
+                   v-for="(researchresult,index) in MISC"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'MISC_BORDERED'"
+                   v-bind:sortedtoken="sortedtokens[index]"
+                   v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
-        <div class="semClassFormate"
-             v-on:click="togglesemanticlass('coref')">coref
-        </div>
     </div>
 
 </template>
