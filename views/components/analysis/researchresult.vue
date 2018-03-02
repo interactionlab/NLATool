@@ -1,7 +1,7 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content deleteSpaces contentColor separate" style="right: inherit">
+        <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="everythingshow">
@@ -14,7 +14,7 @@
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
-                                    {{sortedtoken + ' -> '+ researchresult.result.name}}
+                                    {{sortedtoken + ' -> ' + researchresult.result.name}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
@@ -37,7 +37,6 @@
                                            v-bind:index="index">
                                 </component>
                             </div>
-
 
                             <div v-if="typeof researchresult.result.description !== 'undefined'">
                                 {{researchresult.result.description.articleBody}}
@@ -144,8 +143,7 @@
                     console.log('Showing the source of Article failed: ' + err);
                 }
             },
-            editResearch:function () {
-
+            editResearch: function () {
             }
         },
         components: {
