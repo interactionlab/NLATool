@@ -28,7 +28,7 @@
             hoveredchain: Number,
             selectedchain: Number,
             nestedmentions: Object,
-            endOfMentions: Object
+            endOfMentions: Object,
         },
         data: function () {
             return {
@@ -47,7 +47,8 @@
                 color: this.color,
                 endOfMentions: this.endOfMentions,
                 nested: false,
-                mention: {}
+                mention: {},
+                nextmention: false
             }
         },
 
@@ -58,6 +59,7 @@
                 }
             },
             toHighlight: function () {
+
                 let htmlclass = {};
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
@@ -66,37 +68,39 @@
                     htmlclass['notemark'] = false;
                 }
                 //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
-                if (this.classestomark.coref) {
-                    if (Object.getOwnPropertyNames(this.mention).length === 0) {
+                if (typeof this.mention.mentionID !== 'undefined') {
+                    console.log('highlight: ' + this.index + ' mention:' + JSON.stringify(this.mention));
+                    if (this.classestomark.coref) {
+                        //console.log('Check Highlight 1: ' + Object.getOwnPropertyNames(this.mention).length)
                         //is hovered
                         if (!this.tohover) {
                             //is Representant
                             if (this.mention.representative < 0) {
                                 if (this.mention.mentionID === this.hoveredchain) {
-                                    htmlclass['cHoverRepresentant'] = true;
+                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
                                 } else if (this.mention.mentionID === this.selectedchain) {
-                                    htmlclass['cSelectedRepresentant'] = true;
+                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
                                 }
                                 else {
-                                    htmlclass['cRepresentant'] = true;
+                                    htmlclass['cRepresentant'] = this.classestomark.coref;
                                 }
                             } else {
                                 if (this.mention.representative === this.hoveredchain) {
-                                    htmlclass['cHoverReferent'] = true;
+                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
                                 } else if (this.mention.representative === this.selectedchain) {
-                                    htmlclass['cSelectedReferent'] = true;
+                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
                                 }
                                 else {
-                                    htmlclass['cReferent'] = true;
+                                    htmlclass['cReferent'] = this.classestomark.coref;
                                 }
                             }
                         } else {
                             //is Representant
                             if (this.mention.representative < 0) {
-                                htmlclass['cHoverRepresentant'] = true;
+                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
                                 this.$emit('hoverchain', this.mention.mentionID);
                             } else {
-                                htmlclass['cHoverReferent'] = true;
+                                htmlclass['cHoverReferent'] = this.classestomark.coref;
                                 this.$emit('hoverchain', this.mention.representative);
                             }
 
@@ -124,10 +128,7 @@
                 //Z3: highlight coref and this gab bc next word not part of coref mention
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
-                console.log('Dependencies:  index: ' + this.index
-                    + 'selectedIndexes: ' + JSON.stringify(this.selectedindexes)
-                    + 'hover: ' + this.tohover
-                    + 'classestomark: ' + JSON.stringify(this.classestomark));
+
                 try {
                     if ((this.index) > this.selectedindexes.start
                         && (this.index) < this.selectedindexes.end) {
@@ -135,40 +136,40 @@
                     } else {
                         htmlclass['notemark'] = false;
                     }
-                    if (Object.getOwnPropertyNames(this.mention).length === 0) {
-                        if (!this.tohover) {
-                            //is Representant
-                            if (this.mention.representative < 0) {
-                                if (this.mention.mentionID === this.hoveredchain) {
-                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                } else if (this.mention.mentionID === this.selectedchain) {
-                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                    if (typeof this.mention.mentionID !== 'undefined') {
+                        if (this.classestomark.coref) {
+                            if (this.nextmention) {
+                                if (!this.tohover) {
+                                    //is Representant
+                                    if (this.mention.representative < 0) {
+                                        if (this.mention.mentionID === this.hoveredchain) {
+                                            htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                        } else if (this.mention.mentionID === this.selectedchain) {
+                                            htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                        } else {
+                                            htmlclass['cRepresentant'] = this.classestomark.coref;
+                                        }
+                                    } else {
+                                        if (this.mention.representative === this.hoveredchain) {
+                                            htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                        } else if (this.mention.representative === this.selectedchain) {
+                                            htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                        } else {
+                                            htmlclass['cReferent'] = this.classestomark.coref;
+                                        }
+                                    }
                                 } else {
-                                    htmlclass['cRepresentant'] = this.classestomark.coref;
+                                    //is Representant
+                                    if (this.mention.representative < 0) {
+                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                        this.$emit('hoverchain', this.mention.mentionID);
+                                    } else {
+                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                        this.$emit('hoverchain', this.mention.representative);
+                                    }
                                 }
-                            } else {
-                                if (this.mention.representative === this.hoveredchain) {
-                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                } else if (this.mention.representative === this.selectedchain) {
-                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                } else {
-                                    htmlclass['cReferent'] = this.classestomark.coref;
-                                }
-                            }
-                            if (this.nested) {
-                                htmlclass['nested'] = this.classestomark.coref;
-                            }
-                        } else {
-                            //is Representant
-                            if (this.mention.representative < 0) {
-                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mention.mentionID);
-                            } else {
-                                htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mention.representative);
                             }
                         }
-
                     }
                     //TODO: check for consistency
                     if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
@@ -247,7 +248,6 @@
                 }
                 return resultingBrackets;
             },
-
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
                 //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
@@ -289,20 +289,25 @@
             },
             getMentionInfo: function () {
                 //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
-                for (let i = 0; i < this.nestedmentions.fullyNested.length; i++) {
-                    for (let j = 0; j < this.mentions[0].length; j++) {
-                        if (this.index === this.mentions[0][j].mentionID
-                            && this.index === this.nestedmentions.fullyNested[i].inner) {
-                            this.nested = true;
+                console.log('getMentionInfo');
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    console.log('getMentionInfo: index:' + this.index
+                        + 'startIndex: ' + this.mentions[0][i].startIndex
+                        + 'endIndex: ' + this.mentions[0][i].endIndex
+                        + 'erfüllt: ' + ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex));
+                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex) {
+                        this.mention = this.mentions[0][i];
+                        console.log('getMentionInfo: this Mention got set: ' + JSON.stringify(this.mention));
+                        try {
+                            if (this.mentions[0][i].endIndex - this.index > 0) {
+                                console.log('has next Mention');
+                                this.nextmention = true;
+                            }
+                        } catch (err) {
                         }
-                        if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                            this.mention = this.mentions[0][i];
-                            break;
-                        }
+                        break;
                     }
                 }
-                this.nested = false;
-
             },
             startSelection: function () {
                 //console.log('mouse pressed at: ' + this.index - 1);

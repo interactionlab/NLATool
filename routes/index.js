@@ -240,6 +240,7 @@ function saveCoref(input, counter) {
                 //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
                 startIndex = getCorefStartIndex(input, chain, mention);
                 endIndex = getCorefEndIndex(input, chain, mention);
+
                 input.querys.push('some Representative');
                 input.transControl.useProper[input.querys.length - 1] ={
                     kindOfQuery: 'insert',
@@ -251,8 +252,8 @@ function saveCoref(input, counter) {
                         stringifyForDB(input.corefInfo[chain][mention].number()),
                         stringifyForDB(input.corefInfo[chain][mention].animacy()),
                         -1,
-                        startIndex,
-                        endIndex
+                        stringifyForDB(startIndex),
+                        stringifyForDB(endIndex)
                     ],
                     numberOfColumns: [5],
                     ofResults: [0],
@@ -281,8 +282,8 @@ function saveCoref(input, counter) {
                                 stringifyForDB(input.corefInfo[chain][mention].number()),
                                 stringifyForDB(input.corefInfo[chain][mention].animacy()),
                                 -1,
-                                startIndex,
-                                endIndex
+                                stringifyForDB(startIndex),
+                                stringifyForDB(endIndex)
                             ],
                             numberOfColumns: [0,5],
                             ofResults: [representativeIndex,0],
@@ -301,14 +302,14 @@ function saveCoref(input, counter) {
     return input;
 }
 
-function addNestedInformation (coref){
+function addNestedInformation (coref,chain, mention){
     let nestedMentions = {
         fullyNested: [],
         nested: []
     };
     try {
-        for (let i = 0; i < coref[0].length; i++) {
-            for (let j = i + 1; j < coref[0].length - (i + 1); j++) {
+        for (let i = 0; i < coref[chain].length; i++) {
+            for (let j = i + 1; j < coref[0][mention].length - (i + 1); j++) {
                 if (coref[0][i].startIndex >= coref[0][j].startIndex
                     && coref[0][i].startIndex <= coref[0][j].endIndex) {
                     if (coref[0][i].endIndex <= coref[0][j].endIndex) {
@@ -358,7 +359,7 @@ function getCorefStartIndex(input, chain, mention) {
     for (let i = 0; i < tempMention.sentNum()-1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
-    return stringifyForDB(textLengthToMention + tempMention.startIndex() - 1);
+    return textLengthToMention + tempMention.startIndex() - 1;
 }
 function getCorefEndIndex(input, chain, mention) {
     let tempMention = input.corefInfo[chain][mention];
@@ -366,7 +367,7 @@ function getCorefEndIndex(input, chain, mention) {
     for (let i = 0; i < tempMention.sentNum()-1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
-    return stringifyForDB(textLengthToMention + tempMention.endIndex() - 1);
+    return textLengthToMention + tempMention.endIndex() - 1;
 }
 
 
