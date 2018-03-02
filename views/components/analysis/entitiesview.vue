@@ -1,5 +1,6 @@
 <template>
     <div>
+        <!--TODO after one open close period the button changed font-size-->
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('PERSON')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
