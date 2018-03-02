@@ -45,7 +45,9 @@
                 selectedchain: this.selectedchain,
                 nestedmentions: this.nestedmentions,
                 color: this.color,
-                endOfMentions: this.endOfMentions
+                endOfMentions: this.endOfMentions,
+                nested: false,
+                mention: {}
             }
         },
 
@@ -64,44 +66,42 @@
                     htmlclass['notemark'] = false;
                 }
                 //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    //console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
-                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                    //isPart of a Mention:
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
+                if (this.classestomark.coref) {
+                    if (Object.getOwnPropertyNames(this.mention).length === 0) {
                         //is hovered
                         if (!this.tohover) {
                             //is Representant
-                            if (this.mentions[0][i].representative < 0) {
-                                if (this.mentions[0][i].mentionID === this.hoveredchain) {
-                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                } else if (this.mentions[0][i].mentionID === this.selectedchain) {
-                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                            if (this.mention.representative < 0) {
+                                if (this.mention.mentionID === this.hoveredchain) {
+                                    htmlclass['cHoverRepresentant'] = true;
+                                } else if (this.mention.mentionID === this.selectedchain) {
+                                    htmlclass['cSelectedRepresentant'] = true;
                                 }
                                 else {
-                                    htmlclass['cRepresentant'] = this.classestomark.coref;
+                                    htmlclass['cRepresentant'] = true;
                                 }
                             } else {
-                                if (this.mentions[0][i].representative === this.hoveredchain) {
-                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                } else if (this.mentions[0][i].representative === this.selectedchain) {
-                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                if (this.mention.representative === this.hoveredchain) {
+                                    htmlclass['cHoverReferent'] = true;
+                                } else if (this.mention.representative === this.selectedchain) {
+                                    htmlclass['cSelectedReferent'] = true;
                                 }
                                 else {
-                                    htmlclass['cReferent'] = this.classestomark.coref;
+                                    htmlclass['cReferent'] = true;
                                 }
                             }
                         } else {
                             //is Representant
-                            if (this.mentions[0][i].representative < 0) {
-                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mentions[0][i].mentionID);
+                            if (this.mention.representative < 0) {
+                                htmlclass['cHoverRepresentant'] = true;
+                                this.$emit('hoverchain', this.mention.mentionID);
                             } else {
-                                htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mentions[0][i].representative);
+                                htmlclass['cHoverReferent'] = true;
+                                this.$emit('hoverchain', this.mention.representative);
                             }
+
+                            //is nested in more than one mention
                         }
-                        //is nested in more than one mention
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
@@ -124,6 +124,10 @@
                 //Z3: highlight coref and this gab bc next word not part of coref mention
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
+                console.log('Dependencies:  index: ' + this.index
+                    + 'selectedIndexes: ' + JSON.stringify(this.selectedindexes)
+                    + 'hover: ' + this.tohover
+                    + 'classestomark: ' + JSON.stringify(this.classestomark));
                 try {
                     if ((this.index) > this.selectedindexes.start
                         && (this.index) < this.selectedindexes.end) {
@@ -131,52 +135,45 @@
                     } else {
                         htmlclass['notemark'] = false;
                     }
-                    for (let i = 0; i < this.mentions[0].length; i++) {
-                        //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
-                        //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                        if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                            if (!this.tohover) {
-                                //is Representant
-                                if (this.mentions[0][i].representative < 0) {
-                                    if (this.mentions[0][i].mentionID === this.hoveredchain) {
-                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else if (this.mentions[0][i].mentionID === this.selectedchain) {
-                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                    } else {
-                                        htmlclass['cRepresentant'] = this.classestomark.coref;
-                                    }
+                    if (Object.getOwnPropertyNames(this.mention).length === 0) {
+                        if (!this.tohover) {
+                            //is Representant
+                            if (this.mention.representative < 0) {
+                                if (this.mention.mentionID === this.hoveredchain) {
+                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                } else if (this.mention.mentionID === this.selectedchain) {
+                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
                                 } else {
-                                    if (this.mentions[0][i].representative === this.hoveredchain) {
-                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    } else if (this.mentions[0][i].representative === this.selectedchain) {
-                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                    } else {
-                                        htmlclass['cReferent'] = this.classestomark.coref;
-                                    }
-                                }
-                                if (this.checkIfNested()) {
-                                    htmlclass['nested'] = this.classestomark.coref;
+                                    htmlclass['cRepresentant'] = this.classestomark.coref;
                                 }
                             } else {
-                                //is Representant
-                                if (this.mentions[0][i].representative < 0) {
-                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mentions[0][i].mentionID);
-                                } else {
+                                if (this.mention.representative === this.hoveredchain) {
                                     htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mentions[0][i].representative);
+                                } else if (this.mention.representative === this.selectedchain) {
+                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                } else {
+                                    htmlclass['cReferent'] = this.classestomark.coref;
                                 }
                             }
+                            if (this.nested) {
+                                htmlclass['nested'] = this.classestomark.coref;
+                            }
+                        } else {
+                            //is Representant
+                            if (this.mention.representative < 0) {
+                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                this.$emit('hoverchain', this.mention.mentionID);
+                            } else {
+                                htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                this.$emit('hoverchain', this.mention.representative);
+                            }
                         }
+
                     }
-
                     //TODO: check for consistency
-
-                        if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
-                            htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                        }
-
-
+                    if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
+                        htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                    }
                 } catch (err) {
                     console.log('Got out of the array' + err);
                 }
@@ -250,7 +247,7 @@
                 }
                 return resultingBrackets;
             },
-            
+
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
                 //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
@@ -259,7 +256,7 @@
                 let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
                 let word2OffsetBegin = -1;
                 try {
-                    word2OffsetBegin = this.tokens[this.index].offsetBegin;
+                    word2OffsetBegin = token.offsetBegin;
                 } catch (err) {
                     //console.log('offsetBegin is not defined');
                 }
@@ -276,18 +273,35 @@
                 return gap;
             }
         },
+        mounted() {
+            this.getMentionInfo();
+        },
         methods: {
-
-            checkIfNested: function () {
+            getMentionGap: function () {
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
+                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
+                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
+                        this.mention = this.mentions[0][i];
+                        break;
+                    }
+                }
+            },
+            getMentionInfo: function () {
+                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
                 for (let i = 0; i < this.nestedmentions.fullyNested.length; i++) {
                     for (let j = 0; j < this.mentions[0].length; j++) {
                         if (this.index === this.mentions[0][j].mentionID
                             && this.index === this.nestedmentions.fullyNested[i].inner) {
-                            return true;
+                            this.nested = true;
+                        }
+                        if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
+                            this.mention = this.mentions[0][i];
+                            break;
                         }
                     }
                 }
-                return false;
+                this.nested = false;
 
             },
             startSelection: function () {
