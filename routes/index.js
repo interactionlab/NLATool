@@ -214,42 +214,6 @@ function postLoadWrittenText(req, res, next) {
                         toCompare: null,
                         operators: null
                     };
-                    //-------------------------------------------------------------------------------------!
-                    /* wordInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                         'word',
-                         [
-                             'content',
-                             'isSpecial',
-                             'semanticClass',
-                             'pos'
-                         ], [
-                             words[i][j],
-                             0,
-                             parsedResult.ner[i][j],
-                             parsedResult.pos[i][j]
-                         ],
-                         null, null));
-
-                     wordInsertResult = JSON.parse(wordInsertResult);
-                     wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand(
-                         'textmap',
-                         [
-                             'wordID',
-                             'docID',
-                             'textIndex',
-                             'beginOffSet',
-                             'EndOffSet',
-                             'whitespaceInfo'
-                         ], [
-                             wordInsertResult.insertId,
-                             documentInsertResult.insertId,
-                             counter,
-                             parsedResult.offsetBegin[counter],
-                             parsedResult.offsetEnd[counter],
-                             '"-10"'
-                         ],
-                         null, null));*/
-                    //-------------------------------------------------------------------------------------
                     counter++;
                 }
             }
@@ -273,7 +237,7 @@ function saveCoref(input, counter) {
         for (let mention in input.corefInfo[chain]) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
-                console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
+                //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
                 startIndex = getCorefStartIndex(input, chain, mention);
                 endIndex = getCorefEndIndex(input, chain, mention);
                 input.querys.push('some Representative');
@@ -335,6 +299,57 @@ function saveCoref(input, counter) {
         }
     }
     return input;
+}
+
+function addNestedInformation (coref){
+    let nestedMentions = {
+        fullyNested: [],
+        nested: []
+    };
+    try {
+        for (let i = 0; i < coref[0].length; i++) {
+            for (let j = i + 1; j < coref[0].length - (i + 1); j++) {
+                if (coref[0][i].startIndex >= coref[0][j].startIndex
+                    && coref[0][i].startIndex <= coref[0][j].endIndex) {
+                    if (coref[0][i].endIndex <= coref[0][j].endIndex) {
+                        // i Mention is in j Mention
+                        nestedMentions.fullyNested.push({
+                            inner: coref[0][i].mentionID,
+                            outer: coref[0][j].mentionID
+                        });
+                    } else {
+                        // i Mention starts after j Mention starts
+                        nestedMentions.nested.push({
+                            first: coref[0][j].mentionID,
+                            second: coref[0][i].mentionID
+                        });
+                    }
+                } else if (coref[0][j].startIndex >= coref[0][i].startIndex
+                    && coref[0][j].startIndex <= coref[0][i].endIndex) {
+                    if (coref[0][j].endIndex <= coref[0][i].endIndex) {
+                        // j Mention is in i Mention
+                        nestedMentions.fullyNested.push({
+                            inner: coref[0][j].mentionID,
+                            outer: coref[0][i].mentionID
+                        });
+                    } else {
+                        // j Mention starts after i Mention starts
+                        nestedMentions.nested.push({
+                            first: coref[0][i].mentionID,
+                            second: coref[0][j].mentionID
+                        });
+                    }
+                }
+            }
+        }
+        return nestedMentions;
+    }
+    catch
+        (err) {
+        console.log('nested Chains Recognition failed:' + err);
+        return nestedMentions;
+    }
+
 }
 
 function getCorefStartIndex(input, chain, mention) {
