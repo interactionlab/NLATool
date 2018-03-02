@@ -38,7 +38,7 @@
         </div>
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
-                   v-for="(researchresult,index) in LOCATION"
+                   v-for="(researchresult,index2) in LOCATION"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
@@ -62,7 +62,7 @@
         </div>
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
-                   v-for="(researchresult,index) in ORGANIZATION"
+                   v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
@@ -86,7 +86,7 @@
         </div>
         <component is="researchresult"
                    v-if="classestomark.MISC"
-                   v-for="(researchresult,index) in MISC"
+                   v-for="(researchresult,index4) in MISC"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
