@@ -8,7 +8,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON ({{this.sortedtokens[0].length}})</b>
             </button>
         </div>
@@ -32,7 +32,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">LOCATION ({{this.sortedtokens[1].length}})</b>
             </button>
         </div>
@@ -56,7 +56,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{this.sortedtokens[2].length}})</b>
             </button>
         </div>
@@ -80,7 +80,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">MISC ({{this.sortedtokens[3].length}})</b>
             </button>
         </div>
