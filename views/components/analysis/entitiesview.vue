@@ -8,7 +8,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--4-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON</b>
             </button>
         </div>
@@ -33,7 +33,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--4-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">LOCATION</b>
             </button>
         </div>
@@ -58,7 +58,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--4-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION</b>
             </button>
         </div>
@@ -83,7 +83,7 @@
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--4-col mdl-button mdl-js-button  deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">MISC</b>
             </button>
         </div>
