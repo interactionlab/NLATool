@@ -1,8 +1,17 @@
 <template>
     <div>
+        <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('PERSON')">PERSON ({{this.sortedtokens[0].length}})</div>
-
+             v-on:click="togglesemanticlass('PERSON')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.PERSON"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">PERSON ({{this.sortedtokens[0].length}})</b>
+            </button>
+        </div>
         <component is="researchresult"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
@@ -17,14 +26,22 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('LOCATION')">LOCATION ({{this.sortedtokens[1].length}})</div>
-
+             v-on:click="togglesemanticlass('LOCATION')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.LOCATION"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">LOCATION ({{this.sortedtokens[1].length}})</b>
+            </button>
+        </div>
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
-                   v-for="(researchresult2,index2) in LOCATION"
-                   v-bind:researchresult="researchresult2"
-                   v-bind:key="index2"
-                   v-bind:index="index2"
+                   v-for="(researchresult,index) in LOCATION"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sortedtoken="sortedtokens[1][index2]"
@@ -33,14 +50,22 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('ORGANIZATION')">ORGANIZATION ({{this.sortedtokens[2].length}})</div>
-
+             v-on:click="togglesemanticlass('ORGANIZATION')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.ORGANIZATION"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">ORGANIZATION ({{this.sortedtokens[2].length}})</b>
+            </button>
+        </div>
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
-                   v-for="(researchresult3,index3) in ORGANIZATION"
-                   v-bind:researchresult="researchresult3"
-                   v-bind:key="index3"
-                   v-bind:index="index3"
+                   v-for="(researchresult,index) in ORGANIZATION"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sortedtoken="sortedtokens[2][index3]"
@@ -49,14 +74,22 @@
         </component>
 
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('MISC')">MISC ({{this.sortedtokens[3].length}})</div>
-
+             v-on:click="togglesemanticlass('MISC')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.MISC"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--2-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">MISC ({{this.sortedtokens[3].length}})</b>
+            </button>
+        </div>
         <component is="researchresult"
                    v-if="classestomark.MISC"
-                   v-for="(researchresult4,index4) in MISC"
-                   v-bind:researchresult="researchresult4"
-                   v-bind:key="index4"
-                   v-bind:index="index4"
+                   v-for="(researchresult,index) in MISC"
+                   v-bind:researchresult="researchresult"
+                   v-bind:key="index"
+                   v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sortedtoken="sortedtokens[3][index4]"
@@ -64,6 +97,7 @@
                    v-on:saveresult="saveResult($event)">
         </component>
     </div>
+
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
@@ -78,6 +112,7 @@
             docid: Number,
             tokenstoshow: Array,
             colindex: Number
+
         },
         data: function () {
             return {
