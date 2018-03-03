@@ -235,25 +235,26 @@ function saveCoref(input, counter) {
     for (let chain in input.corefInfo) {
         console.log('Chain: ' + JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
         for (let mention in input.corefInfo[chain]) {
-            //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention]) + input.corefInfo[chain][mention].isRepresentativeMention());
+            //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention])
+            // + input.corefInfo[chain][mention].isRepresentativeMention());
+            input.corefInfo[chain][mention].startIndex = getCorefStartIndex(input, chain, mention);
+            input.corefInfo[chain][mention].endIndex = getCorefEndIndex(input, chain, mention);
+
             if (input.corefInfo[chain][mention].isRepresentativeMention()) {
                 //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
-                startIndex = getCorefStartIndex(input, chain, mention);
-                endIndex = getCorefEndIndex(input, chain, mention);
-
                 input.querys.push('some Representative');
-                input.transControl.useProper[input.querys.length - 1] ={
+                input.transControl.useProper[input.querys.length - 1] = {
                     kindOfQuery: 'insert',
                     table: 'corefmentions',
-                    columns: ['representative', 'gender', 'type', 'number', 'animacy','docID','startIndex','endIndex'],
+                    columns: ['representative', 'gender', 'type', 'number', 'animacy', 'docID', 'startIndex', 'endIndex'],
                     values: [-1,
                         stringifyForDB(input.corefInfo[chain][mention].gender()),
                         stringifyForDB(input.corefInfo[chain][mention].type()),
                         stringifyForDB(input.corefInfo[chain][mention].number()),
                         stringifyForDB(input.corefInfo[chain][mention].animacy()),
                         -1,
-                        stringifyForDB(startIndex),
-                        stringifyForDB(endIndex)
+                        stringifyForDB(input.corefInfo[chain][mention].startIndex),
+                        stringifyForDB(input.corefInfo[chain][mention].endIndex)
                     ],
                     numberOfColumns: [5],
                     ofResults: [0],
@@ -269,25 +270,23 @@ function saveCoref(input, counter) {
                 input.querys.push('Some Referent');
                 if (representativeIndex !== -1) {
                     //console.log('Check2: '  + representativeIndex);
-                    startIndex = getCorefStartIndex(input, chain, mention);
-                    endIndex = getCorefEndIndex(input, chain, mention);
                     input.transControl.useProper[input.querys.length - 1] =
                         {
                             kindOfQuery: 'insert',
                             table: 'corefmentions',
-                            columns: ['representative', 'gender', 'type', 'number', 'animacy','docID','startIndex','endIndex'],
+                            columns: ['representative', 'gender', 'type', 'number', 'animacy', 'docID', 'startIndex', 'endIndex'],
                             values: [-1,
                                 stringifyForDB(input.corefInfo[chain][mention].gender()),
                                 stringifyForDB(input.corefInfo[chain][mention].type()),
                                 stringifyForDB(input.corefInfo[chain][mention].number()),
                                 stringifyForDB(input.corefInfo[chain][mention].animacy()),
                                 -1,
-                                stringifyForDB(startIndex),
-                                stringifyForDB(endIndex)
+                                stringifyForDB(input.corefInfo[chain][mention].startIndex),
+                                stringifyForDB(input.corefInfo[chain][mention].endIndex)
                             ],
-                            numberOfColumns: [0,5],
-                            ofResults: [representativeIndex,0],
-                            nameOfPropers: ['insertId','insertId'],
+                            numberOfColumns: [0, 5],
+                            ofResults: [representativeIndex, 0],
+                            nameOfPropers: ['insertId', 'insertId'],
                             getProper: true,
                             toCompare: null,
                             operators: null
@@ -302,69 +301,72 @@ function saveCoref(input, counter) {
     return input;
 }
 
-function addNestedInformation (coref,chain, mention){
-    let nestedMentions = {
-        fullyNested: [],
-        nested: []
-    };
+function addNestedInformation(input, chain, mention) {
+    let tempMentions = [];
     try {
-        for (let i = 0; i < coref[chain].length; i++) {
-            for (let j = i + 1; j < coref[0][mention].length - (i + 1); j++) {
-                if (coref[0][i].startIndex >= coref[0][j].startIndex
-                    && coref[0][i].startIndex <= coref[0][j].endIndex) {
-                    if (coref[0][i].endIndex <= coref[0][j].endIndex) {
-                        // i Mention is in j Mention
-                        nestedMentions.fullyNested.push({
-                            inner: coref[0][i].mentionID,
-                            outer: coref[0][j].mentionID
-                        });
-                    } else {
-                        // i Mention starts after j Mention starts
-                        nestedMentions.nested.push({
-                            first: coref[0][j].mentionID,
-                            second: coref[0][i].mentionID
-                        });
-                    }
-                } else if (coref[0][j].startIndex >= coref[0][i].startIndex
-                    && coref[0][j].startIndex <= coref[0][i].endIndex) {
-                    if (coref[0][j].endIndex <= coref[0][i].endIndex) {
-                        // j Mention is in i Mention
-                        nestedMentions.fullyNested.push({
-                            inner: coref[0][j].mentionID,
-                            outer: coref[0][i].mentionID
-                        });
-                    } else {
-                        // j Mention starts after i Mention starts
-                        nestedMentions.nested.push({
-                            first: coref[0][i].mentionID,
-                            second: coref[0][j].mentionID
-                        });
-                    }
-                }
+        for (let i = chain + 1; i < input.corefInfo.length; i++) {
+            for(let j = mention; j < input.corefInfo[chain].length; i++){
+                tempMentions = testNestedity(input.corefInfo[chain][mention], input.corefInfo[i][j]);
+
             }
         }
-        return nestedMentions;
-    }
-    catch
-        (err) {
-        console.log('nested Chains Recognition failed:' + err);
-        return nestedMentions;
+    } catch (err) {
+        //got out of Array
     }
 
+}
+
+function testNestedity(mention1, mention2) {
+    let nestedInfo = 'nested';
+    let inner = 'inner';
+    let outer = 'outer';
+    let first = 'first';
+    let second = 'second';
+    try {
+        if (mention1.startIndex >= mention2.startIndex
+            && mention1.startIndex <= mention2.endIndex) {
+            if (mention1.endIndex <= mention2.endIndex) {
+                // i Mention is in j Mention
+                mention1[nestedInfo].push({inner:mention2});
+                mention2[nestedInfo].push({outer:mention1});
+            } else {
+                // i Mention starts after j Mention starts
+                mention1[nestedInfo].push({second:mention2});
+                mention2[nestedInfo].push({first:mention1});
+
+            }
+        } else if (mention2.startIndex >= mention1.startIndex
+            && mention2.startIndex <= mention1.endIndex) {
+            if (mention2.endIndex <= mention1.endIndex) {
+                // j Mention is in i Mention
+                mention1[nestedInfo] = outer;
+                mention2[nestedInfo] = inner;
+            } else {
+                // j Mention starts after i Mention starts
+                mention1[nestedInfo] = first;
+                mention2[nestedInfo] = second;
+            }
+        }
+        return [mention1, mention2];
+    } catch (err) {
+        console.log('nested Chains Recognition failed:' + err);
+        return [];
+    }
 }
 
 function getCorefStartIndex(input, chain, mention) {
     let tempMention = input.corefInfo[chain][mention];
     let textLengthToMention = 0;
-    for (let i = 0; i < tempMention.sentNum()-1; i++) {
+    for (let i = 0; i < tempMention.sentNum() - 1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
     return textLengthToMention + tempMention.startIndex() - 1;
 }
+
 function getCorefEndIndex(input, chain, mention) {
     let tempMention = input.corefInfo[chain][mention];
     let textLengthToMention = 0;
-    for (let i = 0; i < tempMention.sentNum()-1; i++) {
+    for (let i = 0; i < tempMention.sentNum() - 1; i++) {
         textLengthToMention = textLengthToMention + input.words[i].length;
     }
     return textLengthToMention + tempMention.endIndex() - 1;
