@@ -6,7 +6,7 @@ with a quick research functionality.
 
 ## Setup NLATool
 Step-by-step instructions:
-* `$ npm install update`
+* `$ npm install`
 * `$ npm install -g nodemon`
 * `$ npm start`
 
