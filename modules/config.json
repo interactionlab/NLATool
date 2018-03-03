@@ -300,22 +300,22 @@
       "type": "INT",
       "length": "11"
     },
-    "column3":{
-      "name":"gender",
+    "column3": {
+      "name": "gender",
       "type": "VARCHAR",
       "length": "20"
     },
-    "column4":{
+    "column4": {
       "name": "type",
       "type": "VARCHAR",
       "length": "20"
     },
-    "column5":{
+    "column5": {
       "name": "number",
       "type": "VARCHAR",
       "length": "20"
     },
-    "column6":{
+    "column6": {
       "name": "animacy",
       "type": "VARCHAR",
       "length": "20"
@@ -333,6 +333,26 @@
     },
     "column9": {
       "name": "endIndex",
+      "type": "INT",
+      "length": "11"
+    }
+  },
+  "table9": {
+    "isTable": true,
+    "name": "nestedcorefs",
+    "column1": {
+      "name": "mentionID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "corefmentions"
+    },
+    "column2": {
+      "name": "kind",
+      "type":"VARCHAR",
+      "length":"11"
+    },
+    "column3":{
+      "name": "relatedMention",
       "type": "INT",
       "length": "11"
     }
