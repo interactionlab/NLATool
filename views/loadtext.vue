@@ -14,9 +14,8 @@
 
                 <div class="mdl-grid">
                     <!-- Textfield for title-->
-                    <div class="mdl-grid mdl-cell mdl-cell--6-col">
-                        <div class="mdl-layout-spacer"></div>
-                        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--4-col contentColor">
+                    <div class="mdl-grid mdl-cell--8-col">
+                        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
                             <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
                             <label class="mdl-textfield__label" for="titlebox">Title</label>
                         </div>
@@ -39,7 +38,7 @@
                 <div class="mdl-grid mdl-cell--2-col">
                     <div class="mdl-grid" style="text-align: center">
                         <!-- extra div needed to make button in center -->
-                        <button class="mdl-button mdl-js-button">
+                        <button class="mdl-button mdl-js-button mdc-button--raised mdc-button-ink-color">
                             <b class="mdc-button">Analyze</b>
                         </button>
                     </div>
