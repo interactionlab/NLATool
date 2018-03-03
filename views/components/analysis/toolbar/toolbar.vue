@@ -66,6 +66,7 @@
                     </button>
                 </div>
             </div>
+            
         </div>
     </main>
 </template>
@@ -159,7 +160,7 @@
                 this.classestomark.POS = !this.classestomark.POS;
                 console.log('Correction Mode is ' + this.correctionMode);
                 this.$emit('entercorrectionmode', this.correctionMode);
-                this.$emit('changemarkermode', ['POS', this.classestomark]);
+                this.$emit('changemarkermode', this.classestomark);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;

@@ -3,10 +3,12 @@
         font-size: 1em;
         line-height: 1.3;
     }
-    p{
+
+    p {
         font-size: 0.7em;
         line-height: 0.7;
     }
+
     .mdl-button {
         font-size: 14px;
         height: 36px;
@@ -45,10 +47,12 @@
         font-size: 1.2em;
         line-height: 1.6;
     }
-    p{
+
+    p {
         font-size: 0.9em;
         line-height: 1;
     }
+
     .mdl-button {
         font-size: 16px;
         height: 36px;
@@ -85,12 +89,14 @@
 @media screen and (min-width: 1920px) {
     body {
         font-size: 1.4em;
-        line-height: 1.9;
+        line-height: 1.7;
     }
-    p{
+
+    p {
         font-size: 0.9em;
-        line-height: 1.0;
+        line-height: 0.8;
     }
+
     .mdl-button {
         font-size: 18px;
         height: 38px;
@@ -127,13 +133,14 @@
 @media screen and (min-width: 3840px) {
     body {
         font-size: 1.6em;
-        line-height: 2.2;
+        line-height: 1.6;
     }
 
-    p{
+    p {
         font-size: 0.9em;
-        line-height: 1.3;
+        line-height: 0.7;
     }
+
     .mdl-button {
         font-size: 22px;
         height: 42px;
@@ -170,12 +177,14 @@
 @media screen and (min-width: 7680px) {
     body {
         font-size: 2em;
-        line-height: 2.6;
+        line-height: 1.3;
     }
-    p{
+
+    p {
         font-size: 0.9em;
-        line-height: 1.0;
+        line-height: 0.3;
     }
+
     .mdl-button {
         font-size: 24px;
         height: 45px;
@@ -208,6 +217,7 @@
         height: 6px;
     }
 }
+
 .mdl-layout__content {
     background-color: #e8e8e8;
 }
@@ -254,11 +264,12 @@
     background: gray;
 }
 
-.deleteSpaces{
+.deleteSpaces {
     margin: 0;
     padding: 0;
 
 }
+
 .highlight {
     background-color: yellow;
 }
@@ -305,47 +316,64 @@ pre {
 .activeButton {
     background: white;
 }
+
 /** Formation for semantic Class names */
-.semClassFormate{
-    padding: 10px 10px 0px 10px;
-    font-weight: bold;
+.semClassFormate:hover {
+    background-color: #dddddd;
 }
+
+/** snapbtns are for smooth hover and select for buttons*/
+.snapbtn:hover {
+    border-radius: 1px;
+    background-color: #dddddd;
+
+}
+
+.snapbtn {
+    transition: box-shadow 0s cubic-bezier(0, 0, 0, 0), background-color 0s cubic-bezier(0, 0, 0, 0), color 0s cubic-bezier(0, 0, 0, 0);
+    text-align: left;
+}
+
 /** semantic Class highlight for results */
-.PERSON_BORDERED{
-    border: orangered 3px solid;
+.PERSON_BORDERED {
+    border-left: #ff6666 4px solid;
     padding: 10px 10px 10px 10px;
 }
-.LOCATION_BORDERED{
-    border: darkseagreen 3px solid;
+
+.LOCATION_BORDERED {
+    border-left: #8cd98c 4px solid;
     padding: 10px 10px 10px 10px;
 }
-.ORGANIZATION_BORDERED{
-    border: deepskyblue 3px solid;
+
+.ORGANIZATION_BORDERED {
+    border-left: #66a3ff 4px solid;
     padding: 10px 10px 10px 10px;
 }
-.MISC_BORDERED{
-    border: violet 3px solid;
+
+.MISC_BORDERED {
+    border-left: #e699ff 4px solid;
     padding: 10px 10px 10px 10px;
 }
+
 /**semantic Class highlight in Text*/
 .PERSON {
-    background: orangered;
+    background: #ff6666;
 }
 
 .LOCATION {
-    background: darkseagreen;
+    background: #8cd98c;
 }
 
 .ORGANIZATION {
-    background: deepskyblue;
+    background: #66a3ff;
 }
 
 .MISC {
-    background: violet;
+    background: #e699ff;
 }
 
 .POS {
-    background: lightgrey;
+    background: #d9d9d9;
 }
 
 .coref {
@@ -361,12 +389,12 @@ pre {
 }
 
 .cHoverRepresentant {
-    background: darkgrey;
+    background: #a6a6a6;
     border-bottom: 2px solid red;
 }
 
 .cHoverReferent {
-    background: darkgrey;
+    background: #a6a6a6;
     border-bottom: 2px solid blue;
 }
 
@@ -438,22 +466,20 @@ pre {
     background: #dddddd;
 }
 
-.scopeButton{
-    width: 20px;
-    height: 100%;
-    position: fixed;
-    left: 5px;
-    font-size: 70px;
-    line-height: 100%;
+.scopeButton {
+    font-size: 20px;
+    display: inline-block;
+}
 
+#textviewsettings {
+    display: inline-block;
 }
-#forwardScopeButton{
-    left: 99%;
-}
+
 #textfeatureviewport {
     height: 100%;
 }
-.height100{
+
+.height100 {
     height: 100%;
 }
 

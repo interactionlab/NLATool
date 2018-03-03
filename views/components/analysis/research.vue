@@ -18,6 +18,7 @@
                                v-bind:docid="docid"
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
+                               v-bind:sourcequery="sourceQuery"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -30,6 +31,7 @@
                                v-bind:docid="docid"
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
+                               v-bind:sourcequery="sourceQuery"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -67,7 +69,8 @@
                 keywords: this.keywords,
                 selectedchain: this.selectedchain,
                 mentions: this.mentions,
-                mapcoordinates: []
+                mapcoordinates: [],
+                sourceQuery:''
             }
         },
         methods: {
@@ -116,10 +119,11 @@
                 return items;
             },
             switchresearchselected: function () {
-                console.log('Show the Selection: ' + this.resultselected)
+                console.log('Show the Selection: ' + this.resultselected);
                 this.resultselected = !this.resultselected
             },
             searchGoogle: function (query) {
+
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
                     'query': query,
@@ -130,8 +134,10 @@
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
                     //console.log('Response for Research: ' + JSON.stringify(response));
-                    this.rerankWithKeywords(response);
-                    this.getMapCoordinates();
+                    //this.rerankWithKeywords(response);
+                    //this.getMapCoordinates();
+                    this.researchresults = response.itemListElement;
+                    this.sourceQuery=query;
                     console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
