@@ -9,7 +9,7 @@
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
-                <b class="mdc-button snapbtn">PERSON ({{this.sortedtokens[0].length}})</b>
+                <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
         </div>
         <component is="researchresult"
@@ -20,7 +20,7 @@
                    v-bind:index="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sortedtoken="sortedtokens[0][index]"
+                   v-bind:sourcequery="sortedtokens[0][index]"
                    v-bind:semclass="borderedClasses[0]"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -33,18 +33,18 @@
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
-                <b class="mdc-button snapbtn">LOCATION ({{this.sortedtokens[1].length}})</b>
+                <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
         </div>
         <component is="researchresult"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
+                   v-bind:key="index2"
+                   v-bind:index="index2"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sortedtoken="sortedtokens[1][index2]"
+                   v-bind:sourcequery="sortedtokens[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -57,18 +57,18 @@
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
-                <b class="mdc-button snapbtn">ORGANIZATION ({{this.sortedtokens[2].length}})</b>
+                <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
         </div>
         <component is="researchresult"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
+                   v-bind:key="index3"
+                   v-bind:index="index3"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sortedtoken="sortedtokens[2][index3]"
+                   v-bind:sourcequery="sortedtokens[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -81,18 +81,18 @@
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
-                <b class="mdc-button snapbtn">MISC ({{this.sortedtokens[3].length}})</b>
+                <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
         </div>
         <component is="researchresult"
                    v-if="classestomark.MISC"
                    v-for="(researchresult,index4) in MISC"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
+                   v-bind:key="index4"
+                   v-bind:index="index4"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sortedtoken="sortedtokens[3][index4]"
+                   v-bind:sourcequery="sortedtokens[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
                    v-on:saveresult="saveResult($event)">
         </component>
@@ -134,7 +134,7 @@
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
                 let tokensResults = [];
-                this.sortedtokens.push( this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
+                this.sortedtokens.push(this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
                 //console.log('all tokens of: '+ semClass + JSON.stringify(this.sortedtokens[index]));
                 for (let i = 0; i < this.sortedtokens[index].length; i++) {
                     //console.log('input: '+this.sortedtokens[index][i].name);
@@ -173,12 +173,42 @@
                 //console.log('TODO: Trying to save but not implemented.');
             }
         },
-        computed: {},
+        computed: {
+            numberOfPersons: function () {
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[0] !== 'undefined'){
+                    return this.sortedtokens[0].length
+                } else{
+                    return '';
+                }
+
+            },
+            numberOfLocations: function () {
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[1] !== 'undefined'){
+                    return this.sortedtokens[1].length
+                } else{
+                    return '';
+                }
+            },
+            numberOfOrganizations: function () {
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[2] !== 'undefined'){
+                    return this.sortedtokens[2].length
+                } else{
+                    return '';
+                }
+            },
+            numberOfMisc: function () {
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[3] !== 'undefined'){
+                    return this.sortedtokens[3].length
+                } else{
+                    return '';
+                }
+            }
+        },
         mounted() {
-            this.researchTokensOfClass('PERSON',0);
-            this.researchTokensOfClass('LOCATION',1);
-            this.researchTokensOfClass('ORGANIZATION',2);
-            this.researchTokensOfClass('MISC',3);
+            this.researchTokensOfClass('PERSON', 0);
+            this.researchTokensOfClass('LOCATION', 1);
+            this.researchTokensOfClass('ORGANIZATION', 2);
+            this.researchTokensOfClass('MISC', 3);
         },
         watch: {},
         components: {

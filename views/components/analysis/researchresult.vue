@@ -14,7 +14,7 @@
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
-                                    {{sortedtoken.name +' ('+sortedtoken.freq+') '+ ' -> '+ researchresult.result.name}}
+                                    {{title}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
@@ -94,7 +94,7 @@
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
-            sortedtoken: String,
+            sourcequery: String,
             semclass: String
         },
         data: function () {
@@ -107,7 +107,7 @@
                 docid: this.docid,
                 showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
-                sortedtoken: this.sortedtoken,
+                sortedtoken: this.sourcequery,
                 semclass: this.semclass
             }
         },
@@ -159,6 +159,23 @@
                     htmlclass['PERSON_BORDERED'] = true;
                 }
                 return htmlclass;
+            },
+            title: function () {
+                let title = '';
+                if (typeof this.sourcequery !== 'undefined') {
+                    if (typeof this.sourcequery.name !== 'undefined') {
+                        title = title + this.sourcequery.name;
+                        if (typeof this.sourcequery.freq !== 'undefined') {
+                            title = title + ' (' + this.sourcequery.freq + ') ';
+                        }
+                    } else{
+                        title = title + this.sourcequery;
+                    }
+                }
+                title = title + ' -> ' + this.researchresult.result.name;
+                return title;
+
+
             }
         }
     }
