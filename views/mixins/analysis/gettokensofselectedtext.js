@@ -8,11 +8,11 @@ module.exports = {
         },
         gettokensofselectedtext: function (alltokens, indexes) {
             let resultingTokens = [];
-            console.log('start: ' + indexes.start + ' end: '+ indexes.end);
+            //console.log('start: ' + indexes.start + ' end: '+ indexes.end);
             for (let i = indexes.start; i < indexes.end; i++) {
                 resultingTokens.push(alltokens[i]);
             }
-            console.log(JSON.stringify(resultingTokens));
+            //console.log(JSON.stringify(resultingTokens));
             return resultingTokens;
         },
         generateText: function (tokens) {
@@ -23,7 +23,7 @@ module.exports = {
                 gap = this.getWordGap(tokens, i);
                 text = text + gap;
             }
-            console.log(text);
+            //console.log(text);
             return text;
         },
         getWordGap: function (tokens, index) {

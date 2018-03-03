@@ -1,26 +1,29 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content deleteSpaces contentColor separate" style="right: inherit">
+        <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col"
                      v-if="everythingshow">
 
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate"
-                         v-on:click="showSource">
+                         v-on:mouseover="accentuate">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchresult.result !== 'undefined'">
-                                    {{sortedtoken + ' -> '+ researchresult.result.name}}
+                                    {{title}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-on:click="editResearch">
                                     <i class="material-icons">edit</i>
+                                </button>
+                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                                        v-on:click="showSource">
+                                    <i class="material-icons">public</i>
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
@@ -34,7 +37,6 @@
                                            v-bind:index="index">
                                 </component>
                             </div>
-
 
                             <div v-if="typeof researchresult.result.description !== 'undefined'">
                                 {{researchresult.result.description.articleBody}}
@@ -92,7 +94,7 @@
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
-            sortedtoken: String,
+            sourcequery: String,
             semclass: String
         },
         data: function () {
@@ -105,7 +107,7 @@
                 docid: this.docid,
                 showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
-                sortedtoken: this.sortedtoken,
+                sortedtoken: this.sourcequery,
                 semclass: this.semclass
             }
         },
@@ -113,36 +115,35 @@
             showallresults: function () {
                 this.$emit('showallresults');
                 this.showallon = false;
-                console.log('showallrults semclas: ' + this.semclass);
+                //console.log('showallrults semclas: ' + this.semclass);
             },
             showdetail: function () {
-                console.log('Show the detailed List: ' + this.everythingshow);
+                //console.log('Show the detailed List: ' + this.everythingshow);
                 this.everythingshow = !this.everythingshow;
-                console.log('showallrults showdetail: ' + this.semclass);
+                //console.log('showallrults showdetail: ' + this.semclass);
             },
             accentuate: function () {
                 this.hover = !this.hover;
-                console.log('showallrults accentuate: ' + this.semclass);
+                //console.log('showallrults accentuate: ' + this.semclass);
             },
             saveResult: function () {
                 let socket = io('http://localhost:8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
-                console.log('showallrults saveResult: ' + this.semclass);
+                //console.log('showallrults saveResult: ' + this.semclass);
             },
             showSource: function () {
-                console.log('Trying to show the source:');
+                //console.log('Trying to show the source:');
                 try {
                     let url = this.researchresult.result.detailedDescription.url;
                     let win = window.open(url, '_blank');
                     win.focus();
                 } catch (err) {
-                    console.log('Showing the source of Article failed: ' + err);
+                    //console.log('Showing the source of Article failed: ' + err);
                 }
             },
-            editResearch:function () {
-
+            editResearch: function () {
             }
         },
         components: {
@@ -158,6 +159,23 @@
                     htmlclass['PERSON_BORDERED'] = true;
                 }
                 return htmlclass;
+            },
+            title: function () {
+                let title = '';
+                if (typeof this.sourcequery !== 'undefined') {
+                    if (typeof this.sourcequery.name !== 'undefined') {
+                        title = title + this.sourcequery.name;
+                        if (typeof this.sourcequery.freq !== 'undefined') {
+                            title = title + ' (' + this.sourcequery.freq + ') ';
+                        }
+                    } else{
+                        title = title + this.sourcequery;
+                    }
+                }
+                title = title + ' -> ' + this.researchresult.result.name;
+                return title;
+
+
             }
         }
     }

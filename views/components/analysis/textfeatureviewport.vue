@@ -14,6 +14,7 @@
                            v-bind:tokens="tokens"
                            v-bind:mentions="mentions"
                            v-bind:index="generatetrueindex(i+1)"
+
                            v-bind:selectedindexes="selectedindexes"
                            v-bind:classestomark="classestomark"
                            v-bind:hoveredchain="hoveredchain"
@@ -94,7 +95,7 @@
                 analysismode: this.analysismode,
                 docid: this.docid,
                 textcolumnposition: this.textcolumnposition,
-                tokenstoshow:this.tokenstoshow
+                tokenstoshow:this.tokenstoshow,
             }
         },
         methods: {
@@ -127,9 +128,27 @@
                 //console.log('The col Index here is:' + this.colindex);
                 //console.log('The final Index is: ' + wordIndex);
                 return wordIndex;
+
+            },
+            getMentionInfo: function (index) {
+                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
+                console.log('getMentionInfo');
+                let mention = {};
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    console.log('getMentionInfo: index:' + this.index
+                        + 'startIndex: ' + this.mentions[0][i].startIndex
+                        + 'endIndex: ' + this.mentions[0][i].endIndex
+                        + 'erfüllt: ' + ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex));
+                    if ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex) {
+                        mention = this.mentions[0][i];
+                        console.log('getMentionInfo: this Mention got set: ' + JSON.stringify(this.mention));
+                        break;
+                    }
+                }
+                return mention;
             },
             togglesemanticlass:function (newClassesToMark) {
-                console.log('Checkpoint 1: ' + JSON.stringify(newClassesToMark));
+                //console.log('Checkpoint 1: ' + JSON.stringify(newClassesToMark));
                 this.$emit('togglesemanticlass',newClassesToMark);
             },
         },
