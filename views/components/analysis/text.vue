@@ -28,7 +28,7 @@
             hoveredchain: Number,
             selectedchain: Number,
             nestedmentions: Object,
-            endOfMentions: Object
+            endOfMentions: Object,
         },
         data: function () {
             return {
@@ -45,9 +45,13 @@
                 selectedchain: this.selectedchain,
                 nestedmentions: this.nestedmentions,
                 color: this.color,
-                endOfMentions: this.endOfMentions
+                endOfMentions: this.endOfMentions,
+                nested: false,
+                mention: [],
+                nextmention: false
             }
         },
+
         computed: {
             tobejumped: function () {
                 if (this.index === this.selectedindexes.start) {
@@ -55,6 +59,7 @@
                 }
             },
             toHighlight: function () {
+
                 let htmlclass = {};
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
@@ -62,45 +67,44 @@
                 } else {
                     htmlclass['notemark'] = false;
                 }
-                //console.log('Checkpoint 1: ' + JSON.stringify(this.mentions));
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    //console.log('Checkpoint 2.0: ' + this.index - 1 + ' >=? ' + this.mentions[0][i].startIndex);
-                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                    //isPart of a Mention:
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && this.index <= this.mentions[0][i].endIndex) {
-                        //is hovered
-                        if (!this.tohover) {
-                            //is Representant
-                            if (this.mentions[0][i].representative < 0) {
-                                if (this.mentions[0][i].mentionID === this.hoveredchain) {
+                if (this.mention.length > 0) {
+                    //console.log('highlight: ' + this.index + ' mention:' + JSON.stringify(this.mention));
+                    if (this.classestomark.coref) {
+                        for (let i = 0; i < this.mention.length; i++) {
+                            if (!this.tohover) {
+                                //is Representant
+                                if (this.mention[i].representative < 0) {
+                                    if (this.mention[i].mentionID === this.hoveredchain) {
+                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                    } else if (this.mention[i].mentionID === this.selectedchain) {
+                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                    }
+                                    else {
+                                        htmlclass['cRepresentant'] = this.classestomark.coref;
+                                    }
+                                } else {
+                                    if (this.mention[i].representative === this.hoveredchain) {
+                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                    } else if (this.mention[i].representative === this.selectedchain) {
+                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                    }
+                                    else {
+                                        htmlclass['cReferent'] = this.classestomark.coref;
+                                    }
+                                }
+                            } else {
+                                //is Representant
+                                if (this.mention[i].representative < 0) {
                                     htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                } else if (this.mentions[0][i].mentionID === this.selectedchain) {
-                                    htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                }
-                                else {
-                                    htmlclass['cRepresentant'] = this.classestomark.coref;
-                                }
-                            } else {
-                                if (this.mentions[0][i].representative === this.hoveredchain) {
+                                    this.$emit('hoverchain', this.mention[i].mentionID);
+                                } else {
                                     htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                } else if (this.mentions[0][i].representative === this.selectedchain) {
-                                    htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                    this.$emit('hoverchain', this.mention[i].representative);
                                 }
-                                else {
-                                    htmlclass['cReferent'] = this.classestomark.coref;
-                                }
-                            }
-                        } else {
-                            //is Representant
-                            if (this.mentions[0][i].representative < 0) {
-                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mentions[0][i].mentionID);
-                            } else {
-                                htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                this.$emit('hoverchain', this.mentions[0][i].representative);
+
+                                //is nested in more than one mention
                             }
                         }
-                        //is nested in more than one mention
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
@@ -108,10 +112,9 @@
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
-
                     htmlclass['POS'] = this.classestomark['POS'];
                     //console.log(JSON.stringify(this.classestomark));
-                } else{
+                } else {
                     //console.log("else" + JSON.stringify(this.classestomark));
                 }
                 return htmlclass
@@ -123,6 +126,7 @@
                 //Z3: highlight coref and this gab bc next word not part of coref mention
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
+
                 try {
                     if ((this.index) > this.selectedindexes.start
                         && (this.index) < this.selectedindexes.end) {
@@ -130,43 +134,47 @@
                     } else {
                         htmlclass['notemark'] = false;
                     }
-                    for (let i = 0; i < this.mentions[0].length; i++) {
-                        //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
-                        //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                        if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                            if (!this.tohover) {
-                                //is Representant
-                                if (this.mentions[0][i].representative < 0) {
-                                    if (this.mentions[0][i].mentionID === this.hoveredchain) {
-                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else if (this.mentions[0][i].mentionID === this.selectedchain) {
-                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                    if (this.mention.length > 0) {
+                        if (this.classestomark.coref) {
+                            if (this.nextmention) {
+                                for (let i = 0; i < this.mention.length; i++) {
+                                    if (!this.tohover) {
+                                        //is Representant
+
+                                        if (this.mention[i].representative < 0) {
+                                            if (this.mention[i].mentionID === this.hoveredchain) {
+                                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                            } else if (this.mention[i].mentionID === this.selectedchain) {
+                                                htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                            } else {
+                                                htmlclass['cRepresentant'] = this.classestomark.coref;
+                                            }
+                                        } else {
+                                            if (this.mention[i].representative === this.hoveredchain) {
+                                                htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                            } else if (this.mention[i].representative === this.selectedchain) {
+                                                htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                            } else {
+                                                htmlclass['cReferent'] = this.classestomark.coref;
+                                            }
+                                        }
                                     } else {
-                                        htmlclass['cRepresentant'] = this.classestomark.coref;
+                                        //is Representant
+                                        if (this.mention[i].representative < 0) {
+                                            htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                            this.$emit('hoverchain', this.mention[i].mentionID);
+                                        } else {
+                                            htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                            this.$emit('hoverchain', this.mention[i].representative);
+                                        }
                                     }
-                                } else {
-                                    if (this.mentions[0][i].representative === this.hoveredchain) {
-                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    } else if (this.mentions[0][i].representative === this.selectedchain) {
-                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                    } else {
-                                        htmlclass['cReferent'] = this.classestomark.coref;
-                                    }
-                                }
-                                if (this.checkIfNested()) {
-                                    htmlclass['nested'] = this.classestomark.coref;
-                                }
-                            } else {
-                                //is Representant
-                                if (this.mentions[0][i].representative < 0) {
-                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mentions[0][i].mentionID);
-                                } else {
-                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mentions[0][i].representative);
                                 }
                             }
                         }
+                    }
+                    //TODO: check for consistency
+                    if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
+                        htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     }
                 } catch (err) {
                     console.log('Got out of the array' + err);
@@ -241,75 +249,6 @@
                 }
                 return resultingBrackets;
             },
-            mentionBoundaries: function () {
-                let color = ['red', 'blue', 'green', 'yellow', 'violet', 'lightPink', 'grey', 'orange', 'Chocolate'];
-                let style = [];
-
-                let nested = false;
-                let shadowLeft = [];
-                let shadowRight = [];
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    if (this.index === this.mentions[0][i].startIndex) {
-                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                shadowLeft.push('0 0 0 1px black');
-                                shadowLeft.push('0 0 0 1px white');
-                                nested = true;
-                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                shadowLeft.push('0 0 0 1px black');
-                                nested = true;
-                            }
-                        }
-                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                shadowLeft.push('0 0 0 1px black');
-                                nested = true;
-                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                shadowLeft.push('0 0 0 1px black');
-                                nested = true;
-                            }
-                        }
-                        if (!nested) {
-                            shadowLeft.push('0 0 0 1px black');
-                            nested = false;
-                        }
-                    } else if (this.index === this.mentions[0][i].endIndex) {
-                        for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                            if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                shadowRight.push('0 0 0 1px black');
-                                shadowRight.push('0 0 0 1px white');
-                                nested = true;
-                            } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                shadowRight.push('0 0 0 1px black');
-                                nested = true;
-                            }
-                        }
-                        for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                            if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                shadowRight.push('0 0 0 1px black');
-                                nested = true;
-                            } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                shadowRight.push('0 0 0 1px black');
-                                nested = true;
-                            }
-                        }
-                        if (!nested) {
-                            shadowRight.push('0 0 0 1px black');
-                            nested = false;
-                        }
-                    }
-                }
-                style.push({'border-bottom-left-radius': '2px'});
-                style.push({'border-top-left-radius': '2px'});
-                style.push({'border-bottom-right-radius': '2px'});
-                style.push({'border-top-right-radius': '2px'});
-                //console.log('Joined shadows'+shadowLeft.join(', '));
-                style.push({'box-shadow': shadowLeft.join(', ')});
-                style.push({'box-shadow': shadowRight.join(', ')});
-                console.log('style for borders: ' + JSON.stringify(style));
-                return style;
-
-            },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
                 //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
@@ -318,7 +257,7 @@
                 let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
                 let word2OffsetBegin = -1;
                 try {
-                    word2OffsetBegin = this.tokens[this.index].offsetBegin;
+                    word2OffsetBegin = token.offsetBegin;
                 } catch (err) {
                     //console.log('offsetBegin is not defined');
                 }
@@ -335,21 +274,43 @@
                 return gap;
             }
         },
+        mounted() {
+            this.getMentionInfo();
+        },
         methods: {
-            checkIfNested: function () {
-                for (let i = 0; i < this.nestedmentions.fullyNested.length; i++) {
-                    for (let j = 0; j < this.mentions[0].length; j++) {
-                        if (this.index === this.mentions[0][j].mentionID
-                            && this.index === this.nestedmentions.fullyNested[i].inner) {
-                            return true;
+            getMentionGap: function () {
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
+                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
+                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
+                        this.mention = this.mentions[0][i];
+                        break;
+                    }
+                }
+            },
+            getMentionInfo: function () {
+                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
+                //console.log('getMentionInfo');
+                for (let i = 0; i < this.mentions[0].length; i++) {
+                    // console.log('getMentionInfo: index:' + this.index
+                    //     + 'startIndex: ' + this.mentions[0][i].startIndex
+                    //     + 'endIndex: ' + this.mentions[0][i].endIndex
+                    //    + 'erfüllt: ' + ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex));
+                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex) {
+                        this.mention.push(this.mentions[0][i]);
+                        //console.log('getMentionInfo: this Mention got set: index: ' + this.index + ' : ' + JSON.stringify(this.mention));
+                        try {
+                            if (this.mentions[0][i].endIndex - this.index > 0) {
+                                //console.log('has next Mention');
+                                this.nextmention = true;
+                            }
+                        } catch (err) {
                         }
                     }
                 }
-                return false;
-
             },
             startSelection: function () {
-                console.log('mouse pressed at: ' + this.index - 1);
+                //console.log('mouse pressed at: ' + this.index - 1);
                 this.$emit('startselection', this.index - 1);
             },
             endSelection: function () {

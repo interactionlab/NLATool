@@ -2,9 +2,12 @@
     <div>
         <component :is="showmode"
                    v-bind:tokens="tokens"
+                   v-bind:colindex="colindex"
+                   v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
-                   v-bind:classestomark="classestomark">
+                   v-bind:classestomark="classestomark"
+                   v-on:togglesemanticlass="togglesemanticlass($event)">
 
         </component>
     </div>
@@ -24,6 +27,8 @@
             showmode: String,
             docid: String,
             classestomark: Object,
+            tokenstoshow:Array,
+            colindex:Number
         },
         data: function () {
             return {
@@ -31,10 +36,17 @@
                 showmode: this.showmode,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,
-                classestomark: this.classestomark
+                classestomark: this.classestomark,
+                tokenstoshow:this.tokenstoshow,
+                colindex:this.colindex
             }
         },
-        methods: {},
+        methods: {
+            togglesemanticlass:function (newClassesToMark) {
+                //console.log('Checkpoint 1: ' + JSON.stringify(newClassesToMark));
+                this.$emit('togglesemanticlass',newClassesToMark);
+            }
+        },
         components: {
             nerVue,
             necVue,
