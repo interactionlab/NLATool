@@ -4,8 +4,7 @@
          class="mdl-grid">
         <form action="/profile/loadDocument"
               method="post"
-              class="mdl-cell--10-col contentColor"
-        >
+              class="mdl-cell--10-col contentColor">
             <button class="mdl-cell--12-col mdl-button mdl-js-button mdl-js-ripple-effect contentColor"
                     name="docID"
                     style="width: 100%; height: 100%; text-transform: initial"
@@ -13,7 +12,7 @@
             >{{document.name}}
             </button>
         </form>
-        <div class="mdl-cell mdl-cell--2-col contentColor"
+        <div class="mdl-cell mdl-cell--2-col contentColor overridemargin"
              v-show="ishovered">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="editing">
