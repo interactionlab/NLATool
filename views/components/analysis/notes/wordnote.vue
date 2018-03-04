@@ -74,6 +74,7 @@
             deleting: function () {
                 let socket = io('http://localhost:8080');
                 socket.emit('deletenote', this.wordnotedb.noteID);
+                this.$emit('deletenote', this.wordnotedb.noteID);
                 this.editing = false;
             },
             showButns: function () {
