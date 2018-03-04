@@ -38,7 +38,7 @@
                 <div class="mdl-grid mdl-cell--2-col">
                     <div class="mdl-grid" style="text-align: center">
                         <!-- extra div needed to make button in center -->
-                        <button class="mdl-button mdl-js-button mdc-button--raised mdc-button-ink-color">
+                        <button class="mdl-button mdl-js-button mdl-button--raised  mdl-button--accent mdc-button--stroked">
                             <b class="mdc-button">Analyze</b>
                         </button>
                     </div>
