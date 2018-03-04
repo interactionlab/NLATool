@@ -64,14 +64,11 @@
             },
             showButns: function () {
                 this.ishovered = true;
-                console.log('got hovered!');
             },
             hideButns: function () {
                 this.ishovered = false;
             },
             back: function (noteToChange) {
-                console.log('got here: 3');
-                console.log('action: ' + noteToChange[1]);
                 if (noteToChange[1] === 0) {
                     //delete
                     let i = 0;

@@ -75,9 +75,9 @@ function establishConnection() {
     if (dbStatus.connection !== null && dbStatus.connected !== false) {
         testDatabase();
         if (syncDatabase()) {
-            console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes is successful');
+            //console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes is successful');
         } else {
-            console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes failed.');
+            //console.log(notMedia + Tag + 'Establishing Connection to Server and checking it for mistakes failed.');
         }
     } else {
         console.log(notMedia + Tag + 'No Database was available or all connection Settings a wrong!')
@@ -99,7 +99,7 @@ syncDatabase = function () {
             try {
                 let res = wait.for(makeSQLRequest, dbAction.createSelectCommand('word', null, null, null));
                 res = JSON.parse(res);
-                console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
+                //console.log(notMedia + Tag + 'Result of Select in databasCreated: ' + res);
                 dbStatus.exists = true;
                 dbStatus.isCorrect = true;
                 return true;
@@ -255,7 +255,7 @@ exports.makeTransaction = function (input) {
         connection.commit();
         return results;
     } catch (err) {
-        console.log(Tag + err);
+        console.log(Tag + 'Transaction failed: '+err);
         connection.rollback();
         return results;
     }
@@ -332,7 +332,7 @@ testDatabase = function () {
             }
         }
     }
-    console.log('The differences at the end: ' + JSON.stringify(differences));
+    //console.log('The differences at the end: ' + JSON.stringify(differences));
     isDbCorrect();
 };
 
@@ -359,7 +359,7 @@ matchsColumnSettings = function (table, jsonColumns, dbColumns) {
             if (existingColumns.indexOf(column2) < 0) {
                 existingDbColumns.push(dbColumns[column2].name);
                 if (existingColumns.indexOf(column1) < 0) {
-                    console.log('Compare: ' + jsonColumns[column1].name + ' with ' + dbColumns[column2].name);
+                    //console.log('Compare: ' + jsonColumns[column1].name + ' with ' + dbColumns[column2].name);
                     if (jsonColumns[column1].name === dbColumns[column2].name) {
 
                         for (let field in jsonColumns[column1]) {
@@ -385,7 +385,7 @@ matchsColumnSettings = function (table, jsonColumns, dbColumns) {
         dbStatus.settingsCorrect = true;
         return true;
     } else {
-        console.log(notMedia + Tag + 'Differences of Config: ' + JSON.stringify(differences));
+       // console.log(notMedia + Tag + 'Differences of Config: ' + JSON.stringify(differences));
         dbStatus.columnsCorrect = false;
         dbStatus.settingsCorrect = false;
         return false;
@@ -617,7 +617,7 @@ function testConnection(connection) {
         } catch (err) {
             dbStatus.connected = false;
             dbStatus.connectionError = err;
-            console.log(notMedia + Tag + 'ping threw connectionError: ' + dbStatus.connectionError);
+            console.log(notMedia + Tag + 'Connection test failed: ' + dbStatus.connectionError);
         }
     }
 }
