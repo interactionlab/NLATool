@@ -37,6 +37,8 @@ module.exports = {
                 prev = arr[i];
             }
 
+            //check for substrings, not accurate for many texts
+            /*
             for (let j = 0; j < entity.length; j++) {
                 for (let k = 0; k < entity.length; k++) {
                     if (entity[j] !== entity[k]) {
@@ -54,7 +56,7 @@ module.exports = {
                     }
                 }
             }
-
+*/
 
             for (let j = 0; j < entity.length; j++) {
                 entity[j] = {name: entity[j], freq: frequency[j]};
@@ -88,9 +90,6 @@ module.exports = {
                     }
                 }
             }
-
-            //console.log(this.uniqCount((resultingtokens)));
-
             //Uniq array
             return this.uniqCount(resultingtokens);
         }

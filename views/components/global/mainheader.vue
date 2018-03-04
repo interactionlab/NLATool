@@ -27,7 +27,7 @@
                 <a class="mdl-navigation__link" href="signin">
                     <li class="mdl-menu__item">Sign In</li>
                 </a>
-                <a class="mdl-navigation__link" href="signout">
+                <a class="mdl-navigation__link" href="signin">
                     <li class="mdl-menu__item">Sign Out</li>
                 </a>
             </ul>

@@ -1,17 +1,17 @@
 <template>
-    <div class="googlemap" :id="googlemapname"></div>
+    <div class="googlemap" :id="index"></div>
 </template>
 
 <script>
     export default {
         props: {
-            index: String,
+            index: Number,
             mapcoordinates: Array
         },
 
         data: function () {
             return {
-                googlemapname: this.index + "-map",
+                index: this.index,
                 mapoptions: {
                     zoom: 14,
                     center: '',
@@ -20,8 +20,8 @@
             }
         },
         mounted() {
-            //console.log('MapName: ' + this.googlemapname);
-            var element = document.getElementById(this.googlemapname);
+            //console.log('MapName: ' + this.index);
+            var element = document.getElementById(this.index);
             this.mapoptions = {
                 zoom: 14,
                 center: new google.maps.LatLng(51.501527, -0.1921837)
@@ -39,7 +39,6 @@
                 handler: function (newmapcoordinates) {
                     this.setmapcoordinates(newmapcoordinates[this.index].x, newmapcoordinates[this.index].y);
                 }
-
             }
         }
     }
