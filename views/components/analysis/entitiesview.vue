@@ -123,7 +123,7 @@
                     } else {
                         //console.log('Response for Research: ' + JSON.stringify(response));
                         this[semClass].push(response.itemListElement[0]);
-                        console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
+                        //console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
                     }
                 });
             },
@@ -133,7 +133,7 @@
                 this.$emit('togglesemanticlass', this.classestomark);
             },
             saveResults: function () {
-                console.log('TODO: Trying to save but not implemented.');
+                //console.log('TODO: Trying to save but not implemented.');
             }
         },
         computed: {},

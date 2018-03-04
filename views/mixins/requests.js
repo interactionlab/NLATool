@@ -25,7 +25,7 @@ module.exports = {
             let tempresults = [];
             let numberOfMatches = [];
             let researchresults = [];
-            console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
+            //('Checkpoint 1' + JSON.stringify(response.itemListElement));
             for (let i = 0; i < response.itemListElement.length; i++) {
                 numberOfMatches.push(0);
                 for (let j = 0; j < this.keywords.length; j++) {
@@ -34,7 +34,7 @@ module.exports = {
                             numberOfMatches[i] = numberOfMatches[i] + 1;
                         }
                     } catch (err) {
-                        console.log('Detailed Description: ' + err + i)
+                        //console.log('Detailed Description: ' + err + i)
                     }
                 }
                 tempresults.push({
@@ -42,11 +42,11 @@ module.exports = {
                     matches: numberOfMatches[i]
                 });
             }
-            console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
-            console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
+            //console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
+            //console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
             numberOfMatches = this.insertionSort(numberOfMatches);
             numberOfMatches.reverse();
-            console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
+            //console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
             for (let i = 0; i < numberOfMatches.length; i++) {
                 for (let j = 0; j < tempresults.length; j++) {
                     if (numberOfMatches[i] === tempresults[j].matches) {
@@ -54,7 +54,7 @@ module.exports = {
                     }
                 }
             }
-            console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
+            //console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
             return researchresults;
         },
         insertionSort: function (items) {

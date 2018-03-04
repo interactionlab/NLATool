@@ -36,7 +36,6 @@
                 let socket = io('http://localhost:8081');
 
                 this.document.name = this.newtitle;
-                console.log('Title Changed: ' + this.document.name);
                 socket.emit('changeTitle', this.document.docID, this.newtitle);
                 this.$emit('editing', this.newtitle);
             },
