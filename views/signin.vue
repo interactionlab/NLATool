@@ -12,13 +12,9 @@
                 is="headernavbar"
                 v-bind:title_small="title_small">
         </component>
-        <main class="mdl-layout__content">
-            <div class="mdl-grid">
-                <div class="mdl-layout-spacer"></div>
-                <div class="mdl-cell mdl-cell--6-col contentColor">
-                    <component :is="signmode"></component>
-                </div>
-                <div class="mdl-layout-spacer"></div>
+        <main class="mdl-layout__content" style="justify-content: center;align-items: center;">
+            <div class="mdl-card mdl-shadow--6dp" style="margin: auto;">
+                <component :is="signmode"></component>
             </div>
             <div class="mdl-grid">
                 <div class="mdl-layout-spacer" style="text-align: center">
