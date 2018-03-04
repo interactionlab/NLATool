@@ -53,7 +53,7 @@
         methods: {
             editTitle: function () {
                 this.title = this.newTitle;
-                let socket = io('http://localhost:8081');
+                let socket = io('http://localhost:8080');
                 socket.emit('changeTitle', this.docid, this.newTitle);
                 this.editingtitle = false;
             },
