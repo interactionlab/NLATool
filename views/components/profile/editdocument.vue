@@ -7,7 +7,6 @@
                    v-on:keyup.esc="back"
                    class="mdl-textfield__input"/>
         </div>
-
         <div class="mdl-cell mdl-cell--4-col contentColor">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="edit">
