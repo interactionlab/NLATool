@@ -11,11 +11,10 @@
 
         <main class="mdl-layout__content" style="display: flex; flex-flow: row wrap; width: 100%;">
             <form  class="mdl-grid" style="max-width:2160px; overflow-y:auto; flex-direction:column; width:100%" action="/loadWrittenText" method="post">
-
                 <!-- Textfield for title-->
                 <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor" style="flex:0">
                     <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
-                    <label class="mdl-textfield__label" for="titlebox">Title</label>
+                    <label class="mdl-textfield__label" for="titlebox">Enter title here ...</label>
                 </div>
                 <div class="mdl-layout-spacer mdl-cell--12-col" style="flex:0"></div>
 
