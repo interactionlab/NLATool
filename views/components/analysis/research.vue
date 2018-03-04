@@ -153,6 +153,7 @@
                 return $.ajax(connectionParams);
             },
             saveResult: function (index) {
+                //TODO: make new variable that has the meaning of selectedIndex if there are multiple results.
                 this.resultselected = true;
                 this.selectedindex = index;
                 //console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
