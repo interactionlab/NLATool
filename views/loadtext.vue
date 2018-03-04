@@ -17,7 +17,7 @@
                     <div class="mdl-grid mdl-cell--8-col">
                         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
                             <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
-                            <label class="mdl-textfield__label" for="titlebox">Title</label>
+                            <label class="mdl-textfield__label" for="titlebox">Enter title here ...</label>
                         </div>
                         <div class="mdl-layout-spacer"></div>
                     </div>
