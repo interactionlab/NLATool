@@ -74,7 +74,7 @@
             rerankWithKeywords: function (response) {
                 let tempresults = [];
                 let numberOfMatches = [];
-                console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
+                //console.log('Checkpoint 1' + JSON.stringify(response.itemListElement));
                 for (let i = 0; i < response.itemListElement.length; i++) {
                     numberOfMatches.push(0);
                     for (let j = 0; j < this.keywords.length; j++) {
@@ -91,11 +91,11 @@
                         matches: numberOfMatches[i]
                     });
                 }
-                console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
-                console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
+                //console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
+                //console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
                 numberOfMatches = this.insertionSort(numberOfMatches);
                 numberOfMatches.reverse();
-                console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
+                //console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
                 for (let i = 0; i < numberOfMatches.length; i++) {
                     for (let j = 0; j < tempresults.length; j++) {
                         if (numberOfMatches[i] === tempresults[j].matches) {
@@ -103,7 +103,7 @@
                         }
                     }
                 }
-                console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
+                //console.log('Sorted Results Alpha: ' + JSON.stringify(this.researchresults) + this.researchresults.length);
             },
             insertionSort: function (items) {
                 for (let i = 0; i < items.length; i++) {
@@ -116,7 +116,7 @@
                 return items;
             },
             switchresearchselected: function () {
-                console.log('Show the Selection: ' + this.resultselected)
+                //console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
             },
             searchGoogle: function (query) {
@@ -132,7 +132,7 @@
                     //console.log('Response for Research: ' + JSON.stringify(response));
                     this.rerankWithKeywords(response);
                     this.getMapCoordinates();
-                    console.log('Results: ' + JSON.stringify(this.researchresults));
+                    //console.log('Results: ' + JSON.stringify(this.researchresults));
                 });
             },
             makeCORSSecureRequest:function (url, success) {
@@ -148,7 +148,7 @@
             saveResult: function (index) {
                 this.resultselected = true;
                 this.selectedindex = index;
-                console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
+                //console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
                 this.selectedresult = this.researchresults[index];
             },
             getMapCoordinates: function () {
@@ -168,10 +168,9 @@
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
-                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                         this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
-                        console.log('Keywords: ' + JSON.stringify(this.keywords));
+                        //console.log('Keywords: ' + JSON.stringify(this.keywords));
                         this.resultselected = false;
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
                         this.searchGoogle(this.selectedtext);

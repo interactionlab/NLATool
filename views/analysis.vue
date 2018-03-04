@@ -148,22 +148,17 @@
                 this.hoveredChain = chain;
             },
             getAnalighter: function () {
-                console.log('Got clicked1' + this.docID);
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
                 this.analysisMode = 'notes';
-
             },
             getResearch: function () {
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (newClassesToMark) {
-                 console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
+                // console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
                 this.classesToMark = newClassesToMark;
-            },
-            test: function () {
-                console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
@@ -181,22 +176,20 @@
                     this.selectedtextindexes.end = index;
                 }
                 if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
+                    //console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
                     if (this.selectedtextindexes.start > this.selectedtextindexes.end - 1) {
                         let tempstart = this.selectedtextindexes.start + 1;
                         this.selectedtextindexes.start = this.selectedtextindexes.end - 1;
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
-
-                console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
-
+                //console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
-                console.log('changing Note Modes: ' + newNoteModes);
+                //console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
             setColumnSizeFalse: function () {
@@ -241,7 +234,7 @@
             showTokens: function (difference, end) {
                 this.tokenstoshow = [];
                 let newtokenstoshow = [];
-                console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
+                //console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
                 if (end > this.splitted.length) {
                     newtokenstoshow = this.splitted.slice(0, this.splitted.length);
                     for (let i = 0; i < newtokenstoshow.length; i++) {
@@ -249,7 +242,6 @@
                     }
                     this.textcolumnposition.end = this.splitted.length - 1;
                     this.textcolumnposition.start = 0;
-                    console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
                         newtokenstoshow = this.splitted.slice((end + 1) - difference, end);
@@ -257,9 +249,7 @@
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
                         this.textcolumnposition.start = (end + 1) - difference;
-                        console.log('Got here2');
                     } else {
-                        console.log('Got here3');
                         newtokenstoshow = this.splitted.slice(0, end);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
                             this.tokenstoshow.push(newtokenstoshow[i]);
@@ -269,20 +259,20 @@
                     this.textcolumnposition.end = end;
                 }
                 this.textcolumnposition.difference = difference;
-                console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
-                console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
-                console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
+                //console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
+                //console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
+                //console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
             },
             changeScope: function (direction) {
-                console.log('changing Scope: Check 0 ' + direction);
+                //console.log('changing Scope: Check 0 ' + direction);
                 if (direction) {
                     if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
-                        console.log('changing Scope: Check 1');
+                        //console.log('changing Scope: Check 1');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
                     }
                 } else if (!direction) {
                     if (this.textcolumnposition.end < this.splitted.length) {
-                        console.log('changing Scope: Check 2');
+                        //console.log('changing Scope: Check 2');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
                     }
                 }
@@ -305,7 +295,7 @@
                 if (startSlice < this.tokens.length) {
                     this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
                 }
-                console.log('splitted Tokens:' + JSON.stringify(this.splitted));
+                //console.log('splitted Tokens:' + JSON.stringify(this.splitted));
             },
             splitTokens2: function () {
                 this.splitted = [];
@@ -320,11 +310,11 @@
                 if (this.numberOfColumns === 0) {
                     this.numberOfColumns++;
                 }
-                console.log('screenValues:' + JSON.stringify(this.screenOptions));
-                console.log('colQuantity:' + this.numberOfColumns);
+                //console.log('screenValues:' + JSON.stringify(this.screenOptions));
+                //console.log('colQuantity:' + this.numberOfColumns);
             },
             setScreenOptions: function () {
-                console.log('changing Screensizes:');
+                //console.log('changing Screensizes:');
                 this.screenOptions = {
                     screenWidth: window.innerWidth,
                     screenHeight: window.outerHeight,
@@ -402,7 +392,6 @@
         watch: {
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     let priorisizedFound = false;
                     let nested = false;
                     this.selectedChain = -1;
@@ -411,8 +400,8 @@
                             if (priorisizedFound) {
                                 break;
                             }
-                            console.log(newSelectedIndexes.start + '>=' + this.coref[0][i].startIndex);
-                            console.log(newSelectedIndexes.end + '<=' + this.coref[0][i].endIndex);
+                            //console.log(newSelectedIndexes.start + '>=' + this.coref[0][i].startIndex);
+                            //console.log(newSelectedIndexes.end + '<=' + this.coref[0][i].endIndex);
                             if (newSelectedIndexes.start >= this.coref[0][i].startIndex
                                 && newSelectedIndexes.end <= this.coref[0][i].endIndex) {
                                 for (let j = 0; j < this.nestedChains.fullyNested.length; j++) {
@@ -430,11 +419,9 @@
                                         }
                                     } else if (this.nestedChains.fullyNested[j].outer === this.coref[0][i].mentionID) {
                                         if (this.coref[0][i].representative === -1) {
-                                            console.log('outer Check1');
                                             this.selectedChain = this.coref[0][i].mentionID;
                                             nested = true;
                                         } else {
-                                            console.log('outer Check2');
                                             this.selectedChain = this.coref[0][i].representative;
                                             nested = true;
                                         }
@@ -475,7 +462,7 @@
                             }
                         }
                     }
-                    console.log('Watcher got new selected Chain: ' + this.selectedChain);
+                    //console.log('Watcher got new selected Chain: ' + this.selectedChain);
                 },
                 deep: true
             }

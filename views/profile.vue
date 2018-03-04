@@ -51,10 +51,8 @@
         },
         methods:{
             deleted:function (docID) {
-               console.log('Got here with this ID: ' + docID);
                for(let i = 0; i < this.documents.length; i++){
                    if(this.documents[i].docID === docID){
-                       console.log('got here !!!');
                        this.documents.splice(i, 1);
                        break;
                    }

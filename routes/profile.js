@@ -58,11 +58,11 @@ let profileData = {
  */
 io.on('connection', function (socket) {
     socket.on('changeTitle', function (docID, newTitle) {
-        console.log(notMedia + Tag + 'update Document Title: ');
+        //console.log(notMedia + Tag + 'update Document Title: ');
         wait.launchFiber(updateTitle, docID, newTitle);
     });
     socket.on('deleteDocument', function (docID) {
-        console.log('Got here with this ID: ' + docID);
+        //console.log('Got here with this ID: ' + docID);
         wait.launchFiber(deleteDocument, docID);
     });
 });
@@ -77,7 +77,7 @@ router.post('/loadMoreDocuments', function (req, res, next) {
 
 router.post('/loadDocument', function (req, res, next) {
     req.session.docID = req.body.docID;
-    console.log(JSON.stringify(req.body));
+    //console.log(JSON.stringify(req.body));
     res.redirect('/analysis');
 });
 
@@ -117,7 +117,7 @@ function prepareProfile(req, res, next) {
  * @param next
  */
 function loadMoreDocuments(req, res, next) {
-    console.log(notMedia + Tag + 'load More Documents: ' + JSON.stringify(req.body.numberOfButton));
+    //(notMedia + Tag + 'load More Documents: ' + JSON.stringify(req.body.numberOfButton));
     req.session.numberOfButton = req.body.numberOfButton - 1;
     res.redirect('/profile');
 }
@@ -141,7 +141,7 @@ function getDocuments(start, amount) {
             profileData.documents[i].name = 'No Name specified';
         }
     }
-    console.log(notMedia + Tag + 'documents: ' + JSON.stringify(profileData.documents));
+    //console.log(notMedia + Tag + 'documents: ' + JSON.stringify(profileData.documents));
 }
 
 /**

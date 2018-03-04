@@ -113,26 +113,20 @@
             showallresults: function () {
                 this.$emit('showallresults');
                 this.showallon = false;
-                console.log('showallrults semclas: ' + this.semclass);
             },
             showdetail: function () {
-                console.log('Show the detailed List: ' + this.everythingshow);
                 this.everythingshow = !this.everythingshow;
-                console.log('showallrults showdetail: ' + this.semclass);
             },
             accentuate: function () {
                 this.hover = !this.hover;
-                console.log('showallrults accentuate: ' + this.semclass);
             },
             saveResult: function () {
                 let socket = io('http://localhost:8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
-                console.log('showallrults saveResult: ' + this.semclass);
             },
             showSource: function () {
-                console.log('Trying to show the source:');
                 try {
                     let url = this.researchresult.result.detailedDescription.url;
                     let win = window.open(url, '_blank');
