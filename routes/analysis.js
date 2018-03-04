@@ -84,6 +84,10 @@ io.on('connection', function (socket) {
     socket.on('deletenote', function (noteID) {
         wait.launchFiber(deleteNote, noteID);
     });
+    socket.on('changeTitle', function (docID, newTitle) {
+        //console.log(notMedia + Tag + 'update Document Title: ');
+        wait.launchFiber(updateTitle, docID, newTitle);
+    });
 
     socket.on('bignote', function () {
         //console.log(notMedia + Tag + 'big Note: ' + value);
@@ -99,6 +103,18 @@ io.on('connection', function (socket) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
 });
+
+/**
+ * Changes the title of a document on the DB.
+ * @param docID
+ * @param newTitle
+ */
+function updateTitle(docID, newTitle) {
+    console.log('Changing title:' + docID + newTitle);
+    docID = dbAction.stringifyForDB(docID);
+    newTitle = dbAction.stringifyForDB(newTitle);
+    wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
+}
 
 function saveResult(index, researchresult, docID) {
     index = stringifyForDB(index);
