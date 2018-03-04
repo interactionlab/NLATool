@@ -3,12 +3,12 @@
         <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('PERSON')">
-            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
         </div>
@@ -28,12 +28,12 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('LOCATION')">
-            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.LOCATION"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
         </div>
@@ -53,12 +53,12 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('ORGANIZATION')">
-            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.ORGANIZATION"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
         </div>
@@ -78,12 +78,12 @@
 
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('MISC')">
-            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button  mdl-button--icon deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.MISC"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
                 <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
             </button>
-            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button  deleteSpaces snapbtn">
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
         </div>

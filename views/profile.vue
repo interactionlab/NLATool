@@ -25,15 +25,14 @@
                     </button>
                 </form>
             </div>
-            <div class="mdl-grid">
+            <div class="mdl-grid" style="max-width:2160px;">
                 <component is="document"
                            v-for="document in documents"
                            v-bind:document="document"
                            v-bind:key="document.docID"
                            v-on:deleted="deleted($event)"
-                           class="mdl-cell--8-col">
+                           class="mdl-cell--12-col">
                 </component>
-
             </div>
         </main>
     </div>
