@@ -18,6 +18,7 @@
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
+                   v-bind:mapkey="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[0][index]"
@@ -40,8 +41,9 @@
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index2"
+                   v-bind:key="index2+ PERSON.length"
                    v-bind:index="index2"
+                   v-bind:mapkey="index2+ PERSON.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[1][index2]"
@@ -64,8 +66,9 @@
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index3"
+                   v-bind:key="index3+ PERSON.length + LOCATION.length"
                    v-bind:index="index3"
+                   v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[2][index3]"
@@ -88,8 +91,9 @@
                    v-if="classestomark.MISC"
                    v-for="(researchresult,index4) in MISC"
                    v-bind:researchresult="researchresult"
-                   v-bind:key="index4"
+                   v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
                    v-bind:index="index4"
+                   v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[3][index4]"
@@ -127,7 +131,7 @@
                 researchresults: [],
                 sortedtokens: [],
                 tokenstoshow: this.tokenstoshow,
-                colindex: this.colindex
+                colindex: this.colindex,
             }
         },
         methods: {
@@ -175,31 +179,31 @@
         },
         computed: {
             numberOfPersons: function () {
-                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[0] !== 'undefined'){
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[0] !== 'undefined') {
                     return this.sortedtokens[0].length
-                } else{
+                } else {
                     return '';
                 }
 
             },
             numberOfLocations: function () {
-                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[1] !== 'undefined'){
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[1] !== 'undefined') {
                     return this.sortedtokens[1].length
-                } else{
+                } else {
                     return '';
                 }
             },
             numberOfOrganizations: function () {
-                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[2] !== 'undefined'){
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[2] !== 'undefined') {
                     return this.sortedtokens[2].length
-                } else{
+                } else {
                     return '';
                 }
             },
             numberOfMisc: function () {
-                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[3] !== 'undefined'){
+                if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[3] !== 'undefined') {
                     return this.sortedtokens[3].length
-                } else{
+                } else {
                     return '';
                 }
             }
