@@ -20,7 +20,7 @@
             }
         },
         mounted() {
-            console.log('MapName: ' + this.googlemapname);
+            //console.log('MapName: ' + this.googlemapname);
             var element = document.getElementById(this.googlemapname);
             this.mapoptions = {
                 zoom: 14,

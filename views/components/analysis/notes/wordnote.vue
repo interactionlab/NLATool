@@ -78,7 +78,6 @@
             },
             showButns: function () {
                 this.ishovered = true;
-                console.log('got hovered!');
             },
             hideButns: function () {
                 this.ishovered = false;
@@ -88,7 +87,7 @@
                 this.selectedindexes.end = this.wordnotedb.textIndex2;
             },
             back: function (noteToChange) {
-                console.log('Check: ' + noteToChange[0] +' : ' + noteToChange[1] + ' : ' + noteToChange[2]);
+                //console.log('Check: ' + noteToChange[0] +' : ' + noteToChange[1] + ' : ' + noteToChange[2]);
                 this.editing = false;
                 if(noteToChange[0]!== -10 && noteToChange[1]!== -10 && noteToChange[2]!== -10){
                     this.$emit('back', noteToChange);

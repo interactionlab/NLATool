@@ -35,7 +35,7 @@ let vueRenderOptions = {
         meta: [
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-blue.min.css'}
         ]
     }
 };
@@ -51,9 +51,9 @@ let vueData = {
 };
 
 io.on('connection', function (socket) {
-    console.log('socket check');
+    //console.log('socket check');
     socket.on('setLanguage', function (language) {
-        console.log('socket check2 ' + language);
+        //console.log('socket check2 ' + language);
         corenlp.resetPipeline(language);
         this.language = language;
     });
@@ -233,7 +233,7 @@ function saveCoref(input, counter) {
     let startIndex = 0;
     let endIndex = 0;
     for (let chain in input.corefInfo) {
-        console.log('Chain: ' + JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
+        //console.log('Chain: ' + JSON.stringify(input.corefInfo[chain]) + typeof input.corefInfo[chain]);
         for (let mention in input.corefInfo[chain]) {
             //console.log('Mention: ' + JSON.stringify(input.corefInfo[chain][mention])
             // + input.corefInfo[chain][mention].isRepresentativeMention());
@@ -266,7 +266,7 @@ function saveCoref(input, counter) {
                 representativeIndex = input.querys.length - 1;
                 //console.log('Check1: ' + representativeIndex);
             } else {
-                console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
+                //console.log('----------nonRepresentative:' + JSON.stringify(input.corefInfo[chain][mention]));
                 input.querys.push('Some Referent');
                 if (representativeIndex !== -1) {
                     //console.log('Check2: '  + representativeIndex);

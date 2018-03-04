@@ -177,7 +177,7 @@
                         htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     }
                 } catch (err) {
-                    console.log('Got out of the array' + err);
+                    //console.log('Got out of the array' + err);
                 }
                 return htmlclass;
             },
@@ -310,7 +310,6 @@
                 }
             },
             startSelection: function () {
-                //console.log('mouse pressed at: ' + this.index - 1);
                 this.$emit('startselection', this.index - 1);
             },
             endSelection: function () {

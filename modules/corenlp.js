@@ -87,13 +87,13 @@ exports.isReachable = function (host, callback) {
 exports.getAReachableConnection = function () {
     for (let connection in json.corenlp.connections) {
 
-        console.log(nlpReachability());
+        //console.log(nlpReachability());
         if (!nlpReachability()) {
-            console.log('Checking Host: ' + json.corenlp.connections[connection].host);
+            //console.log('Checking Host: ' + json.corenlp.connections[connection].host);
             wait.for(coreNLP.isReachable, json.corenlp.connections[connection].host);
-
+            //TODO: throw error to back to client: Issue #54
             if (nlpStatus.host !== null && nlpStatus.reachable === true) {
-                console.log('Reachable Host is: ' + nlpStatus.host);
+                //console.log('Reachable Host is: ' + nlpStatus.host);
             }
 
         }
@@ -134,7 +134,7 @@ exports.analyse = function (text, callback) {
     //console.log(nlpStatus.pipeline.getService());
     nlpStatus.pipeline.annotate(doc).then(doc => {
         let sentences = doc.sentences();
-        doc.corefs().forEach(chain =>{
+        doc.corefs().forEach(chain => {
             results.coref.push(chain.mentions());
         });
         //console.log('coref Annotation:' + JSON.stringify(results.coref));
@@ -154,7 +154,7 @@ exports.analyse = function (text, callback) {
         //console.log(notMedia + Tag + 'End offsets: ' + results.offsetEnd);
         callback(null, results);
     }).catch(err => {
-        console.log('Check Error Handling'+ err);
+        console.log(Tag + 'Analysis of text failed due to Error: ' + err);
         callback(err, null);
     });
 };

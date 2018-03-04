@@ -2,7 +2,7 @@ module.exports = {
     methods: {
         hello: function (name) {
             for (let i = 0; i < name.name; i++) {
-                console.log('Hello' + name.name);
+                //console.log('Hello' + name.name);
             }
             return name;
         },
