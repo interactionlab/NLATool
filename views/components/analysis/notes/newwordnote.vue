@@ -60,7 +60,7 @@
                 this.$emit('back', [-10, -10, -10]);
             },
             save: function (newnote) {
-                console.log('DOCID: ' + this.docid + ' : ' + this.selectedindexes);
+                //console.log('DOCID: ' + this.docid + ' : ' + this.selectedindexes);
                 if (typeof this.selectedindexes !== 'undefined'
                     && this.selectedindexes.start !== -1
                     && this.selectedindexes.end !== -1) {
@@ -77,7 +77,6 @@
                         };
                         this.newnote = '';
                         this.selectedindexes = {};
-                        console.log('got here: 2');
                         this.$emit('back', [-1, 1, tempNote]);
                     } else {
                         socket.emit('updatewordnote', this.wordnotedb.noteID, newnote);
@@ -106,7 +105,6 @@
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
-                    console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                         this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
 

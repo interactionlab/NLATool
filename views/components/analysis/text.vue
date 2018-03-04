@@ -170,7 +170,7 @@
                         }
                     }
                 } catch (err) {
-                    console.log('Got out of the array' + err);
+                    //console.log('Got out of the array' + err);
                 }
                 return htmlclass;
             },
@@ -307,7 +307,7 @@
                 //console.log('Joined shadows'+shadowLeft.join(', '));
                 style.push({'box-shadow': shadowLeft.join(', ')});
                 style.push({'box-shadow': shadowRight.join(', ')});
-                console.log('style for borders: ' + JSON.stringify(style));
+                //console.log('style for borders: ' + JSON.stringify(style));
                 return style;
 
             },
@@ -351,7 +351,6 @@
 
             },
             startSelection: function () {
-                console.log('mouse pressed at: ' + this.index - 1);
                 this.$emit('startselection', this.index - 1);
             },
             endSelection: function () {

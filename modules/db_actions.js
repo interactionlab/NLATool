@@ -114,7 +114,7 @@ exports.createTableCommand = function (tableName) {
     }
 
     //commandString = setCharAt(commandString, commandString.length - 1, ')');
-    console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
+    //console.log(notMedia + Tag + 'Final Create Table SQL Command: ' + commandString);
     return commandString;
 };
 
@@ -247,11 +247,11 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
             commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     } else {
         commandString = commandString + json.database.name;
-        console.log(notMedia + Tag + sql + commandString);
+        //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
 
@@ -388,7 +388,7 @@ exports.createUpdateCommand = function (table, columns, values, columnsToCompare
         if (valuesToCompare !== null && operators !== null) {
             commandString = commandString + ' ' + createWhereQuery(columnsToCompare, valuesToCompare, operators);
         }
-        console.log(notMedia + Tag + commandString);
+        //console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Update Command Creation failed!');
@@ -408,7 +408,7 @@ exports.createDeleteCommand = function (table, column, valueToCompare) {
     if (table !== null && column !== null && valueToCompare !== null) {
         let operator = [queryOperators[0]];
         commandString = commandString + table + ' ' + createWhereQuery(column, valueToCompare, operator);
-        console.log(notMedia + Tag + commandString);
+        //console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Delete Command Creation failed!');
