@@ -34,7 +34,7 @@
                             <div class="mdl-cell mdl-cell--6-col">
                                 <component is="googlemap"
                                            v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="index">
+                                           v-bind:index="mapkey">
                                 </component>
                             </div>
 
@@ -91,11 +91,12 @@
         props: {
             researchresult: Object,
             index: Number,
+            mapkey: Number,
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
             sourcequery: String,
-            semclass: String
+            semclass: String,
         },
         data: function () {
             return {
@@ -108,7 +109,8 @@
                 showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
                 sortedtoken: this.sourcequery,
-                semclass: this.semclass
+                semclass: this.semclass,
+                mapkey: this.mapkey,
             }
         },
         methods: {
