@@ -240,7 +240,7 @@ function saveCoref(input, counter) {
             input.corefInfo[chain][mention].startIndex = getCorefStartIndex(input, chain, mention);
             input.corefInfo[chain][mention].endIndex = getCorefEndIndex(input, chain, mention);
 
-            if (input.corefInfo[chain][mention].isRepresentativeMention()) {
+            if (input.corefInfo[chain][mention].isRepresentativeMention() || representativeIndex === -1) {
                 //console.log('++++++++++Representative: ' + JSON.stringify(input.corefInfo[chain][mention]));
                 input.querys.push('some Representative');
                 input.transControl.useProper[input.querys.length - 1] = {
