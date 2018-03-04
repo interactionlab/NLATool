@@ -7,7 +7,7 @@
               class="mdl-cell--10-col contentColor">
             <button class="mdl-cell--12-col mdl-button mdl-js-button mdl-js-ripple-effect contentColor"
                     name="docID"
-                    style="width: 100%; height: 100%; text-transform: initial"
+                    style="width:100%;text-align:left;text-transform:initial"
                     v-bind:value="document.docID"
             >{{document.name}}
             </button>

@@ -9,39 +9,33 @@
                    v-bind:title_small="title_small">
         </component>
 
-        <main class="mdl-layout__content">
-            <form action="/loadWrittenText" method="post">
-
-                <div class="mdl-grid">
-                    <!-- Textfield for title-->
-                    <div class="mdl-grid mdl-cell--8-col">
-                        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
-                            <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
-                            <label class="mdl-textfield__label" for="titlebox">Title</label>
-                        </div>
-                        <div class="mdl-layout-spacer"></div>
+        <main class="mdl-layout__content" style="display: flex; flex-flow: row wrap; width: 100%;">
+            <form  class="mdl-grid" style="max-width:2160px; overflow-y:auto; flex-direction:column; width:100%" action="/loadWrittenText" method="post">
+                <!-- Textfield for title-->
+                <div class="mdl-cell mdl-cell--12-col contentColor" style="flex:0;padding:0.5em 1em 0em 1em">
+                    <div class="mdl-textfield mdl-js-textfield" style="width:100%;">
+                        <input class="mdl-textfield__input" type="text" id="titlebox" name="title">
+                        <label class="mdl-textfield__label" for="titlebox">Enter title here ...</label>
                     </div>
+                </div>
+                <div class="mdl-layout-spacer mdl-cell--12-col" style="flex:0"></div>
 
-                    <!-- Textfield for textinput -->
-                    <div class="mdl-grid mdl-cell--8-col">
-                        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor"
-                             style="width: 100%">
-                    <textarea class="mdl-textfield__input" type="text" rows="15" id="textbox" name="textInput">
-                    </textarea>
-                            <label class="mdl-textfield__label" for="textbox">
-                                Enter text here ...
-                            </label>
-                        </div>
+                <!-- Textfield for textinput -->
+                <div class="mdl-cell mdl-cell--12-col contentColor"
+                     style="flex:2 0px;max-height: 100%; height:auto !important; display:flex;padding:0.5em 1em 0em 1em">
+                     <div class="mdl-textfield mdl-js-textfield" style="width:100%;max-height: 100%; height:auto !important; display:flex;">
+                        <textarea class="mdl-textfield__input" type="text" id="textbox" name="textInput" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-gramm="false"></textarea>
+                    <label class="mdl-textfield__label" for="textbox">
+                        Enter text here ...
+                    </label>
                     </div>
                 </div>
                 <!-- Analyze Button -->
-                <div class="mdl-grid mdl-cell--2-col">
-                    <div class="mdl-grid" style="text-align: center">
-                        <!-- extra div needed to make button in center -->
-                        <button class="mdl-button mdl-js-button mdc-button--raised mdc-button-ink-color">
-                            <b class="mdc-button">Analyze</b>
-                        </button>
-                    </div>
+                <div class="mdl-cell mdl-cell--12-col" style="flex:0; text-align: center">
+                    <!-- extra div needed to make button in center -->
+                    <button class="mdl-button mdl-js-button mdl-button--raised  mdl-button--accent mdc-button--stroked">
+                        <b class="mdc-button">Analyze</b>
+                    </button>
                 </div>
             </form>
         </main>
