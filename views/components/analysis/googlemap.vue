@@ -39,7 +39,6 @@
                 handler: function (newmapcoordinates) {
                     this.setmapcoordinates(newmapcoordinates[this.index].x, newmapcoordinates[this.index].y);
                 }
-
             }
         }
     }
