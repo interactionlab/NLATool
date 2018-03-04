@@ -14,11 +14,13 @@
             </div>
         </form>
         <div class="mdl-cell mdl-cell--4-col">
-            <button class="mdl-button "
-                    v-on:click="save2">Save
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    v-on:click="save2">
+                <i class="material-icons">done</i>
             </button>
-            <button class="mdl-button "
-                    v-on:click="back">Back
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    v-on:click="back">
+                <i class="material-icons">clear</i>
             </button>
             <button class="mdl-button  mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="deleting"
