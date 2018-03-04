@@ -22,6 +22,55 @@ module.exports = {
             return resultingtokens;
         },
 
+        uniqCount: function (arr) {
+            let entity = [], frequency = [], prev;
+
+            arr.sort();
+
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] !== prev) {
+                    entity.push(arr[i]);
+                    frequency.push(1);
+                } else {
+                    frequency[frequency.length - 1]++;
+                }
+                prev = arr[i];
+            }
+
+            for (let j = 0; j < entity.length; j++) {
+                for (let k = 0; k < entity.length; k++) {
+                    if (entity[j] !== entity[k]) {
+                        if (entity[j].includes(entity[k])) {
+                            frequency[j] += frequency[k];
+                            entity.splice(k, 1);
+                            frequency.splice(k, 1);
+                            if(j!== 0) {
+                                j--;
+                            }
+                            if(k!==0) {
+                                k--;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            for (let j = 0; j < entity.length; j++) {
+                entity[j] = {name: entity[j], freq: frequency[j]};
+            }
+
+            entity.sort(function (a,b) {
+                return ((a.freq > b.freq) ? -1 : ((a.freq === b.freq) ? 0 : 1));
+            });
+
+            return entity;
+        },
+
+
+        //console.log(arr[i] + " " + prev + " " +arr[i].includes(prev) + " " +prev.includes(arr[i]));
+
+
         filtertokenwithclass: function (tokens, semanticClass) {
             let resultingtokens = [];
             for (let i = 0; i < tokens.length; i++) {
@@ -39,8 +88,11 @@ module.exports = {
                     }
                 }
             }
+
+            //console.log(this.uniqCount((resultingtokens)));
+
             //Uniq array
-            return resultingtokens.filter((v,i,a) => a.indexOf(v) === i);
+            return this.uniqCount(resultingtokens);
         }
     }
 };
