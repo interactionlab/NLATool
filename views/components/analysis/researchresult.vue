@@ -91,12 +91,12 @@
         props: {
             researchresult: Object,
             index: Number,
+            mapkey: Number,
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
             sourcequery: String,
             semclass: String,
-            mapkey:Number
         },
         data: function () {
             return {
@@ -105,12 +105,12 @@
                 researchresult: this.researchresult,
                 hover: false,
                 index: this.index,
-                mapkey: this.mapkey,
                 docid: this.docid,
                 showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
                 sortedtoken: this.sourcequery,
-                semclass: this.semclass
+                semclass: this.semclass,
+                mapkey: this.mapkey,
             }
         },
         methods: {
