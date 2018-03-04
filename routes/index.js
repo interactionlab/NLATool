@@ -35,7 +35,7 @@ let vueRenderOptions = {
         meta: [
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-blue.min.css'}
         ]
     }
 };
