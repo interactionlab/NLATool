@@ -1,13 +1,13 @@
 <template>
     <div class="mdl-grid">
-        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--8-col contentColor">
+        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--10-col contentColor" style="margin:0;padding:0.5em 1em 0em 1em">
             <input type="text"
                    v-model="newtitle"
                    v-on:keyup.enter="edit"
                    v-on:keyup.esc="back"
                    class="mdl-textfield__input"/>
         </div>
-        <div class="mdl-cell mdl-cell--4-col contentColor">
+        <div class="mdl-cell mdl-cell--2-col contentColor" style="margin-bottom:0;margin-top:0">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="edit">
                 <i class="material-icons">done</i>
