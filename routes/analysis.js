@@ -74,11 +74,11 @@ let vueData = {
  */
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, docID, indexes) {
-        console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID + ' Indexes: ' + JSON.stringify(indexes));
+        //console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID + ' Indexes: ' + JSON.stringify(indexes));
         wait.launchFiber(saveWordNote, note, docID, indexes);
     });
     socket.on('updatewordnote', function (noteID, note) {
-        console.log(notMedia + Tag + 'update Word Note: ');
+        //console.log(notMedia + Tag + 'update Word Note: ');
         wait.launchFiber(updateNote, noteID, note);
     });
     socket.on('deletenote', function (noteID) {
@@ -86,13 +86,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('bignote', function () {
-        console.log(notMedia + Tag + 'big Note: ' + value);
+        //console.log(notMedia + Tag + 'big Note: ' + value);
         wait.launchFiber(function (note, word) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
     socket.on('saveresult', function (index, researchresult, docID) {
-        console.log('saved Result: ');
+        //console.log('saved Result: ');
         wait.launchFiber(saveResult, index, researchresult, docID);
     });
     socket.on('changeClass', function (tokenToEdit, docID) {
@@ -129,7 +129,7 @@ function saveResult(index, researchresult, docID) {
                     null, null)));
         }
     } catch (error) {
-        console.log('Could not saved because missing data: ' + error);
+        console.log('Could not save a quick Research Result because missing data: ' + error);
     }
 }
 
@@ -210,7 +210,7 @@ router.post('/clearText', function (req, res) {
  */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
-    console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
+    //console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
 
@@ -224,7 +224,7 @@ function getAndShowText(req, res) {
         getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         vueData.coref = textDB.coref;
-        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
+        //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     res.renderVue('analysis', vueData, vueRenderOptions);
@@ -267,7 +267,7 @@ function getTextFromDB(docID) {
                 //console.log(JSON.stringify(word));
                 textDB.tokens.push(word[0]);
             } catch (err) {
-                console.log(err);
+                console.log('Loading Text form DB failed: '+err);
             }
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
@@ -361,11 +361,11 @@ function binaryTokensSearch(tokens, property, value) {
     let left = 0;
     let right = tokens.length - 1;
     let middle = 0;
-    console.log('Search started with: tokens = ' + JSON.stringify(tokens) + ' property = ' + property + ' value = ' + value);
+    //console.log('Search started with: tokens = ' + JSON.stringify(tokens) + ' property = ' + property + ' value = ' + value);
     while (left <= right) {
         middle = Math.trunc(left + ((right - left) / 2));
-        console.log('Start Loop with middle = ' + middle);
-        console.log('token = ' + tokens[middle][property] + ' =? ' + value);
+        //console.log('Start Loop with middle = ' + middle);
+        //console.log('token = ' + tokens[middle][property] + ' =? ' + value);
         if (tokens[middle][property] === value) {
             return middle;
         } else {
@@ -387,7 +387,7 @@ function buildText() {
     let text = '<span class="' + textDB.tokens[0].semanticClass + '">' + textDB.tokens[0].content + '</span>';
     for (let i = 1; i < textDB.tokens.length; i++) {
         //textDB.words.push(textDB.tokens[i].content);
-        console.log(textDB.tokens[i - 1]);
+        //console.log(textDB.tokens[i - 1]);
         gap = getWordGap(
             textDB.tokens[i - 1].offsetEnd,
             textDB.tokens[i].offsetBegin,
@@ -402,7 +402,7 @@ function buildText() {
         ;
     }
     text = encodeURI(text);
-    console.log(notMedia + Tag + 'Builded Text: ' + text);
+    //console.log(notMedia + Tag + 'Builded Text: ' + text);
     return text;
 }
 

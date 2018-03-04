@@ -153,22 +153,17 @@
                 this.hoveredChain = chain;
             },
             getAnalighter: function () {
-                //console.log('Got clicked1' + this.docID);
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
                 this.analysisMode = 'notes';
-
             },
             getResearch: function () {
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (newClassesToMark) {
-                //console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
+                // console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
                 this.classesToMark = newClassesToMark;
-            },
-            test: function () {
-                //console.log(JSON.stringify(this.notes));
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
@@ -186,16 +181,14 @@
                     this.selectedtextindexes.end = index;
                 }
                 if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
+                    //console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
                     if (this.selectedtextindexes.start > this.selectedtextindexes.end - 1) {
                         let tempstart = this.selectedtextindexes.start + 1;
                         this.selectedtextindexes.start = this.selectedtextindexes.end - 1;
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
-
                 //console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
-
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
@@ -256,7 +249,6 @@
                     }
                     this.textcolumnposition.end = this.splitted.length - 1;
                     this.textcolumnposition.start = 0;
-                    //console.log('Got here1');
                 } else {
                     if (end - difference >= 0) {
                         newtokenstoshow = this.splitted.slice(end - difference, end);
@@ -264,7 +256,6 @@
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
                         this.textcolumnposition.start = end - difference;
-                        //console.log('Got here2');
                     } else {
                         newtokenstoshow = this.splitted.slice(0, difference);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
@@ -342,7 +333,7 @@
                 }
             },
             setScreenOptions: function () {
-                console.log('changing Screensizes:');
+                //console.log('changing Screensizes:');
                 this.screenOptions = {
                     screenWidth: window.innerWidth,
                     screenHeight: window.outerHeight,
@@ -420,7 +411,6 @@
         watch: {
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    //console.log('Watcher activated: ' + JSON.stringify(newSelectedIndexes));
                     let priorisizedFound = false;
                     let nested = false;
                     this.selectedChain = -1;
@@ -448,11 +438,9 @@
                                         }
                                     } else if (this.nestedChains.fullyNested[j].outer === this.coref[0][i].mentionID) {
                                         if (this.coref[0][i].representative === -1) {
-                                            //console.log('outer Check1');
                                             this.selectedChain = this.coref[0][i].mentionID;
                                             nested = true;
                                         } else {
-                                            //console.log('outer Check2');
                                             this.selectedChain = this.coref[0][i].representative;
                                             nested = true;
                                         }

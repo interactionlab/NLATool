@@ -98,7 +98,6 @@
         },
         methods: {
             toggleOnOff: function () {
-                console.log('toggling');
                 this.onOff = !this.onOff;
             },
             changetool: function (tool) {
@@ -158,7 +157,6 @@
                 //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
                 this.classestomark.POS = !this.classestomark.POS;
-                console.log('Correction Mode is ' + this.correctionMode);
                 this.$emit('entercorrectionmode', this.correctionMode);
                 this.$emit('changemarkermode', this.classestomark);
             },
