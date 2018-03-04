@@ -19,6 +19,7 @@
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
                                v-bind:sourcequery="sourceQuery"
+                               v-bind:contentcontrol="{img:true, map:true, information: true}"
                                v-on:showallresults="switchresearchselected">
                     </component>
                     <component is="researchresult"
@@ -32,6 +33,7 @@
                                v-bind:showallon="resultselected"
                                v-bind:mapcoordinates="mapcoordinates"
                                v-bind:sourcequery="sourceQuery"
+                               v-bind:contentcontrol="{img:true, map:true, information: true}"
                                v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
@@ -70,7 +72,7 @@
                 selectedchain: this.selectedchain,
                 mentions: this.mentions,
                 mapcoordinates: [],
-                sourceQuery:''
+                sourceQuery: ''
             }
         },
         methods: {
@@ -137,12 +139,12 @@
                     //this.rerankWithKeywords(response);
                     //this.getMapCoordinates();
                     this.researchresults = response.itemListElement;
-                    this.sourceQuery=query;
+                    this.sourceQuery = query;
                     //console.log('Results: ' + JSON.stringify(this.researchresults));
 
                 });
             },
-            makeCORSSecureRequest:function (url, success) {
+            makeCORSSecureRequest: function (url, success) {
                 let connectionParams = {
                     type: 'GET',
                     url: url,
