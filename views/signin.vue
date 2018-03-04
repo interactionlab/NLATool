@@ -1,7 +1,4 @@
 <template>
-    <!DOCTYPE html>
-    <html>
-    <body>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <!-- Uses a mainHeader that contracts as the page scrolls down. -->
         <component is="mainheader"
@@ -12,25 +9,19 @@
                 is="headernavbar"
                 v-bind:title_small="title_small">
         </component>
-        <main class="mdl-layout__content">
-            <div class="mdl-grid">
-                <div class="mdl-layout-spacer"></div>
-                <div class="mdl-cell mdl-cell--6-col contentColor">
-                    <component :is="signmode"></component>
-                </div>
-                <div class="mdl-layout-spacer"></div>
+        <main class="mdl-layout__content" style="justify-content: center;align-items: center;">
+            <div class="mdl-card mdl-shadow--6dp" style="margin: auto;">
+                <component :is="signmode"></component>
             </div>
             <div class="mdl-grid">
                 <div class="mdl-layout-spacer" style="text-align: center">
-                <button class="mdl-button mdl-js-button" v-on:click="switchauthentification">
-                    <b class="mdc-button">{{signbutn}}</b>
-                </button>
+                    <a class="mdl-button mdl-js-button" v-on:click="switchauthentification">
+                        {{signbutn}}
+                    </a>
                 </div>
             </div>
         </main>
     </div>
-    </body>
-    </html>
 </template>
 <script>
     import headernavbar from './components/global/headernavbar.vue';
@@ -42,17 +33,17 @@
         data: function () {
             return {
                 signmode: 'login',
-                signbutn: 'register'
+                signbutn: 'go toregister'
             }
         },
         methods: {
             switchauthentification: function () {
                 if (this.signmode === 'login') {
                     this.signmode = 'register';
-                    this.signbutn = 'login';
+                    this.signbutn = 'Go to login';
                 } else {
                     this.signmode = 'login';
-                    this.signbutn = 'register';
+                    this.signbutn = 'Go to register';
                 }
 
             }
