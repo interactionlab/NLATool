@@ -1,6 +1,6 @@
 <template>
     <li class="mdl-list__item contentColor">
-        <div class="mdl-list__item-primary-content ">
+        <div class="mdl-list__item-primary-content " style="padding:0em">
             <input type="text"
                    v-model="newtitle"
                    v-on:keyup.enter="edit"
