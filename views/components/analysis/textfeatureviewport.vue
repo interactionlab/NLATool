@@ -27,7 +27,7 @@
             </div>
         </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor">
+        <div class="mdl-cell mdl-cell--6-col contentColor"style="max-height: 100%; overflow-y: auto;"  >
             <component
                     :is="analysismode"
                     v-bind:tokens="tokens"
