@@ -31,6 +31,10 @@
                     <li class="mdl-menu__item">Sign Out</li>
                 </a>
             </ul>
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="settingsbutn">
+                <i class="material-icons">settings</i>
+            </button>
+
         </div>
     </header>
 </template>
