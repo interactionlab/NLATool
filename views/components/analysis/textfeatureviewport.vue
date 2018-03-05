@@ -1,13 +1,10 @@
 <template>
-    <div class="mdl-grid">
+    <div class="mdl-grid contentColor mdl-shadow--6dp" style="padding:0">
         <!--left grid for text stuff -->
-
-        <div class="mdl-cell mdl-cell--6-col contentColor">
+        <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
             <div class="mdl-grid"
                  id="textWindow"
-                 ref="textWindow"
-                 style="width: 100%">
-
+                 ref="textWindow">
                 <component is="tex"
                            v-for="(token,i) in col"
                            v-bind:key="token.wordID"
@@ -15,7 +12,6 @@
                            v-bind:tokens="tokens"
                            v-bind:mentions="mentions"
                            v-bind:index="generatetrueindex(i+1)"
-
                            v-bind:selectedindexes="selectedindexes"
                            v-bind:classestomark="classestomark"
                            v-bind:hoveredchain="hoveredchain"
@@ -28,7 +24,7 @@
             </div>
         </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor" style="max-height: 100%; overflow-y: auto;">
+        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
             <keep-alive>
                 <component
                         :is="analysismode"
