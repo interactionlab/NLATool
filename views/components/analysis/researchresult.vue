@@ -26,24 +26,27 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--6-col">
+                            <div class="mdl-cell mdl-cell--6-col"
+                                 v-if="contentcontrol.img">
                                 <img v-if="typeof researchresult.result.image !== 'undefined'"
                                      v-bind:src="researchresult.result.image.contentUrl"/>
                             </div>
 
-                            <div class="mdl-cell mdl-cell--6-col">
+                            <div class="mdl-cell mdl-cell--6-col"
+                                 v-if="contentcontrol.map">
                                 <component is="googlemap"
                                            v-bind:mapcoordinates="mapcoordinates"
                                            v-bind:index="mapkey">
                                 </component>
                             </div>
+                            <div v-if="contentcontrol.information">
+                                <div v-if="typeof researchresult.result.description !== 'undefined'">
+                                    {{researchresult.result.description.articleBody}}
+                                </div>
 
-                            <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                {{researchresult.result.description.articleBody}}
-                            </div>
-
-                            <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                {{researchresult.result.detailedDescription.articleBody}}
+                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                    {{researchresult.result.detailedDescription.articleBody}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,6 +100,7 @@
             mapcoordinates: Array,
             sourcequery: String,
             semclass: String,
+            contentcontrol: Object,
         },
         data: function () {
             return {
@@ -111,6 +115,7 @@
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
                 mapkey: this.mapkey,
+                contentcontrol: this.contentcontrol,
             }
         },
         methods: {
@@ -164,7 +169,7 @@
                         if (typeof this.sourcequery.freq !== 'undefined') {
                             title = title + ' (' + this.sourcequery.freq + ') ';
                         }
-                    } else{
+                    } else {
                         title = title + this.sourcequery;
                     }
                 }
