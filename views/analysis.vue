@@ -35,7 +35,6 @@
             </div>
             <component is="textviewcontrol"
                        v-on:changescope="changeScope($event)"
-                       v-on:setnumberofcolumns="setNumberOfColumns($event)"
                        style="flex: 0;width: 100%;">
             </component>
             <div class="mdl-grid height100"
