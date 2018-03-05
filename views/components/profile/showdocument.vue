@@ -1,19 +1,15 @@
 <template>
-    <div v-on:mouseover="showButns"
-         v-on:mouseout="hideButns"
-         class="mdl-grid">
-        <form action="/profile/loadDocument"
-              method="post"
-              class="mdl-cell--10-col contentColor">
-            <button class="mdl-cell--12-col mdl-button mdl-js-button mdl-js-ripple-effect contentColor"
+    <li class="mdl-list__item contentColor" v-on:mouseover="showButns" v-on:mouseout="hideButns">
+        <form action="/profile/loadDocument" method="post"
+              class="mdl-list__item-primary-content contentColor">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect contentColor"
                     name="docID"
                     style="width:100%;text-align:left;text-transform:initial"
                     v-bind:value="document.docID"
-            >{{document.name}}
-            </button>
+            >{{document.name}}</button>
         </form>
-        <div class="mdl-cell mdl-cell--2-col contentColor overridemargin"
-             v-show="ishovered">
+        
+        <div class="mdl-list__item-secondary-action overridemargin" v-show="ishovered">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="editing">
                 <i class="material-icons">edit</i>
@@ -24,7 +20,7 @@
                 <i class="material-icons">delete</i>
             </button>
         </div>
-    </div>
+    </li>    
 </template>
 
 <script>
