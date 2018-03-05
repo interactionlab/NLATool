@@ -44,14 +44,15 @@
                            v-model="numberofcolumns"/>
                 </li>
                 <li class="mdl-menu__item"
-                    v-if="route === 'analysis'">Toggle Images
-                </li>
+                    v-if="route === 'analysis'"
+                    v-on:click="toggleResearchContent('img')"
+                >Toggle Images</li>
                 <li class="mdl-menu__item"
-                    v-if="route === 'analysis'">Toggle Maps
-                </li>
+                    v-if="route === 'analysis'"
+                    v-on:click="toggleResearchContent('map')">Toggle Maps</li>
                 <li class="mdl-menu__item"
-                    v-if="route === 'analysis'">Toggle Detailed Informaion
-                </li>
+                    v-if="route === 'analysis'"
+                    v-on:click="toggleResearchContent('information')">Toggle Detailed Information</li>
             </ul>
         </div>
     </header>
@@ -93,6 +94,9 @@
             back: function () {
                 this.editingtitle = false;
             },
+            toggleResearchContent:function (toToggle) {
+                
+            }
         },
         watch: {
             numberofcolumns: function (newNumber) {
