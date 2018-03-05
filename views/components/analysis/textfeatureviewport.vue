@@ -40,6 +40,7 @@
                         v-bind:mentions="mentions"
                         v-bind:showmode="showmode"
                         v-bind:classestomark="classestomark"
+                        v-bind:contentcontrol="contentcontrol"
                         v-on:togglesemanticlass="togglesemanticlass($event)"
                         v-on:jumpmarktext="selectText2($event)">
                 </component>
@@ -74,7 +75,8 @@
             analysismode: String,
             docid: Number,
             textcolumnposition: Number,
-            tokenstoshow: Array
+            tokenstoshow: Array,
+            contentcontrol: Object
         },
         data: function () {
             return {
@@ -96,6 +98,7 @@
                 docid: this.docid,
                 textcolumnposition: this.textcolumnposition,
                 tokenstoshow: this.tokenstoshow,
+                contentcontrol: this.contentcontrol,
             }
         },
         methods: {

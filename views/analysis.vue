@@ -8,7 +8,8 @@
                 v-bind:numberofcolumns="numberOfColumns"
                 v-bind:preventtitleedit="false"
                 v-bind:autochecked="resizing"
-                v-on:newcolumnnumber="setNumberOfColumns($event)">
+                v-on:newcolumnnumber="setNumberOfColumns($event)"
+                v-on:contenttoggle="toogleResearchContent($event)">
         </component>
         <component
                 is="headernavbar"
@@ -63,6 +64,7 @@
                                v-bind:researchmode="researchmode"
                                v-bind:selectedchain="selectedChain"
                                v-bind:showmode="showMode"
+                               v-bind:contentcontrol="contentcontrol"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
@@ -149,9 +151,38 @@
                 tokens: [1],
                 splittNotes: [],
                 resizing: true,
+                contentcontrol: {
+                    PERSONS: {
+                        img: true,
+                        map: false,
+                        information: true
+                    },
+                    LOCATIONS: {
+                        img: true,
+                        map: true,
+                        information: true
+                    },
+                    ORGANIZATIONS: {
+                        img: true,
+                        map: true,
+                        information: true
+                    },
+                    MISCS: {
+                        img: true,
+                        map: true,
+                        information: true
+                    }
+                }
             }
         },
         methods: {
+            toogleResearchContent: function (toToggle) {
+                this.contentcontrol.PERSONS[toToggle] = !this.contentcontrol.PERSONS[toToggle];
+                this.contentcontrol.LOCATIONS[toToggle] = !this.contentcontrol.LOCATIONS[toToggle];
+                this.contentcontrol.ORGANIZATIONS[toToggle] = !this.contentcontrol.ORGANIZATIONS[toToggle];
+                this.contentcontrol.MISCS[toToggle] = !this.contentcontrol.MISCS[toToggle];
+                this.contentcontrol.PERSONS['map'] = false;
+            },
             setTokens: function (newTokens) {
                 this.tokens = newTokens;
             },
