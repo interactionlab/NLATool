@@ -38,9 +38,9 @@
                        style="flex: 0;width: 100%;">
             </component>
             <div class="mdl-grid height100"
-                 style="overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;">
+                 style="overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div
-                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;padding-bottom: 1em;"
+                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;"
                         v-for="(col, colIndex) in tokenstoshow"
                         v-bind:style="columnsize2">
                     <component id="textfeatureviewport"
