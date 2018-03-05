@@ -31,10 +31,28 @@
                     <li class="mdl-menu__item">Sign Out</li>
                 </a>
             </ul>
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="settingsbutn">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="settingsbutn"
+                    v-if="route === 'analysis'">
                 <i class="material-icons">settings</i>
             </button>
-
+            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="settingsbutn">
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">
+                    <span>View Splits</span>
+                    <input type="radio" id="auto" value="true" v-bind:checked="autochecked" v-model="autochecked"/>
+                    <input type="number" id="numberOfcolumnsInput"
+                           v-model="numberofcolumns"/>
+                </li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">Toggle Images
+                </li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">Toggle Maps
+                </li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">Toggle Detailed Informaion
+                </li>
+            </ul>
         </div>
     </header>
 </template>
@@ -43,7 +61,10 @@
         props: {
             title: String,
             preventtitleedit: Boolean,
-            docid: Number
+            docid: Number,
+            route: String,
+            numberofcolumns: Number,
+            autochecked: Boolean
         },
         data: function () {
             return {
@@ -51,7 +72,9 @@
                 editingtitle: false,
                 preventtitleedit: this.preventtitleedit,
                 docid: this.docid,
-                newTitle: ''
+                newTitle: '',
+                route: this.route,
+                autochecked: this.autochecked,
             }
         },
         methods: {
@@ -67,11 +90,21 @@
                     this.newTitle = this.title;
                 }
             },
-            back:function () {
+            back: function () {
                 this.editingtitle = false;
+            },
+        },
+        watch: {
+            numberofcolumns: function (newNumber) {
+                if (newNumber === 0) {
+                    this.$emit('newcolumnnumber', 0);
+                } else {
+                    this.$emit('newcolumnnumber', newNumber);
+                }
             }
         },
         computed: {
-        }
+
+        },
     }
 </script>
