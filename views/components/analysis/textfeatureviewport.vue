@@ -1,51 +1,54 @@
 <template>
-    <div class="mdl-grid contentColor mdl-shadow--6dp" style="padding:0">
-        <!--left grid for text stuff -->
-        <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
-            <div class="mdl-grid"
-                 id="textWindow"
-                 ref="textWindow">
-                <component is="tex"
-                           v-for="(token,i) in col"
-                           v-bind:key="token.wordID"
-                           v-bind:token="token"
-                           v-bind:tokens="tokens"
-                           v-bind:mentions="mentions"
-                           v-bind:index="generatetrueindex(i+1)"
-                           v-bind:selectedindexes="selectedindexes"
-                           v-bind:classestomark="classestomark"
-                           v-bind:hoveredchain="hoveredchain"
-                           v-bind:nestedmentions="nestedmentions"
-                           v-bind:selectedchain="selectedchain"
-                           v-on:hoverchain="hoverChain($event)"
-                           v-on:startselection="startselection($event)"
-                           v-on:endselection="endselection($event)">
-                </component>
+    <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;">
+        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;">
+        
+            <!--left grid for text stuff -->
+            <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
+                <div class="mdl-grid"
+                     id="textWindow"
+                     ref="textWindow"
+                     style="overflow-y: auto; height: auto !important; display: flex; max-height: 100%;">
+                    <component is="tex"
+                               v-for="(token,i) in col"
+                               v-bind:key="token.wordID"
+                               v-bind:token="token"
+                               v-bind:tokens="tokens"
+                               v-bind:mentions="mentions"
+                               v-bind:index="generatetrueindex(i+1)"
+                               v-bind:selectedindexes="selectedindexes"
+                               v-bind:classestomark="classestomark"
+                               v-bind:hoveredchain="hoveredchain"
+                               v-bind:nestedmentions="nestedmentions"
+                               v-bind:selectedchain="selectedchain"
+                               v-on:hoverchain="hoverChain($event)"
+                               v-on:startselection="startselection($event)"
+                               v-on:endselection="endselection($event)">
+                    </component>
+                </div>
+            </div>
+            <!--right grid for result stuff -->
+            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
+                <keep-alive>
+                    <component
+                            :is="analysismode"
+                            v-bind:tokens="tokens"
+                            v-bind:tokenstoshow="tokenstoshow"
+                            v-bind:colindex="colindex"
+                            v-bind:docid="docid"
+                            v-bind:notes="notes"
+                            v-bind:notemodes="notemodes"
+                            v-bind:researchmode="researchmode"
+                            v-bind:selectedindexes="selectedindexes"
+                            v-bind:selectedchain="selectedchain"
+                            v-bind:mentions="mentions"
+                            v-bind:showmode="showmode"
+                            v-bind:classestomark="classestomark"
+                            v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:jumpmarktext="selectText2($event)">
+                    </component>
+                </keep-alive>
             </div>
         </div>
-        <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
-            <keep-alive>
-                <component
-                        :is="analysismode"
-                        v-bind:tokens="tokens"
-                        v-bind:tokenstoshow="tokenstoshow"
-                        v-bind:colindex="colindex"
-                        v-bind:docid="docid"
-                        v-bind:notes="notes"
-                        v-bind:notemodes="notemodes"
-                        v-bind:researchmode="researchmode"
-                        v-bind:selectedindexes="selectedindexes"
-                        v-bind:selectedchain="selectedchain"
-                        v-bind:mentions="mentions"
-                        v-bind:showmode="showmode"
-                        v-bind:classestomark="classestomark"
-                        v-on:togglesemanticlass="togglesemanticlass($event)"
-                        v-on:jumpmarktext="selectText2($event)">
-                </component>
-            </keep-alive>
-        </div>
-
     </div>
 </template>
 
