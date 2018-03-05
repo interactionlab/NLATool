@@ -29,18 +29,13 @@
                 </li>
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent('img')"
-                >Toggle Images</li>
+                    v-on:click="toggleResearchContent(img)">Toggle Images</li>
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent('map')">Toggle Maps</li>
+                    v-on:click="toggleResearchContent(map)">Toggle Maps</li>
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent('information')">Toggle Detailed Information</li>
-                <li class="mdl-menu__item"
-                    v-if="route === 'analysis'"
-                    v-on:click="toggleSortingMode('mode')"
-                >Toggle Sorting Mode</li>
+                    v-on:click="toggleResearchContent(information)">Toggle Detailed Information</li>
             </ul>
             <!-- Headerbutton (3 dots) on the right-->
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
@@ -81,6 +76,9 @@
                 newTitle: '',
                 route: this.route,
                 autochecked: this.autochecked,
+                img: 'img',
+                map: 'map',
+                information: 'information'
             }
         },
         methods: {
@@ -100,7 +98,7 @@
                 this.editingtitle = false;
             },
             toggleResearchContent:function (toToggle) {
-                
+                this.$emit('contenttoggle', toToggle);
             },
             toggleSortingMode:function (mode) {
 

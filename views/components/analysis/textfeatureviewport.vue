@@ -26,28 +26,28 @@
                     </component>
                 </div>
             </div>
-            <!--right grid for result stuff -->
-            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
-                <keep-alive>
-                    <component
-                            :is="analysismode"
-                            v-bind:tokens="tokens"
-                            v-bind:tokenstoshow="tokenstoshow"
-                            v-bind:colindex="colindex"
-                            v-bind:docid="docid"
-                            v-bind:notes="notes"
-                            v-bind:notemodes="notemodes"
-                            v-bind:researchmode="researchmode"
-                            v-bind:selectedindexes="selectedindexes"
-                            v-bind:selectedchain="selectedchain"
-                            v-bind:mentions="mentions"
-                            v-bind:showmode="showmode"
-                            v-bind:classestomark="classestomark"
-                            v-on:togglesemanticlass="togglesemanticlass($event)"
-                            v-on:jumpmarktext="selectText2($event)">
-                    </component>
-                </keep-alive>
-            </div>
+        <!--right grid for result stuff -->
+        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
+            <keep-alive>
+                <component
+                        :is="analysismode"
+                        v-bind:tokens="tokens"
+                        v-bind:tokenstoshow="tokenstoshow"
+                        v-bind:colindex="colindex"
+                        v-bind:docid="docid"
+                        v-bind:notes="notes"
+                        v-bind:notemodes="notemodes"
+                        v-bind:researchmode="researchmode"
+                        v-bind:selectedindexes="selectedindexes"
+                        v-bind:selectedchain="selectedchain"
+                        v-bind:mentions="mentions"
+                        v-bind:showmode="showmode"
+                        v-bind:classestomark="classestomark"
+                        v-bind:contentcontrol="contentcontrol"
+                        v-on:togglesemanticlass="togglesemanticlass($event)"
+                        v-on:jumpmarktext="selectText2($event)">
+                </component>
+            </keep-alive>
         </div>
     </div>
 </template>
@@ -77,7 +77,8 @@
             analysismode: String,
             docid: Number,
             textcolumnposition: Number,
-            tokenstoshow: Array
+            tokenstoshow: Array,
+            contentcontrol: Object
         },
         data: function () {
             return {
@@ -99,6 +100,7 @@
                 docid: this.docid,
                 textcolumnposition: this.textcolumnposition,
                 tokenstoshow: this.tokenstoshow,
+                contentcontrol: this.contentcontrol,
             }
         },
         methods: {
