@@ -1,5 +1,5 @@
 <template>
-    <li class="mdl-list__item contentColor" v-on:mouseover="showButns" v-on:mouseout="hideButns">
+    <li class="mdl-list__item contentColor" v-on:mouseover="showButns" v-on:mouseout="hideButns" style="padding:0em">
         <form action="/profile/loadDocument" method="post"
               class="mdl-list__item-primary-content contentColor">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect contentColor"
