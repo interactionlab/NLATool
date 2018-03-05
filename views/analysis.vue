@@ -11,9 +11,9 @@
                 v-bind:title_small="title_small">
         </component>
 
-        <main class="mdl-layout__content">
+        <main class="mdl-layout__content" style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
             <!-- Toolbar-->
-            <div class="headerRowLight">
+            <div class="headerRowLight" style="flex: 0;width: 100%;">
                 <component
                         is="toolbar"
                         v-bind:tokens="vueTokens"
@@ -28,42 +28,42 @@
                 </component>
             </div>
             <component is="textviewcontrol"
-                       v-on:changescope="changeScope($event)"
-                       v-on:setnumberofcolumns="setNumberOfColumns($event)">
+                    v-on:changescope="changeScope($event)" 
+                    v-on:setnumberofcolumns="setNumberOfColumns($event)" 
+                    style="flex: 0;width: 100%;">
             </component>
-            <div class="height100">
-                <div class="mdl-grid height100">
-                    <div
-                         v-for="(col, colIndex) in tokenstoshow"
+            <div class="mdl-grid height100" style="overflow: auto;height: auto !important;max-height: 100%;flex: 2 1 0px;">
+                <div
+                    style="height: auto !important;max-height: 100%;display: flex;"
+                     v-for="(col, colIndex) in tokenstoshow"
 
-                         v-bind:style="columnsize2">
-                        <component id="textfeatureviewport"
-                                   is="textfeatureviewport"
-                                   v-bind:col="col"
-                                   v-bind:colindex="colIndex"
-                                   v-bind:splitted="splitted"
-                                   v-bind:tokenstoshow="tokenstoshow"
-                                   v-bind:textcolumnposition="textcolumnposition"
-                                   v-bind:tokens="vueTokens"
-                                   v-bind:mentions="coref"
-                                   v-bind:selectedindexes="selectedtextindexes"
-                                   v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="hoveredChain"
-                                   v-bind:nestedmentions="nestedChains"
-                                   v-bind:analysismode="analysisMode"
-                                   v-bind:docid="docID"
-                                   v-bind:notes="notes"
-                                   v-bind:notemodes="notemodes"
-                                   v-bind:researchmode="researchmode"
-                                   v-bind:selectedchain="selectedChain"
-                                   v-bind:showmode="showMode"
-                                   v-on:hoverchain="hoverChain($event)"
-                                   v-on:startselection="selectText($event,0)"
-                                   v-on:endselection="selectText($event,1)"
-                                   v-on:jumpmarktext="selectText2($event)"
-                                   v-on:togglesemanticlass="changeMarkerMode($event)">
-                        </component>
-                    </div>
+                     v-bind:style="columnsize2">
+                    <component id="textfeatureviewport"
+                               is="textfeatureviewport"
+                               v-bind:col="col"
+                               v-bind:colindex="colIndex"
+                               v-bind:splitted="splitted"
+                               v-bind:tokenstoshow="tokenstoshow"
+                               v-bind:textcolumnposition="textcolumnposition"
+                               v-bind:tokens="vueTokens"
+                               v-bind:mentions="coref"
+                               v-bind:selectedindexes="selectedtextindexes"
+                               v-bind:classestomark="classesToMark"
+                               v-bind:hoveredchain="hoveredChain"
+                               v-bind:nestedmentions="nestedChains"
+                               v-bind:analysismode="analysisMode"
+                               v-bind:docid="docID"
+                               v-bind:notes="notes"
+                               v-bind:notemodes="notemodes"
+                               v-bind:researchmode="researchmode"
+                               v-bind:selectedchain="selectedChain"
+                               v-bind:showmode="showMode"
+                               v-on:hoverchain="hoverChain($event)"
+                               v-on:startselection="selectText($event,0)"
+                               v-on:endselection="selectText($event,1)"
+                               v-on:jumpmarktext="selectText2($event)"
+                               v-on:togglesemanticlass="changeMarkerMode($event)">
+                    </component>
                 </div>
             </div>
         </main>
