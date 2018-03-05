@@ -1,12 +1,10 @@
 <template>
-    <div class="mdl-grid">
+    <div class="mdl-grid contentColor mdl-shadow--6dp" style="padding:0">
         <!--left grid for text stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor">
+        <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
             <div class="mdl-grid"
                  id="textWindow"
-                 ref="textWindow"
-                 style="width: 100%">
-
+                 ref="textWindow">
                 <component is="tex"
                            v-for="(token,i) in col"
                            v-bind:key="token.wordID"
@@ -14,7 +12,6 @@
                            v-bind:tokens="tokens"
                            v-bind:mentions="mentions"
                            v-bind:index="generatetrueindex(i+1)"
-
                            v-bind:selectedindexes="selectedindexes"
                            v-bind:classestomark="classestomark"
                            v-bind:hoveredchain="hoveredchain"
@@ -27,25 +24,28 @@
             </div>
         </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor">
-            <component
-                    :is="analysismode"
-                    v-bind:tokens="tokens"
-                    v-bind:tokenstoshow="tokenstoshow"
-                    v-bind:colindex="colindex"
-                    v-bind:docid="docid"
-                    v-bind:notes="notes"
-                    v-bind:notemodes="notemodes"
-                    v-bind:researchmode="researchmode"
-                    v-bind:selectedindexes="selectedindexes"
-                    v-bind:selectedchain="selectedchain"
-                    v-bind:mentions="mentions"
-                    v-bind:showmode="showmode"
-                    v-bind:classestomark="classestomark"
-                    v-on:togglesemanticlass="togglesemanticlass($event)"
-                    v-on:jumpmarktext="selectText2($event)">
-            </component>
+        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
+            <keep-alive>
+                <component
+                        :is="analysismode"
+                        v-bind:tokens="tokens"
+                        v-bind:tokenstoshow="tokenstoshow"
+                        v-bind:colindex="colindex"
+                        v-bind:docid="docid"
+                        v-bind:notes="notes"
+                        v-bind:notemodes="notemodes"
+                        v-bind:researchmode="researchmode"
+                        v-bind:selectedindexes="selectedindexes"
+                        v-bind:selectedchain="selectedchain"
+                        v-bind:mentions="mentions"
+                        v-bind:showmode="showmode"
+                        v-bind:classestomark="classestomark"
+                        v-on:togglesemanticlass="togglesemanticlass($event)"
+                        v-on:jumpmarktext="selectText2($event)">
+                </component>
+            </keep-alive>
         </div>
+
     </div>
 </template>
 
@@ -74,7 +74,7 @@
             analysismode: String,
             docid: Number,
             textcolumnposition: Number,
-            tokenstoshow:Array
+            tokenstoshow: Array
         },
         data: function () {
             return {
@@ -95,7 +95,7 @@
                 analysismode: this.analysismode,
                 docid: this.docid,
                 textcolumnposition: this.textcolumnposition,
-                tokenstoshow:this.tokenstoshow,
+                tokenstoshow: this.tokenstoshow,
             }
         },
         methods: {
@@ -147,8 +147,8 @@
                 }
                 return mention;
             },
-            togglesemanticlass:function (newClassesToMark) {
-                this.$emit('togglesemanticlass',newClassesToMark);
+            togglesemanticlass: function (newClassesToMark) {
+                this.$emit('togglesemanticlass', newClassesToMark);
             },
         },
         components: {
