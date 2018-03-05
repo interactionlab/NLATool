@@ -4,16 +4,21 @@
                 is="mainheader"
                 v-bind:title="title"
                 v-bind:docid="docID"
-                v-bind:preventtitleedit="false">
+                v-bind:route="'analysis'"
+                v-bind:numberofcolumns="numberOfColumns"
+                v-bind:preventtitleedit="false"
+                v-bind:autochecked="resizing"
+                v-on:newcolumnnumber="setNumberOfColumns($event)">
         </component>
         <component
                 is="headernavbar"
                 v-bind:title_small="title_small">
         </component>
 
-        <main class="mdl-layout__content">
+        <main class="mdl-layout__content"
+              style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
             <!-- Toolbar-->
-            <div class="headerRowLight">
+            <div class="headerRowLight" style="flex: 0;width: 100%;">
                 <component
                         is="toolbar"
                         v-bind:tokens="vueTokens"
@@ -29,41 +34,41 @@
             </div>
             <component is="textviewcontrol"
                        v-on:changescope="changeScope($event)"
-                       v-on:setnumberofcolumns="setNumberOfColumns($event)">
+                       v-on:setnumberofcolumns="setNumberOfColumns($event)"
+                       style="flex: 0;width: 100%;">
             </component>
-            <div class="height100">
-                <div class="mdl-grid height100">
-                    <div
-                         v-for="(col, colIndex) in tokenstoshow"
-
-                         v-bind:style="columnsize2">
-                        <component id="textfeatureviewport"
-                                   is="textfeatureviewport"
-                                   v-bind:col="col"
-                                   v-bind:colindex="colIndex"
-                                   v-bind:splitted="splitted"
-                                   v-bind:tokenstoshow="tokenstoshow"
-                                   v-bind:textcolumnposition="textcolumnposition"
-                                   v-bind:tokens="vueTokens"
-                                   v-bind:mentions="coref"
-                                   v-bind:selectedindexes="selectedtextindexes"
-                                   v-bind:classestomark="classesToMark"
-                                   v-bind:hoveredchain="hoveredChain"
-                                   v-bind:nestedmentions="nestedChains"
-                                   v-bind:analysismode="analysisMode"
-                                   v-bind:docid="docID"
-                                   v-bind:notes="notes"
-                                   v-bind:notemodes="notemodes"
-                                   v-bind:researchmode="researchmode"
-                                   v-bind:selectedchain="selectedChain"
-                                   v-bind:showmode="showMode"
-                                   v-on:hoverchain="hoverChain($event)"
-                                   v-on:startselection="selectText($event,0)"
-                                   v-on:endselection="selectText($event,1)"
-                                   v-on:jumpmarktext="selectText2($event)"
-                                   v-on:togglesemanticlass="changeMarkerMode($event)">
-                        </component>
-                    </div>
+            <div class="mdl-grid height100"
+                 style="overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;">
+                <div
+                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;padding-bottom: 1em;"
+                        v-for="(col, colIndex) in tokenstoshow"
+                        v-bind:style="columnsize2">
+                    <component id="textfeatureviewport"
+                               is="textfeatureviewport"
+                               v-bind:col="col"
+                               v-bind:colindex="colIndex"
+                               v-bind:splitted="splitted"
+                               v-bind:tokenstoshow="tokenstoshow"
+                               v-bind:textcolumnposition="textcolumnposition"
+                               v-bind:tokens="vueTokens"
+                               v-bind:mentions="coref"
+                               v-bind:selectedindexes="selectedtextindexes"
+                               v-bind:classestomark="classesToMark"
+                               v-bind:hoveredchain="hoveredChain"
+                               v-bind:nestedmentions="nestedChains"
+                               v-bind:analysismode="analysisMode"
+                               v-bind:docid="docID"
+                               v-bind:notes="notes"
+                               v-bind:notemodes="notemodes"
+                               v-bind:researchmode="researchmode"
+                               v-bind:selectedchain="selectedChain"
+                               v-bind:showmode="showMode"
+                               v-on:hoverchain="hoverChain($event)"
+                               v-on:startselection="selectText($event,0)"
+                               v-on:endselection="selectText($event,1)"
+                               v-on:jumpmarktext="selectText2($event)"
+                               v-on:togglesemanticlass="changeMarkerMode($event)">
+                    </component>
                 </div>
             </div>
         </main>
@@ -118,7 +123,7 @@
                     maxColumnWidth: 800,
                     maxColumnHeight: -1
                 },
-                numberOfColumns: -1,
+                numberOfColumns: 0,
                 splitted: [],
                 tokenstoshow: [],
                 columnsize: {
@@ -135,14 +140,15 @@
                     'mdl-cell--11-col': false,
                     'mdl-cell--12-col': true,
                 },
-                columnsize2: {width: 'calc(100% - 16px)'},
+                columnsize2: {width: '100%'},
                 textcolumnposition: {
                     start: -1,
                     end: -1,
                     difference: -1
                 },
                 tokens: [1],
-                splittNotes: []
+                splittNotes: [],
+                resizing: true,
             }
         },
         methods: {
@@ -203,8 +209,8 @@
                 }
             },
             setColumnSize2: function () {
-                let tempSize = 100/ this.numberOfColumns;
-                this.columnsize2 = {width: 'calc(' + tempSize + '% - 16px)'};
+                let tempSize = 100.0 / this.numberOfColumns;
+                this.columnsize2 = {width: tempSize + '%'};
                 //console.log('css Command: ' + this.columnsize2.width);
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
@@ -324,11 +330,13 @@
                 //console.log('colQuantity:' + this.numberOfColumns);
             },
             setNumberOfColumns: function (number) {
-                if (number > 0) {
+                if (number > 0 && number !== this.numberOfColumns) {
                     this.numberOfColumns = number;
                     this.splitTokens();
                     this.setColumnSize2();
+                    this.resizing = false;
                 } else {
+                    this.resizing = true;
                     this.resize();
                 }
             },
@@ -344,10 +352,12 @@
                 };
             },
             resize: function () {
-                this.setScreenOptions();
-                this.computeNumberOfColumns();
-                this.splitTokens();
-                this.setColumnSize2();
+                if (this.resizing) {
+                    this.setScreenOptions();
+                    this.computeNumberOfColumns();
+                    this.splitTokens();
+                    this.setColumnSize2();
+                }
             }
         },
         mounted() {
