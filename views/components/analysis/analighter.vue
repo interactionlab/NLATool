@@ -7,6 +7,7 @@
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
+                   v-bind:contentcontrol="contentcontrol"
                    v-on:togglesemanticlass="togglesemanticlass($event)">
 
         </component>
@@ -28,7 +29,8 @@
             docid: String,
             classestomark: Object,
             tokenstoshow:Array,
-            colindex:Number
+            colindex:Number,
+            contentcontrol:Object
         },
         data: function () {
             return {
@@ -38,7 +40,8 @@
                 docid: this.docid,
                 classestomark: this.classestomark,
                 tokenstoshow:this.tokenstoshow,
-                colindex:this.colindex
+                colindex:this.colindex,
+                contentcontrol:this.contentcontrol
             }
         },
         methods: {

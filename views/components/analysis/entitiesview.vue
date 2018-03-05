@@ -23,6 +23,7 @@
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[0][index]"
                    v-bind:semclass="borderedClasses[0]"
+                   v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -48,6 +49,7 @@
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
+                   v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -73,6 +75,7 @@
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
+                   v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-on:saveresult="saveResult($event)">
         </component>
 
@@ -98,6 +101,7 @@
                    v-bind:showallon="true"
                    v-bind:sourcequery="sortedtokens[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
+                   v-bind:contentcontrol="contentcontrol.MISCS"
                    v-on:saveresult="saveResult($event)">
         </component>
     </div>
@@ -115,7 +119,8 @@
             classestomark: Object,
             docid: Number,
             tokenstoshow: Array,
-            colindex: Number
+            colindex: Number,
+            contentcontrol:Object
 
         },
         data: function () {
@@ -132,6 +137,7 @@
                 sortedtokens: [],
                 tokenstoshow: this.tokenstoshow,
                 colindex: this.colindex,
+                contentcontrol: this.contentcontrol
             }
         },
         methods: {
@@ -184,7 +190,6 @@
                 } else {
                     return '';
                 }
-
             },
             numberOfLocations: function () {
                 if (typeof this.sortedtokens !== 'undefined' && typeof this.sortedtokens[1] !== 'undefined') {
@@ -206,7 +211,7 @@
                 } else {
                     return '';
                 }
-            }
+            },
         },
         mounted() {
             this.researchTokensOfClass('PERSON', 0);
