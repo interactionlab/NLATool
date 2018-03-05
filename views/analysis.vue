@@ -4,7 +4,11 @@
                 is="mainheader"
                 v-bind:title="title"
                 v-bind:docid="docID"
-                v-bind:preventtitleedit="false">
+                v-bind:route="'analysis'"
+                v-bind:numberofcolumns="numberOfColumns"
+                v-bind:preventtitleedit="false"
+                v-bind:autochecked="resizing"
+                v-on:newcolumnnumber="setNumberOfColumns($event)">
         </component>
         <component
                 is="headernavbar"
@@ -119,7 +123,7 @@
                     maxColumnWidth: 800,
                     maxColumnHeight: -1
                 },
-                numberOfColumns: -1,
+                numberOfColumns: 0,
                 splitted: [],
                 tokenstoshow: [],
                 columnsize: {
@@ -136,14 +140,15 @@
                     'mdl-cell--11-col': false,
                     'mdl-cell--12-col': true,
                 },
-                columnsize2: {width: 'calc(100% - 16px)'},
+                columnsize2: {width: '100%'},
                 textcolumnposition: {
                     start: -1,
                     end: -1,
                     difference: -1
                 },
                 tokens: [1],
-                splittNotes: []
+                splittNotes: [],
+                resizing: true,
             }
         },
         methods: {
@@ -325,11 +330,13 @@
                 //console.log('colQuantity:' + this.numberOfColumns);
             },
             setNumberOfColumns: function (number) {
-                if (number > 0) {
+                if (number > 0 && number !== this.numberOfColumns) {
                     this.numberOfColumns = number;
                     this.splitTokens();
                     this.setColumnSize2();
+                    this.resizing = false;
                 } else {
+                    this.resizing = true;
                     this.resize();
                 }
             },
@@ -345,10 +352,12 @@
                 };
             },
             resize: function () {
-                this.setScreenOptions();
-                this.computeNumberOfColumns();
-                this.splitTokens();
-                this.setColumnSize2();
+                if (this.resizing) {
+                    this.setScreenOptions();
+                    this.computeNumberOfColumns();
+                    this.splitTokens();
+                    this.setColumnSize2();
+                }
             }
         },
         mounted() {
