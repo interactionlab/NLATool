@@ -1,13 +1,14 @@
 <template>
-    <div class="mdl-grid">
-        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--10-col contentColor" style="margin:0;padding:0.5em 1em 0em 1em">
+    <li class="mdl-list__item contentColor">
+        <div class="mdl-list__item-primary-content ">
             <input type="text"
                    v-model="newtitle"
                    v-on:keyup.enter="edit"
                    v-on:keyup.esc="back"
                    class="mdl-textfield__input"/>
         </div>
-        <div class="mdl-cell mdl-cell--2-col contentColor" style="margin-bottom:0;margin-top:0">
+        
+        <div class="mdl-list__item-secondary-action overridemargin">
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     v-on:click="edit">
                 <i class="material-icons">done</i>
@@ -17,7 +18,9 @@
                 <i class="material-icons">clear</i>
             </button>
         </div>
-    </div>
+    </li>
+    
+    
 </template>
 
 <script>
