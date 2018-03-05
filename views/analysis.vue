@@ -11,7 +11,8 @@
                 v-bind:title_small="title_small">
         </component>
 
-        <main class="mdl-layout__content" style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
+        <main class="mdl-layout__content"
+              style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
             <!-- Toolbar-->
             <div class="headerRowLight" style="flex: 0;width: 100%;">
                 <component
@@ -28,16 +29,16 @@
                 </component>
             </div>
             <component is="textviewcontrol"
-                    v-on:changescope="changeScope($event)" 
-                    v-on:setnumberofcolumns="setNumberOfColumns($event)" 
-                    style="flex: 0;width: 100%;">
+                       v-on:changescope="changeScope($event)"
+                       v-on:setnumberofcolumns="setNumberOfColumns($event)"
+                       style="flex: 0;width: 100%;">
             </component>
-            <div class="mdl-grid height100" style="overflow: auto;height: auto !important;max-height: 100%;flex: 2 1 0px;">
+            <div class="mdl-grid height100"
+                 style="overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;">
                 <div
-                    style="height: auto !important;max-height: 100%;display: flex;"
-                     v-for="(col, colIndex) in tokenstoshow"
-
-                     v-bind:style="columnsize2">
+                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;padding-bottom: 1em;"
+                        v-for="(col, colIndex) in tokenstoshow"
+                        v-bind:style="columnsize2">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:col="col"
@@ -203,8 +204,8 @@
                 }
             },
             setColumnSize2: function () {
-                let tempSize = 100/ this.numberOfColumns;
-                this.columnsize2 = {width: 'calc(' + tempSize + '% - 16px)'};
+                let tempSize = 100.0 / this.numberOfColumns;
+                this.columnsize2 = {width: tempSize + '%'};
                 //console.log('css Command: ' + this.columnsize2.width);
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
