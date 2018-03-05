@@ -6,19 +6,8 @@
              id="forwardScopeButton"
              v-on:click="changeScope(false)">
         </div>
-        <input type="range"
-               min="0"
-               max="12"
-               value="1"
-               class="slider"
-               id="myRange"
-               v-model="numberofcolumns"
-               v-on:change="setNumberOfColumns">
-        <span v-if="numberofcolumns > 0">{{numberofcolumns}}</span>
-        <span v-else>auto</span>
     </div>
 </template>
-
 <script>
     export default {
         data: function () {
@@ -30,10 +19,6 @@
             changeScope: function (direction) {
                 this.$emit('changescope', direction);
             },
-            setNumberOfColumns: function () {
-                console.log('New Number of Columns: ' + this.numberofcolumns);
-                this.$emit('setnumberofcolumns', this.numberofcolumns);
-            }
         },
     }
 </script>
