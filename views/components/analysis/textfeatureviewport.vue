@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-grid">
         <!--left grid for text stuff -->
+
         <div class="mdl-cell mdl-cell--6-col contentColor">
             <div class="mdl-grid"
                  id="textWindow"
@@ -27,25 +28,28 @@
             </div>
         </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col contentColor"style="max-height: 100%; overflow-y: auto;"  >
-            <component
-                    :is="analysismode"
-                    v-bind:tokens="tokens"
-                    v-bind:tokenstoshow="tokenstoshow"
-                    v-bind:colindex="colindex"
-                    v-bind:docid="docid"
-                    v-bind:notes="notes"
-                    v-bind:notemodes="notemodes"
-                    v-bind:researchmode="researchmode"
-                    v-bind:selectedindexes="selectedindexes"
-                    v-bind:selectedchain="selectedchain"
-                    v-bind:mentions="mentions"
-                    v-bind:showmode="showmode"
-                    v-bind:classestomark="classestomark"
-                    v-on:togglesemanticlass="togglesemanticlass($event)"
-                    v-on:jumpmarktext="selectText2($event)">
-            </component>
+        <div class="mdl-cell mdl-cell--6-col contentColor" style="max-height: 100%; overflow-y: auto;">
+            <keep-alive>
+                <component
+                        :is="analysismode"
+                        v-bind:tokens="tokens"
+                        v-bind:tokenstoshow="tokenstoshow"
+                        v-bind:colindex="colindex"
+                        v-bind:docid="docid"
+                        v-bind:notes="notes"
+                        v-bind:notemodes="notemodes"
+                        v-bind:researchmode="researchmode"
+                        v-bind:selectedindexes="selectedindexes"
+                        v-bind:selectedchain="selectedchain"
+                        v-bind:mentions="mentions"
+                        v-bind:showmode="showmode"
+                        v-bind:classestomark="classestomark"
+                        v-on:togglesemanticlass="togglesemanticlass($event)"
+                        v-on:jumpmarktext="selectText2($event)">
+                </component>
+            </keep-alive>
         </div>
+
     </div>
 </template>
 
@@ -74,7 +78,7 @@
             analysismode: String,
             docid: Number,
             textcolumnposition: Number,
-            tokenstoshow:Array
+            tokenstoshow: Array
         },
         data: function () {
             return {
@@ -95,7 +99,7 @@
                 analysismode: this.analysismode,
                 docid: this.docid,
                 textcolumnposition: this.textcolumnposition,
-                tokenstoshow:this.tokenstoshow,
+                tokenstoshow: this.tokenstoshow,
             }
         },
         methods: {
@@ -147,8 +151,8 @@
                 }
                 return mention;
             },
-            togglesemanticlass:function (newClassesToMark) {
-                this.$emit('togglesemanticlass',newClassesToMark);
+            togglesemanticlass: function (newClassesToMark) {
+                this.$emit('togglesemanticlass', newClassesToMark);
             },
         },
         components: {
