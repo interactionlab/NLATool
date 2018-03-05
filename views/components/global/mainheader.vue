@@ -28,14 +28,39 @@
                            v-model="numberofcolumns"/>
                 </li>
                 <li class="mdl-menu__item"
-                    v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent(img)">Toggle Images</li>
+                    v-if="route === 'analysis'">
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="toggleImg">
+                        <input type="checkbox"
+                               id="toggleImg"
+                               class="mdl-switch__input"
+                               v-on:click="toggleResearchContent(img)"
+                               checked>
+                        <span class="mdl-switch__label">Toggle Images</span>
+                    </label>
+                </li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="toggleMap">
+                        <input type="checkbox"
+                               id="toggleMap"
+                               class="mdl-switch__input"
+                               v-on:click="toggleResearchContent(map)"
+                               checked>
+                        <span class="mdl-switch__label">Toggle Maps</span>
+                    </label>
+                </li>
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent(map)">Toggle Maps</li>
-                <li class="mdl-menu__item"
-                    v-if="route === 'analysis'"
-                    v-on:click="toggleResearchContent(information)">Toggle Detailed Information</li>
+                    v-on:click="toggleResearchContent(information)">
+                    <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="toogleInfo">
+                        <input type="checkbox"
+                               id="toogleInfo"
+                               class="mdl-switch__input"
+                               v-on:click="toggleResearchContent(information)"
+                               checked>
+                        <span class="mdl-switch__label">Toggle Detailed Information</span>
+                    </label>
+                </li>
             </ul>
             <!-- Headerbutton (3 dots) on the right-->
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
@@ -97,10 +122,10 @@
             back: function () {
                 this.editingtitle = false;
             },
-            toggleResearchContent:function (toToggle) {
+            toggleResearchContent: function (toToggle) {
                 this.$emit('contenttoggle', toToggle);
             },
-            toggleSortingMode:function (mode) {
+            toggleSortingMode: function (mode) {
 
             }
         },
@@ -113,7 +138,6 @@
                 }
             }
         },
-        computed: {
-        },
+        computed: {},
     }
 </script>
