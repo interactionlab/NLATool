@@ -15,22 +15,6 @@
                    class="mdl-textfield__input"/>
             <div class="mdl-layout-spacer">
             </div>
-            <!-- Headerbutton (3 dots) on the right-->
-            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
-                <i class="material-icons">account_circle</i>
-            </button>
-            <!-- Some examples for headerbutton-->
-            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
-                <a class="mdl-navigation__link" href="profile">
-                    <li class="mdl-menu__item">Profile</li>
-                </a>
-                <a class="mdl-navigation__link" href="signin">
-                    <li class="mdl-menu__item">Sign In</li>
-                </a>
-                <a class="mdl-navigation__link" href="signin">
-                    <li class="mdl-menu__item">Sign Out</li>
-                </a>
-            </ul>
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="settingsbutn"
                     v-if="route === 'analysis'">
                 <i class="material-icons">settings</i>
@@ -53,7 +37,28 @@
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'"
                     v-on:click="toggleResearchContent('information')">Toggle Detailed Information</li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'"
+                    v-on:click="toggleSortingMode('mode')"
+                >Toggle Sorting Mode</li>
             </ul>
+            <!-- Headerbutton (3 dots) on the right-->
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="headerbtn">
+                <i class="material-icons">account_circle</i>
+            </button>
+            <!-- Some examples for headerbutton-->
+            <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
+                <a class="mdl-navigation__link" href="profile">
+                    <li class="mdl-menu__item">Profile</li>
+                </a>
+                <a class="mdl-navigation__link" href="signin">
+                    <li class="mdl-menu__item">Sign In</li>
+                </a>
+                <a class="mdl-navigation__link" href="signin">
+                    <li class="mdl-menu__item">Sign Out</li>
+                </a>
+            </ul>
+
         </div>
     </header>
 </template>
@@ -96,6 +101,9 @@
             },
             toggleResearchContent:function (toToggle) {
                 
+            },
+            toggleSortingMode:function (mode) {
+
             }
         },
         watch: {
