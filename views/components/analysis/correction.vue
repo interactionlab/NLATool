@@ -43,7 +43,8 @@
             </div>
         </div>
         <div v-if="selectedtokens.length === 0" class="mdl-grid">
-            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. <span v-bind:class="{POS:true}">Suggested</span> words are the most likely ones to not be classified. </p>
+            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. </p>
+            <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most likely ones not to be classified. </p>
         </div>
 
     </div>
