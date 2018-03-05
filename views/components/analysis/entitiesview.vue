@@ -119,7 +119,8 @@
             classestomark: Object,
             docid: Number,
             tokenstoshow: Array,
-            colindex: Number
+            colindex: Number,
+            contentcontrol:Object
 
         },
         data: function () {
@@ -136,28 +137,7 @@
                 sortedtokens: [],
                 tokenstoshow: this.tokenstoshow,
                 colindex: this.colindex,
-                contentcontrol: {
-                    PERSONS:{
-                        img: true,
-                        map: false,
-                        information: true
-                    },
-                    LOCATIONS:{
-                        img: true,
-                        map: true,
-                        information: true
-                    },
-                    ORGANIZATIONS:{
-                        img: true,
-                        map: true,
-                        information: true
-                    },
-                    MISCS:{
-                        img: true,
-                        map: true,
-                        information: true
-                    }
-                }
+                contentcontrol: this.contentcontrol
             }
         },
         methods: {
