@@ -126,7 +126,6 @@
                 this.$emit('contenttoggle', toToggle);
             },
             toggleSortingMode: function (mode) {
-
             }
         },
         watch: {
