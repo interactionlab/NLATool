@@ -172,6 +172,7 @@
                         map: true,
                         information: true
                     }
+
                 }
             }
         },
