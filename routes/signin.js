@@ -37,9 +37,14 @@ router.get('/', function (req, res, next) {
 });
 
 router.post('/login', function (req, res, next) {
-    if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
-        req.session.user = req.body.user;
-        res.renderVue('signin', vueRenderOptions);
+    try {
+        if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
+            req.session.user = req.body.user;
+            res.renderVue('signin', vueRenderOptions);
+        }
+    }catch (err){
+        console.log(Tag+'Login failed due to error:' + err);
+        res.redirect('/signin');
     }
 });
 
@@ -49,7 +54,7 @@ router.post('/register', function (req, res, next) {
 
 
 function loginDB(user, pass) {
-    wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('accountData',['email','username','pass']));
+    wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('accountData', ['email', 'username', 'pass']));
 
     return false;
 }
