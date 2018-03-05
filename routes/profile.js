@@ -152,7 +152,9 @@ function getDocuments(start, amount) {
 function updateTitle(docID, newTitle) {
     docID = dbAction.stringifyForDB(docID);
     newTitle = dbAction.stringifyForDB(newTitle);
+    console.log(Tag + 'Server sets new Title' + newTitle);
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
+
 }
 
 function deleteDocument(docID) {
