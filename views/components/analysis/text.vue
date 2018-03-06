@@ -251,13 +251,14 @@
             },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
-                //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
+                console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
+                console.log('word2: ' + JSON.stringify(this.tokens[this.index]));
                 let token = this.tokens[this.index];
-                let word1OffsetEnd = this.tokens[this.index - 1].offsetEnd;
+                let word1OffsetEnd = this.tokens[this.index - 1].EndOffSet;
                 let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
                 let word2OffsetBegin = -1;
                 try {
-                    word2OffsetBegin = token.offsetBegin;
+                    word2OffsetBegin = token.beginOffSet;
                 } catch (err) {
                     //console.log('offsetBegin is not defined');
                 }
