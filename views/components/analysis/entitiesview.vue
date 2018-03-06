@@ -12,21 +12,22 @@
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   v-if="classestomark.PERSON"
-                   v-for="(researchresult,index) in PERSON"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:mapkey="index"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[0][index]"
-                   v-bind:semclass="borderedClasses[0]"
-                   v-bind:contentcontrol="contentcontrol.PERSONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       v-if="classestomark.PERSON"
+                       v-for="(researchresult,index) in PERSON"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index"
+                       v-bind:index="index"
+                       v-bind:mapkey="index"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[0][index]"
+                       v-bind:semclass="borderedClasses[0]"
+                       v-bind:contentcontrol="contentcontrol.PERSONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('LOCATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -38,21 +39,22 @@
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   v-if="classestomark.LOCATION"
-                   v-for="(researchresult,index2) in LOCATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index2+ PERSON.length"
-                   v-bind:index="index2"
-                   v-bind:mapkey="index2+ PERSON.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[1][index2]"
-                   v-bind:semclass="'LOCATION_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.LOCATIONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       v-if="classestomark.LOCATION"
+                       v-for="(researchresult,index2) in LOCATION"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index2+ PERSON.length"
+                       v-bind:index="index2"
+                       v-bind:mapkey="index2+ PERSON.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[1][index2]"
+                       v-bind:semclass="'LOCATION_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.LOCATIONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('ORGANIZATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -64,21 +66,22 @@
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   v-if="classestomark.ORGANIZATION"
-                   v-for="(researchresult,index3) in ORGANIZATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index3+ PERSON.length + LOCATION.length"
-                   v-bind:index="index3"
-                   v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[2][index3]"
-                   v-bind:semclass="'ORGANIZATION_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       v-if="classestomark.ORGANIZATION"
+                       v-for="(researchresult,index3) in ORGANIZATION"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index3+ PERSON.length + LOCATION.length"
+                       v-bind:index="index3"
+                       v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[2][index3]"
+                       v-bind:semclass="'ORGANIZATION_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              v-on:click="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -90,22 +93,23 @@
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   v-if="classestomark.MISC"
-                   v-for="(researchresult,index4) in MISC"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
-                   v-bind:index="index4"
-                   v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[3][index4]"
-                   v-bind:semclass="'MISC_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.MISCS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
+        <keep-alive>
+            <component is="researchresult"
+                       v-if="classestomark.MISC"
+                       v-for="(researchresult,index4) in MISC"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
+                       v-bind:index="index4"
+                       v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[3][index4]"
+                       v-bind:semclass="'MISC_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.MISCS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
     </div>
-
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
@@ -120,7 +124,7 @@
             docid: Number,
             tokenstoshow: Array,
             colindex: Number,
-            contentcontrol:Object
+            contentcontrol: Object
 
         },
         data: function () {
