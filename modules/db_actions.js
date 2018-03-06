@@ -310,19 +310,23 @@ exports.createInnerJoinSelectCommand = function (input) {
         if (input.columns === '*') {
             commandString = input.columns;
         } else {
-            commandString = commandString + input.tables[0] + '.' + input.columns[0].name;
+            commandString = commandString + json.database.name + '.' + input.tables[0] + '.' + input.columns[0].name;
             for (let i = 1; i < input.columns.length; i++) {
-                commandString = commandString + ', ' + input.tables[input.columns[i].tableIndex] + '.' + input.columns[i].name;
+                commandString = commandString + ', '
+                    + json.database.name + '.'
+                    + input.tables[input.columns[i].tableIndex]
+                    + '.' + input.columns[i].name;
                 if (typeof input.columns[i].alias !== 'undefined' && input.columns[i].alias !== null) {
                     commandString = commandString + ' as ' + input.columns[i].alias;
                 }
             }
 
         }
-        commandString = commandString + ' FROM ' + input.tables[0];
+        commandString = commandString + ' FROM ' + json.database.name + '.' + input.tables[0];
         for (let i = 1; i < input.tables.length; i++) {
             commandString = commandString
-                + ' ' + input.kindOfJoin[i-1] + ' JOIN '
+                + ' ' + input.kindOfJoin[i - 1] + ' JOIN '
+                + json.database.name + '.'
                 + input.tables[i]
                 + createJoinCondition(input.columns, input.tables, input.joinConditions[i - 1]);
         }
@@ -470,11 +474,9 @@ createJoinCondition = function (columns, tables, condition) {
     let queryString = ' ON ';
     let columnIndex1 = condition.columnIndexes[0];
     let columnIndex2 = condition.valueColumnIndexes[0];
-    queryString = queryString
-        + tables[columns[columnIndex1].tableIndex] + '.' + columns[columnIndex1].name + ' '
+    queryString = queryString + tables[columns[columnIndex1].tableIndex] + '.' + columns[columnIndex1].name + ' '
         + condition.operator[0] + ' '
         + tables[columns[columnIndex2].tableIndex] + '.' + columns[columnIndex2].name;
-    console.log(condition.columnIndexes.length);
     if (condition.columnIndexes.length > 0) {
         for (let i = 1; i < condition.columnIndexes.length; i++) {
             queryString = queryString + ' AND ';
