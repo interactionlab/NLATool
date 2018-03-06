@@ -41,7 +41,7 @@ router.get('/', function (req, res, next) {
     res.renderVue('signin', vueRenderOptions);
 });
 
-router.post('/login', function (req, res, next) {
+router.post('/', function (req, res, next) {
     //try {
         if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
             req.session.user = req.body.user;
