@@ -230,9 +230,9 @@ function getAndShowText(req, res) {
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
         selectWithInnerJoin(docID);
-        getTextFromDB(docID);
+        //getTextFromDB(docID);
         //console.log(textDB.tokens);
-        vueData.vueTokens = textDB.tokens;
+        //vueData.vueTokens = textDB.tokens;
         //vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
@@ -240,9 +240,10 @@ function getAndShowText(req, res) {
         getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         vueData.coref = textDB.coref;
-        //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
+        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
+
     res.renderVue('analysis', vueData, vueRenderOptions);
 }
 
@@ -296,7 +297,7 @@ function getTextFromDB(docID) {
 
 function selectWithInnerJoin(docID) {
     let queryObject = {
-        tables: ['textmap', 'word', 'corefmentions'],
+        tables: ['textmap', 'word', 'corefmentions', 'nestedcorefs'],
         columns: [{
             tableIndex: 0,
             name: 'docID',
@@ -358,7 +359,23 @@ function selectWithInnerJoin(docID) {
         }, {
             tableIndex: 2,
             name: 'endIndex',
-        },],
+        },
+            {
+                tableIndex: 3,
+                name: 'docID',
+                alias: 'nesteddocId'
+            },{
+                tableIndex: 3,
+                name: 'mentionID',
+                alias: 'nestedMentionID'
+            },
+            {
+                tableIndex: 3,
+                name: 'kind',
+            },{
+                tableIndex: 3,
+                name: 'relatedMention',
+            }],
         joinConditions: [{
             columnIndexes: [1],
             valueColumnIndexes: [6],
@@ -367,8 +384,12 @@ function selectWithInnerJoin(docID) {
             columnIndexes: [0, 2, 2],
             valueColumnIndexes: [11, 18, 19],
             operator: ['=', '>=', '<='],
-        },],
-        kindOfJoin: ['INNER','LEFT'],
+        },{
+            columnIndexes: [12],
+            valueColumnIndexes: [21],
+            operator: ['='],
+        }],
+        kindOfJoin: ['INNER','LEFT','LEFT'],
         whereConditions: {
             columns: ['textmap.docID'],
             values: [docID,],
@@ -377,83 +398,7 @@ function selectWithInnerJoin(docID) {
     };
     //dbAction.createInnerJoinSelectCommand(queryObject);
     console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-
-}
-
-function getMetaInfo(docID) {
-    let queryObject = {
-        tables: ['textmap', 'text'],
-        columns: [{
-            tableIndex: 0,
-            name: 'docID',
-        }, {
-            tableIndex: 3,
-            name: 'docID',
-        }, {
-            tableIndex: 3,
-            name: 'title',
-        }, {
-            tableIndex: 3,
-            name: 'length',
-        }, {
-            tableIndex: 3,
-            name: 'author',
-        }, {
-            tableIndex: 3,
-            name: 'year',
-        }],
-        joinConditions: [{
-            columnIndexes: [0],
-            valueColumnIndexes: [1],
-            operator: ['='],
-        },],
-        kindOfJoin: ['INNER'],
-        whereConditions: {
-            columns: ['textmap.docID'],
-            values: [docID],
-            operators: ['='],
-        }
-    };
-    //dbAction.createInnerJoinSelectCommand(queryObject);
-    console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-}
-
-function getNotesFromDB(docID) {
-    let queryObject = {
-        tables: ['textmap', 'notes'],
-        columns: [{
-            tableIndex: 0,
-            name: 'docID',
-        }, {
-            tableIndex: 2,
-            name: 'docID',
-        }, {
-            tableIndex: 2,
-            name: 'noteID',
-        }, {
-            tableIndex: 2,
-            name: 'content',
-        }, {
-            tableIndex: 2,
-            name: 'textIndex1',
-        }, {
-            tableIndex: 2,
-            name: 'textIndex2',
-        },],
-        joinConditions: [{
-            columnIndexes: [0],
-            valueColumnIndexes: [1],
-            operator: ['='],
-        },],
-        kindOfJoin: ['INNER'],
-        whereConditions: {
-            columns: ['textmap.docID'],
-            values: [docID],
-            operators: ['='],
-        }
-    };
-    //dbAction.createInnerJoinSelectCommand(queryObject);
-    console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    vueData.vueTokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
 }
 
 function getCorefInfo(docID) {
