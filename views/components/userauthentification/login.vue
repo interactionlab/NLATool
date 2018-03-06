@@ -1,5 +1,5 @@
 <template>
-    <form action="/signin/login" method="post">
+    <form action="/signin" method="post">
         <div class="mdl-card__supporting-text">
         
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
