@@ -234,46 +234,12 @@
                 //console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
-            setColumnSizeFalse: function () {
-                for (let theClass in this.columnsize) {
-                    this.columnsize[theClass] = false;
-                }
-            },
             setColumnSize2: function () {
                 let tempSize = 100.0 / this.numberOfColumns;
                 this.columnsize2 = {width: tempSize + '%'};
                 //console.log('css Command: ' + this.columnsize2.width);
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
-            },
-            setColumnSize: function () {
-                this.setColumnSizeFalse();
-                switch (true) {
-                    case (this.numberOfColumns >= 12):
-                        this.columnsize["mdl-cell--1-col"] = true;
-                        this.showTokens(12, this.numberOfColumns);
-                        break;
-                    case (this.numberOfColumns < 12 && this.numberOfColumns >= 6):
-                        this.columnsize["mdl-cell--2-col"] = true;
-                        this.showTokens(6, this.numberOfColumns);
-                        break;
-                    case (this.numberOfColumns < 6 && this.numberOfColumns >= 3):
-                        this.columnsize["mdl-cell--4-col"] = true;
-                        this.showTokens(3, this.numberOfColumns);
-                        break;
-                    case (this.numberOfColumns < 3 && this.numberOfColumns >= 2):
-                        this.columnsize["mdl-cell--6-col"] = true;
-                        this.showTokens(2, this.numberOfColumns);
-                        break;
-                    case (this.numberOfColumns < 2 && this.numberOfColumns >= 1):
-                        this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(1, this.numberOfColumns);
-                        break;
-                    default:
-                        this.columnsize["mdl-cell--12-col"] = true;
-                        this.showTokens(1, this.numberOfColumns);
-                        break;
-                }
             },
             showTokens: function (difference, end) {
                 this.tokenstoshow = [];
