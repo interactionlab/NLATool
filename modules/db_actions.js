@@ -439,9 +439,9 @@ exports.createDeleteCommand = function (table, column, valueToCompare) {
 createWhereQuery = function (columns, values, operators) {
     let queryString = 'WHERE ';
     if (columns !== null && values !== null && operators !== null) {
-        queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
+        queryString = queryString + columns[0] + " " + operators[0] + " " + values[0] + " ";
         for (let i = 1; i < operators.length; i++) {
-            queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
+            queryString = queryString + " AND " + columns[i] + " " + operators[i] + " " + values[i] + " ";
         }
         //console.log(notMedia + Tag + queryString);
         return queryString;
