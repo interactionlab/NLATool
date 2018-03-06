@@ -1,9 +1,10 @@
 <template>
     <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
         <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%;">
-        
+
             <!--left grid for text stuff -->
-            <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
+            <div class="mdl-cell mdl-cell--6-col"
+                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
                 <div class="mdl-grid"
                      id="textWindow"
                      ref="textWindow"
@@ -26,28 +27,29 @@
                     </component>
                 </div>
             </div>
-        <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
-            <keep-alive>
-                <component
-                        :is="analysismode"
-                        v-bind:tokens="tokens"
-                        v-bind:tokenstoshow="tokenstoshow"
-                        v-bind:colindex="colindex"
-                        v-bind:docid="docid"
-                        v-bind:notes="notes"
-                        v-bind:notemodes="notemodes"
-                        v-bind:researchmode="researchmode"
-                        v-bind:selectedindexes="selectedindexes"
-                        v-bind:selectedchain="selectedchain"
-                        v-bind:mentions="mentions"
-                        v-bind:showmode="showmode"
-                        v-bind:classestomark="classestomark"
-                        v-bind:contentcontrol="contentcontrol"
-                        v-on:togglesemanticlass="togglesemanticlass($event)"
-                        v-on:jumpmarktext="selectText2($event)">
-                </component>
-            </keep-alive>
+            <!--right grid for result stuff -->
+            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
+                <keep-alive>
+                    <component
+                            :is="analysismode"
+                            v-bind:tokens="tokens"
+                            v-bind:tokenstoshow="tokenstoshow"
+                            v-bind:colindex="colindex"
+                            v-bind:docid="docid"
+                            v-bind:notes="notes"
+                            v-bind:notemodes="notemodes"
+                            v-bind:researchmode="researchmode"
+                            v-bind:selectedindexes="selectedindexes"
+                            v-bind:selectedchain="selectedchain"
+                            v-bind:mentions="mentions"
+                            v-bind:showmode="showmode"
+                            v-bind:classestomark="classestomark"
+                            v-bind:contentcontrol="contentcontrol"
+                            v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:jumpmarktext="selectText2($event)">
+                    </component>
+                </keep-alive>
+            </div>
         </div>
     </div>
 </template>
