@@ -123,7 +123,10 @@ app.use(function (err, req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 let server = app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + server.address().port);
+    var ipVerson = "ipV4";
+    if (server.address().address == "::")
+        ipVerson = "ipV6";
+    console.log('Express server listening on ' + ipVerson + ' http://' + server.address().address + ":" + server.address().port);
 });
 
 
