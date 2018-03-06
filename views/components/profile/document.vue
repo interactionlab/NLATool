@@ -8,8 +8,8 @@
 </template>
 
 <script>
-    import editdoc from './components/profile/editdocument.vue';
-    import showdoc from './components/profile/showdocument.vue';
+    import editdoc from './editdocument.vue';
+    import showdoc from './showdocument.vue';
 
     export default {
         props: {

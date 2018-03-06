@@ -39,7 +39,9 @@ let vueRenderOptions = {
 let vueData = {
     documents: null,
     amountOfDocuments: null,
-    amountOfButtons: null
+    amountOfButtons: null,
+    title:'NLA - Natural Language Analyse Tool',
+    title_small: 'NLA - Tool',
 };
 /**
  * locally global Variable package.
@@ -106,7 +108,14 @@ function prepareProfile(req, res, next) {
     vueData.documents = profileData.documents;
     vueData.amountOfDocuments = profileData.amountOfDocuments;
     vueData.amountOfButtons = profileData.amountOfButtons;
-    res.renderVue('profile', vueData, vueRenderOptions);
+    req.vueOptions = {
+        head: {
+            meta: [
+                {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+            ]
+        }
+    };
+    res.renderVue('profile.vue', vueData, req.vueOptions);
 }
 
 /**

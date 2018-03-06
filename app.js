@@ -19,14 +19,9 @@ const expressVue = require('express-vue');
 
 const app = express();
 
-if (process.env.NODE_ENV === 'production') {
-    //its production so use the minimised production build of vuejs
-    vueScript = 'https://unpkg.com/vue';
-}
-
 const vueOptions = {
     rootPath: path.join(__dirname, '/views'),
-    layout: {
+    template: {
         html: {
             start: '<!DOCTYPE html><html>',
             end: '</html>'
@@ -40,29 +35,28 @@ const vueOptions = {
             end: '</div>'
         }
     },
-    vue: {
-        head: {
-            title: 'NLA - Natural Language Analyse Tool',
-            meta: [
-                {script: 'https://unpkg.com/vue'},
-                {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
-                {script: 'https://unpkg.com/vuex'},
-                {script: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
-                {style: 'https://storage.googleapis.com/code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
-                {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
-                {style: 'https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css'},
-                {style: '/css/style.css'},
-                {style: '/css/debugstyle.css'},
-                {charset: 'UTF-8'}
-            ]
-        }
+    head: {
+        title: 'NLA - Natural Language Analyse Tool',
+        scripts: [
+            {src: 'https://code.getmdl.io/1.3.0/material.min.js'},
+            {src: 'https://unpkg.com/vuex'},
+            {src: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
+        ],
+        styles: [
+            {style: 'https://storage.googleapis.com/code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
+            {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
+            {style: 'https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css'},
+            {style: '/css/style.css'},
+            {style: '/css/debugstyle.css'},
+        ],
+        metas: [{charset: 'UTF-8'}]
     },
     data: {
         title:'NLA - Natural Language Analyse Tool',
         title_small: 'NLA - Tool',
-
     }
 };
+
 const expressVueMiddleware = expressVue.init(vueOptions);
 app.use(expressVueMiddleware);
 
