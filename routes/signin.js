@@ -29,23 +29,31 @@ let vueRenderOptions = {
         ]
     }
 };
-
-let vueData = {};
+/**
+ * Vue data object to be set for this route.
+ * @type {{documents: null}}
+ */
+let vueData = {
+    errormsg: "TEST"
+};
 
 router.get('/', function (req, res, next) {
     res.renderVue('signin', vueRenderOptions);
 });
 
 router.post('/login', function (req, res, next) {
-    try {
+    //try {
         if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
             req.session.user = req.body.user;
-            res.renderVue('signin', vueRenderOptions);
+            res.renderVue('profile', vueRenderOptions);
+        } else {
+            vueData.errormsg = "Unknown User or wrong password";
+            res.renderVue('signin', vueData, vueRenderOptions);
         }
-    }catch (err){
+    /*}catch (err){
         console.log(Tag+'Login failed due to error:' + err);
         res.redirect('/signin');
-    }
+    }*/
 });
 
 router.post('/register', function (req, res, next) {
@@ -54,9 +62,26 @@ router.post('/register', function (req, res, next) {
 
 
 function loginDB(user, pass) {
-    wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand('accountData', ['email', 'username', 'pass']));
+    
+    if (user == "")
+        return false;
+    if (pass == "")
+        return false;
+    
+    let query = dbAction.createSelectCommand('accountData', ['username', 'password', 'email'], [pass, user], ['=', '=']);
+    
+    query = "SELECT * FROM nlatool.accountData WHERE username = '" + user + "' AND password = '"+pass+"' LIMIT 1";
+    
+    console.log(query);
+    
+    
+    let selectresult = wait.for(dbStub.makeSQLRequest, query);
 
-    return false;
+    if (selectresult.length == 1){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 module.exports = router;

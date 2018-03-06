@@ -19,6 +19,9 @@ const expressVue = require('express-vue');
 
 const app = express();
 
+const dbStub = require('./modules/db_stub');
+dbStub.fiberEstablishConnection();
+
 if (process.env.NODE_ENV === 'production') {
     //its production so use the minimised production build of vuejs
     vueScript = 'https://unpkg.com/vue';

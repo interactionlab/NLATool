@@ -11,7 +11,8 @@
         </component>
         <main class="mdl-layout__content" style="justify-content: center;align-items: center;">
             <div class="mdl-card mdl-shadow--6dp" style="margin: auto;overflow:initial">
-                <component :is="signmode"></component>
+                <component :is="signmode"
+                    v-bind:errormsg="errormsg"></component>
                 <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" style=" position: absolute;bottom: -1em;height: 56px;right: -1em;" v-on:click="switchauthentification">
                   <i class="material-icons">{{signbutn}}</i>
                 </button>
@@ -35,6 +36,7 @@
     import register from './components/userauthentification/register.vue';
 
     export default {
+        
         data: function () {
             return {
                 signmode: 'login',
