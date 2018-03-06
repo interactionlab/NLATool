@@ -26,26 +26,23 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.img">
-                                <img v-if="typeof researchresult.result.image !== 'undefined'"
-                                     v-bind:src="researchresult.result.image.contentUrl"/>
-                            </div>
-
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.map">
-                                <component is="googlemap"
+                            <div class="mdl-cell mdl-cell--12-col">
+                                <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
+                                     v-bind:src="researchresult.result.image.contentUrl"
+                                     style="float: left; width: 30%; margin-right: 1em;"/>
+                                <component is="googlemap" v-if="contentcontrol.map"
                                            v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="mapkey">
+                                           v-bind:index="mapkey"
+                                           style="float: left; width: 30%; margin-right: 1em;">
                                 </component>
-                            </div>
-                            <div v-if="contentcontrol.information">
-                                <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                    {{researchresult.result.description.articleBody}}
-                                </div>
+                                <div v-if="contentcontrol.information">
+                                    <div v-if="typeof researchresult.result.description !== 'undefined'">
+                                        {{researchresult.result.description.articleBody}}
+                                    </div>
 
-                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                    {{researchresult.result.detailedDescription.articleBody}}
+                                    <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                        {{researchresult.result.detailedDescription.articleBody}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
