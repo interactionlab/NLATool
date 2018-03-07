@@ -11,7 +11,7 @@
                      style="overflow-y: auto; height: auto !important; display: flex; max-height: 100%;">
                     <component is="tex"
                                v-for="(token,i) in col"
-                               v-bind:key="token.wordID"
+                               v-bind:key="token.textIndex"
                                v-bind:token="token"
                                v-bind:tokens="tokens"
                                v-bind:mentions="mentions"
