@@ -200,6 +200,7 @@ function updateNote(noteID, note) {
 }
 
 router.get('/', function (req, res, next) {
+    console.log(Tag + "load text " + req.session.docID);
     dbStub.fiberEstablishConnection();
     wait.launchFiber(getAndShowText, req, res, next);
 });

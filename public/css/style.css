@@ -352,7 +352,7 @@ pre {
 
 .MISC_BORDERED {
     border-left: #e699ff 4px solid;
-    padding: 10px 10px 10px 10px;
+    padding-left: 0.4em;
 }
 
 /**semantic Class highlight in Text*/
