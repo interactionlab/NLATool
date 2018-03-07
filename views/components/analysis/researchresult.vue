@@ -30,11 +30,13 @@
                                 <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
                                      v-bind:src="researchresult.result.image.contentUrl"
                                      style="float: left; width: 30%; margin-right: 0.5em;"/>
-                                <component is="googlemap" v-if="contentcontrol.map"
-                                           v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="mapkey"
-                                           style="float: left; width: 30%; margin-right: 1em;">
-                                </component>
+                                <div style="float: left; width: 30%; margin-right: 1em;">
+                                    <component is="googlemap" v-if="contentcontrol.map"
+                                               v-bind:mapcoordinates="mapcoordinates"
+                                               v-bind:index="mapkey"
+                                               >
+                                    </component>
+                                </div>
                                 <div v-if="contentcontrol.information">
                                     <div v-if="typeof researchresult.result.description !== 'undefined'">
                                         {{researchresult.result.description.articleBody}}
