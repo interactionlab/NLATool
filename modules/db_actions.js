@@ -336,7 +336,7 @@ exports.createInnerJoinSelectCommand = function (input) {
         }
     }
     commandString = commandString + ';';
-    console.log(Tag + sql + commandString);
+    //console.log(Tag + sql + commandString);
     return commandString;
 };
 
