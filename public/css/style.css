@@ -2,6 +2,7 @@
     body {
         font-size: 1em;
         line-height: 1.3;
+        overflow: hidden;
     }
 
     p {

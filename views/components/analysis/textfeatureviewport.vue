@@ -167,13 +167,11 @@
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
             hoverlinesetoffsetstart: function (event) {
-                let offsets = event[0]; 
-                this.hoveredentitiy = event[1];                
-                //console.log("hoveredentitiy in emit reciver: " + this.hoveredentitiy);                
+                let offsets = event[0];
+                this.hoveredentitiy = event[1];
                 this.$emit('setoffsetstart', [offsets, this.hoveredentitiy]);
             },
             hoverlinesetoffsetend: function (event) {
-                console.log("TextFeatureViewPort: " + event );   
                 this.$emit('hoverlinesetoffsetend', event);
             },
         },
