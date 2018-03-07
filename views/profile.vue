@@ -13,6 +13,8 @@
         </component>
         
         <main class="mdl-layout__content" style="justify-content: center; align-items: center;">
+            <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;" v-bind:style="{ display: displayladoing}">
+            </div>
             <div class="mdl-card mdl-shadow--6dp" style="margin: auto; overflow: initial; max-width: 500px;width: 100%;">
        
                 <ul class="mdl-list">
@@ -32,6 +34,7 @@
                     <component is="document"
                                v-for="document in documents"
                                v-bind:document="document"
+                               v-bind:displayladoing="this.displayladoing"
                                v-bind:key="document.docID"
                                v-on:deleted="deleted($event)">
                     </component>
@@ -49,7 +52,9 @@
 
     export default {
         data: function () {
-            return {}
+            return {
+                displayladoing: 'none'
+            }
         },
         methods:{
             deleted:function (docID) {
