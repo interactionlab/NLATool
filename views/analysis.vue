@@ -350,127 +350,33 @@
         beforeDestroy() {
             window.removeAllListeners();
         },
-        computed: {
-            nestedChains: function () {
-                let nestedMentions = {
-                    fullyNested: [],
-                    nested: []
-                };
-                try {
-                    for (let i = 0; i < this.coref[0].length; i++) {
-                        for (let j = i + 1; j < this.coref[0].length - (i + 1); j++) {
-                            if (this.coref[0][i].startIndex >= this.coref[0][j].startIndex
-                                && this.coref[0][i].startIndex <= this.coref[0][j].endIndex) {
-                                if (this.coref[0][i].endIndex <= this.coref[0][j].endIndex) {
-                                    // i Mention is in j Mention
-                                    nestedMentions.fullyNested.push({
-                                        inner: this.coref[0][i].mentionID,
-                                        outer: this.coref[0][j].mentionID
-                                    });
-                                } else {
-                                    // i Mention starts after j Mention starts
-                                    nestedMentions.nested.push({
-                                        first: this.coref[0][j].mentionID,
-                                        second: this.coref[0][i].mentionID
-                                    });
-                                }
-                            } else if (this.coref[0][j].startIndex >= this.coref[0][i].startIndex
-                                && this.coref[0][j].startIndex <= this.coref[0][i].endIndex) {
-                                if (this.coref[0][j].endIndex <= this.coref[0][i].endIndex) {
-                                    // j Mention is in i Mention
-                                    nestedMentions.fullyNested.push({
-                                        inner: this.coref[0][j].mentionID,
-                                        outer: this.coref[0][i].mentionID
-                                    });
-                                } else {
-                                    // j Mention starts after i Mention starts
-                                    nestedMentions.nested.push({
-                                        first: this.coref[0][i].mentionID,
-                                        second: this.coref[0][j].mentionID
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    return nestedMentions;
-                }
-                catch
-                    (err) {
-                    console.log('nested Chains Recognition failed:' + err);
-                    return nestedMentions;
-                }
-            }
-        },
+        computed: {},
         watch: {
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    let priorisizedFound = false;
-                    let nested = false;
                     this.selectedChain = -1;
-                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
-                        for (let i = 0; i < this.coref[0].length; i++) {
-                            if (priorisizedFound) {
-                                break;
-                            }
-                            //console.log(newSelectedIndexes.start + '>=' + this.coref[0][i].startIndex);
-                            //console.log(newSelectedIndexes.end + '<=' + this.coref[0][i].endIndex);
-                            if (newSelectedIndexes.start >= this.coref[0][i].startIndex
-                                && newSelectedIndexes.end <= this.coref[0][i].endIndex) {
-                                for (let j = 0; j < this.nestedChains.fullyNested.length; j++) {
-                                    if (this.nestedChains.fullyNested[j].inner === this.coref[0][i].mentionID) {
-                                        if (this.coref[0][i].representative === -1) {
-                                            this.selectedChain = this.coref[0][i].mentionID;
-                                            priorisizedFound = true;
-                                            nested = true;
+                    if (this.classesToMark.coref) {
+                        if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
+                            for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
+                                if (typeof this.tokens[i].coref !== 'undefined') {
+                                    for (let j = 0; j < this.tokens[i].coref.length; j++) {
+                                        if (this.tokens[i].coref[j].kind === 'outer') {
+                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
                                             break;
-                                        } else {
-                                            this.selectedChain = this.coref[0][i].representative;
-                                            priorisizedFound = true;
-                                            nested = true;
+                                        } else if (this.tokens[i].coref[j].kind === 'inner') {
+                                            if (this.tokens[i].coref[j].endIndex >= newSelectedIndexes.end) {
+                                                this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                                break;
+                                            }
+                                        } else if (this.tokens[i].coref[j].kind === 'first') {
+                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                        } else if (this.tokens[i].coref[j].kind === 'second') {
+                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
                                             break;
-                                        }
-                                    } else if (this.nestedChains.fullyNested[j].outer === this.coref[0][i].mentionID) {
-                                        if (this.coref[0][i].representative === -1) {
-                                            this.selectedChain = this.coref[0][i].mentionID;
-                                            nested = true;
-                                        } else {
-                                            this.selectedChain = this.coref[0][i].representative;
-                                            nested = true;
                                         }
                                     }
                                 }
-                                for (let j = 0; j < this.nestedChains.nested.length; j++) {
-                                    if (this.nestedChains.nested[j].second === this.coref[0][i].mentionID) {
-                                        if (this.coref[0][i].representative === -1) {
-                                            this.selectedChain = this.coref[0][i].mentionID;
-                                            priorisizedFound = true;
-                                            nested = true;
-                                            break;
-                                        } else {
-                                            this.selectedChain = this.coref[0][i].representative;
-                                            priorisizedFound = true;
-                                            nested = true;
-                                            break;
-                                        }
-                                    } else if (this.nestedChains.nested[j].first === this.coref[0][i].mentionID) {
-                                        if (this.coref[0][i].representative === -1) {
-                                            this.selectedChain = this.coref[0][i].mentionID;
-                                            nested = true;
-                                        } else {
-                                            this.selectedChain = this.coref[0][i].representative;
-                                            nested = true;
-                                        }
-                                    }
-                                }
-                                if (!nested) {
-                                    if (this.coref[0][i].representative === -1) {
-                                        this.selectedChain = this.coref[0][i].mentionID;
-                                        break;
-                                    } else {
-                                        this.selectedChain = this.coref[0][i].representative;
-                                        break;
-                                    }
-                                }
+
                             }
                         }
                     }
