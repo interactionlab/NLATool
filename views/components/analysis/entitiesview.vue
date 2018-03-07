@@ -31,6 +31,7 @@
         </component>
 
         <div class="semClassFormate"
+            ref="locationresultsparent"
              v-on:click="togglesemanticlass('LOCATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.LOCATION"
@@ -58,6 +59,7 @@
         </component>
 
         <div class="semClassFormate"
+            ref="organisazionresultsparent"
              v-on:click="togglesemanticlass('ORGANIZATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.ORGANIZATION"
@@ -67,7 +69,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
-        </div>
+        </div> 
         <component is="researchresult"
                     ref="organisazionresults"
                    v-if="classestomark.ORGANIZATION"
@@ -85,6 +87,7 @@
         </component>
 
         <div class="semClassFormate"
+            ref="miscresultsparent"
              v-on:click="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.MISC"
@@ -230,28 +233,59 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            hoveredentitiy : function(newWord, oldWord){
-                console.log(newWord + "<=" + oldWord);
+            hoveredentitiy : function(newValue, oldValue){
+                //console.log(newValue + "<=" + oldValue);
+                let newWord = newValue[0];
+                let type = newValue[1];
                 let bb = null;
-                console.log(this.$refs);
-                if (this.$refs["personresults"] != undefined && this.$refs["personresults"].length > 0)
-                {
-                    for (let i = 0; i < this.$refs["personresults"].length; i++){
-                        if (this.$refs.personresults[i].sourcequery.name == newWord){
-                            console.log(this.$refs.personresults[i]);
-                            console.log(this.$refs.personresults[i].$el.getBoundingClientRect());
-                            bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+                if (type == "PERSON"){
+                    if (this.$refs["personresults"] != undefined && this.$refs["personresults"].length > 0)
+                    {
+                        for (let i = 0; i < this.$refs["personresults"].length; i++){
+                            if (this.$refs.personresults[i].sourcequery.name == newWord){
+                                bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+                            }
                         }
+                    } else  {
+                        bb = this.$refs["personresultsparent"].getBoundingClientRect()
                     }
-                } else  {
-                    bb = this.$refs["personresultsparent"].getBoundingClientRect()
+                } else if (type == "LOCATION"){
+                    if (this.$refs["locationresults"] != undefined && this.$refs["locationresults"].length > 0)
+                    {
+                        for (let i = 0; i < this.$refs["locationresults"].length; i++){
+                            if (this.$refs.locationresults[i].sourcequery.name == newWord){
+                                bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
+                            }
+                        }
+                    } else  {
+                        bb = this.$refs["locationresultsparent"].getBoundingClientRect()
+                    }
+                } else if (type == "ORGANIZATION"){
+                    if (this.$refs["organisazionresults"] != undefined && this.$refs["organisazionresults"].length > 0)
+                    {
+                        for (let i = 0; i < this.$refs["organisazionresults"].length; i++){
+                            if (this.$refs.organisazionresults[i].sourcequery.name == newWord){
+                                bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
+                            }
+                        }
+                    } else  {
+                        bb = this.$refs["organisazionresultsparent"].getBoundingClientRect()
+                    }
+                } else if (type == "MISC"){
+                    if (this.$refs["miscresults"] != undefined && this.$refs["miscresults"].length > 0)
+                    {
+                        for (let i = 0; i < this.$refs["miscresults"].length; i++){
+                            if (this.$refs.miscresults[i].sourcequery.name == newWord){
+                                bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
+                            }
+                        }
+                    } else  {
+                        bb = this.$refs["miscresultsparent"].getBoundingClientRect()
+                    }
+                } else {
+                    bb = null;
                 }
-                
-                this.$emit('hoverlinesetoffsetend', bb);
-                
-                
-                /*this.sourcequery.name*/
-                
+                this.$emit('hoverlinesetoffsetend', bb);                
             }
         },
         components: {

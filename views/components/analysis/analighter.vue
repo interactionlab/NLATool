@@ -53,7 +53,6 @@
                 this.$emit('togglesemanticlass',newClassesToMark);
             },
             hoverlinesetoffsetend:function (event) {
-                console.log("Analighter: " + event );
                 this.$emit('hoverlinesetoffsetend',event);
             }
         },

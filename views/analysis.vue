@@ -415,9 +415,7 @@
                 
             },
             hoverlinesetoffsetend: function (event) {                
-                this.offsetend =  event;
-                console.log("Analysis: " + this.offsetend );
-                
+                this.offsetend =  event;                
             },
         },
         mounted() {

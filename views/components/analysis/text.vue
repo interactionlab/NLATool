@@ -320,9 +320,11 @@
                 }
                 //var mentionid = this.mention[0].mentionID;
                 
+                console.log();
+                
                 var offsets = event.target.getBoundingClientRect();
                 if (this.token.content != "" && this.token.content != " "&& this.token.content != "]" && this.token.content != "["){
-                    this.$emit('hoverlinesetoffsetstart', [offsets, this.token.content]);
+                    this.$emit('hoverlinesetoffsetstart', [offsets, [this.token.content, this.token.semanticClass]]);
                 }
             }
         }
