@@ -337,17 +337,17 @@ pre {
 /** semantic Class highlight for results */
 .PERSON_BORDERED {
     border-left: #ff6666 4px solid;
-    padding: 10px 10px 10px 10px;
+    padding: 0.4em;
 }
 
 .LOCATION_BORDERED {
     border-left: #8cd98c 4px solid;
-    padding: 10px 10px 10px 10px;
+    padding: 0.4em;
 }
 
 .ORGANIZATION_BORDERED {
     border-left: #66a3ff 4px solid;
-    padding: 10px 10px 10px 10px;
+    padding: 0.4em;
 }
 
 .MISC_BORDERED {
