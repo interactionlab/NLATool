@@ -45,6 +45,7 @@
                     </component>
                 </ul>
             </div>
+            <a href="./" class="mdl-button mdl-js-button mdl-button--fab mdl-button--colored" style="height: 56px; position: fixed; right: 0; bottom: 0; margin-bottom: 2em; margin-right: 2em;"><i class="material-icons">add</i></button>
         </main>
     </div>
     </body>
