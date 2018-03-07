@@ -29,7 +29,7 @@
                             <div class="mdl-cell mdl-cell--12-col deleteSpaces">
                                 <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
                                      v-bind:src="researchresult.result.image.contentUrl"
-                                     style="float: left; width: 30%; margin-right: 0.5em;"/>
+                                     style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
                                 <div style="float: left; width: 30%; margin-right: 1em;">
                                     <component is="googlemap" v-if="contentcontrol.map"
                                                v-bind:mapcoordinates="mapcoordinates"
