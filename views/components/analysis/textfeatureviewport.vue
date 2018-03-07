@@ -1,6 +1,6 @@
 <template>
     <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
-        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%;">
+        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0">
         
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
@@ -27,7 +27,7 @@
                 </div>
             </div>
         <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
+        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto; width:50%">
             <keep-alive>
                 <component
                         :is="analysismode"

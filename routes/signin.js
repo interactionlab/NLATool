@@ -62,7 +62,6 @@ router.post('/register', function (req, res, next) {
 
 
 function loginDB(user, pass) {
-    
     if (user == "")
         return false;
     if (pass == "")
