@@ -106,7 +106,6 @@
         },
         methods: {
             movetoolbar: function () {
-                console.log("movetoolbar");
                 this.$emit('movetoolbar', this.colindex);
             },
             hoverChain: function (chain) {

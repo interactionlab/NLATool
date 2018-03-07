@@ -31,19 +31,21 @@
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)"
-                        v-bind:style="columnsizetoolbarpos">
+                        v-bind:style="{left: columnsizetoolbarpos+ '%'}">
                 </component>
             </div>
-            <component is="textviewcontrol"
-                       v-on:changescope="changeScope($event)"
-                       style="flex: 0;width: 100%;">
-            </component>
+            <div style="flex: 0;width: 100%; position: relative;">
+                <component is="textviewcontrol"
+                            v-on:changescope="changeScope($event)"
+                            v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}">
+                </component>
+            </div>
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div
                         style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
                         v-for="(col, colIndex) in tokenstoshow"
-                        v-bind:style="columnsize2">
+                        v-bind:style="{width: columnsize2+ '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:col="col"
@@ -143,8 +145,8 @@
                     'mdl-cell--11-col': false,
                     'mdl-cell--12-col': true,
                 },
-                columnsize2: {width: '100%'},
-                columnsizetoolbarpos: {left: '0%'},
+                columnsize2: 100,
+                columnsizetoolbarpos: 0,
                 textcolumnposition: {
                     start: -1,
                     end: -1,
@@ -190,9 +192,7 @@
                 this.tokens = newTokens;
             },
             movetoolbar: function (colIndex) {
-                console.log("movetoolbar + analysis" + colIndex);
-                let tempSize = (colIndex / this.numberOfColumns)*100.0;
-                this.columnsizetoolbarpos = {left: tempSize + '%'};
+                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns)*100.0;
             },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
@@ -248,9 +248,7 @@
                 }
             },
             setColumnSize2: function () {
-                let tempSize = 100.0 / this.numberOfColumns;
-                this.columnsize2 = {width: tempSize + '%'};
-                //console.log('css Command: ' + this.columnsize2.width);
+                this.columnsize2 = 100.0 / this.numberOfColumns;
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
             },
