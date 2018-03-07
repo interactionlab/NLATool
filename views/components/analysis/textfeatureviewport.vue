@@ -1,6 +1,7 @@
 <template>
     <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
-        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0">
+        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0"
+            v-on:mouseover="movetoolbar">
         
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
@@ -104,6 +105,10 @@
             }
         },
         methods: {
+            movetoolbar: function () {
+                console.log("movetoolbar");
+                this.$emit('movetoolbar', this.colindex);
+            },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
                 this.$emit('hoverchain', chain);
