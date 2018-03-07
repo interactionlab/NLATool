@@ -2,6 +2,7 @@
     <component :is="changing"
                v-bind:newtitle="newtitle"
                v-bind:document="document"
+               v-bind:displayladoing="displayladoing"
                v-on:editing="editing($event)"
                v-on:deleted="deleted($event)">
     </component>
@@ -13,13 +14,15 @@
 
     export default {
         props: {
-            document: Object
+            document: Object,   
+            displayladoing : String,
         },
         data: function () {
             return {
                 document: this.document,
                 changing: 'showdoc',
-                newtitle: ''
+                newtitle: '',
+                displayladoing : this.displayladoing
             }
         },
         methods: {
