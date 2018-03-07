@@ -30,7 +30,8 @@
                         v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)">
+                        v-on:entercorrectionmode="entercorrectionmode($event)"
+                        v-bind:style="columnsizetoolbarpos">
                 </component>
             </div>
             <component is="textviewcontrol"
@@ -64,6 +65,7 @@
                                v-bind:selectedchain="selectedChain"
                                v-bind:showmode="showMode"
                                v-bind:contentcontrol="contentcontrol"
+                               v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
@@ -142,6 +144,7 @@
                     'mdl-cell--12-col': true,
                 },
                 columnsize2: {width: '100%'},
+                columnsizetoolbarpos: {left: '0%'},
                 textcolumnposition: {
                     start: -1,
                     end: -1,
@@ -185,6 +188,11 @@
             },
             setTokens: function (newTokens) {
                 this.tokens = newTokens;
+            },
+            movetoolbar: function (colIndex) {
+                console.log("movetoolbar + analysis" + colIndex);
+                let tempSize = (colIndex / this.numberOfColumns)*100.0;
+                this.columnsizetoolbarpos = {left: tempSize + '%'};
             },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
