@@ -13,7 +13,7 @@
         </component>
         
         <main class="mdl-layout__content" style="justify-content: center; align-items: center;">
-            <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;" v-bind:style="{ display: displayladoing}">
+            <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;" v-bind:style="{ display: displayloading}">
             </div>
             <div class="mdl-card mdl-shadow--6dp" style="margin: auto; overflow: initial; max-width: 500px;width: 100%;">
        
@@ -34,9 +34,10 @@
                     <component is="document"
                                v-for="document in documents"
                                v-bind:document="document"
-                               v-bind:displayladoing="this.displayladoing"
+                               v-bind:displayloading="this.displayloading"
                                v-bind:key="document.docID"
-                               v-on:deleted="deleted($event)">
+                               v-on:deleted="deleted($event)"
+                               v-on:displayloading="displayloadingClicked($event)">
                     </component>
                 </ul>
             </div>
@@ -53,10 +54,13 @@
     export default {
         data: function () {
             return {
-                displayladoing: 'none'
+                displayloading: 'none'
             }
         },
         methods:{
+            displayloadingClicked: function (displayloading) {
+                this.displayloading = displayloading;
+            },
             deleted:function (docID) {
                for(let i = 0; i < this.documents.length; i++){
                    if(this.documents[i].docID === docID){
