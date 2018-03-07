@@ -6,7 +6,7 @@
                     name="docID"
                     style="width:100%;text-align:left;text-transform:initial"
                     v-bind:value="document.docID"
-                    v-on:click="loading"
+                    v-on:click="loadingClick"
             >{{document.name}}</button>
         </form>
         
@@ -28,18 +28,21 @@
     export default {
         props: {
             document: Object,
+            displayloading : String,
         },
         data: function () {
             return {
                 ishovered: false,
                 document: this.document,
                 changing: false,
-                displayladoing : this.displayladoing
+                displayloading : this.displayloading
             }
         },
         methods: {
-            loading: function () {
-                this.displayladoing = "block";
+            loadingClick: function () {
+                console.log("test");
+                this.displayloading = "block";
+                this.$emit('displayloading', this.displayloading);
             },
             showButns: function () {
                 this.ishovered = true;
