@@ -2,7 +2,9 @@
     <div>
         <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
         <div class="semClassFormate"
-             v-on:click="togglesemanticlass('PERSON')">
+            ref="personresultsparent"
+             v-on:click="togglesemanticlass('PERSON')"
+             v-on:mouseover="log">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
@@ -13,6 +15,7 @@
             </button>
         </div>
         <component is="researchresult"
+                    ref="personresults"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
                    v-bind:researchresult="researchresult"
@@ -39,6 +42,7 @@
             </button>
         </div>
         <component is="researchresult"
+                    ref="locationresults"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:researchresult="researchresult"
@@ -65,6 +69,7 @@
             </button>
         </div>
         <component is="researchresult"
+                    ref="organisazionresults"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:researchresult="researchresult"
@@ -91,6 +96,7 @@
             </button>
         </div>
         <component is="researchresult"
+                   ref="miscresults"
                    v-if="classestomark.MISC"
                    v-for="(researchresult,index4) in MISC"
                    v-bind:researchresult="researchresult"
@@ -120,7 +126,8 @@
             docid: Number,
             tokenstoshow: Array,
             colindex: Number,
-            contentcontrol:Object
+            contentcontrol:Object,
+            hoveredentitiy: String,
 
         },
         data: function () {
@@ -137,10 +144,13 @@
                 sortedtokens: [],
                 tokenstoshow: this.tokenstoshow,
                 colindex: this.colindex,
-                contentcontrol: this.contentcontrol
+                contentcontrol: this.contentcontrol,
             }
         },
         methods: {
+            log:function(){
+                console.log("entitiesview: "+this.hoveredentitiy);
+            },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
                 let tokensResults = [];
@@ -219,7 +229,31 @@
             this.researchTokensOfClass('ORGANIZATION', 2);
             this.researchTokensOfClass('MISC', 3);
         },
-        watch: {},
+        watch: {
+            hoveredentitiy : function(newWord, oldWord){
+                console.log(newWord + "<=" + oldWord);
+                let bb = null;
+                console.log(this.$refs);
+                if (this.$refs["personresults"] != undefined && this.$refs["personresults"].length > 0)
+                {
+                    for (let i = 0; i < this.$refs["personresults"].length; i++){
+                        if (this.$refs.personresults[i].sourcequery.name == newWord){
+                            console.log(this.$refs.personresults[i]);
+                            console.log(this.$refs.personresults[i].$el.getBoundingClientRect());
+                            bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+                        }
+                    }
+                } else  {
+                    bb = this.$refs["personresultsparent"].getBoundingClientRect()
+                }
+                
+                this.$emit('hoverlinesetoffsetend', bb);
+                
+                
+                /*this.sourcequery.name*/
+                
+            }
+        },
         components: {
             researchresult,
             requests

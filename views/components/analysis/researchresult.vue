@@ -1,6 +1,6 @@
 <template> <!--editordocument in 8080-->
 
-    <div class="mdl-layout mdl-js-layout">
+    <div class="mdl-layout mdl-js-layout">  
         <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%"
@@ -51,8 +51,7 @@
                     </div>
                 </div>
 
-                <div class="mdl-cell mdl-cell--12-col"
-                     v-else>
+                <div class="mdl-cell mdl-cell--12-col" v-else>
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
@@ -99,7 +98,7 @@
             mapcoordinates: Array,
             sourcequery: String,
             semclass: String,
-            contentcontrol: Object,
+            contentcontrol: Object
         },
         data: function () {
             return {
@@ -114,7 +113,7 @@
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
                 mapkey: this.mapkey,
-                contentcontrol: this.contentcontrol,
+                contentcontrol: this.contentcontrol
             }
         },
         methods: {

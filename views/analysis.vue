@@ -1,4 +1,5 @@
 <template>
+    <div>
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <component
                 is="mainheader"
@@ -72,7 +73,9 @@
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
                                v-on:jumpmarktext="selectText2($event)"
-                               v-on:togglesemanticlass="changeMarkerMode($event)">
+                               v-on:togglesemanticlass="changeMarkerMode($event)"
+                               v-on:setoffsetstart="setoffsetstart($event)"
+                               v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
                     </component>
                 </div>
             </div>
@@ -80,6 +83,13 @@
         <component is="variablehelper"
                    v-bind:tokens="vueTokens"
                    v-on:resize="setTokens($event)">
+        </component>
+    </div>
+        <component is="linetohover"
+            id="line"
+            v-if="offsetstart != null && offsetend != null"
+            v-bind:offsetstart="offsetstart"
+            v-bind:offsetend="offsetend">
         </component>
     </div>
 </template>
@@ -95,10 +105,13 @@
     import tex from './components/analysis/text.vue';
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
+    import linetohover from './components/analysis/linetohover.vue';
 
     export default {
         data: function () {
             return {
+                offsetstart: null,
+                offsetend: null,
                 analysisMode: 'analighter',
                 showMode: 'entitiesview',
                 researchmode: '',
@@ -395,7 +408,17 @@
                     this.splitTokens();
                     this.setColumnSize2();
                 }
-            }
+            },
+            setoffsetstart: function (event) {                
+                this.offsetstart =  event[0];
+                //let hoveredentitiy = event[1]; 
+                
+            },
+            hoverlinesetoffsetend: function (event) {                
+                this.offsetend =  event;
+                console.log("Analysis: " + this.offsetend );
+                
+            },
         },
         mounted() {
             window.addEventListener('resize', this.resize);
@@ -544,7 +567,8 @@
             tex,
             variablehelper,
             textfeatureviewport,
-            textviewcontrol
+            textviewcontrol,
+            linetohover
         }
     }
 </script>

@@ -8,7 +8,9 @@
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
-                   v-on:togglesemanticlass="togglesemanticlass($event)">
+                   v-bind:hoveredentitiy="hoveredentitiy"
+                   v-on:togglesemanticlass="togglesemanticlass($event)"
+                   v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
 
         </component>
     </div>
@@ -28,9 +30,10 @@
             showmode: String,
             docid: String,
             classestomark: Object,
-            tokenstoshow:Array,
-            colindex:Number,
-            contentcontrol:Object
+            tokenstoshow: Array,
+            colindex: Number,
+            contentcontrol: Object,
+            hoveredentitiy: String,
         },
         data: function () {
             return {
@@ -41,12 +44,17 @@
                 classestomark: this.classestomark,
                 tokenstoshow:this.tokenstoshow,
                 colindex:this.colindex,
-                contentcontrol:this.contentcontrol
+                contentcontrol:this.contentcontrol,
+                hoveredentitiy:this.hoveredentitiy,
             }
         },
         methods: {
             togglesemanticlass:function (newClassesToMark) {
                 this.$emit('togglesemanticlass',newClassesToMark);
+            },
+            hoverlinesetoffsetend:function (event) {
+                console.log("Analighter: " + event );
+                this.$emit('hoverlinesetoffsetend',event);
             }
         },
         components: {
