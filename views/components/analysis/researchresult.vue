@@ -3,7 +3,7 @@
     <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
-                <div class="mdl-cell mdl-cell--12-col"
+                <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%"
                      v-if="everythingshow">
 
                     <div v-bind:class="generalstyleclass"
@@ -26,10 +26,10 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--12-col">
+                            <div class="mdl-cell mdl-cell--12-col deleteSpaces">
                                 <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
                                      v-bind:src="researchresult.result.image.contentUrl"
-                                     style="float: left; width: 30%; margin-right: 1em;"/>
+                                     style="float: left; width: 30%; margin-right: 0.5em;"/>
                                 <component is="googlemap" v-if="contentcontrol.map"
                                            v-bind:mapcoordinates="mapcoordinates"
                                            v-bind:index="mapkey"
