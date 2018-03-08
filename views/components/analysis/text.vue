@@ -185,8 +185,7 @@
                     }
                 }
                 return resultingBrackets;
-            }
-            ,
+            },
             endBrackets: function () {
                 let resultingBrackets = '';
                 let bracket = ']';
