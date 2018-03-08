@@ -23,7 +23,8 @@
                                v-bind:selectedchain="selectedchain"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
-                               v-on:endselection="endselection($event)">
+                               v-on:endselection="endselection($event)"
+                               v-on:hoverlinesetoffsetstart="hoverlinesetoffsetstart($event)">
                     </component>
                 </div>
             </div>
@@ -45,7 +46,9 @@
                             v-bind:showmode="showmode"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
+                            v-bind:hoveredentitiy="hoveredentitiy"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
                             v-on:jumpmarktext="selectText2($event)">
                     </component>
                 </keep-alive>
@@ -80,7 +83,7 @@
             docid: Number,
             textcolumnposition: Number,
             tokenstoshow: Array,
-            contentcontrol: Object
+            contentcontrol: Object,
         },
         data: function () {
             return {
@@ -103,6 +106,7 @@
                 textcolumnposition: this.textcolumnposition,
                 tokenstoshow: this.tokenstoshow,
                 contentcontrol: this.contentcontrol,
+                hoveredentitiy: "",
             }
         },
         methods: {
@@ -156,6 +160,16 @@
             },
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
+            },
+            hoverlinesetoffsetstart: function (event) {
+                let offsets = event[0];
+                this.hoveredentitiy = event[1];
+                //console.log("hoveredentitiy in emit reciver: " + this.hoveredentitiy);
+                this.$emit('setoffsetstart', [offsets, this.hoveredentitiy]);
+            },
+            hoverlinesetoffsetend: function (event) {
+                console.log("TextFeatureViewPort: " + event);
+                this.$emit('hoverlinesetoffsetend', event);
             },
         },
         components: {
