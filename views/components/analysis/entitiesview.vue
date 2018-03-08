@@ -14,22 +14,23 @@
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   ref="personresults"
-                   v-if="classestomark.PERSON"
-                   v-for="(researchresult,index) in PERSON"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index"
-                   v-bind:index="index"
-                   v-bind:mapkey="index"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[0][index]"
-                   v-bind:semclass="borderedClasses[0]"
-                   v-bind:contentcontrol="contentcontrol.PERSONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       ref="personresults"
+                       v-if="classestomark.PERSON"
+                       v-for="(researchresult,index) in PERSON"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index"
+                       v-bind:index="index"
+                       v-bind:mapkey="index"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[0][index]"
+                       v-bind:semclass="borderedClasses[0]"
+                       v-bind:contentcontrol="contentcontrol.PERSONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              ref="locationresultsparent"
              v-on:click="togglesemanticlass('LOCATION')">
@@ -42,22 +43,23 @@
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   ref="locationresults"
-                   v-if="classestomark.LOCATION"
-                   v-for="(researchresult,index2) in LOCATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index2+ PERSON.length"
-                   v-bind:index="index2"
-                   v-bind:mapkey="index2+ PERSON.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[1][index2]"
-                   v-bind:semclass="'LOCATION_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.LOCATIONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       ref="locationresults"
+                       v-if="classestomark.LOCATION"
+                       v-for="(researchresult,index2) in LOCATION"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index2+ PERSON.length"
+                       v-bind:index="index2"
+                       v-bind:mapkey="index2+ PERSON.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[1][index2]"
+                       v-bind:semclass="'LOCATION_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.LOCATIONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              ref="organisazionresultsparent"
              v-on:click="togglesemanticlass('ORGANIZATION')">
@@ -70,22 +72,23 @@
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   ref="organisazionresults"
-                   v-if="classestomark.ORGANIZATION"
-                   v-for="(researchresult,index3) in ORGANIZATION"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index3+ PERSON.length + LOCATION.length"
-                   v-bind:index="index3"
-                   v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[2][index3]"
-                   v-bind:semclass="'ORGANIZATION_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
-
+        <keep-alive>
+            <component is="researchresult"
+                       ref="organisazionresults"
+                       v-if="classestomark.ORGANIZATION"
+                       v-for="(researchresult,index3) in ORGANIZATION"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index3+ PERSON.length + LOCATION.length"
+                       v-bind:index="index3"
+                       v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[2][index3]"
+                       v-bind:semclass="'ORGANIZATION_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
         <div class="semClassFormate"
              ref="miscresultsparent"
              v-on:click="togglesemanticlass('MISC')">
@@ -98,21 +101,23 @@
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
         </div>
-        <component is="researchresult"
-                   ref="miscresults"
-                   v-if="classestomark.MISC"
-                   v-for="(researchresult,index4) in MISC"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
-                   v-bind:index="index4"
-                   v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
-                   v-bind:docid="docid"
-                   v-bind:showallon="true"
-                   v-bind:sourcequery="sortedtokens[3][index4]"
-                   v-bind:semclass="'MISC_BORDERED'"
-                   v-bind:contentcontrol="contentcontrol.MISCS"
-                   v-on:saveresult="saveResult($event)">
-        </component>
+        <keep-alive>
+            <component is="researchresult"
+                       ref="miscresults"
+                       v-if="classestomark.MISC"
+                       v-for="(researchresult,index4) in MISC"
+                       v-bind:researchresult="researchresult"
+                       v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
+                       v-bind:index="index4"
+                       v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
+                       v-bind:docid="docid"
+                       v-bind:showallon="true"
+                       v-bind:sourcequery="sortedtokens[3][index4]"
+                       v-bind:semclass="'MISC_BORDERED'"
+                       v-bind:contentcontrol="contentcontrol.MISCS"
+                       v-on:saveresult="saveResult($event)">
+            </component>
+        </keep-alive>
     </div>
 
 </template>
@@ -120,6 +125,7 @@
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
     import requests from './mixins/requests.js';
+
     export default {
         mixins: [filtertokenwithclass],
         props: {
@@ -128,7 +134,7 @@
             docid: Number,
             tokenstoshow: Array,
             colindex: Number,
-            contentcontrol:Object,
+            contentcontrol: Object,
             hoveredentitiy: String,
         },
         data: function () {
@@ -149,8 +155,8 @@
             }
         },
         methods: {
-            log:function(){
-                console.log("entitiesview: "+this.hoveredentitiy);
+            log: function () {
+                console.log("entitiesview: " + this.hoveredentitiy);
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -230,53 +236,49 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            hoveredentitiy : function(newValue, oldValue){
+            hoveredentitiy: function (newValue, oldValue) {
                 //console.log(newValue + "<=" + oldValue);
                 let newWord = newValue[0];
                 let type = newValue[1];
                 let bb = null;
-                if (type == "PERSON"){
-                    if (this.$refs["personresults"] != undefined && this.$refs["personresults"].length > 0)
-                    {
-                        for (let i = 0; i < this.$refs["personresults"].length; i++){
-                            if (this.$refs.personresults[i].sourcequery.name == newWord){
+                if (type == "PERSON") {
+                    if (this.$refs["personresults"] != undefined && this.$refs["personresults"].length > 0) {
+                        for (let i = 0; i < this.$refs["personresults"].length; i++) {
+                            if (this.$refs.personresults[i].sourcequery.name == newWord) {
                                 bb = this.$refs.personresults[i].$el.getBoundingClientRect();
                             }
                         }
-                    } else  {
+                    } else {
                         bb = this.$refs["personresultsparent"].getBoundingClientRect()
                     }
-                } else if (type == "LOCATION"){
-                    if (this.$refs["locationresults"] != undefined && this.$refs["locationresults"].length > 0)
-                    {
-                        for (let i = 0; i < this.$refs["locationresults"].length; i++){
-                            if (this.$refs.locationresults[i].sourcequery.name == newWord){
+                } else if (type == "LOCATION") {
+                    if (this.$refs["locationresults"] != undefined && this.$refs["locationresults"].length > 0) {
+                        for (let i = 0; i < this.$refs["locationresults"].length; i++) {
+                            if (this.$refs.locationresults[i].sourcequery.name == newWord) {
                                 bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
                             }
                         }
-                    } else  {
+                    } else {
                         bb = this.$refs["locationresultsparent"].getBoundingClientRect()
                     }
-                } else if (type == "ORGANIZATION"){
-                    if (this.$refs["organisazionresults"] != undefined && this.$refs["organisazionresults"].length > 0)
-                    {
-                        for (let i = 0; i < this.$refs["organisazionresults"].length; i++){
-                            if (this.$refs.organisazionresults[i].sourcequery.name == newWord){
+                } else if (type == "ORGANIZATION") {
+                    if (this.$refs["organisazionresults"] != undefined && this.$refs["organisazionresults"].length > 0) {
+                        for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
+                            if (this.$refs.organisazionresults[i].sourcequery.name == newWord) {
                                 bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
                             }
                         }
-                    } else  {
+                    } else {
                         bb = this.$refs["organisazionresultsparent"].getBoundingClientRect()
                     }
-                } else if (type == "MISC"){
-                    if (this.$refs["miscresults"] != undefined && this.$refs["miscresults"].length > 0)
-                    {
-                        for (let i = 0; i < this.$refs["miscresults"].length; i++){
-                            if (this.$refs.miscresults[i].sourcequery.name == newWord){
+                } else if (type == "MISC") {
+                    if (this.$refs["miscresults"] != undefined && this.$refs["miscresults"].length > 0) {
+                        for (let i = 0; i < this.$refs["miscresults"].length; i++) {
+                            if (this.$refs.miscresults[i].sourcequery.name == newWord) {
                                 bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
                             }
                         }
-                    } else  {
+                    } else {
                         bb = this.$refs["miscresultsparent"].getBoundingClientRect()
                     }
                 } else {
