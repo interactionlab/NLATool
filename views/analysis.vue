@@ -55,7 +55,6 @@
                                v-bind:selectedindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
-                               v-bind:nestedmentions="nestedChains"
                                v-bind:analysismode="analysisMode"
                                v-bind:docid="docID"
                                v-bind:notes="notes"
@@ -68,7 +67,9 @@
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
                                v-on:jumpmarktext="selectText2($event)"
-                               v-on:togglesemanticlass="changeMarkerMode($event)">
+                               v-on:togglesemanticlass="changeMarkerMode($event)"
+                               v-on:setoffsetstart="setoffsetstart($event)"
+                               v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
                     </component>
                 </div>
             </div>
@@ -77,7 +78,14 @@
                    v-bind:tokens="vueTokens"
                    v-on:resize="setTokens($event)">
         </component>
+        <component is="linetohover"
+                   id="line"
+                   v-if="offsetstart != null && offsetend != null"
+                   v-bind:offsetstart="offsetstart"
+                   v-bind:offsetend="offsetend">
+        </component>
     </div>
+
 </template>
 <script>
     import research from './components/analysis/research.vue';
@@ -92,9 +100,12 @@
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
     import linetohover from './components/analysis/linetohover.vue';
+
     export default {
         data: function () {
             return {
+                offsetstart: null,
+                offsetend: null,
                 analysisMode: 'analighter',
                 showMode: 'entitiesview',
                 researchmode: '',
@@ -343,7 +354,15 @@
                     this.splitTokens();
                     this.setColumnSize2();
                 }
-            }
+            },
+            setoffsetstart: function (event) {
+                this.offsetstart = event[0];
+                //let hoveredentitiy = event[1];
+
+            },
+            hoverlinesetoffsetend: function (event) {
+                this.offsetend = event;
+            },
         },
         mounted() {
             window.addEventListener('resize', this.resize);
@@ -361,6 +380,7 @@
                         if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                             for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
                                 if (typeof this.tokens[i].coref !== 'undefined') {
+                                    this.selectedChain = this.tokens[i].coref[0].mentionID;
                                     for (let j = 0; j < this.tokens[i].coref.length; j++) {
                                         if (this.tokens[i].coref[j].kind === 'outer') {
                                             this.selectedChain = this.tokens[i].coref[j].mentionID;

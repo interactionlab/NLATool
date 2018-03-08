@@ -2,7 +2,7 @@
     <div>
         <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
         <div class="semClassFormate"
-            ref="personresultsparent"
+             ref="personresultsparent"
              v-on:click="togglesemanticlass('PERSON')"
              v-on:mouseover="log">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -14,26 +14,8 @@
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
         </div>
-<<<<<<< HEAD
-        <keep-alive>
-            <component is="researchresult"
-                       v-if="classestomark.PERSON"
-                       v-for="(researchresult,index) in PERSON"
-                       v-bind:researchresult="researchresult"
-                       v-bind:key="index"
-                       v-bind:index="index"
-                       v-bind:mapkey="index"
-                       v-bind:docid="docid"
-                       v-bind:showallon="true"
-                       v-bind:sourcequery="sortedtokens[0][index]"
-                       v-bind:semclass="borderedClasses[0]"
-                       v-bind:contentcontrol="contentcontrol.PERSONS"
-                       v-on:saveresult="saveResult($event)">
-            </component>
-        </keep-alive>
-=======
         <component is="researchresult"
-                    ref="personresults"
+                   ref="personresults"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
                    v-bind:researchresult="researchresult"
@@ -48,9 +30,8 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
->>>>>>> 954b20c467b77aa7f7a497577ce6fbb093f84ef0
         <div class="semClassFormate"
-            ref="locationresultsparent"
+             ref="locationresultsparent"
              v-on:click="togglesemanticlass('LOCATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.LOCATION"
@@ -61,26 +42,8 @@
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
         </div>
-<<<<<<< HEAD
-        <keep-alive>
-            <component is="researchresult"
-                       v-if="classestomark.LOCATION"
-                       v-for="(researchresult,index2) in LOCATION"
-                       v-bind:researchresult="researchresult"
-                       v-bind:key="index2+ PERSON.length"
-                       v-bind:index="index2"
-                       v-bind:mapkey="index2+ PERSON.length"
-                       v-bind:docid="docid"
-                       v-bind:showallon="true"
-                       v-bind:sourcequery="sortedtokens[1][index2]"
-                       v-bind:semclass="'LOCATION_BORDERED'"
-                       v-bind:contentcontrol="contentcontrol.LOCATIONS"
-                       v-on:saveresult="saveResult($event)">
-            </component>
-        </keep-alive>
-=======
         <component is="researchresult"
-                    ref="locationresults"
+                   ref="locationresults"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:researchresult="researchresult"
@@ -95,9 +58,8 @@
                    v-on:saveresult="saveResult($event)">
         </component>
 
->>>>>>> 954b20c467b77aa7f7a497577ce6fbb093f84ef0
         <div class="semClassFormate"
-            ref="organisazionresultsparent"
+             ref="organisazionresultsparent"
              v-on:click="togglesemanticlass('ORGANIZATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.ORGANIZATION"
@@ -107,9 +69,9 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
-        </div> 
+        </div>
         <component is="researchresult"
-                    ref="organisazionresults"
+                   ref="organisazionresults"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:researchresult="researchresult"
@@ -123,8 +85,9 @@
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-on:saveresult="saveResult($event)">
         </component>
+
         <div class="semClassFormate"
-            ref="miscresultsparent"
+             ref="miscresultsparent"
              v-on:click="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.MISC"
@@ -135,7 +98,6 @@
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
         </div>
-
         <component is="researchresult"
                    ref="miscresults"
                    v-if="classestomark.MISC"
@@ -152,12 +114,12 @@
                    v-on:saveresult="saveResult($event)">
         </component>
     </div>
+
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
     import requests from './mixins/requests.js';
-
     export default {
         mixins: [filtertokenwithclass],
         props: {
@@ -224,7 +186,6 @@
                 });
             },
             togglesemanticlass: function (semClass) {
-
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('togglesemanticlass', this.classestomark);
             },
@@ -321,7 +282,7 @@
                 } else {
                     bb = null;
                 }
-                this.$emit('hoverlinesetoffsetend', bb);                
+                this.$emit('hoverlinesetoffsetend', bb);
             }
         },
         components: {
@@ -329,5 +290,4 @@
             requests
         }
     }
-
 </script>

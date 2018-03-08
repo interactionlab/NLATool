@@ -201,7 +201,7 @@ function updateNote(noteID, note) {
 
 router.get('/', function (req, res, next) {
     console.log(Tag + "load text " + req.session.docID);
-    if (req.session.docID == undefined){
+    if (req.session.docID == undefined) {
         res.redirect('/');
     } else {
         dbStub.fiberEstablishConnection();
@@ -353,11 +353,13 @@ function selectWithInnerJoin(docID) {
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     vueData.vueTokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     let corefs = getCorefs(docID);
-    for (let i = 0; i < vueData.vueTokens.length-1; i++) {
+    for (let i = 0; i < vueData.vueTokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
-            //console.log(JSON.stringify(vueData.vueTokens[i]));
+            //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
             if (vueData.vueTokens[i].textIndex === corefs[j].textIndex) {
-                vueData.vueTokens[i]['coref'] = [];
+                if(typeof  vueData.vueTokens[i].coref === 'undefined'){
+                    vueData.vueTokens[i]['coref'] = [];
+                }
                 vueData.vueTokens[i]['coref'].push({
                     mentionID: corefs[j].mentionID,
                     representative: corefs[j].representative,
@@ -430,7 +432,7 @@ function getCorefs(docID) {
         joinConditions: [{
             columnIndexes: [0, 1, 1],
             valueColumnIndexes: [2, 9, 10],
-            operator: ['=', '>=', '<='],
+            operator: ['=', '>=', '<'],
         }, {
             columnIndexes: [3],
             valueColumnIndexes: [12],
@@ -443,7 +445,7 @@ function getCorefs(docID) {
             operators: ['='],
         }
     };
-   // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
 }
 
