@@ -25,6 +25,7 @@
                         v-bind:tokens="vueTokens"
                         v-bind:selectedindexes="selectedtextindexes"
                         v-bind:classestomark="classesToMark"
+                        v-bind:style="{left: columnsizetoolbarpos+ '%'}"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:emitresearch="getResearch"
@@ -33,16 +34,18 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <component is="textviewcontrol"
-                       v-on:changescope="changeScope($event)"
-                       style="flex: 0;width: 100%;">
-            </component>
+            <div style="flex: 0;width: 100%; position: relative;">
+                <component is="textviewcontrol"
+                           v-on:changescope="changeScope($event)"
+                           v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}">
+                </component>
+            </div>
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div
                         style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
                         v-for="(col, colIndex) in tokenstoshow"
-                        v-bind:style="columnsize2">
+                        v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:col="col"
@@ -63,6 +66,7 @@
                                v-bind:selectedchain="selectedChain"
                                v-bind:showmode="showMode"
                                v-bind:contentcontrol="contentcontrol"
+                               v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
@@ -188,6 +192,9 @@
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
             },
+            movetoolbar: function (colIndex) {
+                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns)*100.0;
+            },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
             },
@@ -234,9 +241,7 @@
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
-                let tempSize = 100.0 / this.numberOfColumns;
-                this.columnsize2 = {width: tempSize + '%'};
-                //console.log('css Command: ' + this.columnsize2.width);
+                this.columnsize2  = 100.0 / this.numberOfColumns;
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
             },
