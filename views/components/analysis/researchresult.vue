@@ -3,9 +3,7 @@
     <div class="mdl-layout mdl-js-layout">  
         <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
-                <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%"
-                     v-if="everythingshow">
-
+                <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate">
@@ -47,36 +45,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mdl-cell mdl-cell--12-col" v-else>
-                    <div v-bind:class="{researchresulthover: hover}"
-                         v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate"
-                         v-on:click="showdetail">
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result !== 'undefined'">
-                            {{researchresult.result.name}}
-                        </div>
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result.description !== 'undefined'">
-                            {{researchresult.result.description.articleBody}}
-                        </div>
-                    </div>
-                    <div class="mdl-grid deleteSpaces">
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="saveResult">
-                                <i class="mdc-button">Save</i>
-                            </button>
-                        </div>
-                        <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="showallresults">
-                                <i class="mdc-button">Show All</i>
-                            </button>
                         </div>
                     </div>
                 </div>
