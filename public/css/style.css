@@ -387,12 +387,12 @@ pre {
 }
 
 .cHoverRepresentant {
-    background: #a6a6a6;
+    background: #dedede;
     border-bottom: 2px solid #FF7C72;
 }
 
 .cSelectedRepresentant {
-    background: yellow;
+    background: #FFE352;
     border-bottom: 2px solid #FF7C72;
 }
 
@@ -401,12 +401,12 @@ pre {
 }
 
 .cHoverReferent {
-    background: #a6a6a6;
+    background: #dedede;
     border-bottom: 2px solid #61A0FF;
 }
 
 .cSelectedReferent {
-    background: yellow;
+    background: #FFE352;
     border-bottom: 2px solid #61A0FF;
 }
 
@@ -433,7 +433,7 @@ pre {
 }
 
 .notemark {
-    background: yellow;
+    background: #FFE352;
 }
 
 .inputFieldNote {
