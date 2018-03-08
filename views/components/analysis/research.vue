@@ -10,7 +10,6 @@
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
-
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
@@ -56,7 +55,7 @@
             tokens: Array,
             docid: Number,
             selectedchain: Number,
-            mentions: Array
+            mentions: Array,
         },
         data: function () {
             return {
@@ -72,7 +71,7 @@
                 selectedchain: this.selectedchain,
                 mentions: this.mentions,
                 mapcoordinates: [],
-                sourceQuery: ''
+                sourceQuery: '',
             }
         },
         methods: {

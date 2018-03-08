@@ -1,10 +1,7 @@
 <template>
-    <div class="mdl_grid">
-        <div class="mdl-cell mdl-cell--2-col scopeButton icon-arrow-left"
-             v-on:click="changeScope(true)"></div>
-        <div class="mdl-cell mdl-cell--2-col scopeButton icon-arrow-right"
-             id="forwardScopeButton"
-             v-on:click="changeScope(false)">
+    <div class="mdl_grid" style="position: relative;">
+        <div class="mdl-cell mdl-cell--6-col scopeButton icon-arrow-left" v-on:click="changeScope(true)"></div>
+        <div class="mdl-cell mdl-cell--6-col scopeButton icon-arrow-right" style="text-align: right;" id="forwardScopeButton" v-on:click="changeScope(false)">
         </div>
     </div>
 </template>

@@ -200,8 +200,13 @@ function updateNote(noteID, note) {
 }
 
 router.get('/', function (req, res, next) {
-    dbStub.fiberEstablishConnection();
-    wait.launchFiber(getAndShowText, req, res, next);
+    console.log(Tag + "load text " + req.session.docID);
+    if (req.session.docID == undefined){
+        res.redirect('/');
+    } else {
+        dbStub.fiberEstablishConnection();
+        wait.launchFiber(getAndShowText, req, res, next);
+    }
 });
 
 router.get('/a', function (req, res, next) {

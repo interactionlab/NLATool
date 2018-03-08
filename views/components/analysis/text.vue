@@ -2,16 +2,9 @@
     <span v-bind:name="tobejumped"
           v-on:mousedown="startSelection"
           v-on:mouseup="endSelection"
-          v-on:mouseover="tohover = true"
+          v-on:mouseover="tohover = true"          
           v-on:mouseout="stophover">
-        <span class="nonPreAlt specialBracket"
-              v-bind:class="toHighlight">{{beginBrackets}}</span
-        ><span class="nonPreAlt"
-               v-bind:class="toHighlight">{{token.content}}</span
-    ><span class="nonPreAlt specialBracket"
-           v-bind:class="toHighlight">{{endBrackets}}</span
-    ><span class="preAlt "
-           v-bind:class="classToHighlightGap">{{getWordGap}}</span>
+        <span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt " v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
 </template>
 
@@ -278,6 +271,21 @@
             stophover: function () {
                 this.tohover = false;
                 this.$emit('hoverchain', -1);
+            },
+            
+            hover: function (event) {
+                //console.log("Word id: " + this.index);
+                if (this.token.semanticClass == "O"){
+                    return;
+                }
+                //var mentionid = this.mention[0].mentionID;
+                
+                console.log();
+                
+                var offsets = event.target.getBoundingClientRect();
+                if (this.token.content != "" && this.token.content != " "&& this.token.content != "]" && this.token.content != "["){
+                    this.$emit('hoverlinesetoffsetstart', [offsets, [this.token.content, this.token.semanticClass]]);
+                }
             }
         }
     }
