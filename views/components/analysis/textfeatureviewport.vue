@@ -106,7 +106,7 @@
                 textcolumnposition: this.textcolumnposition,
                 tokenstoshow: this.tokenstoshow,
                 contentcontrol: this.contentcontrol,
-                hoveredentitiy: "",
+                hoveredentitiy: [],
             }
         },
         methods: {
@@ -166,13 +166,48 @@
             },
             hoverlinesetoffsetstart: function (event) {
                 let offsets = event[0];
-                this.hoveredentitiy = event[1];
+                let token = event[1];
+                let found = false;
+                let next = token.textIndex + 1;
+                let prev = token.textIndex - 1;
+                let completeEntity = [];
+                completeEntity.push(token);
+                while (!found) {
+                    if (typeof this.tokens[next] !== 'undefined' && this.tokens[next].semanticClass === token.semanticClass) {
+                        completeEntity.push(this.tokens[next]);
+                        found = false;
+                        next++;
+                    } else {
+                        found = true;
+                    }
+                    if (typeof this.tokens[prev] !== 'undefined' && this.tokens[prev].semanticClass === token.semanticClass) {
+                        completeEntity.push(this.tokens[prev]);
+                        found = false;
+                        prev--;
+                    } else {
+                        found = true;
+                    }
+                }
+                completeEntity.sort(this.dynamicSort('textIndex'));
+                console.log('Complete Entity: ' + JSON.stringify(completeEntity));
+                this.hoveredentitiy = completeEntity;
                 //console.log("hoveredentitiy in emit reciver: " + this.hoveredentitiy);
                 this.$emit('setoffsetstart', [offsets, this.hoveredentitiy]);
             },
             hoverlinesetoffsetend: function (event) {
                 console.log("TextFeatureViewPort: " + event);
                 this.$emit('hoverlinesetoffsetend', event);
+            },
+            dynamicSort: function (property) {
+                let sortOrder = 1;
+                if (property[0] === "-") {
+                    sortOrder = -1;
+                    property = property.substr(1);
+                }
+                return function (a, b) {
+                    let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                    return result * sortOrder;
+                }
             },
         },
         components: {

@@ -130,8 +130,8 @@
             title: function () {
                 let title = '';
                 if (typeof this.sourcequery !== 'undefined') {
-                    if (typeof this.sourcequery.name !== 'undefined') {
-                        title = title + this.sourcequery.name;
+                    if (typeof this.sourcequery.query !== 'undefined') {
+                        title = title + this.sourcequery.query;
                         if (typeof this.sourcequery.freq !== 'undefined') {
                             title = title + ' (' + this.sourcequery.freq + ') ';
                         }
