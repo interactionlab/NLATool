@@ -1,12 +1,14 @@
 <template>
-    <form action="/signin/login" method="post">
+    <form action="/signin" method="post">
         <div class="mdl-card__supporting-text">
-            <div class="mdl-textfield mdl-js-textfield" style="width:100%">
-                <input class="mdl-textfield__input" type="text" id="username" name="user">
+        
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+                <input class="mdl-textfield__input" type="text" id="username" name="user" required>
                 <label class="mdl-textfield__label" for="username">Username</label>
+                <span class="mdl-textfield__error">{{errormsg}}</span>
             </div>
-            <div class="mdl-textfield mdl-js-textfield" style="width:100%">
-                <input class="mdl-textfield__input" type="password" id="userpass" name="pass">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="width:100%">
+                <input class="mdl-textfield__input" type="password" id="userpass" name="pass" required>
                 <label class="mdl-textfield__label" for="userpass">Password</label>
             </div>            
         </div>
@@ -18,7 +20,13 @@
 
 <script>
     export default {
-        name: "login"
+        name: "login",
+        props: {
+            errormsg: Object
+        },
+        data: function () {
+            return {}
+        },
         
      }
 </script>
