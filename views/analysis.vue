@@ -1,5 +1,5 @@
 <template>
-    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="overflow:hidden">
         <component
                 is="mainheader"
                 v-bind:title="title"
