@@ -33,7 +33,7 @@
             tokenstoshow: Array,
             colindex: Number,
             contentcontrol: Object,
-            hoveredentitiy: String,
+            hoveredentitiy: Array,
         },
         data: function () {
             return {

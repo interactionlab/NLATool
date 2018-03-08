@@ -197,8 +197,7 @@
                     }
                 }
                 return resultingBrackets;
-            }
-            ,
+            },
             getWordGap: function () {
                 //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
                 //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
@@ -238,8 +237,7 @@
                         break;
                     }
                 }
-            }
-            ,
+            },
             getMentionInfo: function () {
                 //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
                 //console.log('getMentionInfo');
@@ -260,35 +258,31 @@
                         }
                     }
                 }
-            }
-            ,
+            },
             startSelection: function () {
                 this.$emit('startselection', this.index - 1);
-            }
-            ,
+            },
             endSelection: function () {
                 this.$emit('endselection', this.index);
-            }
-            ,
+            },
             stophover: function () {
                 this.tohover = false;
                 this.$emit('hoverchain', -1);
-            }
-            ,
-
+                this.$emit('hoverlinesetoffsetstart', [-1, {}]);
+            },
             hover: function (event) {
+                this.tohover = true;
                 //console.log("Word id: " + this.index);
-                if (this.token.semanticClass == "O") {
+                if (this.token.semanticClass === "O") {
                     return;
                 }
                 //var mentionid = this.mention[0].mentionID;
 
-                console.log();
-
                 var offsets = event.target.getBoundingClientRect();
-                if (this.token.content != "" && this.token.content != " " && this.token.content != "]" && this.token.content != "[") {
-                    this.$emit('hoverlinesetoffsetstart', [offsets, [this.token.content, this.token.semanticClass]]);
-                }
+                this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);
+                //if (this.token.content != "" && this.token.content != " " && this.token.content != "]" && this.token.content != "[") {
+                //    this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);
+                //}
             }
         }
     }
