@@ -91,7 +91,7 @@
     import tex from './components/analysis/text.vue';
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
-
+    import linetohover from './components/analysis/linetohover.vue';
     export default {
         data: function () {
             return {
@@ -127,7 +127,9 @@
                 numberOfColumns: 0,
                 splitted: [],
                 tokenstoshow: [],
-                columnsize2: {width: '100%'},
+
+                columnsize2: 100,
+                columnsizetoolbarpos: 0,
                 textcolumnposition: {
                     start: -1,
                     end: -1,
@@ -396,7 +398,8 @@
             tex,
             variablehelper,
             textfeatureviewport,
-            textviewcontrol
+            textviewcontrol,
+            linetohover
         }
     }
 </script>

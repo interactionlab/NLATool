@@ -2,6 +2,7 @@
     body {
         font-size: 1em;
         line-height: 1.3;
+        overflow: hidden;
     }
 
     p {
@@ -309,6 +310,7 @@ pre {
 
 .specialBracket {
     font-weight: bold;
+    color: #7D7D7D;
 
 }
 
@@ -336,40 +338,40 @@ pre {
 
 /** semantic Class highlight for results */
 .PERSON_BORDERED {
-    border-left: #ff6666 4px solid;
-    padding: 10px 10px 10px 10px;
+    border-left: #9DD6B8 4px solid;
+    padding: 0.4em;
 }
 
 .LOCATION_BORDERED {
-    border-left: #8cd98c 4px solid;
-    padding: 10px 10px 10px 10px;
+    border-left: #E9DBFF 4px solid;
+    padding: 0.4em;
 }
 
 .ORGANIZATION_BORDERED {
-    border-left: #66a3ff 4px solid;
-    padding: 10px 10px 10px 10px;
+    border-left: #FFDBC5 4px solid;
+    padding: 0.4em;
 }
 
 .MISC_BORDERED {
-    border-left: #e699ff 4px solid;
-    padding: 10px 10px 10px 10px;
+    border-left: #FFFFC6 4px solid;
+    padding-left: 0.4em;
 }
 
 /**semantic Class highlight in Text*/
 .PERSON {
-    background: #ff6666;
+    background: #9DD6B8;
 }
 
 .LOCATION {
-    background: #8cd98c;
+    background: #E9DBFF;
 }
 
 .ORGANIZATION {
-    background: #66a3ff;
+    background: #FFDBC5;
 }
 
 .MISC {
-    background: #e699ff;
+    background: #FFFFC6;
 }
 
 .POS {
@@ -377,35 +379,35 @@ pre {
 }
 
 .coref {
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid #FF7C72;
 }
 
 .cRepresentant {
-    border-bottom: 2px solid red;
-}
-
-.cReferent {
-    border-bottom: 2px solid blue;
+    border-bottom: 2px solid #FF7C72;
 }
 
 .cHoverRepresentant {
     background: #a6a6a6;
-    border-bottom: 2px solid red;
-}
-
-.cHoverReferent {
-    background: #a6a6a6;
-    border-bottom: 2px solid blue;
+    border-bottom: 2px solid #FF7C72;
 }
 
 .cSelectedRepresentant {
     background: yellow;
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid #FF7C72;
+}
+
+.cReferent {
+    border-bottom: 2px solid #61A0FF;
+}
+
+.cHoverReferent {
+    background: #a6a6a6;
+    border-bottom: 2px solid #61A0FF;
 }
 
 .cSelectedReferent {
     background: yellow;
-    border-bottom: 2px solid blue;
+    border-bottom: 2px solid #61A0FF;
 }
 
 .nested {

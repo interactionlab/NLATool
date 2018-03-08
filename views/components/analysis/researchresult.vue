@@ -1,9 +1,9 @@
 <template> <!--editordocument in 8080-->
 
-    <div class="mdl-layout mdl-js-layout">
+    <div class="mdl-layout mdl-js-layout">  
         <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
-                <div class="mdl-cell mdl-cell--12-col"
+                <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%"
                      v-if="everythingshow">
 
                     <div v-bind:class="generalstyleclass"
@@ -26,34 +26,32 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.img">
-                                <img v-if="typeof researchresult.result.image !== 'undefined'"
-                                     v-bind:src="researchresult.result.image.contentUrl"/>
-                            </div>
-
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.map">
-                                <component is="googlemap"
-                                           v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="mapkey">
-                                </component>
-                            </div>
-                            <div v-if="contentcontrol.information">
-                                <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                    {{researchresult.result.description.articleBody}}
+                            <div class="mdl-cell mdl-cell--12-col deleteSpaces">
+                                <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
+                                     v-bind:src="researchresult.result.image.contentUrl"
+                                     style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
+                                <div style="float: left; width: 30%; margin-right: 1em;">
+                                    <component is="googlemap" v-if="contentcontrol.map"
+                                               v-bind:mapcoordinates="mapcoordinates"
+                                               v-bind:index="mapkey"
+                                               >
+                                    </component>
                                 </div>
+                                <div v-if="contentcontrol.information">
+                                    <div v-if="typeof researchresult.result.description !== 'undefined'">
+                                        {{researchresult.result.description.articleBody}}
+                                    </div>
 
-                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                    {{researchresult.result.detailedDescription.articleBody}}
+                                    <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
+                                        {{researchresult.result.detailedDescription.articleBody}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="mdl-cell mdl-cell--12-col"
-                     v-else>
+                <div class="mdl-cell mdl-cell--12-col" v-else>
                     <div v-bind:class="{researchresulthover: hover}"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
@@ -100,7 +98,7 @@
             mapcoordinates: Array,
             sourcequery: String,
             semclass: String,
-            contentcontrol: Object,
+            contentcontrol: Object
         },
         data: function () {
             return {
@@ -115,7 +113,7 @@
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
                 mapkey: this.mapkey,
-                contentcontrol: this.contentcontrol,
+                contentcontrol: this.contentcontrol
             }
         },
         methods: {

@@ -19,6 +19,9 @@ const expressVue = require('express-vue');
 
 const app = express();
 
+const dbStub = require('./modules/db_stub');
+dbStub.fiberEstablishConnection();
+
 if (process.env.NODE_ENV === 'production') {
     //its production so use the minimised production build of vuejs
     vueScript = 'https://unpkg.com/vue';
@@ -123,7 +126,10 @@ app.use(function (err, req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 let server = app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + server.address().port);
+    var ipVerson = "ipV4";
+    if (server.address().address == "::")
+        ipVerson = "ipV6";
+    console.log('Express server listening on ' + ipVerson + ' http://' + server.address().address + ":" + server.address().port);
 });
 
 
