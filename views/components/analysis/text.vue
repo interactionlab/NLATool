@@ -5,13 +5,14 @@
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
         <span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
+            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight"
+                                                                                                              v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
 <script>
     export default {
         props: {
             token: Object,
-            tokens: Array,
+            prevtoken: Object,
             index: Number,
             classestomark: Object,
             selectedindexes: Object,
@@ -23,7 +24,7 @@
         data: function () {
             return {
                 token: this.token,
-                tokens: this.tokens,
+                prevtoken: this.prevtoken,
                 index: this.index,
                 classestomark: this.classestomark,
                 selectedindexes: this.selectedindexes,                
@@ -158,7 +159,7 @@
                         }
                     }
                     //TODO: check for consistency
-                    if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
+                    if (this.prevtoken !== null && this.prevtoken.semanticClass === this.token.semanticClass) {
                         htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     }
                 } catch (err) {
@@ -191,12 +192,14 @@
                 return resultingBrackets;
             },
             getWordGap: function () {
-                let token = this.tokens[this.index];
-                let word1OffsetEnd = this.tokens[this.index - 1].EndOffSet;
-                let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
+                if(this.prevtoken === null){
+                    return '';
+                }
+                let word1OffsetEnd = this.prevtoken.EndOffSet;
+                let whitespaceInfo = this.prevtoken.whitespaceInfo;
                 let word2OffsetBegin = -1;
                 try {
-                    word2OffsetBegin = token.beginOffSet;
+                    word2OffsetBegin = this.token.beginOffSet;
                 } catch (err) {
                 }
                 //default Setting: 1 space * difference between Offsets
@@ -220,14 +223,14 @@
             entitytoline:{
                 handler: function(newEntitytoline)
                 {
-                    let found = false
+                    let found = false;
                     for (let i = 0; i < newEntitytoline.length; i++){
-                        if (newEntitytoline[i].textIndex == this.token.textIndex){
+                        if (newEntitytoline[i].textIndex === this.token.textIndex){
                             this.isEntityHovered = true;
                             found = true;
                         }
                     }  
-                    if (found == false) {
+                    if (found === false) {
                         this.isEntityHovered = false;
                     }
                     
