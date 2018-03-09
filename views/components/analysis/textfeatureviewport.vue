@@ -14,12 +14,10 @@
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
                                v-bind:tokens="tokens"
-                               v-bind:mentions="mentions"
                                v-bind:index="generatetrueindex(i+1)"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
-                               v-bind:nestedmentions="nestedmentions"
                                v-bind:selectedchain="selectedchain"
                                v-bind:entityindextoline="entityindextoline"
                                v-bind:entitytoline="entitytoline"
@@ -77,7 +75,6 @@
             tokens: Array,
             notes: Array,
             mentions: Array,
-            nestedmentions: Array,
             selectedindexes: Object,
             selectedchain: Number,
             hoveredchain: Number,
@@ -100,7 +97,6 @@
                 tokens: this.tokens,
                 notes: this.notes,
                 mentions: this.mentions,
-                nestedmentions: this.nestedmentions,
                 selectedindexes: this.selectedindexes,
                 selectedchain: this.selectedchain,
                 hoveredchain: this.hoveredchain,

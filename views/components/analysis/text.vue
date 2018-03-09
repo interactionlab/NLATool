@@ -5,21 +5,18 @@
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
         <span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
+            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
 <script>
     export default {
         props: {
             token: Object,
             tokens: Array,
-            mentions: Array,
             index: Number,
             classestomark: Object,
             selectedindexes: Object,
             hoveredchain: Number,
             selectedchain: Number,
-            nestedmentions: Object,
-            endOfMentions: Object,
             entityindextoline: Number,
             entitytoline: Array,
         },
@@ -27,26 +24,17 @@
             return {
                 token: this.token,
                 tokens: this.tokens,
-                mentions: this.mentions,
                 index: this.index,
                 classestomark: this.classestomark,
-                selectedindexes: this.selectedindexes,
-                htmlclass: {},
-                markgap: false,
-                tohover: false,
+                selectedindexes: this.selectedindexes,                
                 hoveredchain: this.hoveredchain,
                 selectedchain: this.selectedchain,
-                nestedmentions: this.nestedmentions,
-                color: this.color,
-                endOfMentions: this.endOfMentions,
-                nested: false,
-                mention: [],
-                nextmention: false,
                 entitytoline: this.entitytoline,
+                htmlclass: {},
+                tohover: false,
                 isEntityHovered: false,
             }
         },
-
         computed: {
             tobejumped: function () {
                 if (this.index === this.selectedindexes.start) {
@@ -62,7 +50,6 @@
                     htmlclass['notemark'] = false;
                 }
                 if (typeof this.token.coref !== 'undefined') {
-                    //console.log('highlight: ' + this.index + ' mention:' + JSON.stringify(this.mention));
                     if (this.classestomark.coref) {
                         for (let i = 0; i < this.token.coref.length; i++) {
                             if (!this.tohover) {
@@ -108,16 +95,13 @@
                 else {
                     htmlclass[this.token.semanticClass + "_strong"] = false;
                     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass]; 
-                }
-                
+                }                
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
                     htmlclass['POS'] = this.classestomark['POS'];
-                    //console.log(JSON.stringify(this.classestomark));
                 } else {
-                    //console.log("else" + JSON.stringify(this.classestomark));
                 }
                 return htmlclass
             },
@@ -137,6 +121,7 @@
                     }
                     if (typeof this.token.coref !== 'undefined') {
                         if (this.classestomark.coref) {
+                            console.log(this.token.coref.length);
                             for (let i = 0; i < this.token.coref.length; i++) {
                                 if (this.token.coref[i].endIndex-1 > this.token.textIndex) {
                                     if (!this.tohover) {
@@ -206,9 +191,6 @@
                 return resultingBrackets;
             },
             getWordGap: function () {
-                //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
-                //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
-                //console.log('word2: ' + JSON.stringify(this.tokens[this.index]));
                 let token = this.tokens[this.index];
                 let word1OffsetEnd = this.tokens[this.index - 1].EndOffSet;
                 let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
@@ -216,28 +198,22 @@
                 try {
                     word2OffsetBegin = token.beginOffSet;
                 } catch (err) {
-                    //console.log('offsetBegin is not defined');
                 }
                 //default Setting: 1 space * difference between Offsets
                 let gap = '';
                 if (word2OffsetBegin !== -1) {
                     if (whitespaceInfo === -10) {
-                        //console.log('offsets: ' + word1OffsetEnd + ' ' + word2OffsetBegin);
-                        for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
-                            gap = gap + ' ';
-                        }
+                        gap = Array(word2OffsetBegin - word1OffsetEnd +1).join(" ");
                     }
                 }
                 return gap;
             }
         },
-        mounted() {
-        },
         watch:{
             entityindextoline:function (newIndex) {
                 if(newIndex === this.token.textIndex){
-                    this.$refs["word"].scrollIntoView();
-                    let offsets =  this.$refs["word"].getBoundingClientRect();
+                    this.$el.scrollIntoView();
+                    let offsets =  this.$el.getBoundingClientRect();
                     this.$emit('setoffsetstart', [offsets, this.token, "research"]);
                 }
             },
@@ -282,7 +258,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>
