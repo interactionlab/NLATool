@@ -207,7 +207,6 @@
                     if (limit > 1) {
                         // this[semClass].push(this.rerankWithKeywords());
                     } else {
-                        //console.log('Response for Research: ' + JSON.stringify(response));
                         this[semClass].push(response.itemListElement[0]);
                         //console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
                     }
