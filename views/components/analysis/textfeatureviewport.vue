@@ -46,7 +46,7 @@
                             v-bind:showmode="showmode"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
-                            v-bind:hoveredentitiy="hoveredentitiy"
+                            v-bind:entitytoline="entitytoline"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
                             v-on:jumpmarktext="selectText2($event)">
@@ -106,7 +106,7 @@
                 textcolumnposition: this.textcolumnposition,
                 tokenstoshow: this.tokenstoshow,
                 contentcontrol: this.contentcontrol,
-                hoveredentitiy: [],
+                entitytoline: [],
             }
         },
         methods: {
@@ -172,10 +172,10 @@
                     }
                 }
                 completeEntity.sort(this.dynamicSort('textIndex'));
-                //console.log('Complete Entity: ' + JSON.stringify(completeEntity));
-                this.hoveredentitiy = completeEntity;
-                //console.log("hoveredentitiy in emit reciver: " + this.hoveredentitiy);
-                this.$emit('setoffsetstart', [offsets, this.hoveredentitiy]);
+                console.log('Complete Entity: ' + JSON.stringify(completeEntity));
+                this.entitytoline = completeEntity;
+                //console.log("entitytoline in emit reciver: " + this.entitytoline);
+                this.$emit('setoffsetstart', [offsets, this.entitytoline]);
             },
             hoverlinesetoffsetend: function (event) {
                 this.$emit('hoverlinesetoffsetend', event);

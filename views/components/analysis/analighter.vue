@@ -8,7 +8,7 @@
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
-                   v-bind:hoveredentitiy="hoveredentitiy"
+                   v-bind:entitytoline="entitytoline"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
                    v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
 
@@ -33,7 +33,7 @@
             tokenstoshow: Array,
             colindex: Number,
             contentcontrol: Object,
-            hoveredentitiy: Array,
+            entitytoline: Array,
         },
         data: function () {
             return {
@@ -45,7 +45,7 @@
                 tokenstoshow:this.tokenstoshow,
                 colindex:this.colindex,
                 contentcontrol:this.contentcontrol,
-                hoveredentitiy:this.hoveredentitiy,
+                entitytoline:this.entitytoline,
             }
         },
         methods: {

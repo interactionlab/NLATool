@@ -193,7 +193,7 @@
                 this.hoveredChain = chain;
             },
             movetoolbar: function (colIndex) {
-                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns)*100.0;
+                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns) * 100.0;
             },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
@@ -241,7 +241,7 @@
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
-                this.columnsize2  = 100.0 / this.numberOfColumns;
+                this.columnsize2 = 100.0 / this.numberOfColumns;
                 this.showTokens(this.numberOfColumns, this.numberOfColumns);
 
             },
@@ -361,8 +361,9 @@
                 }
             },
             setoffsetstart: function (event) {
+                console.log('setOffset: ' + event[0]);
                 this.offsetstart = event[0];
-                //let hoveredentitiy = event[1];
+                //let entitytoline = event[1];
 
             },
             hoverlinesetoffsetend: function (event) {
@@ -385,20 +386,40 @@
                         if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                             for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
                                 if (typeof this.tokens[i].coref !== 'undefined') {
-                                    this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                    if (this.tokens[i].coref[0].representative === -1) {
+                                        this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                    }else{
+                                        this.selectedChain = this.tokens[i].coref[0].representative;
+                                    }
                                     for (let j = 0; j < this.tokens[i].coref.length; j++) {
                                         if (this.tokens[i].coref[j].kind === 'outer') {
-                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                            if (this.tokens[i].coref[0].representative === -1) {
+                                                this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                            }else{
+                                                this.selectedChain = this.tokens[i].coref[0].representative;
+                                            }
                                             break;
                                         } else if (this.tokens[i].coref[j].kind === 'inner') {
                                             if (this.tokens[i].coref[j].endIndex >= newSelectedIndexes.end) {
-                                                this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                                if (this.tokens[i].coref[0].representative === -1) {
+                                                    this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                                }else{
+                                                    this.selectedChain = this.tokens[i].coref[0].representative;
+                                                }
                                                 break;
                                             }
                                         } else if (this.tokens[i].coref[j].kind === 'first') {
-                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                            if (this.tokens[i].coref[0].representative === -1) {
+                                                this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                            }else{
+                                                this.selectedChain = this.tokens[i].coref[0].representative;
+                                            }
                                         } else if (this.tokens[i].coref[j].kind === 'second') {
-                                            this.selectedChain = this.tokens[i].coref[j].mentionID;
+                                            if (this.tokens[i].coref[0].representative === -1) {
+                                                this.selectedChain = this.tokens[i].coref[0].mentionID;
+                                            }else{
+                                                this.selectedChain = this.tokens[i].coref[0].representative;
+                                            }
                                             break;
                                         }
                                     }
