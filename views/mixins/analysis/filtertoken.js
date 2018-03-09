@@ -21,7 +21,6 @@ module.exports = {
             }
             return resultingtokens;
         },
-
         uniqCount: function (arr) {
             let entity = [], frequency = [], prev;
 
@@ -36,28 +35,6 @@ module.exports = {
                 }
                 prev = arr[i];
             }
-
-            //check for substrings, not accurate for many texts
-            /*
-            for (let j = 0; j < entity.length; j++) {
-                for (let k = 0; k < entity.length; k++) {
-                    if (entity[j] !== entity[k]) {
-                        if (entity[j].includes(entity[k])) {
-                            frequency[j] += frequency[k];
-                            entity.splice(k, 1);
-                            frequency.splice(k, 1);
-                            if(j!== 0) {
-                                j--;
-                            }
-                            if(k!==0) {
-                                k--;
-                            }
-                        }
-                    }
-                }
-            }
-*/
-
             for (let j = 0; j < entity.length; j++) {
                 entity[j] = {name: entity[j], freq: frequency[j]};
             }
