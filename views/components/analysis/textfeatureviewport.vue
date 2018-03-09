@@ -21,10 +21,11 @@
                                v-bind:hoveredchain="hoveredchain"
                                v-bind:nestedmentions="nestedmentions"
                                v-bind:selectedchain="selectedchain"
+                               v-bind:entityindextoline="entityindextoline"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
                                v-on:endselection="endselection($event)"
-                               v-on:hoverlinesetoffsetstart="hoverlinesetoffsetstart($event)">
+                               v-on:setoffsetstart="setoffsetstart($event)">
                     </component>
                 </div>
             </div>
@@ -49,7 +50,8 @@
                             v-bind:entitytoline="entitytoline"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
-                            v-on:jumpmarktext="selectText2($event)">
+                            v-on:jumpmarktext="selectText2($event)"
+                            v-on:pickresearchresult="pickresearchresult($event)">
                     </component>
                 </keep-alive>
             </div>
@@ -107,6 +109,7 @@
                 tokenstoshow: this.tokenstoshow,
                 contentcontrol: this.contentcontrol,
                 entitytoline: [],
+                entityindextoline: -1
             }
         },
         methods: {
@@ -147,7 +150,7 @@
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
-            hoverlinesetoffsetstart: function (event) {
+            setoffsetstart: function (event) {
                 let offsets = event[0];
                 let token = event[1];
                 let found = false;
@@ -190,6 +193,9 @@
                     let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
                     return result * sortOrder;
                 }
+            },
+            pickresearchresult:function (textIndex) {
+                this.entityindextoline = textIndex;
             },
         },
         components: {
