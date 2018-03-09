@@ -33,10 +33,10 @@
 
 
                 <!--<div class="mdc-switch contentColor" style="border: white 2px">-->
-                    <!--<input v-on:click="toggleSuggestions()" type="checkbox" id="basic-switch" class="mdc-switch__native-control" />-->
-                    <!--<div class="mdc-switch__background">-->
-                        <!--<div class="mdc-switch__knob"></div>-->
-                    <!--</div>-->
+                <!--<input v-on:click="toggleSuggestions()" type="checkbox" id="basic-switch" class="mdc-switch__native-control" />-->
+                <!--<div class="mdc-switch__background">-->
+                <!--<div class="mdc-switch__knob"></div>-->
+                <!--</div>-->
                 <!--<label for="basic-switch" class="mdc-switch-label">Show suggestions</label>-->
                 <!--</div>-->
 
@@ -44,7 +44,8 @@
         </div>
         <div v-if="selectedtokens.length === 0" class="mdl-grid">
             <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. </p>
-            <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most likely ones not to be classified. </p>
+            <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most
+                likely ones not to be classified. </p>
         </div>
 
     </div>
@@ -56,12 +57,14 @@
     export default {
         mixins: [getselectedtext],
         props: {
+            serverip: String,
             tokens: Array,
             selectedindexes: Object,
             docid: String,
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 showNewClasses: false,
                 tokens: this.tokens,
                 selectedtokens: [],
@@ -78,15 +81,15 @@
                 handler: function (newselectedindexes) {
                     this.selectedtokens =
                         this.gettokensofselectedtext(this.tokens, newselectedindexes);
-                    for(let i = 0; i < this.selectedtokens.length; i++){
+                    for (let i = 0; i < this.selectedtokens.length; i++) {
                         this.classesPerToken[i] = false;
                     }
                 },
                 deep: true
             }
         },
-        computed:{
-            shownclassespertoken:function () {
+        computed: {
+            shownclassespertoken: function () {
                 return this.classesPerToken[this.index];
             },
             semclassofselected: function () {
@@ -103,7 +106,7 @@
             changeClass: function (newClass) {
                 //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
                 this.selectedtokens[0].semanticClass = newClass;
-                let socket = io('http://localhost:8080');
+                let socket = io(this.serverip + ':8080');
                 socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },
             toggleSuggestions: function () {

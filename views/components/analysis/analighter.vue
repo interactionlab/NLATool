@@ -1,6 +1,7 @@
 <template>
     <div>
         <component :is="showmode"
+                   v-bind:serverip="serverip"
                    v-bind:tokens="tokens"
                    v-bind:colindex="colindex"
                    v-bind:tokenstoshow="tokenstoshow"
@@ -26,6 +27,7 @@
     export default {
 
         props: {
+            serverip: String,
             tokens: Array,
             selectedindexes: Object,
             showmode: String,
@@ -39,6 +41,7 @@
         data: function () {
             return {
                 tokens: this.tokens,
+                serverip: this.serverip,
                 showmode: this.showmode,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,

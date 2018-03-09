@@ -34,6 +34,7 @@
                 <keep-alive>
                     <component
                             :is="analysismode"
+                            v-bind:serverip="serverip"
                             v-bind:tokens="tokens"
                             v-bind:tokenstoshow="tokenstoshow"
                             v-bind:colindex="colindex"
@@ -67,6 +68,7 @@
 
     export default {
         props: {
+            serverip: String,
             col: Array,
             colindex: Number,
             splitted: Array,
@@ -89,6 +91,7 @@
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 col: this.col,
                 colindex: this.colindex,
                 splitted: this.splitted,

@@ -2,6 +2,7 @@
     <component :is="changing"
                v-bind:newtitle="newtitle"
                v-bind:document="document"
+               v-bind:serverip="serverip"
                v-bind:displayloading="displayloading"
                v-on:editing="editing($event)"
                v-on:deleted="deleted($event)"
@@ -15,7 +16,8 @@
 
     export default {
         props: {
-            document: Object,   
+            document: Object,
+            serverip: String,
             displayloading : String,
         },
         data: function () {
@@ -23,6 +25,7 @@
                 document: this.document,
                 changing: 'showdoc',
                 newtitle: '',
+                serverip: this.serverip,
                 displayloading : this.displayloading
             }
         },
