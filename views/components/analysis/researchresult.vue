@@ -6,7 +6,8 @@
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate">
+                         v-on:mouseover="accentuate"
+                        v-on:click="">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
