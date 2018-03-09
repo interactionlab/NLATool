@@ -161,10 +161,6 @@
                     //console.log('sortedTokens before getting the query: ' + JSON.stringify(this.sortedtokens[index][i]));
                     for (let j = 0; j < this.sortedtokens[index][i].length; j++) {
                         for (let k = 0; k < this.sourcequery[index].length; k++) {
-                            // console.log('Was searched: '
-                            //     + this.sourcequery[index][k].query + ':'
-                            //     + this.sortedtokens[index][i][j].content
-                            //     + this.sourcequery[index][k].query.indexOf(this.sortedtokens[index][i][j].content));
                             if (this.sourcequery[index][k].query.indexOf(this.sortedtokens[index][i][j].content) !== -1) {
                                 searched = true;
                             }
