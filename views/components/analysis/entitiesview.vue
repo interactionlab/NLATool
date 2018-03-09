@@ -251,7 +251,7 @@
                         } else {
                             bb = this.$refs["personresultsparent"].getBoundingClientRect()
                         }
-                    } else if (newValue[0].semanticClass === 'PERSON') {
+                    } else if (newValue[0].semanticClass === 'LOCATION') {
                         if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 if (this.$refs.locationresults[i].sourcequery.query === newWord) {
