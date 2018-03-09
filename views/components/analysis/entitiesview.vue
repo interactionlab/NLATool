@@ -28,7 +28,7 @@
                    v-bind:semclass="borderedClasses[0]"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-on:saveresult="saveResult($event)"
-            v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:pickresearchresult="pickresearchresult($event)">
         </component>
         <div class="semClassFormate"
              ref="locationresultsparent"
@@ -151,7 +151,7 @@
             }
         },
         methods: {
-            pickresearchresult:function (textIndex) {
+            pickresearchresult: function (textIndex) {
                 this.$emit('pickresearchresult', textIndex);
             },
             log: function () {
