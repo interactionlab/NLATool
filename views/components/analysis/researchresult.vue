@@ -1,13 +1,13 @@
 <template> <!--editordocument in 8080-->
 
-    <div class="mdl-layout mdl-js-layout">  
+    <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content deleteSpaces contentColor separate">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                        v-on:click="pickResearchResult">
+                         v-on:click="showdetail">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
@@ -33,7 +33,7 @@
                                     <component is="googlemap" v-if="contentcontrol.map"
                                                v-bind:mapcoordinates="mapcoordinates"
                                                v-bind:index="mapkey"
-                                               >
+                                    >
                                     </component>
                                 </div>
                                 <div v-if="contentcontrol.information">
@@ -91,7 +91,16 @@
                 this.showallon = false;
             },
             showdetail: function () {
-                this.everythingshow = !this.everythingshow;
+                console.log('showdetail check' + JSON.stringify(this.contentcontrol));
+                if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
+                    this.contentcontrol.img = false;
+                    this.contentcontrol.map = false;
+                    this.contentcontrol.information = false;
+                } else {
+                    this.contentcontrol.img = true;
+                    this.contentcontrol.map = true;
+                    this.contentcontrol.information = true;
+                }
             },
             accentuate: function () {
                 this.hover = !this.hover;
@@ -114,7 +123,7 @@
             },
             editResearch: function () {
             },
-            pickResearchResult:function () {
+            pickResearchResult: function () {
                 let textIndex = this.sourcequery.source[0].textIndex;
                 this.$emit('pickresearchresult', textIndex);
             }
