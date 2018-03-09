@@ -338,40 +338,76 @@ pre {
 
 /** semantic Class highlight for results */
 .PERSON_BORDERED {
-    border-left: #9DD6B8 4px solid;
+    border-left: #fae8e1 4px solid;
+    padding: 0.4em;
+}
+
+.PERSON_BORDERED_strong {
+    border-left: #ed906c 4px solid;
     padding: 0.4em;
 }
 
 .LOCATION_BORDERED {
-    border-left: #E9DBFF 4px solid;
+    border-left: #faf4e1 4px solid;
+    padding: 0.4em;
+}
+
+.LOCATION_BORDERED_strong {
+    border-left: #edcd6c 4px solid;
     padding: 0.4em;
 }
 
 .ORGANIZATION_BORDERED {
-    border-left: #FFDBC5 4px solid;
+    border-left: #e6f2e6 4px solid;
+    padding: 0.4em;
+}
+
+.ORGANIZATION_BORDERED_strong {
+    border-left: #86c386 4px solid;
     padding: 0.4em;
 }
 
 .MISC_BORDERED {
-    border-left: #FFFFC6 4px solid;
+    border-left: #e4e9f5 4px solid;
+    padding-left: 0.4em;
+}
+
+.MISC_BORDERED_strong {
+    border-left: #7b98d4 4px solid;
     padding-left: 0.4em;
 }
 
 /**semantic Class highlight in Text*/
 .PERSON {
-    background: #9DD6B8;
+    background: #fae8e1;
+}
+
+.PERSON_strong {
+    background: #ed906c;
 }
 
 .LOCATION {
-    background: #E9DBFF;
+    background: #faf4e1;
+}
+
+.LOCATION_strong {
+    background: #edcd6c;
 }
 
 .ORGANIZATION {
-    background: #FFDBC5;
+    background: #e6f2e6;
+}
+
+.ORGANIZATION_strong {
+    background: #86c386;
 }
 
 .MISC {
-    background: #FFFFC6;
+    background: #e4e9f5;
+}
+
+.MISC_strong {
+    background: #7b98d4;
 }
 
 .POS {
@@ -379,35 +415,31 @@ pre {
 }
 
 .coref {
-    border-bottom: 2px solid #FF7C72;
+    
 }
 
 .cRepresentant {
-    border-bottom: 2px solid #FF7C72;
+    border-bottom: 2px solid #000;
 }
 
 .cHoverRepresentant {
-    background: #dedede;
-    border-bottom: 2px solid #FF7C72;
+    background: #DDD;
 }
 
 .cSelectedRepresentant {
     background: #FFE352;
-    border-bottom: 2px solid #FF7C72;
 }
 
 .cReferent {
-    border-bottom: 2px solid #61A0FF;
+    border-bottom: 2px dashed #000;
 }
 
 .cHoverReferent {
-    background: #dedede;
-    border-bottom: 2px solid #61A0FF;
+    background: #DDD;
 }
 
 .cSelectedReferent {
     background: #FFE352;
-    border-bottom: 2px solid #61A0FF;
 }
 
 .nested {

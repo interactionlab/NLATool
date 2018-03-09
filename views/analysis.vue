@@ -86,7 +86,8 @@
                    id="line"
                    v-if="offsetstart != null && offsetend != null"
                    v-bind:offsetstart="offsetstart"
-                   v-bind:offsetend="offsetend">
+                   v-bind:offsetend="offsetend"
+                   v-bind:semanticclass="semanticclass">
         </component>
     </div>
 
@@ -110,6 +111,7 @@
             return {
                 offsetstart: null,
                 offsetend: null,
+                semanticclass: {},
                 analysisMode: 'analighter',
                 showMode: 'entitiesview',
                 researchmode: '',
@@ -361,9 +363,11 @@
                 }
             },
             setoffsetstart: function (event) {
-                //console.log('setOffset: ' + event[0]);
                 this.offsetstart = event[0];
-                //let entitytoline = event[1];
+                let classofcolor = event[1][0].semanticClass + "_strong";
+                let whereFrom = event[2];
+                this.semanticclass = {};
+                this.semanticclass[classofcolor]= true;
 
             },
             hoverlinesetoffsetend: function (event) {

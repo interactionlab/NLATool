@@ -22,6 +22,7 @@
                                v-bind:nestedmentions="nestedmentions"
                                v-bind:selectedchain="selectedchain"
                                v-bind:entityindextoline="entityindextoline"
+                               v-bind:entitytoline="entitytoline"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
                                v-on:endselection="endselection($event)"
@@ -48,6 +49,7 @@
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
                             v-bind:entitytoline="entitytoline"
+                            v-bind:whereislinefrom="whereislinefrom"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
                             v-on:jumpmarktext="selectText2($event)"
@@ -109,6 +111,7 @@
                 tokenstoshow: this.tokenstoshow,
                 contentcontrol: this.contentcontrol,
                 entitytoline: [],
+                whereislinefrom: "",
                 entityindextoline: -1
             }
         },
@@ -175,10 +178,10 @@
                     }
                 }
                 completeEntity.sort(this.dynamicSort('textIndex'));
-                //console.log('Complete Entity: ' + JSON.stringify(completeEntity));
+                
                 this.entitytoline = completeEntity;
-                //console.log("entitytoline in emit reciver: " + this.entitytoline);
-                this.$emit('setoffsetstart', [offsets, this.entitytoline]);
+                this.whereislinefrom = event[2];                
+                this.$emit('setoffsetstart', [offsets, this.entitytoline, "text"]);
             },
             hoverlinesetoffsetend: function (event) {
                 this.$emit('hoverlinesetoffsetend', event);
@@ -194,8 +197,8 @@
                     return result * sortOrder;
                 }
             },
-            pickresearchresult:function (textIndex) {
-                this.entityindextoline = textIndex;
+            pickresearchresult:function (event) {
+                this.entityindextoline = event[0];
             },
         },
         components: {

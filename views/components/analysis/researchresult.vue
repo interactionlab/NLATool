@@ -67,7 +67,8 @@
             mapcoordinates: Array,
             sourcequery: Object,
             semclass: String,
-            contentcontrol: Object
+            contentcontrol: Object,
+            hoveredentity: String,
         },
         data: function () {
             return {
@@ -82,7 +83,8 @@
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
                 mapkey: this.mapkey,
-                contentcontrol: this.contentcontrol
+                contentcontrol: this.contentcontrol,
+                hoveredentity: this.hoveredentity,
             }
         },
         methods: {
@@ -104,7 +106,10 @@
             },
             accentuate: function () {
                 this.hover = !this.hover;
-                this.pickResearchResult();
+                
+                //mouseover
+                let textIndex = this.sourcequery.source[0].textIndex;
+                this.$emit('pickresearchresult', [textIndex, "research"]);
             },
             saveResult: function () {
                 let socket = io('http://localhost:8080');
@@ -122,10 +127,6 @@
                 }
             },
             editResearch: function () {
-            },
-            pickResearchResult: function () {
-                let textIndex = this.sourcequery.source[0].textIndex;
-                this.$emit('pickresearchresult', textIndex);
             }
         },
         components: {
@@ -136,10 +137,18 @@
                 let htmlclass = {
                     researchresulthover: this.hover
                 };
-                htmlclass[this.semclass] = true;
-                if (this.semclass === 'PERSON_BORDERED') {
-                    htmlclass['PERSON_BORDERED'] = true;
+                
+                if (this.hoveredentity == this.sourcequery.query)
+                {
+                    this.hover = true;
+                    htmlclass[this.semclass + "_strong"] = true;
+                    htmlclass[this.semclass] = false;
+                } else {
+                    this.hover = false;
+                    htmlclass[this.semclass + "_strong"] = false;
+                    htmlclass[this.semclass] = true;
                 }
+                
                 return htmlclass;
             },
             title: function () {
