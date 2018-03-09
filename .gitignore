@@ -56,7 +56,7 @@ typings/
 
 # dotenv environment variables file
 .env
-
+# vue.js
 /.tgitconfig
 /.idea
 NLATool/.idea

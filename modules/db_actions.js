@@ -303,7 +303,7 @@ input:{
 
 }
  */
-exports.createInnerJoinSelectCommand = function (input) {
+exports.createInnerJoinSelectCommand = function (input, start, amount) {
     let commandString = '';
     if (input.tables.length > 1) {
         commandString = 'SELECT ';
@@ -334,9 +334,12 @@ exports.createInnerJoinSelectCommand = function (input) {
             commandString = commandString + ' '
                 + createWhereQuery(input.whereConditions.columns, input.whereConditions.values, input.whereConditions.operators);
         }
+        if (start !== undefined && amount !== undefined) {
+            commandString = commandString + ' limit ' + start + ' , ' + amount;
+        }
     }
     commandString = commandString + ';';
-    //console.log(Tag + sql + commandString);
+    console.log(Tag + sql + commandString);
     return commandString;
 };
 
