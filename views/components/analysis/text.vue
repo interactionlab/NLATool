@@ -225,40 +225,8 @@
             }
         },
         mounted() {
-            //this.getMentionInfo();
         },
         methods: {
-            getMentionGap: function () {
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
-                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                        this.mention = this.mentions[0][i];
-                        break;
-                    }
-                }
-            },
-            getMentionInfo: function () {
-                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
-                //console.log('getMentionInfo');
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    // console.log('getMentionInfo: index:' + this.index
-                    //     + 'startIndex: ' + this.mentions[0][i].startIndex
-                    //     + 'endIndex: ' + this.mentions[0][i].endIndex
-                    //    + 'erfüllt: ' + ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex));
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex) {
-                        this.mention.push(this.mentions[0][i]);
-                        //console.log('getMentionInfo: this Mention got set: index: ' + this.index + ' : ' + JSON.stringify(this.mention));
-                        try {
-                            if (this.mentions[0][i].endIndex - this.index > 0) {
-                                //console.log('has next Mention');
-                                this.nextmention = true;
-                            }
-                        } catch (err) {
-                        }
-                    }
-                }
-            },
             startSelection: function () {
                 this.$emit('startselection', this.index - 1);
             },
@@ -277,8 +245,7 @@
                     return;
                 }
                 //var mentionid = this.mention[0].mentionID;
-
-                var offsets = event.target.getBoundingClientRect();
+                let offsets = event.target.getBoundingClientRect();
                 this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);
                 //if (this.token.content != "" && this.token.content != " " && this.token.content != "]" && this.token.content != "[") {
                 //    this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);

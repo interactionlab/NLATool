@@ -52,7 +52,6 @@ module.exports = {
             let tokenChain = [];
             let content = '';
             let flag = false;
-            console.log('test2');
             for (let i = 0; i < tokens.length; i++) {
                 if (tokens[i].semanticClass === semanticClass) {
                     //merging entities of same classes e.g. first + last name

@@ -144,23 +144,6 @@
                 return wordIndex;
 
             },
-            getMentionInfo: function (index) {
-                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
-                console.log('getMentionInfo');
-                let mention = {};
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    console.log('getMentionInfo: index:' + this.index
-                        + 'startIndex: ' + this.mentions[0][i].startIndex
-                        + 'endIndex: ' + this.mentions[0][i].endIndex
-                        + 'erfüllt: ' + ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex));
-                    if ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex) {
-                        mention = this.mentions[0][i];
-                        console.log('getMentionInfo: this Mention got set: ' + JSON.stringify(this.mention));
-                        break;
-                    }
-                }
-                return mention;
-            },
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
@@ -189,13 +172,12 @@
                     }
                 }
                 completeEntity.sort(this.dynamicSort('textIndex'));
-                console.log('Complete Entity: ' + JSON.stringify(completeEntity));
+                //console.log('Complete Entity: ' + JSON.stringify(completeEntity));
                 this.hoveredentitiy = completeEntity;
                 //console.log("hoveredentitiy in emit reciver: " + this.hoveredentitiy);
                 this.$emit('setoffsetstart', [offsets, this.hoveredentitiy]);
             },
             hoverlinesetoffsetend: function (event) {
-                console.log("TextFeatureViewPort: " + event);
                 this.$emit('hoverlinesetoffsetend', event);
             },
             dynamicSort: function (property) {
