@@ -64,7 +64,6 @@
             index: Number,
             mapkey: Number,
             docid: Number,
-            showallon: Boolean,
             mapcoordinates: Array,
             sourcequery: Object,
             semclass: String,
@@ -74,30 +73,26 @@
         data: function () {
             return {
                 serverip: this.serverip,
-                showimage: false,
-                everythingshow: true,
                 researchresult: this.researchresult,
-                hover: false,
                 index: this.index,
                 docid: this.docid,
-                showallon: this.showallon,
                 mapcoordinates: this.mapcoordinates,
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
-                mapkey: this.mapkey,
                 contentcontrol: this.contentcontrol,
+                mapkey: this.mapkey,
+                hoveredentity: this.hoveredentity,
+                hover: false,                
                 localcontentcontrol: {
                     img: true,
                     map: true,
                     information: true
-                },
-                hoveredentity: this.hoveredentity,
+                },                
             }
         },
         methods: {
             showallresults: function () {
                 this.$emit('showallresults');
-                this.showallon = false;
             },
             showdetail: function () {
 
@@ -113,7 +108,6 @@
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
-                this.showallon = true;
             },
             showSource: function () {
                 try {
@@ -185,7 +179,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>
