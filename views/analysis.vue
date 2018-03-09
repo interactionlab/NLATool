@@ -361,7 +361,7 @@
                 }
             },
             setoffsetstart: function (event) {
-                console.log('setOffset: ' + event[0]);
+                //console.log('setOffset: ' + event[0]);
                 this.offsetstart = event[0];
                 //let entitytoline = event[1];
 

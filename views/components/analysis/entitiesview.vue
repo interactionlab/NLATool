@@ -255,7 +255,7 @@
                 handler: function (newValue) {
                     let newWord = newValue[0].content;
                     let bb = null;
-                    console.log('watcher: ' + newValue);
+                    //console.log('watcher: ' + newValue);
                     if (newValue[0].semanticClass === 'PERSON') {
                         if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
