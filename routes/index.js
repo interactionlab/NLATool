@@ -79,6 +79,7 @@ router.post('/loadDocument', function (req, res) {
 });
 
 router.post('/loadWrittenText', function (req, res) {
+    console.log('Start loading Text');
     wait.launchFiber(postLoadWrittenText, req, res, req);
 });
 
@@ -129,7 +130,14 @@ function postLoadWrittenText(req, res, next) {
                 },
                 words: []
             };
+            let firstTimeCheck = new Date();
+            let deltaTime = firstTimeCheck.getTime();
+            console.log('Starting analysing text');
             let parsedResult = wait.for(corenlp.analyse, text);
+            console.log('Finished analysing text');
+            let lastTimeCheck = new Date();
+            console.log('Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+
             transactionInformation.words = parsedResult.text;
             let title = stringifyForDB(req.body.title);
             let lang = stringifyForDB(language);
@@ -175,6 +183,8 @@ function postLoadWrittenText(req, res, next) {
             //TODO: check if word + NER Tag exists already
             let wordInsertResult = null;
             let counter = 0;
+            firstTimeCheck = new Date();
+            deltaTime = firstTimeCheck.getTime();
             for (let i = 0; i < transactionInformation.words.length; i++) {
                 for (let j = 0; j < transactionInformation.words[i].length; j++) {
                     transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
@@ -217,10 +227,21 @@ function postLoadWrittenText(req, res, next) {
                     counter++;
                 }
             }
+            lastTimeCheck = new Date();
+            console.log('Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+            firstTimeCheck = new Date();
+            deltaTime = firstTimeCheck.getTime();
             transactionInformation = saveCoref(transactionInformation, counter);
+            lastTimeCheck = new Date();
+            console.log('Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+            firstTimeCheck = new Date();
+            deltaTime = firstTimeCheck.getTime();
             let transactionResults = dbStub.makeTransaction(transactionInformation);
+            lastTimeCheck = new Date();
+            console.log('Time executing transaction took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
             transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
             req.session.docID = transactionResults[0].getProper.insertId;
+            console.log('Finished uploading annotated Text to DB. redirecting to analysis');
             res.redirect('/analysis');
         }
     }

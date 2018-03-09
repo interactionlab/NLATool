@@ -102,6 +102,10 @@ io.on('connection', function (socket) {
     socket.on('changeClass', function (tokenToEdit, docID) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
+
+    socket.on('getMoreText', function(endIndex, pagesize){
+
+    });
 });
 
 /**
@@ -234,7 +238,10 @@ function getAndShowText(req, res) {
     //console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
-        selectWithInnerJoin(docID);
+        let firstTimeCheck = new Date();
+        let deltaTime = firstTimeCheck.getTime();
+        selectWithInnerJoin(docID,0,300);
+
         //getTextFromDB(docID);
         //console.log(textDB.tokens);
         //vueData.vueTokens = textDB.tokens;
@@ -242,6 +249,8 @@ function getAndShowText(req, res) {
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
+        let lastTimeCheck = new Date();
+        console.log('Time Join  took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
         //getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         //vueData.coref = textDB.coref;
@@ -300,7 +309,7 @@ function getTextFromDB(docID) {
     //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
 }
 
-function selectWithInnerJoin(docID) {
+function selectWithInnerJoin(docID, start, amount) {
     let queryObject = {
         tables: ['textmap', 'word'],
         columns: [{
@@ -351,13 +360,13 @@ function selectWithInnerJoin(docID) {
     };
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    vueData.vueTokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    let corefs = getCorefs(docID);
+    vueData.vueTokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
+    let corefs = getCorefs(docID,start, amount);
     for (let i = 0; i < vueData.vueTokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
             //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
             if (vueData.vueTokens[i].textIndex === corefs[j].textIndex) {
-                if(typeof  vueData.vueTokens[i].coref === 'undefined'){
+                if (typeof  vueData.vueTokens[i].coref === 'undefined') {
                     vueData.vueTokens[i]['coref'] = [];
                 }
                 vueData.vueTokens[i]['coref'].push({
@@ -377,7 +386,7 @@ function selectWithInnerJoin(docID) {
     }
 }
 
-function getCorefs(docID) {
+function getCorefs(docID, start, amount) {
     let queryObject = {
         tables: ['textmap', 'corefmentions', 'nestedcorefs'],
         columns: [{
@@ -446,7 +455,7 @@ function getCorefs(docID) {
         }
     };
     // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
 }
 
 function getCorefInfo(docID) {
