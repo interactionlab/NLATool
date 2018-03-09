@@ -10,6 +10,7 @@
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:entitytoline="entitytoline"
+                   v-bind:whereislinefrom="whereislinefrom"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
                    v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
                    v-on:pickresearchresult="pickresearchresult($event)">
@@ -37,6 +38,7 @@
             colindex: Number,
             contentcontrol: Object,
             entitytoline: Array,
+            whereislinefrom: String,
         },
         data: function () {
             return {
@@ -50,6 +52,7 @@
                 colindex:this.colindex,
                 contentcontrol:this.contentcontrol,
                 entitytoline:this.entitytoline,
+                whereislinefrom: this.whereislinefrom,
             }
         },
         methods: {
