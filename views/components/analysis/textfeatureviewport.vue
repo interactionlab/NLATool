@@ -172,7 +172,7 @@
                     }
                 }
                 completeEntity.sort(this.dynamicSort('textIndex'));
-                console.log('Complete Entity: ' + JSON.stringify(completeEntity));
+                //console.log('Complete Entity: ' + JSON.stringify(completeEntity));
                 this.entitytoline = completeEntity;
                 //console.log("entitytoline in emit reciver: " + this.entitytoline);
                 this.$emit('setoffsetstart', [offsets, this.entitytoline]);
