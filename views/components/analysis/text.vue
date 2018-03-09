@@ -4,8 +4,8 @@
           v-on:mouseup="endSelection"
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
-        <span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
+        <span v-if="token.coref !== undefined" class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span
+            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
 <script>
     export default {
