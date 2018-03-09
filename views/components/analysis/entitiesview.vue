@@ -126,7 +126,7 @@
             tokenstoshow: Array,
             colindex: Number,
             contentcontrol: Object,
-            hoveredentitiy: Array,
+            entitytoline: Array,
         },
         data: function () {
             return {
@@ -148,7 +148,7 @@
         },
         methods: {
             log: function () {
-                //console.log("entitiesview: " + JSON.stringify(this.hoveredentitiy));
+                //console.log("entitiesview: " + JSON.stringify(this.entitytoline));
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -251,10 +251,11 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            hoveredentitiy: {
+            entitytoline: {
                 handler: function (newValue) {
                     let newWord = newValue[0].content;
                     let bb = null;
+                    console.log('watcher: ' + newValue);
                     if (newValue[0].semanticClass === 'PERSON') {
                         if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
