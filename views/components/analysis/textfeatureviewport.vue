@@ -13,7 +13,7 @@
                                v-for="(token,i) in col"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:tokens="tokens"
+                               v-bind:prevtoken="prevtoken(token.textIndex)"
                                v-bind:index="token.textIndex"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
@@ -114,7 +114,16 @@
                 entityindextoline: -1
             }
         },
+        computed:{
+        },
         methods: {
+            prevtoken:function (index) {
+                if(index === 0){
+                    return null;
+                } else {
+                    return this.tokens[index-1];
+                }
+            },
             movetoolbar: function () {
                 this.$emit('movetoolbar', this.colindex);
             },
