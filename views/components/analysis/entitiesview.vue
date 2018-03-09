@@ -1,10 +1,9 @@
 <template>
     <div>
         <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
-        <div class="semClassFormate"
+        <div class="semClassFormate PERSON"
              ref="personresultsparent"
-             v-on:click="togglesemanticlass('PERSON')"
-             v-on:mouseover="log">
+             v-on:click="togglesemanticlass('PERSON')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
@@ -28,10 +27,11 @@
                    v-bind:sourcequery="sourcequery[0][index]"
                    v-bind:semclass="borderedClasses[0]"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
+                   v-bind:hoveredentity="hoveredentity"
                    v-on:saveresult="saveResult($event)"
                    v-on:pickresearchresult="pickresearchresult($event)">
         </component>
-        <div class="semClassFormate"
+        <div class="semClassFormate LOCATION"
              ref="locationresultsparent"
              v-on:click="togglesemanticlass('LOCATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -57,10 +57,11 @@
                    v-bind:sourcequery="sourcequery[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
+                   v-bind:hoveredentity="hoveredentity"
                    v-on:saveresult="saveResult($event)"
                    v-on:pickresearchresult="pickresearchresult($event)">
         </component>
-        <div class="semClassFormate"
+        <div class="semClassFormate ORGANIZATION"
              ref="organisazionresultsparent"
              v-on:click="togglesemanticlass('ORGANIZATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -86,10 +87,11 @@
                    v-bind:sourcequery="sourcequery[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
+                   v-bind:hoveredentity="hoveredentity"
                    v-on:saveresult="saveResult($event)"
                    v-on:pickresearchresult="pickresearchresult($event)">
         </component>
-        <div class="semClassFormate"
+        <div class="semClassFormate MISC"
              ref="miscresultsparent"
              v-on:click="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -115,6 +117,7 @@
                    v-bind:sourcequery="sourcequery[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.MISCS"
+                   v-bind:hoveredentity="hoveredentity"
                    v-on:saveresult="saveResult($event)"
                    v-on:pickresearchresult="pickresearchresult($event)">
         </component>
@@ -136,6 +139,7 @@
             colindex: Number,
             contentcontrol: Object,
             entitytoline: Array,
+            whereislinefrom: String,
         },
         data: function () {
             return {
@@ -153,15 +157,18 @@
                 tokenstoshow: this.tokenstoshow,
                 colindex: this.colindex,
                 contentcontrol: this.contentcontrol,
-                sourcequery: []
+                sourcequery: [],
+                hoveredentity: null,
+                isHoverFromResearch: false,
             }
         },
         methods: {
-            pickresearchresult: function (textIndex) {
-                this.$emit('pickresearchresult', textIndex);
-            },
-            log: function () {
-                //console.log("entitiesview: " + JSON.stringify(this.entitytoline));
+            pickresearchresult: function (event) {
+                if (event[1] == "research")
+                    this.isHoverFromResearch = true;
+                else
+                    this.isHoverFromResearch = false;
+                this.$emit('pickresearchresult', event);                   
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -171,7 +178,6 @@
                 this.sortedtokens.push(this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
                 this.sourcequery.push([]);
                 for (let i = 0; i < this.sortedtokens[index].length; i++) {
-                    //console.log('sortedTokens before getting the query: ' + JSON.stringify(this.sortedtokens[index][i]));
                     for (let j = 0; j < this.sortedtokens[index][i].length; j++) {
                         for (let k = 0; k < this.sourcequery[index].length; k++) {
                             if (this.sourcequery[index][k].query.indexOf(this.sortedtokens[index][i][j].content) !== -1) {
@@ -184,7 +190,6 @@
                         }
                         searched = false;
                     }
-                    //console.log('Query for Research: ' + query);
                     if (query !== '') {
                         this.sourcequery[index].push({
                             query: query,
@@ -214,7 +219,6 @@
                         // this[semClass].push(this.rerankWithKeywords());
                     } else {
                         this[semClass].push(response.itemListElement[0]);
-                        //console.log('this semanticlass: ' + semClass + ' has: ' + JSON.stringify(this[semClass]));
                     }
                 });
             },
@@ -271,8 +275,11 @@
                         if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
                                 if (this.$refs.personresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
-                                    this.$refs.personresults[i].$el.scrollIntoView();
+                                    if (!this.isHoverFromResearch)
+                                        this.$refs.personresults[i].$el.scrollIntoView();
+                                    
                                     bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+                                    this.hoveredentity = this.$refs.personresults[i].sourcequery.query
                                 }
                             }
                         } else {
@@ -282,8 +289,11 @@
                         if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 if (this.$refs.locationresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
-                                    this.$refs.locationresults[i].$el.scrollIntoView();
+                                    if (!this.isHoverFromResearch)
+                                        this.$refs.locationresults[i].$el.scrollIntoView();
+                                    
                                     bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
+                                    this.hoveredentity = this.$refs.locationresults[i].sourcequery.query
                                 }
                             }
                         } else {
@@ -293,8 +303,11 @@
                         if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 if (this.$refs.organisazionresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
-                                    this.$refs.organisazionresults[i].$el.scrollIntoView();
+                                    if (!this.isHoverFromResearch)
+                                        this.$refs.organisazionresults[i].$el.scrollIntoView();
+                                    
                                     bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
+                                    this.hoveredentity = this.$refs.organisazionresults[i].sourcequery.query
                                 }
                             }
                         } else {
@@ -304,8 +317,11 @@
                         if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 if (this.$refs.miscresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
-                                    this.$refs.miscresults[i].$el.scrollIntoView();
+                                    if (!this.isHoverFromResearch)
+                                        this.$refs.miscresults[i].$el.scrollIntoView();
+                                    
                                     bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
+                                    this.hoveredentity = this.$refs.miscresults[i].sourcequery.query
                                 }
                             }
                         } else {
@@ -316,6 +332,14 @@
                     }
                     this.$emit('hoverlinesetoffsetend', bb);
                 }, deep: true
+            },
+            
+            whereislinefrom: function(value){
+                if (this.whereislinefrom == "research")
+                    this.isHoverFromResearch = true;
+                 else
+                    this.isHoverFromResearch = false;
+                    
             }
         },
         components: {
