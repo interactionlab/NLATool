@@ -10,8 +10,6 @@
                                                                                                     v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
 </template>
-
-
 <script>
     export default {
         props: {
