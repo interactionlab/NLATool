@@ -5,10 +5,7 @@
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
         <span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span
-            class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt "
-                                                                                                    v-bind:class="classToHighlightGap">{{getWordGap}}</span>
-    </span>
+            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
 
 
@@ -25,7 +22,8 @@
             selectedchain: Number,
             nestedmentions: Object,
             endOfMentions: Object,
-            entityindextoline: Number
+            entityindextoline: Number,
+            entitytoline: Array,
         },
         data: function () {
             return {
@@ -45,7 +43,9 @@
                 endOfMentions: this.endOfMentions,
                 nested: false,
                 mention: [],
-                nextmention: false
+                nextmention: false,
+                entitytoline: this.entitytoline,
+                isEntityHovered: false,
             }
         },
 
@@ -103,7 +103,15 @@
                         }
                     }
                 }
-                htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                if (this.isEntityHovered == true){
+                    htmlclass[this.token.semanticClass + "_strong"] = true;
+                    htmlclass[this.token.semanticClass] = false;
+                }
+                else {
+                    htmlclass[this.token.semanticClass + "_strong"] = false;
+                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass]; 
+                }
+                
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
@@ -230,9 +238,26 @@
         watch:{
             entityindextoline:function (newIndex) {
                 if(newIndex === this.token.textIndex){
+                    this.$refs["word"].scrollIntoView();
                     let offsets =  this.$refs["word"].getBoundingClientRect();
-                    this.$emit('setoffsetstart', [offsets, this.token]);
+                    this.$emit('setoffsetstart', [offsets, this.token, "research"]);
                 }
+            },
+            entitytoline:{
+                handler: function(newEntitytoline)
+                {
+                    let found = false
+                    for (let i = 0; i < newEntitytoline.length; i++){
+                        if (newEntitytoline[i].textIndex == this.token.textIndex){
+                            this.isEntityHovered = true;
+                            found = true;
+                        }
+                    }  
+                    if (found == false) {
+                        this.isEntityHovered = false;
+                    }
+                    
+                }, deep:true
             }
         },
         methods: {
@@ -241,7 +266,7 @@
             },
             endSelection: function (event) {
                 let offsets = event.target.getBoundingClientRect();
-                this.$emit('setoffsetstart', [offsets, this.token]);
+                this.$emit('setoffsetstart', [offsets, this.token, "text"]);
                 this.$emit('endselection', this.index);
             },
             stophover: function () {
@@ -250,16 +275,11 @@
             },
             hover: function (event) {
                 this.tohover = true;
-                //console.log("Word id: " + this.index);
                 if (this.token.semanticClass === "O") {
                     return;
                 }
-                //var mentionid = this.mention[0].mentionID;
                 let offsets = event.target.getBoundingClientRect();
-                this.$emit('setoffsetstart', [offsets, this.token]);
-                //if (this.token.content != "" && this.token.content != " " && this.token.content != "]" && this.token.content != "[") {
-                //    this.$emit('setoffsetstart', [offsets, this.token]);
-                //}
+                this.$emit('setoffsetstart', [offsets, this.token, "text"]);
             }
         }
     }
