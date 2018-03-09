@@ -15,7 +15,7 @@
                                v-bind:token="token"
                                v-bind:tokens="tokens"
                                v-bind:mentions="mentions"
-                               v-bind:index="generatetrueindex(i+1)"
+                               v-bind:index="token.textIndex"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
@@ -134,24 +134,6 @@
             },
             selectText2: function (newSelectedIndexes) {
                 this.$emit('jumpmarktext', newSelectedIndexes)
-            },
-            generatetrueindex: function (wordIndex) {
-                let i;
-                let j = 0;
-                //console.log('the wordIndex Input is:' + wordIndex);
-                //console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
-                for (let k = 0; k < this.textcolumnposition.start; k++) {
-                    wordIndex = wordIndex + this.splitted[k].length;
-                }
-                for (i = this.textcolumnposition.start; i < (this.colindex + this.textcolumnposition.start); i++) {
-                    wordIndex = wordIndex + this.splitted[i].length - 1;
-                    j++;
-                }
-                wordIndex = wordIndex + j;
-                //console.log('The col Index here is:' + this.colindex);
-                //console.log('The final Index is: ' + wordIndex);
-                return wordIndex;
-
             },
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
