@@ -116,7 +116,6 @@
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
-    import requests from './mixins/requests.js';
 
     export default {
         mixins: [filtertokenwithclass],
@@ -152,7 +151,7 @@
                 console.log("entitiesview: " + JSON.stringify(this.hoveredentitiy));
             },
             researchTokensOfClass: function (semClass, index) {
-                /*this[semClass] = [];
+                this[semClass] = [];
                 let tokensResults = [];
                 let query = '';
                 let frequency = 0;
@@ -169,8 +168,7 @@
                     }
                     this.sourcequery[index].push({query: query, freq: frequency, source: this.sortedtokens[i]});
                     this.searchGoogle(query, 1, semClass);
-                }*/
-
+                }
             },
             searchGoogle: function (query, limit, semClass) {
                 if (limit < 1) {
@@ -186,7 +184,7 @@
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
                     if (limit > 1) {
-                        this[semClass].push(this.rerankWithKeywords());
+                       // this[semClass].push(this.rerankWithKeywords());
                     } else {
                         //console.log('Response for Research: ' + JSON.stringify(response));
                         this[semClass].push(response.itemListElement[0]);
@@ -239,61 +237,59 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            hoveredentitiy: function (newValue, oldValue) {
-                //console.log(newValue + "<=" + oldValue);
-                /*let newWord = newValue[0];
-                let type = newValue[1];
-                let bb = null;
-                console.log('hoveredEntity in entities.vue: '+JSON.stringify(newWord));
-                if (newValue[0].semanticClass === 'PERSON') {
-                    if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
-                        for (let i = 0; i < this.$refs["personresults"].length; i++) {
-                            if (this.$refs.personresults[i].sourcequery.query === newWord) {
-                                bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+            hoveredentitiy: {
+                handler: function (newValue) {
+                    let newWord = newValue[0];
+                    let bb = null;
+                    if (newValue[0].semanticClass === 'PERSON') {
+                        if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["personresults"].length; i++) {
+                                if (this.$refs.personresults[i].sourcequery.query === newWord) {
+                                    bb = this.$refs.personresults[i].$el.getBoundingClientRect();
+                                }
                             }
+                        } else {
+                            bb = this.$refs["personresultsparent"].getBoundingClientRect()
+                        }
+                    } else if (newValue[0].semanticClass === 'PERSON') {
+                        if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["locationresults"].length; i++) {
+                                if (this.$refs.locationresults[i].sourcequery.query === newWord) {
+                                    bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["locationresultsparent"].getBoundingClientRect()
+                        }
+                    } else if (newValue[0].semanticClass === "ORGANIZATION") {
+                        if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
+                                if (this.$refs.organisazionresults[i].sourcequery.query === newWord) {
+                                    bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["organisazionresultsparent"].getBoundingClientRect()
+                        }
+                    } else if (newValue[0].semanticClass === "MISC") {
+                        if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["miscresults"].length; i++) {
+                                if (this.$refs.miscresults[i].sourcequery.query === newWord) {
+                                    bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["miscresultsparent"].getBoundingClientRect()
                         }
                     } else {
-                        bb = this.$refs["personresultsparent"].getBoundingClientRect()
+                        bb = null;
                     }
-                } else if (newValue[0].semanticClass === 'PERSON') {
-                    if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
-                        for (let i = 0; i < this.$refs["locationresults"].length; i++) {
-                            if (this.$refs.locationresults[i].sourcequery.query === newWord) {
-                                bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
-                            }
-                        }
-                    } else {
-                        bb = this.$refs["locationresultsparent"].getBoundingClientRect()
-                    }
-                } else if (newValue[0].semanticClass === "ORGANIZATION") {
-                    if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
-                        for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
-                            if (this.$refs.organisazionresults[i].sourcequery.query === newWord) {
-                                bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
-                            }
-                        }
-                    } else {
-                        bb = this.$refs["organisazionresultsparent"].getBoundingClientRect()
-                    }
-                } else if (newValue[0].semanticClass === "MISC") {
-                    if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
-                        for (let i = 0; i < this.$refs["miscresults"].length; i++) {
-                            if (this.$refs.miscresults[i].sourcequery.query === newWord) {
-                                bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
-                            }
-                        }
-                    } else {
-                        bb = this.$refs["miscresultsparent"].getBoundingClientRect()
-                    }
-                } else {
-                    bb = null;
-                }
-                this.$emit('hoverlinesetoffsetend', bb);*/
+                    this.$emit('hoverlinesetoffsetend', bb);
+                }, deep: true
             }
         },
         components: {
-            researchresult,
-            requests
+            researchresult
         }
     }
 </script>
