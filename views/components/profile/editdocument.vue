@@ -24,18 +24,20 @@
     export default {
         props: {
             document: Object,
+            serverip: String,
             newtitle: String
         },
         data: function () {
             return {
                 document: this.document,
                 changing: 'showdoc',
+                serverip: this.serverip,
                 newtitle: this.newtitle
             }
         },
         methods: {
             edit: function () {
-                let socket = io('http://localhost:8081');
+                let socket = io(this.serverip+':8081');
                 this.document.name = this.newtitle;
                 console.log('Client Send new Title of Document: ' + this.newtitle);
                 socket.emit('changeTitle', this.document.docID, this.newtitle);

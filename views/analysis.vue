@@ -2,6 +2,7 @@
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header" style="overflow:hidden">
         <component
                 is="mainheader"
+                v-bind:serverip="serverip"
                 v-bind:title="title"
                 v-bind:docid="docID"
                 v-bind:route="'analysis'"
@@ -50,6 +51,7 @@
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
+                               v-bind:serverip="serverip"
                                v-bind:col="col"
                                v-bind:colindex="colIndex"
                                v-bind:splitted="splitted"
@@ -382,7 +384,7 @@
                 let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
                 console.log('token length: ' + this.tokens.length);
                 console.log('endIndex: ' + endIndex);
-                let socket = io('http://localhost:8080');
+                let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
                 socket.on('sendMoreText', function (tokens, setBla) {
                     self.setBla(tokens);

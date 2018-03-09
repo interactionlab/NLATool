@@ -16,8 +16,10 @@ const loadtext = require('./routes/loadtext');
 const setup = require('./routes/setup');
 const comment = require('./routes/comment');
 const expressVue = require('express-vue');
-
+const ip = require('ip');
 const app = express();
+
+const ipAdress = ip.address();
 
 const dbStub = require('./modules/db_stub');
 dbStub.fiberEstablishConnection();
@@ -62,6 +64,7 @@ const vueOptions = {
     data: {
         title:'NLA - Natural Language Analyse Tool',
         title_small: 'NLA - Tool',
+        serverip: ipAdress
 
     }
 };
