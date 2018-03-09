@@ -26,17 +26,17 @@
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col deleteSpaces">
-                                <img v-if="(contentcontrol.img) & (typeof researchresult.result.image !== 'undefined')"
+                                <img v-if="(localcontentcontroler.img) & (typeof researchresult.result.image !== 'undefined')"
                                      v-bind:src="researchresult.result.image.contentUrl"
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
                                 <div style="float: left; width: 30%; margin-right: 1em;">
-                                    <component is="googlemap" v-if="contentcontrol.map"
+                                    <component is="googlemap" v-if="localcontentcontroler.map"
                                                v-bind:mapcoordinates="mapcoordinates"
                                                v-bind:index="mapkey"
                                     >
                                     </component>
                                 </div>
-                                <div v-if="contentcontrol.information">
+                                <div v-if="localcontentcontroler.information">
                                     <div v-if="typeof researchresult.result.description !== 'undefined'">
                                         {{researchresult.result.description.articleBody}}
                                     </div>
@@ -82,7 +82,12 @@
                 sortedtoken: this.sourcequery,
                 semclass: this.semclass,
                 mapkey: this.mapkey,
-                contentcontrol: this.contentcontrol
+                contentcontrol: this.contentcontrol,
+                localcontentcontrol: {
+                    img: true,
+                    map: true,
+                    information:true
+                }
             }
         },
         methods: {
@@ -91,16 +96,7 @@
                 this.showallon = false;
             },
             showdetail: function () {
-                console.log('showdetail check' + JSON.stringify(this.contentcontrol));
-                if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
-                    this.contentcontrol.img = false;
-                    this.contentcontrol.map = false;
-                    this.contentcontrol.information = false;
-                } else {
-                    this.contentcontrol.img = true;
-                    this.contentcontrol.map = true;
-                    this.contentcontrol.information = true;
-                }
+
             },
             accentuate: function () {
                 this.hover = !this.hover;
@@ -132,6 +128,22 @@
             googlemap
         },
         computed: {
+            localcontentcontroler:function () {
+                console.log('showdetail check' + JSON.stringify(this.contentcontrol));
+                if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
+                    this.localcontentcontrol.img = false;
+                    this.localcontentcontrol.map = false;
+                    this.localcontentcontrol.information = false;
+                } else {
+                    this.localcontentcontrol.img = true;
+                    this.localcontentcontrol.map = true;
+                    this.localcontentcontrol.information = true;
+                }
+                if(this.sourcequery.source[0].semanticClass === 'PERSON'){
+                    this.localcontentcontrol.map = false;
+                }
+                return this.localcontentcontrol;
+            },
             generalstyleclass: function () {
                 let htmlclass = {
                     researchresulthover: this.hover

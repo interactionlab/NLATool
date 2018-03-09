@@ -25,6 +25,7 @@
     "express": "~4.15.2",
     "express-vue": "^4.0.14",
     "fibers": "^2.0.0",
+    "ip": "^1.1.5",
     "is-reachable": "^2.4.0",
     "jsonfile": "^4.0.0",
     "morgan": "~1.8.1",

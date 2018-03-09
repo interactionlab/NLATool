@@ -34,6 +34,8 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
+            <button v-on:click="getMoreText(tokens[0].docID, 500)">get More Text
+            </button>
             <div style="flex: 0;width: 100%; position: relative;">
                 <component is="textviewcontrol"
                            v-on:changescope="changeScope($event)"
@@ -108,6 +110,7 @@
     export default {
         data: function () {
             return {
+                moreData: null,
                 offsetstart: null,
                 offsetend: null,
                 analysisMode: 'analighter',
@@ -369,6 +372,22 @@
             hoverlinesetoffsetend: function (event) {
                 this.offsetend = event;
             },
+            setBla: function (value) {
+                console.log(value);
+                this.moreData = value;
+
+            },
+            getMoreText: function (docID, pagesize) {
+                var self = this;
+                let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
+                console.log('token length: ' + this.tokens.length);
+                console.log('endIndex: ' + endIndex);
+                let socket = io('http://localhost:8080');
+                socket.emit('getMoreText', docID, endIndex, pagesize);
+                socket.on('sendMoreText', function (tokens, setBla) {
+                    self.setBla(tokens);
+                });
+            }
         },
         mounted() {
             window.addEventListener('resize', this.resize);
@@ -379,6 +398,16 @@
         },
         computed: {},
         watch: {
+            moreData: {
+                handler: function (newData) {
+                    console.log("before " + this.tokens.length);
+                    for (let i = 0; i < newData.length; i++) {
+                        this.tokens.push(newData[i]);
+                    }
+                    this.resize();
+                    console.log("after " + this.tokens.length);
+                }, deep: true
+            },
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
                     this.selectedChain = -1;
@@ -388,14 +417,14 @@
                                 if (typeof this.tokens[i].coref !== 'undefined') {
                                     if (this.tokens[i].coref[0].representative === -1) {
                                         this.selectedChain = this.tokens[i].coref[0].mentionID;
-                                    }else{
+                                    } else {
                                         this.selectedChain = this.tokens[i].coref[0].representative;
                                     }
                                     for (let j = 0; j < this.tokens[i].coref.length; j++) {
                                         if (this.tokens[i].coref[j].kind === 'outer') {
                                             if (this.tokens[i].coref[0].representative === -1) {
                                                 this.selectedChain = this.tokens[i].coref[0].mentionID;
-                                            }else{
+                                            } else {
                                                 this.selectedChain = this.tokens[i].coref[0].representative;
                                             }
                                             break;
@@ -403,7 +432,7 @@
                                             if (this.tokens[i].coref[j].endIndex >= newSelectedIndexes.end) {
                                                 if (this.tokens[i].coref[0].representative === -1) {
                                                     this.selectedChain = this.tokens[i].coref[0].mentionID;
-                                                }else{
+                                                } else {
                                                     this.selectedChain = this.tokens[i].coref[0].representative;
                                                 }
                                                 break;
@@ -411,13 +440,13 @@
                                         } else if (this.tokens[i].coref[j].kind === 'first') {
                                             if (this.tokens[i].coref[0].representative === -1) {
                                                 this.selectedChain = this.tokens[i].coref[0].mentionID;
-                                            }else{
+                                            } else {
                                                 this.selectedChain = this.tokens[i].coref[0].representative;
                                             }
                                         } else if (this.tokens[i].coref[j].kind === 'second') {
                                             if (this.tokens[i].coref[0].representative === -1) {
                                                 this.selectedChain = this.tokens[i].coref[0].mentionID;
-                                            }else{
+                                            } else {
                                                 this.selectedChain = this.tokens[i].coref[0].representative;
                                             }
                                             break;

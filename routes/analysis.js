@@ -103,10 +103,15 @@ io.on('connection', function (socket) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
 
-    socket.on('getMoreText', function(endIndex, pagesize){
-
+    socket.on('getMoreText', function(docID, endIndex, pagesize){
+        wait.launchFiber(getMoreTextResponse,socket, {docID:docID, endIndex:endIndex, pagesize: pagesize});
     });
 });
+
+function getMoreTextResponse(socket, input){
+    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
+    socket.emit('sendMoreText', tokens);
+}
 
 /**
  * Changes the title of a document on the DB.
@@ -240,7 +245,7 @@ function getAndShowText(req, res) {
         let docID = req.session.docID;
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
-        selectWithInnerJoin(docID,0,300);
+        vueData.vueTokens = selectWithInnerJoin(docID,0,30);
 
         //getTextFromDB(docID);
         //console.log(textDB.tokens);
@@ -310,6 +315,7 @@ function getTextFromDB(docID) {
 }
 
 function selectWithInnerJoin(docID, start, amount) {
+    let tokens = [];
     let queryObject = {
         tables: ['textmap', 'word'],
         columns: [{
@@ -360,16 +366,16 @@ function selectWithInnerJoin(docID, start, amount) {
     };
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    vueData.vueTokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
+    tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
     let corefs = getCorefs(docID,start, amount);
-    for (let i = 0; i < vueData.vueTokens.length - 1; i++) {
+    for (let i = 0; i < tokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
             //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
-            if (vueData.vueTokens[i].textIndex === corefs[j].textIndex) {
-                if (typeof  vueData.vueTokens[i].coref === 'undefined') {
-                    vueData.vueTokens[i]['coref'] = [];
+            if (tokens[i].textIndex === corefs[j].textIndex) {
+                if (typeof  tokens[i].coref === 'undefined') {
+                    tokens[i]['coref'] = [];
                 }
-                vueData.vueTokens[i]['coref'].push({
+                tokens[i]['coref'].push({
                     mentionID: corefs[j].mentionID,
                     representative: corefs[j].representative,
                     gender: corefs[j].gender,
@@ -384,6 +390,7 @@ function selectWithInnerJoin(docID, start, amount) {
             }
         }
     }
+    return tokens;
 }
 
 function getCorefs(docID, start, amount) {
