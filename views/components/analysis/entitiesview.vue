@@ -266,6 +266,7 @@
                         if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
                                 if (this.$refs.personresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                    this.$refs.personresults[i].$el.scrollIntoView();
                                     bb = this.$refs.personresults[i].$el.getBoundingClientRect();
                                 }
                             }
@@ -276,6 +277,7 @@
                         if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 if (this.$refs.locationresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                    this.$refs.locationresults[i].$el.scrollIntoView();
                                     bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
                                 }
                             }
@@ -286,6 +288,7 @@
                         if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 if (this.$refs.organisazionresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                    this.$refs.organisazionresults[i].$el.scrollIntoView();
                                     bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
                                 }
                             }
@@ -296,6 +299,7 @@
                         if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 if (this.$refs.miscresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                    this.$refs.miscresults[i].$el.scrollIntoView();
                                     bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
                                 }
                             }
