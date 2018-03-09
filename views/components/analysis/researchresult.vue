@@ -59,6 +59,7 @@
 
     export default {
         props: {
+            serverip: String,
             researchresult: Object,
             index: Number,
             mapkey: Number,
@@ -71,6 +72,7 @@
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 showimage: false,
                 everythingshow: true,
                 researchresult: this.researchresult,
@@ -86,7 +88,7 @@
                 localcontentcontrol: {
                     img: true,
                     map: true,
-                    information:true
+                    information: true
                 }
             }
         },
@@ -103,7 +105,7 @@
                 this.pickResearchResult();
             },
             saveResult: function () {
-                let socket = io('http://localhost:8080');
+                let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.index, this.researchresult, this.docid);
                 this.$emit('saveresult', this.index);
                 this.showallon = true;
@@ -128,7 +130,7 @@
             googlemap
         },
         computed: {
-            localcontentcontroler:function () {
+            localcontentcontroler: function () {
                 console.log('showdetail check' + JSON.stringify(this.contentcontrol));
                 if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
                     this.localcontentcontrol.img = false;
@@ -139,7 +141,7 @@
                     this.localcontentcontrol.map = true;
                     this.localcontentcontrol.information = true;
                 }
-                if(this.sourcequery.source[0].semanticClass === 'PERSON'){
+                if (this.sourcequery.source[0].semanticClass === 'PERSON') {
                     this.localcontentcontrol.map = false;
                 }
                 return this.localcontentcontrol;

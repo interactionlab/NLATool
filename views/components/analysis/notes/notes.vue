@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor height100">
         <component :is="noteMode"
+                   v-bind:serverip="serverip"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
                    v-bind:tokens="tokens"
@@ -15,6 +16,7 @@
 
     export default {
         props: {
+            serverip:String,
             wordnotesp: Array,
             selectedindexes: Object,
             docid: String,
@@ -24,6 +26,7 @@
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 wordnotesp: this.wordnotesp,
                 selectedindexes: this.selectedindexes,
                 docid: this.docid,

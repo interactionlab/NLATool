@@ -3,6 +3,7 @@
         <component class="height100"
                    is="wordnote"
                    v-for="wordnotedb in notes"
+                   v-bind:serverip="serverip"
                    v-bind:wordnotedb="wordnotedb"
                    v-bind:key="wordnotedb.noteID"
                    v-bind:ishovered="ishovered"
@@ -18,6 +19,7 @@
         </component>
 
         <component is="newwordnote"
+                   v-bind:serverip="serverip"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="this.docid"
                    v-bind:tokens="tokens"
@@ -32,6 +34,7 @@
 
     export default {
         props: {
+            serverip: String,
             docid: String,
             notes: Array,
             selectedindexes: Object,
@@ -39,6 +42,7 @@
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 note: '',
                 docid: this.docid,
                 notes: this.notes,

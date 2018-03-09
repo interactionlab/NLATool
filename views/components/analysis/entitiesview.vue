@@ -18,6 +18,7 @@
                    ref="personresults"
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
+                   v-bind:serverip="serverip"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
@@ -46,6 +47,7 @@
                    ref="locationresults"
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
+                   v-bind:serverip="serverip"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index2+ PERSON.length"
                    v-bind:index="index2"
@@ -74,6 +76,7 @@
                    ref="organisazionresults"
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
+                   v-bind:serverip="serverip"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index3+ PERSON.length + LOCATION.length"
                    v-bind:index="index3"
@@ -102,6 +105,7 @@
                    ref="miscresults"
                    v-if="classestomark.MISC"
                    v-for="(researchresult,index4) in MISC"
+                   v-bind:serverip="serverip"
                    v-bind:researchresult="researchresult"
                    v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
                    v-bind:index="index4"
@@ -124,6 +128,7 @@
     export default {
         mixins: [filtertokenwithclass],
         props: {
+            serverip: String,
             tokens: Array,
             classestomark: Object,
             docid: Number,
@@ -134,6 +139,7 @@
         },
         data: function () {
             return {
+                serverip:this.serverip,
                 PERSON: [],
                 LOCATION: [],
                 ORGANIZATION: [],

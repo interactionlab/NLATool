@@ -28,6 +28,7 @@
     export default {
         props: {
             document: Object,
+            serverip: String,
             displayloading : String,
         },
         data: function () {
@@ -35,6 +36,7 @@
                 ishovered: false,
                 document: this.document,
                 changing: false,
+                serverip: this.serverip,
                 displayloading : this.displayloading
             }
         },
@@ -54,7 +56,7 @@
                 this.$emit('editing');
             },
             deleting: function () {
-                let socket = io('http://localhost:8081');
+                let socket = io(this.serverip+':8081');
                 socket.emit('deleteDocument', this.document.docID);
                 this.$emit('deleted', this.document.docID);
             },

@@ -5,7 +5,7 @@
         <div class="mdl-grid"
              v-if="!editing">
             <div class="mdl-cell--12-col contentColor"
-                v-on:click="jumpMarkText">
+                 v-on:click="jumpMarkText">
                 <p>{{linkedtextfornote}}</p>
             </div>
             <div class="mdl-cell--10-col contentColor">
@@ -38,28 +38,31 @@
 <script>
     import newwordnote from './components/analysis/notes/newwordnote.vue';
     import gettokensofselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+
     export default {
-        mixins:[gettokensofselectedtext],
+        mixins: [gettokensofselectedtext],
         props: {
+            serverip: String,
             wordnotedb: Object,
             docid: String,
-            tokens:Object,
-            selectedindexes:Object
+            tokens: Object,
+            selectedindexes: Object
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 wordnotedb: this.wordnotedb,
                 ishovered: false,
                 editing: false,
                 docid: this.docid,
-                tokens:this.tokens,
+                tokens: this.tokens,
                 selectedindexes: this.selectedindexes
             }
         },
-        computed:{
-            linkedtextfornote:function () {
+        computed: {
+            linkedtextfornote: function () {
                 let noteRanges = {
-                    start:  this.wordnotedb.textIndex1,
+                    start: this.wordnotedb.textIndex1,
                     end: this.wordnotedb.textIndex2
                 };
                 return this.generateText(this.gettokensofselectedtext(this.tokens, noteRanges));
@@ -72,7 +75,7 @@
                 this.$emit('edit', [this.wordnotedb]);
             },
             deleting: function () {
-                let socket = io('http://localhost:8080');
+                let socket = io(this.serverip + ':8080');
                 socket.emit('deletenote', this.wordnotedb.noteID);
                 this.$emit('deletenote', this.wordnotedb.noteID);
                 this.editing = false;
@@ -90,13 +93,13 @@
             back: function (noteToChange) {
                 //console.log('Check: ' + noteToChange[0] +' : ' + noteToChange[1] + ' : ' + noteToChange[2]);
                 this.editing = false;
-                if(noteToChange[0]!== -10 && noteToChange[1]!== -10 && noteToChange[2]!== -10){
+                if (noteToChange[0] !== -10 && noteToChange[1] !== -10 && noteToChange[2] !== -10) {
                     this.$emit('back', noteToChange);
                 }
             },
-            jumpMarkText:function () {
+            jumpMarkText: function () {
                 this.setSelectedRanges();
-                this.$emit('jumpmarktext',this.selectedindexes);
+                this.$emit('jumpmarktext', this.selectedindexes);
                 //href #selectesindexes.start behavior
             }
         },
