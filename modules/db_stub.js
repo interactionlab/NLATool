@@ -192,6 +192,8 @@ exports.makeSQLRequest = function (query, callback) {
  */
 exports.makeTransaction = function (input) {
     let results = [];
+    let firstTimeCheck = new Date();
+    let deltaTime = firstTimeCheck.getMilliseconds();
     try {
         connection.beginTransaction();
         for (let i = 0; i < input.querys.length; i++) {
@@ -253,9 +255,13 @@ exports.makeTransaction = function (input) {
             }
         }
         connection.commit();
+        let lastTimeCheck = new Date();
+        console.log('Time it took: ' + (lastTimeCheck.getMilliseconds() - deltaTime));
         return results;
     } catch (err) {
-        console.log(Tag + 'Transaction failed: '+err);
+        let lastTimeCheck = new Date();
+        console.log('Time it took: ' + (lastTimeCheck.getMilliseconds() - deltaTime));
+        console.log(Tag + 'Transaction failed: ' + err);
         connection.rollback();
         return results;
     }
@@ -385,7 +391,7 @@ matchsColumnSettings = function (table, jsonColumns, dbColumns) {
         dbStatus.settingsCorrect = true;
         return true;
     } else {
-       // console.log(notMedia + Tag + 'Differences of Config: ' + JSON.stringify(differences));
+        // console.log(notMedia + Tag + 'Differences of Config: ' + JSON.stringify(differences));
         dbStatus.columnsCorrect = false;
         dbStatus.settingsCorrect = false;
         return false;
