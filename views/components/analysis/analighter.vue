@@ -10,7 +10,8 @@
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:entitytoline="entitytoline"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
-                   v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
+                   v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
+                   v-on:pickresearchresult="pickresearchresult($event)">
 
         </component>
     </div>
@@ -54,7 +55,10 @@
             },
             hoverlinesetoffsetend:function (event) {
                 this.$emit('hoverlinesetoffsetend',event);
-            }
+            },
+            pickresearchresult:function (textIndex) {
+                this.$emit('pickresearchresult', textIndex);
+            },
         },
         components: {
             nerVue,

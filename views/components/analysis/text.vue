@@ -5,7 +5,7 @@
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
         <span class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span
+            class="nonPreAlt" v-bind:class="toHighlight" ref="word" v-on:mouseover="hover">{{token.content}}</span><span
             class="nonPreAlt specialBracket" v-bind:class="toHighlight">{{endBrackets}}</span><span class="preAlt "
                                                                                                     v-bind:class="classToHighlightGap">{{getWordGap}}</span>
     </span>
@@ -25,6 +25,7 @@
             selectedchain: Number,
             nestedmentions: Object,
             endOfMentions: Object,
+            entityindextoline: Number
         },
         data: function () {
             return {
@@ -226,17 +227,26 @@
         },
         mounted() {
         },
+        watch:{
+            entityindextoline:function (newIndex) {
+                if(newIndex === this.token.textIndex){
+                    let offsets =  this.$refs["word"].getBoundingClientRect();
+                    this.$emit('setoffsetstart', [offsets, this.token]);
+                }
+            }
+        },
         methods: {
             startSelection: function () {
                 this.$emit('startselection', this.index - 1);
             },
-            endSelection: function () {
+            endSelection: function (event) {
+                let offsets = event.target.getBoundingClientRect();
+                this.$emit('setoffsetstart', [offsets, this.token]);
                 this.$emit('endselection', this.index);
             },
             stophover: function () {
                 this.tohover = false;
                 this.$emit('hoverchain', -1);
-                this.$emit('hoverlinesetoffsetstart', [-1, {}]);
             },
             hover: function (event) {
                 this.tohover = true;
@@ -246,9 +256,9 @@
                 }
                 //var mentionid = this.mention[0].mentionID;
                 let offsets = event.target.getBoundingClientRect();
-                this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);
+                this.$emit('setoffsetstart', [offsets, this.token]);
                 //if (this.token.content != "" && this.token.content != " " && this.token.content != "]" && this.token.content != "[") {
-                //    this.$emit('hoverlinesetoffsetstart', [offsets, this.token]);
+                //    this.$emit('setoffsetstart', [offsets, this.token]);
                 //}
             }
         }

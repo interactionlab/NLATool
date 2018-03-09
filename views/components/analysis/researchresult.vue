@@ -7,7 +7,7 @@
                     <div v-bind:class="generalstyleclass"
                          v-on:mouseout="accentuate"
                          v-on:mouseover="accentuate"
-                        v-on:click="">
+                        v-on:click="pickResearchResult">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchresult.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
@@ -65,7 +65,7 @@
             docid: Number,
             showallon: Boolean,
             mapcoordinates: Array,
-            sourcequery: String,
+            sourcequery: Object,
             semclass: String,
             contentcontrol: Object
         },
@@ -95,6 +95,7 @@
             },
             accentuate: function () {
                 this.hover = !this.hover;
+                this.pickResearchResult();
             },
             saveResult: function () {
                 let socket = io('http://localhost:8080');
@@ -112,6 +113,10 @@
                 }
             },
             editResearch: function () {
+            },
+            pickResearchResult:function () {
+                let textIndex = this.sourcequery.source[0].textIndex;
+                this.$emit('pickresearchresult', textIndex);
             }
         },
         components: {

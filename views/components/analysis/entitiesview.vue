@@ -27,7 +27,8 @@
                    v-bind:sourcequery="sourcequery[0][index]"
                    v-bind:semclass="borderedClasses[0]"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+            v-on:pickresearchresult="pickresearchresult($event)">
         </component>
         <div class="semClassFormate"
              ref="locationresultsparent"
@@ -54,7 +55,8 @@
                    v-bind:sourcequery="sourcequery[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:pickresearchresult="pickresearchresult($event)">
         </component>
         <div class="semClassFormate"
              ref="organisazionresultsparent"
@@ -81,7 +83,8 @@
                    v-bind:sourcequery="sourcequery[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:pickresearchresult="pickresearchresult($event)">
         </component>
         <div class="semClassFormate"
              ref="miscresultsparent"
@@ -108,7 +111,8 @@
                    v-bind:sourcequery="sourcequery[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.MISCS"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:pickresearchresult="pickresearchresult($event)">
         </component>
     </div>
 
@@ -147,6 +151,9 @@
             }
         },
         methods: {
+            pickresearchresult:function (textIndex) {
+                this.$emit('pickresearchresult', textIndex);
+            },
             log: function () {
                 //console.log("entitiesview: " + JSON.stringify(this.entitytoline));
             },
