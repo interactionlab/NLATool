@@ -390,7 +390,6 @@
         beforeDestroy() {
             window.removeAllListeners();
         },
-        computed: {},
         watch: {
             moreData: {
                 handler: function (newData) {
