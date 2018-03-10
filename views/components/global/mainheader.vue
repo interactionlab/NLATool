@@ -95,6 +95,7 @@
         },
         data: function () {
             return {
+                serverip: this.serverip,
                 title: this.title,
                 editingtitle: false,
                 preventtitleedit: this.preventtitleedit,
@@ -105,7 +106,6 @@
                 img: 'img',
                 map: 'map',
                 information: 'information',
-                serverip: this.serverip
             }
         },
         methods: {

@@ -44,8 +44,6 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <button v-on:click="getMoreText(tokens[0].docID, 500)">get More Text
-            </button>
             <div style="flex: 0;width: 100%; position: relative;">
                 <component is="textviewcontrol"
                            v-on:changescope="changeScope($event)"
@@ -272,13 +270,13 @@
                     if (end - difference >= 0) {
                         newtokenstoshow = this.splitted.slice(end - difference, end);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push(newtokenstoshow[i]);
+                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
                         }
                         this.textcolumnposition.start = end - difference;
                     } else {
                         newtokenstoshow = this.splitted.slice(0, difference);
                         for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push(newtokenstoshow[i]);
+                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
                         }
                         this.textcolumnposition.start = 0;
                     }
@@ -387,7 +385,6 @@
         },
         mounted() {
             window.addEventListener('resize', this.resize);
-            this.resize();
             this.getMoreText(this.tokens[0].docID, 500);
         },
         beforeDestroy() {
