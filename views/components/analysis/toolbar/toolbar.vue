@@ -76,7 +76,6 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            tokens: Array,
             selectedindexes: Object,
             classestomark:Object
         },
@@ -84,7 +83,6 @@
             return {
                 tool: 'analightertool',
                 onOff: false,
-                tokens: this.tokens,
                 selectedindexes: this.selectedindexes,
                 correctionMode: false,
                 allActive: false,
