@@ -18,7 +18,7 @@
         </component>
         
         <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;"
-                 v-if="displayloading == true>
+                 v-if="displayloading == true">
                 <div style=" margin: 0% auto;  z-index: 10;  left: 0; top: 50%; width: auto !important; max-width: 100%; color: gray; max-width:1000px; position: relative; opacity: 1;">
                     Loading...
                     <div id="progressbar2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
@@ -373,14 +373,11 @@
                 this.offsetend = event;
             },
             setMoreDataFromServer: function (value) {
-                console.log(value);
                 this.moreData = value;
             },
             getMoreText: function (docID, pagesize) {
                 var self = this;
                 let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
-                console.log('token length: ' + this.tokens.length);
-                console.log('endIndex: ' + endIndex);
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
                 socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {
@@ -389,10 +386,9 @@
             }
         },
         mounted() {
-            this.getMoreText(this.tokens[0].docID, 500);
             window.addEventListener('resize', this.resize);
             this.resize();
-            this.displayloading = false;
+            this.getMoreText(this.tokens[0].docID, 500);
         },
         beforeDestroy() {
             window.removeAllListeners();
@@ -401,11 +397,14 @@
         watch: {
             moreData: {
                 handler: function (newData) {
-                    console.log("before " + this.tokens.length);
-                    for (let i = 0; i < newData.length; i++) {
-                        this.tokens.push(newData[i]);
+                    if (newData.length > 0){
+                        
+                        this.tokens.push.apply(this.tokens, newData);
+                        this.getMoreText(this.tokens[0].docID, 500);
+                    } else {
+                        this.resize();
+                        this.displayloading = false;
                     }
-                    this.resize();
                     console.log("after " + this.tokens.length);
                 }, deep: true
             },
