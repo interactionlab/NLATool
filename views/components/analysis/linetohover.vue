@@ -15,15 +15,12 @@
 <script>
     export default {
         props: {
-            offsetstart: Object,
-            offsetend: Object,
-            semanticclass: Object,
+            offsetstart: { type: Object, default: null },
+            offsetend: { type: Object, default: null },
+            semanticclass: { type: Object, default: null },
         },
         data: function () {
             return {
-                offsetstart: this.offsetstart,
-                offsetend: this.offsetend,
-                semanticclass: this.semanticclass,
             }
         },
     }

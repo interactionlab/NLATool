@@ -22,7 +22,7 @@
     export default {
         name: "login",
         props: {
-            errormsg: Object
+            errormsg: { type: Object, default: null }
         },
         data: function () {
             return {}

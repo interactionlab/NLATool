@@ -50,26 +50,20 @@
 
         mixins: [getselectedtext, filtertoken],
         props: {
-
-            selectedindexes: Object,
-            tokens: Array,
-            docid: Number,
-            selectedchain: Number,
-            mentions: Array,
+            selectedindexes: { type: Object, default: null },
+            tokens: { type: Array, default: [] },
+            docid: { type: Number, default: -1 },
+            selectedchain: { type: Number, default: -1 },
+            mentions: { type: Array, default: [] },
         },
         data: function () {
             return {
                 researchresults: [''],
-                tokens: this.tokens,
                 selectedtext: '',
-                selectedindexes: this.selectedindexes,
                 resultselected: false,
                 selectedresult: {},
                 selectedindex: -1,
-                docid: this.docid,
                 keywords: this.keywords,
-                selectedchain: this.selectedchain,
-                mentions: this.mentions,
                 mapcoordinates: [],
                 sourceQuery: '',
             }

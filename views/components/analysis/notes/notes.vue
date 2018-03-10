@@ -16,23 +16,16 @@
 
     export default {
         props: {
-            serverip:String,
-            wordnotesp: Array,
-            selectedindexes: Object,
-            docid: String,
-            notes: Array,
-            tokens: Object,
-            notemodes: Object
+            serverip: { type: String, default: "" },
+            wordnotesp: { type: Array, default: [] },
+            selectedindexes: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            notes: { type: Array, default: [] },
+            tokens: { type: Array, default: [] },
+            notemodes: { type: Object, default: null },
         },
         data: function () {
             return {
-                serverip: this.serverip,
-                wordnotesp: this.wordnotesp,
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                notes: this.notes,
-                tokens: this.tokens,
-                notemodes: this.notemodes
             }
         },
         methods: {

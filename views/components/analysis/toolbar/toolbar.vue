@@ -76,17 +76,15 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            selectedindexes: Object,
-            classestomark:Object
+            selectedindexes: { type: Object, default: null },
+            classestomark:{ type: Object, default: null }
         },
         data: function () {
             return {
                 tool: 'analightertool',
                 onOff: false,
-                selectedindexes: this.selectedindexes,
                 correctionMode: false,
                 allActive: false,
-                classestomark: this.classestomark,
                 noteModes: {
                     wordnote: true,
                     globalnote: false

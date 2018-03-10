@@ -40,22 +40,16 @@
             autotextarea
         },
         props: {
-            serverip: String,
-            selectedindexes: Object,
-            docid: String,
-            newnote: String,
-            wordnotedb: Object,
-            tokens: Object
+            serverip: { type: String, default : ''},
+            selectedindexes: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            newnote: { type: String, default: "" },
+            wordnotedb: { type: Object, default: null },
+            tokens: { type: Array, default: [] },
         },
         data: function () {
             return {
-                serverip: this.serverip,
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                newnote: this.newnote,
-                wordnotedb: this.wordnotedb,
                 selectedtext: '',
-                tokens: this.tokens,
                 submitit: false
             }
         },

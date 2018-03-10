@@ -42,21 +42,16 @@
     export default {
         mixins: [gettokensofselectedtext],
         props: {
-            serverip: String,
-            wordnotedb: Object,
-            docid: String,
-            tokens: Object,
-            selectedindexes: Object
+            serverip: { type: String, default: "" },
+            wordnotedb: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            tokens: { type: Array, default: [] },
+            selectedindexes: { type: Object, default: null },
         },
         data: function () {
             return {
-                serverip: this.serverip,
-                wordnotedb: this.wordnotedb,
                 ishovered: false,
                 editing: false,
-                docid: this.docid,
-                tokens: this.tokens,
-                selectedindexes: this.selectedindexes
             }
         },
         computed: {
