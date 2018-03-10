@@ -18,7 +18,7 @@
             selectedindexes: { type: Object, default: null }, 
             hoveredchain: { type: Number, default: -1 },
             selectedchain: { type: Number, default: -1 },
-            entityindextoline: Number,
+            entityindextoline: { type: Number, default: -1 },
             entitytoline: { type: Array, default: function () { return [] }},
         },
         data: function () {
@@ -204,11 +204,15 @@
             }
         },
         watch:{
-            entityindextoline:function (newIndex) {
-                if(newIndex === this.token.textIndex){
-                    this.$el.scrollIntoView();
-                    let offsets =  this.$el.getBoundingClientRect();
-                    this.$emit('setoffsetstart', [offsets, this.token, "research"]);
+            entityindextoline:function (wordids) {
+                let index = wordids.indexOf(this.token.wordID)
+                if(index >- 1){
+                    console.log(index);
+                    if (index == 0){
+                        this.$el.scrollIntoView();
+                        let offsets =  this.$el.getBoundingClientRect();                        
+                        this.$emit('setoffsetstart', [offsets, this.token, "research"]);
+                    }
                 }
             },
             entitytoline:{

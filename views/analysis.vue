@@ -296,12 +296,12 @@
                 }
             },
             splitNotes: function () {
-                for (let i = 0; i < this.splitted; i++) {
+                /*for (let i = 0; i < this.splitted; i++) {
                     for (let j = 0; j < this.notes; j++) {
                         if (this.splitted[i][this.splitted[i].length - 1] === 0) {
                         }
                     }
-                }
+                }*/
             },
             splitTokens: function () {
                 let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns) + 1;

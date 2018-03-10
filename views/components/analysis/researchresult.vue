@@ -1,18 +1,18 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content deleteSpaces contentColor separate">
+        <main class="mdl-layout__content deleteSpaces contentColor separate"
+                v-on:mouseout="mouseout"
+                v-on:mouseover="accentuate"
+                v-on:click="showdetail">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
-                    <div v-bind:class="generalstyleclass"
-                         v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate"
-                         v-on:click="showdetail">
+                    <div v-bind:class="generalstyleclass">
                         <div class="mdl-grid deleteSpaces"
-                             v-if="typeof researchresult.result !== 'undefined' ">
+                             v-if="typeof researchdata.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
-                                     v-if="typeof researchresult.result !== 'undefined'">
+                                     v-if="typeof researchdata.result !== 'undefined'">
                                     {{title}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
@@ -26,8 +26,8 @@
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col deleteSpaces">
-                                <img v-if="(localcontentcontroler.img) & (typeof researchresult.result.image !== 'undefined')"
-                                     v-bind:src="researchresult.result.image.contentUrl"
+                                <img v-if="(localcontentcontroler.img) & (typeof researchdata.result.image !== 'undefined')"
+                                     v-bind:src="researchdata.result.image.contentUrl"
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
                                 <div style="float: left; width: 30%; margin-right: 1em;">
                                     <component is="googlemap" v-if="localcontentcontroler.map"
@@ -37,12 +37,12 @@
                                     </component>
                                 </div>
                                 <div v-if="localcontentcontroler.information">
-                                    <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                        {{researchresult.result.description.articleBody}}
+                                    <div v-if="typeof researchdata.result.description !== 'undefined'">
+                                        {{researchdata.result.description.articleBody}}
                                     </div>
 
-                                    <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                        {{researchresult.result.detailedDescription.articleBody}}
+                                    <div v-if="typeof researchdata.result.detailedDescription !== 'undefined'">
+                                        {{researchdata.result.detailedDescription.articleBody}}
                                     </div>
                                 </div>
                             </div>
@@ -60,12 +60,11 @@
     export default {
         props: {
             serverip: { type: String, default: "" },
-            researchresult: { type: Object, default: null },
+            researchdata: { type: Object, default: null },
             index: { type: Number, default: -1 },
             mapkey: { type: Number, default: -1 },
             docid: { type: Number, default: -1 },
             mapcoordinates: { type: Array, default: function () { return [] }},
-            sourcequery: { type: Object, default: null },
             semclass: { type: String, default: "" },
             contentcontrol: { type: Object, default: null },  
             hoveredentity: { type: String, default: "" },
@@ -87,21 +86,23 @@
             showdetail: function () {
 
             },
-            accentuate: function () {
-                this.hover = !this.hover;
-                
-                //mouseover
-                let textIndex = this.sourcequery.source[0].textIndex;
-                this.$emit('pickresearchresult', [textIndex, "research"]);
+            mouseout: function () {
+                this.hover = false;
             },
+            accentuate: function () {
+                this.hover = true;                
+                //mouseover
+                this.$emit('hoverreseach', [this.researchdata.sourcequery.wordids, "research"]);
+            },
+            
             saveResult: function () {
                 let socket = io(this.serverip + ':8080');
-                socket.emit('saveresult', this.index, this.researchresult, this.docid);
+                socket.emit('saveresult', this.index, this.researchdata, this.docid);
                 this.$emit('saveresult', this.index);
             },
             showSource: function () {
                 try {
-                    let url = this.researchresult.result.detailedDescription.url;
+                    let url = this.researchdata.result.detailedDescription.url;
                     let win = window.open(url, '_blank');
                     win.focus();
                 } catch (err) {
@@ -125,23 +126,23 @@
                     this.localcontentcontrol.map = true;
                     this.localcontentcontrol.information = true;
                 }
-                if (this.sourcequery.source[0].semanticClass === 'PERSON') {
+                if (this.researchdata.sourcequery.source[0].semanticClass === 'PERSON') {
                     this.localcontentcontrol.map = false;
                 }
                 return this.localcontentcontrol;
             },
             generalstyleclass: function () {
                 let htmlclass = {
-                    researchresulthover: this.hover
+                    researchdatahover: this.hover
                 };
                 
-                if (this.hoveredentity == this.sourcequery.query)
+                console.log("this.hoveredentity: "+this.hoveredentity);
+                
+                if (this.hoveredentity != null && this.researchdata.sourcequery.wordids.indexOf(this.hoveredentity[0])  > -1)
                 {
-                    this.hover = true;
                     htmlclass[this.semclass + "_strong"] = true;
                     htmlclass[this.semclass] = false;
                 } else {
-                    this.hover = false;
                     htmlclass[this.semclass + "_strong"] = false;
                     htmlclass[this.semclass] = true;
                 }
@@ -150,17 +151,24 @@
             },
             title: function () {
                 let title = '';
-                if (typeof this.sourcequery !== 'undefined') {
-                    if (typeof this.sourcequery.query !== 'undefined') {
-                        title = title + this.sourcequery.query;
-                        if (typeof this.sourcequery.freq !== 'undefined') {
-                            title = title + ' (' + this.sourcequery.freq + ') ';
+                if (typeof this.researchdata.sourcequery !== 'undefined') {
+                    if (typeof this.researchdata.sourcequery.querys !== 'undefined') {
+                        let t = "";
+                        for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++)
+                        {
+                            if (this.researchdata.sourcequery.querys[i].length > t.length){
+                                t = this.researchdata.sourcequery.querys[i];
+                            }
+                        }                        
+                        title = title + t;
+                        if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
+                            title = title + ' (' + this.researchdata.sourcequery.freq + ') ';
                         }
                     } else {
-                        title = title + this.sourcequery;
+                        title = title + this.researchdata.sourcequery;
                     }
                 }
-                title = title + ' -> ' + this.researchresult.result.name;
+                title = title + ' -> ' + this.researchdata.result.name;
                 return title;
 
 

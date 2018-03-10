@@ -52,7 +52,7 @@
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
                             v-on:jumpmarktext="selectText2($event)"
-                            v-on:pickresearchresult="pickresearchresult($event)">
+                            v-on:hoverreseach="hoverreseach($event)">
                     </component>
                 </keep-alive>
             </div>
@@ -168,7 +168,7 @@
                     return result * sortOrder;
                 }
             },
-            pickresearchresult:function (event) {
+            hoverreseach:function (event) {
                 this.entityindextoline = event[0];
             },
         },
