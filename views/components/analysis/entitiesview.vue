@@ -18,18 +18,17 @@
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
                    v-bind:serverip="serverip"
-                   v-bind:researchresult="researchresult"
+                   v-bind:researchdata="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
                    v-bind:mapkey="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sourcequery="sourcequery[0][index]"
                    v-bind:semclass="borderedClasses[0]"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:hoveredentity="hoveredentity"
-                   v-on:saveresult="saveResult($event)"
-                   v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:hoverreseach="hoverreseach($event)"
+                   v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate LOCATION"
              ref="locationresultsparent"
@@ -48,18 +47,17 @@
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:serverip="serverip"
-                   v-bind:researchresult="researchresult"
+                   v-bind:researchdata="researchresult"
                    v-bind:key="index2+ PERSON.length"
                    v-bind:index="index2"
                    v-bind:mapkey="index2+ PERSON.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sourcequery="sourcequery[1][index2]"
                    v-bind:semclass="'LOCATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:hoveredentity="hoveredentity"
-                   v-on:saveresult="saveResult($event)"
-                   v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:hoverreseach="hoverreseach($event)"
+                   v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate ORGANIZATION"
              ref="organisazionresultsparent"
@@ -78,18 +76,17 @@
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:serverip="serverip"
-                   v-bind:researchresult="researchresult"
+                   v-bind:researchdata="researchresult"
                    v-bind:key="index3+ PERSON.length + LOCATION.length"
                    v-bind:index="index3"
                    v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sourcequery="sourcequery[2][index3]"
                    v-bind:semclass="'ORGANIZATION_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:hoveredentity="hoveredentity"
-                   v-on:saveresult="saveResult($event)"
-                   v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:hoverreseach="hoverreseach($event)"
+                   v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate MISC"
              ref="miscresultsparent"
@@ -107,19 +104,18 @@
                    ref="miscresults"
                    v-if="classestomark.MISC"
                    v-for="(researchresult,index4) in MISC"
-                   v-bind:serverip="serverip"
-                   v-bind:researchresult="researchresult"
-                   v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
                    v-bind:index="index4"
+                   v-bind:serverip="serverip"
+                   v-bind:researchdata="researchresult"
+                   v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
                    v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:sourcequery="sourcequery[3][index4]"
                    v-bind:semclass="'MISC_BORDERED'"
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:hoveredentity="hoveredentity"
-                   v-on:saveresult="saveResult($event)"
-                   v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:hoverreseach="hoverreseach($event)"
+                   v-on:saveresult="saveResult($event)">
         </component>
     </div>
 
@@ -150,18 +146,18 @@
                 borderedClasses: ['PERSON_BORDERED',],
                 researchresults: [],
                 sortedtokens: [],
-                sourcequery: [],
                 hoveredentity: null,
                 isHoverFromResearch: false,
+                sourcequery:[],
             }
         },
         methods: {
-            pickresearchresult: function (event) {
+            hoverreseach: function (event) {
                 if (event[1] == "research")
                     this.isHoverFromResearch = true;
                 else
                     this.isHoverFromResearch = false;
-                this.$emit('pickresearchresult', event);                   
+                this.$emit('hoverreseach', event);                   
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -184,18 +180,22 @@
                         searched = false;
                     }
                     if (query !== '') {
-                        this.sourcequery[index].push({
-                            query: query,
+                        let wordids = []
+                        for (let k = 0; k < this.sortedtokens[index][i].length; k++){
+                            wordids.push(this.sortedtokens[index][i][k].wordID);
+                        } 
+                        this.searchGoogle(query, 1, semClass, {
                             freq: frequency,
+                            wordids: wordids,
+                            querys: [query],                            
                             source: this.sortedtokens[index][i]
                         });
-                        this.searchGoogle(query, 1, semClass);
                     }
                     query = '';
                     frequency = 0;
                 }
             },
-            searchGoogle: function (query, limit, semClass) {
+            searchGoogle: function (query, limit, semClass, sourcequery) {
                 if (limit < 1) {
                     return null;
                 }
@@ -211,7 +211,29 @@
                     if (limit > 1) {
                         // this[semClass].push(this.rerankWithKeywords());
                     } else {
-                        this[semClass].push(response.itemListElement[0]);
+                        
+                        let data = response.itemListElement[0];
+                                               
+                        let found = false;
+                        for(let i = 0; i < this[semClass].length; i++)
+                        {
+                            if (this[semClass][i].result["@id"] == data.result["@id"]){
+                                found = true;
+                                for (let k = 0; k < sourcequery.source.length; k++){
+                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                }                                
+                                this[semClass][i].sourcequery.wordids.sort();
+                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
+                                this[semClass][i].sourcequery.freq += sourcequery.freq;
+                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
+                                //console.log(JSON.stringify(this[semClass][i]));
+                            }
+                        }
+                        if (found == false){
+                            data["sourcequery"] = sourcequery;
+                            this[semClass].push(data);
+                        }
+                        
                     }
                 });
             },
@@ -225,29 +247,29 @@
         },
         computed: {
             numberOfPersons: function () {
-                if (typeof this.sourcequery !== 'undefined' && typeof this.sourcequery[0] !== 'undefined') {
-                    return this.sourcequery[0].length;
+                if (typeof this["PERSON"] !== 'undefined') {
+                    return this["PERSON"].length;
                 } else {
                     return '';
                 }
             },
             numberOfLocations: function () {
-                if (typeof this.sourcequery !== 'undefined' && typeof this.sourcequery[1] !== 'undefined') {
-                    return this.sourcequery[1].length;
+                if (typeof this["LOCATION"] !== 'undefined') {
+                    return this["LOCATION"].length;
                 } else {
                     return '';
                 }
             },
             numberOfOrganizations: function () {
-                if (typeof this.sourcequery !== 'undefined' && typeof this.sourcequery[2] !== 'undefined') {
-                    return this.sourcequery[2].length;
+                if (typeof this['ORGANIZATION'] !== 'undefined') {
+                    return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
             },
             numberOfMisc: function () {
-                if (typeof this.sourcequery !== 'undefined' && typeof this.sourcequery[3] !== 'undefined') {
-                    return this.sourcequery[3].length;
+                if (typeof this['MISC'] !== 'undefined') {
+                    return this['MISC'].length;
                 } else {
                     return '';
                 }
@@ -262,17 +284,19 @@
         watch: {
             entitytoline: {
                 handler: function (newValue) {
-                    let newWord = newValue[0].content;
+                    // this is shit
+                    let newwordid = newValue[0].wordID;
                     let bb = null;
                     if (newValue[0].semanticClass === 'PERSON') {
                         if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
-                                if (this.$refs.personresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                
+                                if (this.$refs.personresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (!this.isHoverFromResearch)
                                         this.$refs.personresults[i].$el.scrollIntoView();
                                     
                                     bb = this.$refs.personresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.personresults[i].sourcequery.query
+                                    this.hoveredentity = this.$refs.personresults[i].researchdata.sourcequery.wordids
                                 }
                             }
                         } else {
@@ -281,12 +305,12 @@
                     } else if (newValue[0].semanticClass === 'LOCATION') {
                         if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
-                                if (this.$refs.locationresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                if (this.$refs.locationresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (!this.isHoverFromResearch)
                                         this.$refs.locationresults[i].$el.scrollIntoView();
                                     
                                     bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.locationresults[i].sourcequery.query
+                                    this.hoveredentity = this.$refs.locationresults[i].researchdata.sourcequery.wordids
                                 }
                             }
                         } else {
@@ -295,12 +319,12 @@
                     } else if (newValue[0].semanticClass === "ORGANIZATION") {
                         if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
-                                if (this.$refs.organisazionresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                if (this.$refs.organisazionresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (!this.isHoverFromResearch)
                                         this.$refs.organisazionresults[i].$el.scrollIntoView();
                                     
                                     bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.organisazionresults[i].sourcequery.query
+                                    this.hoveredentity = this.$refs.organisazionresults[i].researchdata.sourcequery.wordids
                                 }
                             }
                         } else {
@@ -309,12 +333,12 @@
                     } else if (newValue[0].semanticClass === "MISC") {
                         if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
-                                if (this.$refs.miscresults[i].sourcequery.source[0].content.indexOf(newWord) > -1) {
+                                if (this.$refs.miscresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (!this.isHoverFromResearch)
                                         this.$refs.miscresults[i].$el.scrollIntoView();
                                     
                                     bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.miscresults[i].sourcequery.query
+                                    this.hoveredentity = this.$refs.miscresults[i].researchdata.sourcequery.wordids
                                 }
                             }
                         } else {

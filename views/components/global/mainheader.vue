@@ -89,7 +89,7 @@
             preventtitleedit: { type: Boolean, default: false},
             docid: { type: Number, default: -1 },
             route: { type: String, default: "" },
-            numberofcolumns: Number,
+            numberofcolumns: { type: Number, default: 1 },
             autochecked: { type: Boolean, default: false },
             serverip: { type: String, default: "" }
         },

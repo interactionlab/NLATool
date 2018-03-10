@@ -13,7 +13,7 @@
                    v-bind:whereislinefrom="whereislinefrom"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
                    v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
-                   v-on:pickresearchresult="pickresearchresult($event)">
+                   v-on:hoverreseach="hoverreseach($event)">
 
         </component>
     </div>
@@ -23,7 +23,6 @@
     import necVue from './components/analysis/nec.vue';
     import correction from './components/analysis/correction.vue';
     import entitiesview from './components/analysis/entitiesview.vue';
-
 
     export default {
 
@@ -51,8 +50,8 @@
             hoverlinesetoffsetend:function (event) {
                 this.$emit('hoverlinesetoffsetend',event);
             },
-            pickresearchresult:function (textIndex) {
-                this.$emit('pickresearchresult', textIndex);
+            hoverreseach:function (textIndex) {
+                this.$emit('hoverreseach', textIndex);
             },
         },
         components: {
