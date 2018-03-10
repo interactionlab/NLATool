@@ -34,21 +34,16 @@
 
     export default {
         props: {
-            serverip: String,
-            docid: String,
-            notes: Array,
-            selectedindexes: Object,
-            tokens: Object
+            serverip: { type: String, default: "" },
+            docid: { type: Number, default: -1 },
+            notes: { type: Array, default: [] },
+            selectedindexes: { type: Object, default: null },
+            tokens: { type: Array, default: [] },
         },
         data: function () {
             return {
-                serverip: this.serverip,
                 note: '',
-                docid: this.docid,
-                notes: this.notes,
-                selectedindexes: this.selectedindexes,
                 ishovered: false,
-                tokens: this.tokens
             }
         },
         methods: {

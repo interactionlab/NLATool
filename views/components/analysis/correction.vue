@@ -57,21 +57,18 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            serverip: String,
-            tokens: Array,
-            selectedindexes: Object,
-            docid: String,
+            serverip: { type: String, default: "" },
+            tokens: { type: Array, default: [] },
+            selectedindexes: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
         },
         data: function () {
             return {
-                serverip: this.serverip,
+
                 showNewClasses: false,
-                tokens: this.tokens,
                 selectedtokens: [],
-                selectedindexes: this.selectedindexes,
                 classesPerToken: [],
                 index: 0,
-                docid: this.docid,
                 suggestions: false
             }
 

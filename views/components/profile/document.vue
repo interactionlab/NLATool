@@ -16,17 +16,14 @@
 
     export default {
         props: {
-            document: Object,
-            serverip: String,
-            displayloading : String,
+            document: { type: Object, default: null },
+            serverip: { type: String, default: "" },
+            displayloading : { type: String, default: "" },
         },
         data: function () {
             return {
-                document: this.document,
                 changing: 'showdoc',
                 newtitle: '',
-                serverip: this.serverip,
-                displayloading : this.displayloading
             }
         },
         methods: {

@@ -23,16 +23,13 @@
 <script>
     export default {
         props: {
-            document: Object,
-            serverip: String,
-            newtitle: String
+            document: { type: Object, default: null },
+            serverip: { type: String, default: "" },
+            newtitle: { type: String, default: "" }
         },
         data: function () {
             return {
-                document: this.document,
                 changing: 'showdoc',
-                serverip: this.serverip,
-                newtitle: this.newtitle
             }
         },
         methods: {

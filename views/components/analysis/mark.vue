@@ -8,16 +8,13 @@
 
     export default {
         props: {
-            tokens: Object,
-            markermode: String,
-            lang: String
+            tokens: { type: Array, default: [] },
+            markermode: { type: String, default: "" },
+            lang: { type: String, default: "" }
         },
         data: function () {
             return {
-                tokens: this.tokens,
-                markermode: this.markermode,
                 toMarkClass: {},
-                lang: this.lang,
             }
         },
         mounted() {
