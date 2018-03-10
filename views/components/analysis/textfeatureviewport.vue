@@ -69,12 +69,12 @@
     export default {
         props: {
             serverip: { type: String, default: "" },
-            col: { type: Array, default: [] },
+            col: { type: Array, default: function () { return [] }},
             colindex: { type: Number, default: -1 },
-            splitted: { type: Array, default: [] },
-            tokens: { type: Array, default: [] },
-            notes: { type: Array, default: [] },
-            mentions: { type: Array, default: [] },
+            splitted: { type: Array, default: function () { return [] }},
+            tokens: { type: Array, default: function () { return [] }},
+            notes: { type: Array, default: function () { return [] }},
+            mentions: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
             selectedchain: { type: Number, default: -1 },
             hoveredchain: { type: Number, default: -1 },
@@ -85,7 +85,7 @@
             analysismode: { type: String, default: "" },
             docid: { type: Number, default: -1 },
             textcolumnposition: { type: Number, default: -1 },
-            tokenstoshow: { type: Array, default: [] },
+            tokenstoshow: { type: Array, default: function () { return [] }},
             contentcontrol: { type: Object, default: null }, 
         },
         data: function () {

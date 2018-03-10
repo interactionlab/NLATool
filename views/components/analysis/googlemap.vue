@@ -6,7 +6,7 @@
     export default {
         props: {
             index: { type: Number, default: -1 },
-            mapcoordinates: { type: Array, default: []}
+            mapcoordinates: { type: Array, default: function () { return [] }}
         },
 
         data: function () {

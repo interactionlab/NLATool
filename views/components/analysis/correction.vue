@@ -58,7 +58,7 @@
         mixins: [getselectedtext],
         props: {
             serverip: { type: String, default: "" },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
             docid: { type: Number, default: -1 },
         },

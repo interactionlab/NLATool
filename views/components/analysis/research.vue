@@ -51,10 +51,10 @@
         mixins: [getselectedtext, filtertoken],
         props: {
             selectedindexes: { type: Object, default: null },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
             docid: { type: Number, default: -1 },
             selectedchain: { type: Number, default: -1 },
-            mentions: { type: Array, default: [] },
+            mentions: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {

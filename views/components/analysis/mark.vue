@@ -8,7 +8,7 @@
 
     export default {
         props: {
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
             markermode: { type: String, default: "" },
             lang: { type: String, default: "" }
         },
