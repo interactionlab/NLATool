@@ -16,7 +16,7 @@ module.exports = {
                 if (limit > 1) {
                     return this.rerankWithKeywords();
                 } else {
-                    //console.log('Response for Research: ' + JSON.stringify(response));
+                    console.log('Response for Research: ' + JSON.stringify(response));
                     return response;
                 }
             });
