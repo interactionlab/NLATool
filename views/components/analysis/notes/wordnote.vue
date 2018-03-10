@@ -45,7 +45,7 @@
             serverip: { type: String, default: "" },
             wordnotedb: { type: Object, default: null },
             docid: { type: Number, default: -1 },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
         },
         data: function () {

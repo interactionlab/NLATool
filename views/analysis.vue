@@ -165,7 +165,7 @@
                     end: -1,
                     difference: -1
                 },
-                tokens: [1],
+                tokens: [],
                 splittNotes: [],
                 resizing: true,
                 contentcontrol: {

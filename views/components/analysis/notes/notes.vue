@@ -17,11 +17,11 @@
     export default {
         props: {
             serverip: { type: String, default: "" },
-            wordnotesp: { type: Array, default: [] },
+            wordnotesp: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
             docid: { type: Number, default: -1 },
-            notes: { type: Array, default: [] },
-            tokens: { type: Array, default: [] },
+            notes: { type: Array, default: function () { return [] }},
+            tokens: { type: Array, default: function () { return [] }},
             notemodes: { type: Object, default: null },
         },
         data: function () {

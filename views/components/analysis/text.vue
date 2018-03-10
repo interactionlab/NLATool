@@ -19,7 +19,7 @@
             hoveredchain: { type: Number, default: -1 },
             selectedchain: { type: Number, default: -1 },
             entityindextoline: Number,
-            entitytoline: { type: Array, default: [] },
+            entitytoline: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {

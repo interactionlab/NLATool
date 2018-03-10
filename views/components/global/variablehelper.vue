@@ -5,7 +5,7 @@
 <script>
     export default {
         props:{
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
         },
         data:function () {
             return{
