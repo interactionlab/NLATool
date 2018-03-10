@@ -90,14 +90,13 @@
             docid: { type: Number, default: -1 },
             route: { type: String, default: "" },
             numberofcolumns: Number,
-            autochecked: Boolean,
+            autochecked: { type: Boolean, default: false },
             serverip: { type: String, default: "" }
         },
         data: function () {
             return {
                 editingtitle: false,
                 newTitle: '',
-                autochecked: this.autochecked,
                 img: 'img',
                 map: 'map',
                 information: 'information',

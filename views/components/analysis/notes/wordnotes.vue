@@ -36,9 +36,9 @@
         props: {
             serverip: { type: String, default: "" },
             docid: { type: Number, default: -1 },
-            notes: { type: Array, default: [] },
+            notes: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {

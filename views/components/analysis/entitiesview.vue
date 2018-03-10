@@ -132,13 +132,13 @@
         mixins: [filtertokenwithclass],
         props: {
             serverip: { type: String, default: "" },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
             classestomark: { type: Object, default: null },
             docid: { type: Number, default: -1 },
-            tokenstoshow: { type: Array, default: [] },
+            tokenstoshow: { type: Array, default: function () { return [] }},
             colindex: { type: Number, default: -1 },
             contentcontrol: { type: Object, default: null },
-            entitytoline: { type: Array, default: [] },
+            entitytoline: { type: Array, default: function () { return [] }},
             whereislinefrom: { type: String, default: "" },
         },
         data: function () {

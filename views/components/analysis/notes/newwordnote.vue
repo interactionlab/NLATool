@@ -45,7 +45,7 @@
             docid: { type: Number, default: -1 },
             newnote: { type: String, default: "" },
             wordnotedb: { type: Object, default: null },
-            tokens: { type: Array, default: [] },
+            tokens: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {

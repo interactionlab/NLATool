@@ -64,7 +64,7 @@
             index: { type: Number, default: -1 },
             mapkey: { type: Number, default: -1 },
             docid: { type: Number, default: -1 },
-            mapcoordinates: { type: Array, default: [] },
+            mapcoordinates: { type: Array, default: function () { return [] }},
             sourcequery: { type: Object, default: null },
             semclass: { type: String, default: "" },
             contentcontrol: { type: Object, default: null },  
@@ -116,7 +116,6 @@
         },
         computed: {
             localcontentcontroler: function () {
-                console.log('showdetail check' + JSON.stringify(this.contentcontrol));
                 if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
                     this.localcontentcontrol.img = false;
                     this.localcontentcontrol.map = false;
