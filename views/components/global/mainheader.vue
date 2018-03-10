@@ -85,23 +85,18 @@
 <script>
     export default {
         props: {
-            title: String,
-            preventtitleedit: Boolean,
-            docid: Number,
-            route: String,
+            title: { type: String, default: "" },
+            preventtitleedit: { type: Boolean, default: false},
+            docid: { type: Number, default: -1 },
+            route: { type: String, default: "" },
             numberofcolumns: Number,
             autochecked: Boolean,
-            serverip: String
+            serverip: { type: String, default: "" }
         },
         data: function () {
             return {
-                serverip: this.serverip,
-                title: this.title,
                 editingtitle: false,
-                preventtitleedit: this.preventtitleedit,
-                docid: this.docid,
                 newTitle: '',
-                route: this.route,
                 autochecked: this.autochecked,
                 img: 'img',
                 map: 'map',

@@ -27,17 +27,15 @@
 <script>
     export default {
         props: {
-            document: Object,
-            serverip: String,
-            displayloading : String,
+            document: { type: Object, default: null },
+            serverip: { type: String, default: "" },
+            displayloading : { type: String, default: "" },
         },
         data: function () {
             return {
                 ishovered: false,
-                document: this.document,
                 changing: false,
-                serverip: this.serverip,
-                displayloading : this.displayloading
+               
             }
         },
         methods: {

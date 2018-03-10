@@ -28,31 +28,20 @@
     export default {
 
         props: {
-            serverip: String,
-            tokens: Array,
-            selectedindexes: Object,
-            showmode: String,
-            docid: String,
-            classestomark: Object,
-            tokenstoshow: Array,
-            colindex: Number,
-            contentcontrol: Object,
-            entitytoline: Array,
-            whereislinefrom: String,
+            serverip: { type: String, default: "" },
+            tokens: { type: Array, default: [] },
+            selectedindexes: { type: Object, default: null },
+            showmode: { type: String, default: "" },
+            docid: { type: String, default: '' },
+            classestomark: { type: Object, default: null },
+            tokenstoshow: { type: Array, default: [] },
+            colindex: { type: Number, default: -1 },
+            contentcontrol: { type: Object, default: null },
+            entitytoline: { type: Array, default: [] },
+            whereislinefrom: { type: String, default: "" },
         },
         data: function () {
             return {
-                tokens: this.tokens,
-                serverip: this.serverip,
-                showmode: this.showmode,
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                classestomark: this.classestomark,
-                tokenstoshow:this.tokenstoshow,
-                colindex:this.colindex,
-                contentcontrol:this.contentcontrol,
-                entitytoline:this.entitytoline,
-                whereislinefrom: this.whereislinefrom,
             }
         },
         methods: {

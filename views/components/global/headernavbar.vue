@@ -10,10 +10,11 @@
 </template>
 <script>
     export default {
-        props: ['title_small'],
+        props: {
+            title_small: { type: String, default: "" }
+        },
         data: function () {
             return {
-                title_small: this.title_small
             }
         }
     }
