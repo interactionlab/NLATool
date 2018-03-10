@@ -195,8 +195,7 @@
                 if(this.prevtoken === null){
                     return '';
                 }
-                let word1OffsetEnd = this.prevtoken.EndOffSet;
-                let whitespaceInfo = this.prevtoken.whitespaceInfo;
+               
                 let word2OffsetBegin = -1;
                 try {
                     word2OffsetBegin = this.token.beginOffSet;
@@ -205,8 +204,8 @@
                 //default Setting: 1 space * difference between Offsets
                 let gap = '';
                 if (word2OffsetBegin !== -1) {
-                    if (whitespaceInfo === -10) {
-                        gap = Array(word2OffsetBegin - word1OffsetEnd +1).join(" ");
+                    if (this.prevtoken.whitespaceInfo === -10) {
+                        gap = Array(word2OffsetBegin - this.prevtoken.EndOffSet + 1).join(" ");
                     }
                 }
                 return gap;

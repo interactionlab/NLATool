@@ -16,6 +16,15 @@
                 is="headernavbar"
                 v-bind:title_small="title_small">
         </component>
+        
+        <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;"
+                 v-if="displayloading == true>
+                <div style=" margin: 0% auto;  z-index: 10;  left: 0; top: 50%; width: auto !important; max-width: 100%; color: gray; max-width:1000px; position: relative; opacity: 1;">
+                    Loading...
+                    <div id="progressbar2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
+                         style="width: auto !important; max-width: 100%;"></div>
+                </div>
+            </div>
 
         <main class="mdl-layout__content"
               style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
@@ -114,6 +123,7 @@
         data: function () {
             return {
                 moreData: null,
+                displayloading: true,
                 offsetstart: null,
                 offsetend: null,
                 semanticclass: {},
@@ -212,7 +222,6 @@
                 this.analysisMode = 'research';
             },
             changeMarkerMode: function (newClassesToMark) {
-                // console.log('classesToMark: ' + JSON.stringify(newClassesToMark));
                 this.classesToMark = newClassesToMark;
             },
             entercorrectionmode: function (correctionMode) {
@@ -221,7 +230,6 @@
                 } else {
                     this.showMode = 'entitiesview';
                 }
-
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
@@ -238,13 +246,11 @@
                         this.selectedtextindexes.end = tempstart;
                     }
                 }
-                //console.log('selectedIndexes: ' + JSON.stringify(this.selectedtextindexes));
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
-                //console.log('changing Note Modes: ' + newNoteModes);
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
@@ -255,7 +261,6 @@
             showTokens: function (difference, end) {
                 this.tokenstoshow = [];
                 let newtokenstoshow = [];
-                //console.log('Input for showTokens: ' + end + ': ' + difference + ' : ' + (this.splitted.length));
                 if (end > this.splitted.length) {
                     newtokenstoshow = this.splitted.slice(0, this.splitted.length);
                     for (let i = 0; i < newtokenstoshow.length; i++) {
@@ -276,25 +281,18 @@
                             this.tokenstoshow.push(newtokenstoshow[i]);
                         }
                         this.textcolumnposition.start = 0;
-                        //console.log('Got here3');
                     }
                     this.textcolumnposition.end = end;
                 }
                 this.textcolumnposition.difference = difference;
-                //console.log('The textcolumnposition: ' + JSON.stringify(this.textcolumnposition));
-                //console.log('Tokens to show: ' + JSON.stringify(this.tokenstoshow));
-                //console.log('tokenstoshow different to splitted? ' + this.splitted.length + '==?' + this.tokenstoshow.length);
             },
             changeScope: function (direction) {
-                //console.log('changing Scope: Check 0 ' + direction);
                 if (direction) {
                     if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
-                        //console.log('changing Scope: Check 1');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
                     }
                 } else if (!direction) {
                     if (this.textcolumnposition.end < this.splitted.length) {
-                        //console.log('changing Scope: Check 2');
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
                     }
                 }
@@ -319,7 +317,6 @@
                 if (startSlice < this.tokens.length) {
                     this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
                 }
-                //console.log('splitted Tokens:' + JSON.stringify(this.splitted));
             },
             splitTokens2: function () {
                 this.splitted = [];
@@ -334,8 +331,6 @@
                 if (this.numberOfColumns === 0) {
                     this.numberOfColumns++;
                 }
-                //console.log('screenValues:' + JSON.stringify(this.screenOptions));
-                //console.log('colQuantity:' + this.numberOfColumns);
             },
             setNumberOfColumns: function (number) {
                 if (number > 0 && number !== this.numberOfColumns) {
@@ -349,7 +344,6 @@
                 }
             },
             setScreenOptions: function () {
-                //console.log('changing Screensizes:');
                 this.screenOptions = {
                     screenWidth: window.innerWidth,
                     screenHeight: window.outerHeight,
@@ -378,10 +372,9 @@
             hoverlinesetoffsetend: function (event) {
                 this.offsetend = event;
             },
-            setBla: function (value) {
+            setMoreDataFromServer: function (value) {
                 console.log(value);
                 this.moreData = value;
-
             },
             getMoreText: function (docID, pagesize) {
                 var self = this;
@@ -390,14 +383,16 @@
                 console.log('endIndex: ' + endIndex);
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
-                socket.on('sendMoreText', function (tokens, setBla) {
-                    self.setBla(tokens);
+                socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {
+                    self.setMoreDataFromServer(tokens);
                 });
             }
         },
         mounted() {
+            this.getMoreText(this.tokens[0].docID, 500);
             window.addEventListener('resize', this.resize);
             this.resize();
+            this.displayloading = false;
         },
         beforeDestroy() {
             window.removeAllListeners();
