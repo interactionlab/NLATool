@@ -80,7 +80,6 @@ createAllTables = function (connection) {
  * @returns {string}
  */
 createDatabaseCommand = function () {
-    //console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database.name));
     return 'CREATE DATABASE ' + json.database.name;
 };
 
@@ -339,7 +338,7 @@ exports.createInnerJoinSelectCommand = function (input, start, amount) {
         }
     }
     commandString = commandString + ';';
-    console.log(Tag + sql + commandString);
+    //console.log(Tag + sql + commandString);
     return commandString;
 };
 
