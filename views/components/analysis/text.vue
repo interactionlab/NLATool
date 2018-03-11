@@ -19,7 +19,7 @@
             hoveredchain: { type: Number, default: -1 },
             selectedchain: { type: Number, default: -1 },
             entityindextoline: { type: Number, default: -1 },
-            entitytoline: { type: Array, default: function () { return [] }},
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
@@ -114,7 +114,7 @@
                     }
                     if (typeof this.token.coref !== 'undefined') {
                         if (this.classestomark.coref) {
-                            console.log(this.token.coref.length);
+                            //console.log(this.token.coref.length);
                             for (let i = 0; i < this.token.coref.length; i++) {
                                 if (this.token.coref[i].endIndex-1 > this.token.textIndex) {
                                     if (!this.tohover) {
@@ -203,34 +203,24 @@
                 return gap;
             }
         },
-        watch:{
-            entityindextoline:function (wordids) {
-                let index = wordids.indexOf(this.token.wordID)
-                if(index >- 1){
-                    console.log(index);
-                    if (index == 0){
-                        this.$el.scrollIntoView();
-                        let offsets =  this.$el.getBoundingClientRect();                        
-                        this.$emit('setoffsetstart', [offsets, this.token, "research"]);
-                    }
+        watch: {
+            wordtomarkonhoverdata: function (event) {
+                if (typeof event === 'undefined'){
+                    consol.log("WARNING: text vue event in wordtomarkonhover undefined"); 
+                    return;
                 }
-            },
-            entitytoline:{
-                handler: function(newEntitytoline)
-                {
-                    let found = false;
-                    for (let i = 0; i < newEntitytoline.length; i++){
-                        if (newEntitytoline[i].textIndex === this.token.textIndex){
-                            this.isEntityHovered = true;
-                            found = true;
-                        }
-                    }  
-                    if (found === false) {
-                        this.isEntityHovered = false;
+                let index = event.wordids.indexOf(this.token.wordID)
+                if(index >- 1){
+                    this.isEntityHovered = true;
+                    if (index == 0 && event.hoverstarted == "research"){
+                        this.$el.scrollIntoView();
+                        let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
+                        this.$emit('endhover', data);
                     }
-                    
-                }, deep:true
-            }
+                } else {
+                    this.isEntityHovered = false;
+                }
+            }, deep:true
         },
         methods: {
             startSelection: function () {
@@ -246,12 +236,19 @@
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
-                this.tohover = true;
-                if (this.token.semanticClass === "O") {
+                if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
-                let offsets = event.target.getBoundingClientRect();
-                this.$emit('setoffsetstart', [offsets, this.token, "text"]);
+                
+                let hoverdata = {
+                    hoverstarted: "text",
+                    offsetstart: event.target.getBoundingClientRect(),
+                    startword: this.token,
+                    semanticClass: this.token.semanticClass,
+                    startresearch: undefined,
+                    wordtomarkonhover: []
+                }
+                this.$emit('starthover', hoverdata);
             }
         }
     }

@@ -9,11 +9,11 @@
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
-                   v-bind:entitytoline="entitytoline"
-                   v-bind:whereislinefrom="whereislinefrom"
+                   v-bind:hoverdata="hoverdata"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
-                   v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
-                   v-on:hoverreseach="hoverreseach($event)">
+                   v-on:endhover="endhover($event)"
+                   v-on:starthover="starthover($event)">
 
         </component>
     </div>
@@ -34,10 +34,10 @@
             docid: { type: Number, default: -1 },
             classestomark: { type: Object, default: null },
             tokenstoshow: { type: Array, default: function () { return [] }},
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
             colindex: { type: Number, default: -1 },
             contentcontrol: { type: Object, default: null },
-            entitytoline: { type: Array, default: function () { return [] }},
-            whereislinefrom: { type: String, default: "" },
+            hoverdata: { type: Object, default: null},
         },
         data: function () {
             return {
@@ -47,11 +47,11 @@
             togglesemanticlass:function (newClassesToMark) {
                 this.$emit('togglesemanticlass',newClassesToMark);
             },
-            hoverlinesetoffsetend:function (event) {
-                this.$emit('hoverlinesetoffsetend',event);
+            endhover:function (event) {
+                this.$emit('endhover',event);
             },
-            hoverreseach:function (textIndex) {
-                this.$emit('hoverreseach', textIndex);
+            starthover:function (textIndex) {
+                this.$emit('starthover', textIndex);
             },
         },
         components: {
