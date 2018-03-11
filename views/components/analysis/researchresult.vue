@@ -67,7 +67,7 @@
             mapcoordinates: { type: Array, default: function () { return [] }},
             semclass: { type: String, default: "" },
             contentcontrol: { type: Object, default: null },  
-            hoveredentity: { type: String, default: "" },
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
@@ -92,7 +92,16 @@
             accentuate: function () {
                 this.hover = true;                
                 //mouseover
-                this.$emit('hoverreseach', [this.researchdata.sourcequery.wordids, "research"]);
+                let hoverdata = {
+                    hoverstarted: "research",
+                    offsetstart: null,
+                    offsetend: this.$el.getBoundingClientRect(),
+                    startword: null,
+                    semanticClass: this.semclass,
+                    startresearch: undefined,
+                    wordtomarkonhover: this.researchdata.sourcequery.wordids,
+                }
+                this.$emit('starthover', hoverdata);
             },
             
             saveResult: function () {
@@ -136,15 +145,18 @@
                     researchdatahover: this.hover
                 };
                 
-                console.log("this.hoveredentity: "+this.hoveredentity);
+                //console.log("this.wordtomarkonhoverdata: "+JSON.stringify(this.wordtomarkonhoverdata));
                 
-                if (this.hoveredentity != null && this.researchdata.sourcequery.wordids.indexOf(this.hoveredentity[0])  > -1)
+                if (this.wordtomarkonhoverdata != null
+                    && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
+                    && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
+                    && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0])  > -1)
                 {
-                    htmlclass[this.semclass + "_strong"] = true;
-                    htmlclass[this.semclass] = false;
+                    htmlclass[this.semclass + "_BORDERED_strong"] = true;
+                    htmlclass[this.semclass + "_BORDERED"] = false;
                 } else {
-                    htmlclass[this.semclass + "_strong"] = false;
-                    htmlclass[this.semclass] = true;
+                    htmlclass[this.semclass + "_BORDERED_strong"] = false;
+                    htmlclass[this.semclass + "_BORDERED"] = true;
                 }
                 
                 return htmlclass;
