@@ -19,12 +19,13 @@
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
-                               v-bind:entityindextoline="entityindextoline"
-                               v-bind:entitytoline="entitytoline"
+                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                               v-bind:hoverdata="hoverdata"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
                                v-on:endselection="endselection($event)"
-                               v-on:setoffsetstart="setoffsetstart($event)">
+                               v-on:starthover="starthover($event)"
+                               v-on:endhover="endhover($event)">
                     </component>
                 </div>
             </div>
@@ -43,16 +44,16 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedindexes"
                             v-bind:selectedchain="selectedchain"
+                            v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:mentions="mentions"
                             v-bind:showmode="showmode"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
-                            v-bind:entitytoline="entitytoline"
-                            v-bind:whereislinefrom="whereislinefrom"
+                            v-bind:hoverdata="hoverdata"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
-                            v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)"
+                            v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
-                            v-on:hoverreseach="hoverreseach($event)">
+                            v-on:starthover="starthover($event)">
                     </component>
                 </keep-alive>
             </div>
@@ -78,6 +79,7 @@
             selectedindexes: { type: Object, default: null },
             selectedchain: { type: Number, default: -1 },
             hoveredchain: { type: Number, default: -1 },
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
             classestomark: { type: Object, default: null },
             showmode: { type: String, default: "" },
             notemodes: { type: Object, default: null },
@@ -90,8 +92,8 @@
         },
         data: function () {
             return {
+                hoverdata: null,
                 entitytoline: [],
-                whereislinefrom: "",
                 entityindextoline: -1
             }
         },
@@ -124,38 +126,8 @@
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
-            setoffsetstart: function (event) {
-                let offsets = event[0];
-                let token = event[1];
-                let found = false;
-                let next = token.textIndex + 1;
-                let prev = token.textIndex - 1;
-                let completeEntity = [];
-                completeEntity.push(token);
-                while (!found) {
-                    if (typeof this.tokens[next] !== 'undefined' && this.tokens[next].semanticClass === token.semanticClass) {
-                        completeEntity.push(this.tokens[next]);
-                        found = false;
-                        next++;
-                    } else {
-                        found = true;
-                    }
-                    if (typeof this.tokens[prev] !== 'undefined' && this.tokens[prev].semanticClass === token.semanticClass) {
-                        completeEntity.push(this.tokens[prev]);
-                        found = false;
-                        prev--;
-                    } else {
-                        found = true;
-                    }
-                }
-                completeEntity.sort(this.dynamicSort('textIndex'));
-                
-                this.entitytoline = completeEntity;
-                this.whereislinefrom = event[2];                
-                this.$emit('setoffsetstart', [offsets, this.entitytoline, "text"]);
-            },
-            hoverlinesetoffsetend: function (event) {
-                this.$emit('hoverlinesetoffsetend', event);
+            endhover: function (event) {
+                this.$emit('endhover', event);
             },
             dynamicSort: function (property) {
                 let sortOrder = 1;
@@ -168,8 +140,12 @@
                     return result * sortOrder;
                 }
             },
-            hoverreseach:function (event) {
+            starthover:function (event) {
+                //console.log("TFVP starthover" + JSON.stringify(event));
                 this.entityindextoline = event[0];
+                
+                this.hoverdata = event;
+                this.$emit('starthover', event);
             },
         },
         components: {

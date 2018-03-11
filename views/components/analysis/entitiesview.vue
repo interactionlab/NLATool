@@ -26,8 +26,8 @@
                    v-bind:showallon="true"
                    v-bind:semclass="borderedClasses[0]"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
-                   v-bind:hoveredentity="hoveredentity"
-                   v-on:hoverreseach="hoverreseach($event)"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:starthover="starthover($event)"
                    v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate LOCATION"
@@ -53,10 +53,10 @@
                    v-bind:mapkey="index2+ PERSON.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'LOCATION_BORDERED'"
+                   v-bind:semclass="'LOCATION'"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
-                   v-bind:hoveredentity="hoveredentity"
-                   v-on:hoverreseach="hoverreseach($event)"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:starthover="starthover($event)"
                    v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate ORGANIZATION"
@@ -82,10 +82,10 @@
                    v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'ORGANIZATION_BORDERED'"
+                   v-bind:semclass="'ORGANIZATION'"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
-                   v-bind:hoveredentity="hoveredentity"
-                   v-on:hoverreseach="hoverreseach($event)"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:starthover="starthover($event)"
                    v-on:saveresult="saveResult($event)">
         </component>
         <div class="semClassFormate MISC"
@@ -111,10 +111,10 @@
                    v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="'MISC_BORDERED'"
+                   v-bind:semclass="'MISC'"
                    v-bind:contentcontrol="contentcontrol.MISCS"
-                   v-bind:hoveredentity="hoveredentity"
-                   v-on:hoverreseach="hoverreseach($event)"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:starthover="starthover($event)"
                    v-on:saveresult="saveResult($event)">
         </component>
     </div>
@@ -132,10 +132,10 @@
             classestomark: { type: Object, default: null },
             docid: { type: Number, default: -1 },
             tokenstoshow: { type: Array, default: function () { return [] }},
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
             colindex: { type: Number, default: -1 },
             contentcontrol: { type: Object, default: null },
-            entitytoline: { type: Array, default: function () { return [] }},
-            whereislinefrom: { type: String, default: "" },
+            hoverdata: { type: Object, default: null},
         },
         data: function () {
             return {
@@ -143,21 +143,15 @@
                 LOCATION: [],
                 ORGANIZATION: [],
                 MISC: [],
-                borderedClasses: ['PERSON_BORDERED',],
+                borderedClasses: ['PERSON',],
                 researchresults: [],
                 sortedtokens: [],
-                hoveredentity: null,
-                isHoverFromResearch: false,
                 sourcequery:[],
             }
         },
         methods: {
-            hoverreseach: function (event) {
-                if (event[1] == "research")
-                    this.isHoverFromResearch = true;
-                else
-                    this.isHoverFromResearch = false;
-                this.$emit('hoverreseach', event);                   
+            starthover: function (event) {
+                this.$emit('starthover', event);                   
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -243,7 +237,7 @@
             },
             saveResults: function () {
                 //console.log('TODO: Trying to save but not implemented.');
-            }
+            },
         },
         computed: {
             numberOfPersons: function () {
@@ -282,82 +276,92 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            entitytoline: {
-                handler: function (newValue) {
-                    // this is shit
-                    let newwordid = newValue[0].wordID;
-                    let bb = null;
-                    if (newValue[0].semanticClass === 'PERSON') {
-                        if (this.$refs["personresults"] !== undefined && this.$refs["personresults"].length > 0) {
-                            for (let i = 0; i < this.$refs["personresults"].length; i++) {
-                                
-                                if (this.$refs.personresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (!this.isHoverFromResearch)
-                                        this.$refs.personresults[i].$el.scrollIntoView();
-                                    
-                                    bb = this.$refs.personresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.personresults[i].researchdata.sourcequery.wordids
-                                }
-                            }
-                        } else {
-                            bb = this.$refs["personresultsparent"].getBoundingClientRect()
-                        }
-                    } else if (newValue[0].semanticClass === 'LOCATION') {
-                        if (this.$refs["locationresults"] !== undefined && this.$refs["locationresults"].length > 0) {
-                            for (let i = 0; i < this.$refs["locationresults"].length; i++) {
-                                if (this.$refs.locationresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (!this.isHoverFromResearch)
-                                        this.$refs.locationresults[i].$el.scrollIntoView();
-                                    
-                                    bb = this.$refs["locationresults"][i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.locationresults[i].researchdata.sourcequery.wordids
-                                }
-                            }
-                        } else {
-                            bb = this.$refs["locationresultsparent"].getBoundingClientRect()
-                        }
-                    } else if (newValue[0].semanticClass === "ORGANIZATION") {
-                        if (this.$refs["organisazionresults"] !== undefined && this.$refs["organisazionresults"].length > 0) {
-                            for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
-                                if (this.$refs.organisazionresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (!this.isHoverFromResearch)
-                                        this.$refs.organisazionresults[i].$el.scrollIntoView();
-                                    
-                                    bb = this.$refs.organisazionresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.organisazionresults[i].researchdata.sourcequery.wordids
-                                }
-                            }
-                        } else {
-                            bb = this.$refs["organisazionresultsparent"].getBoundingClientRect()
-                        }
-                    } else if (newValue[0].semanticClass === "MISC") {
-                        if (this.$refs["miscresults"] !== undefined && this.$refs["miscresults"].length > 0) {
-                            for (let i = 0; i < this.$refs["miscresults"].length; i++) {
-                                if (this.$refs.miscresults[i].researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (!this.isHoverFromResearch)
-                                        this.$refs.miscresults[i].$el.scrollIntoView();
-                                    
-                                    bb = this.$refs.miscresults[i].$el.getBoundingClientRect();
-                                    this.hoveredentity = this.$refs.miscresults[i].researchdata.sourcequery.wordids
-                                }
-                            }
-                        } else {
-                            bb = this.$refs["miscresultsparent"].getBoundingClientRect()
-                        }
-                    } else {
-                        bb = null;
+            hoverdata: {
+                handler: function (hoverdata) {
+                    if (hoverdata === 'undefined'){
+                        console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    this.$emit('hoverlinesetoffsetend', bb);
+                    // console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    // console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
+                    
+                    if(hoverdata.hoverstarted == "research")
+                    {
+                        return;
+                    }
+                    
+                    let wordtomarkonhoverDUMMY = [];
+                    let newwordid = -1;
+                    if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text"){
+                        newwordid = hoverdata.startword.wordID;
+                    } else {
+                        newwordid = hoverdata.wordids[0];
+                    }
+                    let bb = null;
+                    if (hoverdata.semanticClass === 'PERSON') {
+                        if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["personresults"].length; i++) {
+                                let refElement = this.$refs.personresults[i]
+                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                    if (hoverdata.hoverstarted == "text")
+                                        refElement.$el.scrollIntoView();
+                                    
+                                    bb = refElement.$el.getBoundingClientRect();
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["personresultsparent"].getBoundingClientRect();
+                        }
+                    } else if (hoverdata.semanticClass === 'LOCATION') {
+                        if (typeof this.$refs["locationresults"] !== 'undefined' && this.$refs["locationresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["locationresults"].length; i++) {
+                                let refElement = this.$refs.locationresults[i]
+                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                    if (hoverdata.hoverstarted == "text")
+                                        refElement.$el.scrollIntoView();
+                                    
+                                    bb = refElement.$el.getBoundingClientRect();
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["locationresultsparent"].getBoundingClientRect();
+                        }
+                    } else if (hoverdata.semanticClass === "ORGANIZATION") {
+                        if (typeof this.$refs["organisazionresults"] !== 'undefined' && this.$refs["organisazionresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
+                                let refElement = this.$refs.organisazionresults[i]
+                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                    if (hoverdata.hoverstarted == "text")
+                                        refElement.$el.scrollIntoView();
+                                    
+                                    bb = refElement.$el.getBoundingClientRect();
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["organisazionresultsparent"].getBoundingClientRect();
+                        }
+                    } else if (hoverdata.semanticClass === "MISC") {
+                        if (typeof this.$refs["miscresults"] !== 'undefined' && this.$refs["miscresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["miscresults"].length; i++) {
+                                let refElement = this.$refs.miscresults[i]
+                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                    if (hoverdata.hoverstarted == "text")
+                                        refElement.$el.scrollIntoView();
+                                    
+                                    bb = refElement.$el.getBoundingClientRect();
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                }
+                            }
+                        } else {
+                            bb = this.$refs["miscresultsparent"].getBoundingClientRect();
+                        }
+                    }
+                    let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY}
+                    this.$emit('endhover', data);
                 }, deep: true
             },
-            
-            whereislinefrom: function(value){
-                if (this.whereislinefrom == "research")
-                    this.isHoverFromResearch = true;
-                 else
-                    this.isHoverFromResearch = false;
-                    
-            }
         },
         components: {
             researchresult

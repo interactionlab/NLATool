@@ -77,14 +77,15 @@
                                v-bind:selectedchain="selectedChain"
                                v-bind:showmode="showMode"
                                v-bind:contentcontrol="contentcontrol"
+                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:togglesemanticlass="changeMarkerMode($event)"
-                               v-on:setoffsetstart="setoffsetstart($event)"
-                               v-on:hoverlinesetoffsetend="hoverlinesetoffsetend($event)">
+                               v-on:starthover="starthover($event)"
+                               v-on:endhover="endhover($event)">
                     </component>
                 </div>
             </div>
@@ -122,6 +123,7 @@
             return {
                 moreData: null,
                 displayloading: true,
+                wordtomarkonhoverdata: [],
                 offsetstart: null,
                 offsetend: null,
                 semanticclass: {},
@@ -359,16 +361,32 @@
                     this.setColumnSize2();
                 }
             },
-            setoffsetstart: function (event) {
-                this.offsetstart = event[0];
-                let classofcolor = event[1][0].semanticClass + "_strong";
-                let whereFrom = event[2];
+            starthover: function (event) {       
+                //console.log("Analysis vu starthover: " + JSON.stringify(event));            
+                
+                let classofcolor = event.semanticClass + "_strong";
+                let whereFrom = event.hoverstarted;
+                
                 this.semanticclass = {};
                 this.semanticclass[classofcolor]= true;
+                
+                if(event.hoverstarted == "text"){
+                    this.offsetstart = event.offsetstart;
+                } else if(event.hoverstarted == "research")
+                {
+                    this.wordtomarkonhoverdata = {wordids: event.wordtomarkonhover, hoverstarted: "research"};
+                    this.offsetend = event.offsetend;
+                }
 
             },
-            hoverlinesetoffsetend: function (event) {
-                this.offsetend = event;
+            endhover: function (event) {
+                //console.log("analysis vue endhover:" + JSON.stringify(event));
+                if (event.hoverended == "research"){
+                    this.wordtomarkonhoverdata = {wordids: event.wordtomarkonhover, hoverstarted: "text"};
+                    this.offsetend = event.offsetend;
+                } else if (event.hoverended == "text"){
+                    this.offsetstart = event.offsetstart;
+                }
             },
             setMoreDataFromServer: function (value) {
                 this.moreData = value;

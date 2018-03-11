@@ -81,7 +81,7 @@
                                 numberOfMatches[i] = numberOfMatches[i] + 1;
                             }
                         } catch (err) {
-                            console.log('Detailed Description: ' + err + i)
+                            console.log('ERROR: research vue Detailed Description: ' + err + i)
                         }
                     }
                     tempresults.push({

@@ -26,7 +26,7 @@
                 this.$emit('submitit', this.inputtext);
             }
         },
-        watch:{
+        watch: {
             submitit:function (newvalue) {
                 if(newvalue){
                     this.submitIt();
