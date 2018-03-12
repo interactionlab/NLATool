@@ -396,6 +396,7 @@
                 let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
+                console.log('requesting next part of text of ' + docID + ' at ' + endIndex);
                 socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {
                     self.setMoreDataFromServer(tokens);
                 });
@@ -419,7 +420,7 @@
                         this.resize();
                         this.displayloading = false;
                     }
-                    console.log("after " + this.tokens.length);
+                    //console.log('after ' + this.tokens.length);
                 }, deep: true
             },
             selectedtextindexes: {
