@@ -2,8 +2,11 @@
     <component :is="changing"
                v-bind:newtitle="newtitle"
                v-bind:document="document"
+               v-bind:serverip="serverip"
+               v-bind:displayloading="displayloading"
                v-on:editing="editing($event)"
-               v-on:deleted="deleted($event)">
+               v-on:deleted="deleted($event)"
+               v-on:displayloading="displayloadingClicked($event)">
     </component>
 </template>
 
@@ -13,16 +16,20 @@
 
     export default {
         props: {
-            document: Object
+            document: { type: Object, default: null },
+            serverip: { type: String, default: "" },
+            displayloading : { type: String, default: "" },
         },
         data: function () {
             return {
-                document: this.document,
                 changing: 'showdoc',
-                newtitle: ''
+                newtitle: '',
             }
         },
         methods: {
+            displayloadingClicked: function (displayloading) {
+                this.$emit('displayloading', this.displayloading);
+            },
             showButns: function () {
                 this.ishovered = true;
                 console.log('got hovered!');

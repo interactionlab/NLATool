@@ -16,8 +16,12 @@ const loadtext = require('./routes/loadtext');
 const setup = require('./routes/setup');
 const comment = require('./routes/comment');
 const expressVue = require('express-vue');
-
+const ip = require('ip');
 const app = express();
+const ipAdress = ip.address();
+
+const dbStub = require('./modules/db_stub');
+dbStub.fiberEstablishConnection();
 
 const vueOptions = {
     rootPath: path.join(__dirname, '/views'),
@@ -38,6 +42,7 @@ const vueOptions = {
     head: {
         title: 'NLA - Natural Language Analyse Tool',
         scripts: [
+            {script: '/javascripts/vue.js'},
             {src: 'https://code.getmdl.io/1.3.0/material.min.js'},
             {src: 'https://unpkg.com/vuex'},
             {src: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
@@ -50,10 +55,12 @@ const vueOptions = {
             {style: '/css/debugstyle.css'},
         ],
         metas: [{charset: 'UTF-8'}]
+
     },
     data: {
         title:'NLA - Natural Language Analyse Tool',
         title_small: 'NLA - Tool',
+        serverip: ipAdress
     }
 };
 
@@ -117,7 +124,10 @@ app.use(function (err, req, res, next) {
 
 app.set('port', process.env.PORT || 3000);
 let server = app.listen(app.get('port'), function () {
-    console.log('Express server listening on port ' + server.address().port);
+    var ipVerson = "ipV4";
+    if (server.address().address == "::")
+        ipVerson = "ipV6";
+    console.log('Express server listening on ' + ipVerson + ' http://' + server.address().address + ":" + server.address().port);
 });
 
 
