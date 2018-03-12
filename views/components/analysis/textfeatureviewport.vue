@@ -19,8 +19,8 @@
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
-                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-bind:hoverdata="hoverdata"
+                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
                                v-on:endselection="endselection($event)"
@@ -44,12 +44,12 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedindexes="selectedindexes"
                             v-bind:selectedchain="selectedchain"
+                            v-bind:hoverdata="hoverdata"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:mentions="mentions"
                             v-bind:showmode="showmode"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
-                            v-bind:hoverdata="hoverdata"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
@@ -79,6 +79,7 @@
             selectedindexes: { type: Object, default: null },
             selectedchain: { type: Number, default: -1 },
             hoveredchain: { type: Number, default: -1 },
+            hoverdata: { type: Object, default: null },
             wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
             classestomark: { type: Object, default: null },
             showmode: { type: String, default: "" },
@@ -92,9 +93,7 @@
         },
         data: function () {
             return {
-                hoverdata: null,
-                entitytoline: [],
-                entityindextoline: -1
+                entitytoline: []
             }
         },
         computed:{
@@ -141,10 +140,6 @@
                 }
             },
             starthover:function (event) {
-                //console.log("TFVP starthover" + JSON.stringify(event));
-                this.entityindextoline = event[0];
-                
-                this.hoverdata = event;
                 this.$emit('starthover', event);
             },
         },
