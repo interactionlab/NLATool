@@ -45,8 +45,10 @@
             </div>
             <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative" >
                 <component is="textviewcontrol"
-                           v-on:changescope="changeScope($event)"
-                           v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}">
+                    v-bind:currentpage="currentpage"
+                    v-bind:pagecount="pagecount"
+                    v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}"
+                    v-on:changescope="changeScope($event)">
                 </component>
             </div>
             <div class="mdl-grid"
@@ -159,6 +161,9 @@
                 tokenssplitted: [],
                 tokenstoshow: [],
                 tokenssplittedindextoshow: 0,
+                columnindexoflasthover:1,
+                currentpage: 1,
+                pagecount: 1,
                 columnsize2: 100,
                 columnsizetoolbarpos: 0,
                 splittNotes: [],
@@ -203,7 +208,11 @@
                 this.hoveredChain = chain;
             },
             movetoolbar: function (columnindex) {
-                this.columnsizetoolbarpos = (columnindex / this.numberofcolumns) * 100.0;
+                if (this.columnindexoflasthover === columnindex)
+                    return;
+                this.columnindexoflasthover = columnindex;
+                this.columnsizetoolbarpos = (this.columnindexoflasthover / this.numberofcolumns) * 100.0;
+                this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
             },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
@@ -265,11 +274,15 @@
                     if (this.tokenssplittedindextoshow -1 >=0){
                         this.tokenssplittedindextoshow--;
                         this.showTokens();
+                        this.offsetstart = null;
+                        this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 } else if (!direction) {
                     if (this.tokenssplittedindextoshow + this.numberofcolumns < this.tokenssplitted.length){
                         this.tokenssplittedindextoshow++;
                         this.showTokens();
+                        this.offsetstart = null;
+                        this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 }
             },
@@ -297,7 +310,8 @@
                     }
                 }
                 console.log("analysis vue splitTokens tokenssplittedDUMMY length: "+ tokenssplittedDUMMY.length);
-                this.tokenssplitted = tokenssplittedDUMMY
+                this.tokenssplitted = tokenssplittedDUMMY;
+                this.pagecount = this.tokenssplitted.length;
             },
             computenumberofcolumns: function () {
                 this.numberofcolumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
