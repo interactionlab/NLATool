@@ -53,12 +53,11 @@
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div
                         style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                        v-for="(col, columnindex) in tokenstoshow"
+                        v-for="columnindex in numberofcolumns"
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
-                               v-bind:col="col"
-                               v-bind:columnindex="columnindex"
+                               v-bind:columnindex="columnindex-1"
                                v-bind:serverip="serverip"
                                v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
@@ -253,19 +252,12 @@
 
             },
             showTokens: function () {
-                console.log("Analysis vue tokenssplitted length: " + this.tokenssplitted.length);
                 if (this.numberofcolumns === 1){
                     this.tokenstoshow = this.tokenssplitted;
                 } else {
-                    console.log("Analysis vue tokenssplittedindextoshow: " + Object.prototype.toString.call(this.tokenssplittedindextoshow));
-                    console.log("Analysis vue numberofcolumns: " + Object.prototype.toString.call(this.numberofcolumns));
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
-                    console.log("Analysis vue end: " + end);
-                    let test = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
-                    console.log("analysis vue tokenstoshow length: "+ test.length);
-                    this.tokenstoshow = test;
+                    this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
                 }
-                console.log("analysis vue tokenstoshow length: "+ this.tokenstoshow.length);
             },
             changeScope: function (direction) {
                 
