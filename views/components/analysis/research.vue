@@ -42,9 +42,9 @@
 </template>
 
 <script>
-    import researchresult from './components/analysis/researchresult.vue';
-    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
-    import filtertoken from './mixins/analysis/filtertoken.js';
+    import researchresult from './researchresult.vue';
+    import getselectedtext from 'views/mixins/analysis/gettokensofselectedtext.js';
+    import filtertoken from 'views/mixins/analysis/filtertoken.js';
 
     export default {
 

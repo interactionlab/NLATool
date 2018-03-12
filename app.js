@@ -42,9 +42,7 @@ const vueOptions = {
     head: {
         title: 'NLA - Natural Language Analyse Tool',
         scripts: [
-            {script: '/javascripts/vue.js'},
             {src: 'https://code.getmdl.io/1.3.0/material.min.js'},
-            {src: 'https://unpkg.com/vuex'},
             {src: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
         ],
         styles: [

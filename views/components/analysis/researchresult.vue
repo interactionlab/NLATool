@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    import googlemap from './components/analysis/googlemap.vue';
+    import googlemap from './googlemap.vue';
 
     export default {
         props: {

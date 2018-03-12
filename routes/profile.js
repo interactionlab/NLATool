@@ -110,8 +110,8 @@ function prepareProfile(req, res, next) {
     vueData.amountOfButtons = profileData.amountOfButtons;
     req.vueOptions = {
         head: {
-            meta: [
-                {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+            scripts: [
+                {src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             ]
         }
     };

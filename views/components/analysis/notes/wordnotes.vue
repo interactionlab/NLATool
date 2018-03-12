@@ -29,8 +29,8 @@
     </div>
 </template>
 <script>
-    import wordnote from './components/analysis/notes/wordnote.vue';
-    import newwordnote from './components/analysis/notes/newwordnote.vue';
+    import wordnote from './wordnote.vue';
+    import newwordnote from './newwordnote.vue';
 
     export default {
         props: {

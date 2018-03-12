@@ -11,8 +11,8 @@
     </div>
 </template>
 <script>
-    import wordnotes from './components/analysis/notes/wordnotes.vue';
-    import globalnote from './components/analysis/notes/globalnote.vue'
+    import wordnotes from './wordnotes.vue';
+    import globalnote from './globalnote.vue'
 
     export default {
         props: {

@@ -43,7 +43,7 @@
                                v-for="document in documents"
                                v-bind:document="document"
                                v-bind:serverip="serverip"
-                               v-bind:displayloading="this.displayloading"
+                               v-bind:displayloading="displayloading"
                                v-bind:key="document.docID"
                                v-on:deleted="deleted($event)"
                                v-on:displayloading="displayloadingClicked($event)">

@@ -62,10 +62,10 @@
 </template>
 
 <script>
-    import research from './components/analysis/research.vue';
-    import notes from './components/analysis/notes/notes.vue';
-    import analighter from './components/analysis/analighter.vue';
-    import tex from './components/analysis/text.vue';
+    import research from './research.vue';
+    import notes from './notes/notes.vue';
+    import analighter from './analighter.vue';
+    import tex from './text.vue';
 
     export default {
         props: {

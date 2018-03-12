@@ -31,8 +31,8 @@
     </div>
 </template>
 <script>
-    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
-    import autotextarea from './components/global/autosizingtextarea.vue';
+    import getselectedtext from 'views/mixins/analysis/gettokensofselectedtext.js';
+    import autotextarea from '/global/autosizingtextarea.vue';
 
     export default {
         mixins: [getselectedtext],

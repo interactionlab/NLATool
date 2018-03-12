@@ -105,15 +105,10 @@
 
 </template>
 <script>
-    import research from './components/analysis/research.vue';
-    import notes from './components/analysis/notes/notes.vue';
     import mainheader from './components/global/mainheader.vue';
     import headernavbar from './components/global/headernavbar.vue';
     import toolbar from './components/analysis/toolbar/toolbar.vue';
     import textviewcontrol from './components/analysis/toolbar/textviewcontrol.vue';
-    import analighter from './components/analysis/analighter.vue';
-    import markjs from './components/analysis/mark.vue';
-    import tex from './components/analysis/text.vue';
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
     import linetohover from './components/analysis/linetohover.vue';
@@ -481,11 +476,6 @@
             mainheader,
             headernavbar,
             toolbar,
-            research,
-            notes,
-            analighter,
-            markjs,
-            tex,
             variablehelper,
             textfeatureviewport,
             textviewcontrol,

@@ -40,10 +40,10 @@ let textDB = {
  */
 let vueRenderOptions = {
     head: {
-        meta: [
-            {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
-            {script: 'https://code.jquery.com/jquery-3.2.1.min.js'},
-            {script: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCILXEEId8MKt4qxS7V-XACNfyxUSgrdPk'}
+        scripts: [
+            {src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+            {src: 'https://code.jquery.com/jquery-3.2.1.min.js'},
+            {src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCILXEEId8MKt4qxS7V-XACNfyxUSgrdPk'}
 
         ]
     }
@@ -211,7 +211,7 @@ function updateNote(noteID, note) {
 
 router.get('/', function (req, res, next) {
     console.log(Tag + "load text " + req.session.docID);
-    if (req.session.docID == undefined) {
+    if (req.session.docID === undefined) {
         res.redirect('/');
     } else {
         dbStub.fiberEstablishConnection();
@@ -221,11 +221,13 @@ router.get('/', function (req, res, next) {
 
 router.get('/a', function (req, res, next) {
     dbStub.fiberEstablishConnection();
-    res.renderVue('analysis', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('analysis.vue', vueData, req.vueOptions);
 });
 
 router.post('/showText', function (req, res) {
-    res.renderVue('analysis', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('analysis.vue', vueData, req.vueOptions);
 });
 
 router.post('/clearText', function (req, res) {
@@ -264,7 +266,8 @@ function getAndShowText(req, res) {
     }
     resetTextDB();
     console.log(Tag + 'Server sent text to /analysis');
-    res.renderVue('analysis', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('analysis.vue', vueData, req.vueOptions);
 }
 
 /**

@@ -121,8 +121,8 @@
 
 </template>
 <script>
-    import filtertokenwithclass from './mixins/analysis/filtertoken.js';
-    import researchresult from './components/analysis/researchresult.vue';
+    import filtertokenwithclass from 'views/mixins/analysis/filtertoken.js';
+    import researchresult from './researchresult.vue';
 
     export default {
         mixins: [filtertokenwithclass],
