@@ -133,7 +133,7 @@
             docid: { type: Number, default: -1 },
             tokenstoshow: { type: Array, default: function () { return [] }},
             wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
-            colindex: { type: Number, default: -1 },
+            columnindex: { type: Number, default: 0 },
             contentcontrol: { type: Object, default: null },
             hoverdata: { type: Object, default: null},
         },
@@ -156,7 +156,7 @@
                 let query = '';
                 let frequency = 0;
                 let searched = false;
-                let sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass);
+                let sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.columnindex], semClass);
                 this.sourcequery.push([]);
                 for (let i = 0; i < sortedtokens.length; i++) {
                     for (let j = 0; j < sortedtokens[i].length; j++) {
