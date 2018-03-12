@@ -149,7 +149,7 @@
         },
         methods: {
             starthover: function (event) {
-                this.$emit('starthover', event);                   
+                this.$emit('starthover', event);
             },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
@@ -268,6 +268,8 @@
             },
         },
         mounted() {
+            if (this.tokenstoshow.length === 0)
+                return;
             this.researchTokensOfClass('PERSON', 0);
             this.researchTokensOfClass('LOCATION', 1);
             this.researchTokensOfClass('ORGANIZATION', 2);
