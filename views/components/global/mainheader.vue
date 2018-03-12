@@ -85,31 +85,27 @@
 <script>
     export default {
         props: {
-            title: String,
-            preventtitleedit: Boolean,
-            docid: Number,
-            route: String,
-            numberofcolumns: Number,
-            autochecked: Boolean
+            title: { type: String, default: "" },
+            preventtitleedit: { type: Boolean, default: false},
+            docid: { type: Number, default: -1 },
+            route: { type: String, default: "" },
+            numberofcolumns: { type: Number, default: 1 },
+            autochecked: { type: Boolean, default: false },
+            serverip: { type: String, default: "" }
         },
         data: function () {
             return {
-                title: this.title,
                 editingtitle: false,
-                preventtitleedit: this.preventtitleedit,
-                docid: this.docid,
                 newTitle: '',
-                route: this.route,
-                autochecked: this.autochecked,
                 img: 'img',
                 map: 'map',
-                information: 'information'
+                information: 'information',
             }
         },
         methods: {
             editTitle: function () {
                 this.title = this.newTitle;
-                let socket = io('http://localhost:8080');
+                let socket = io(this.serverip +':8080');
                 socket.emit('changeTitle', this.docid, this.newTitle);
                 this.editingtitle = false;
             },

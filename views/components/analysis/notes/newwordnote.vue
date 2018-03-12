@@ -40,20 +40,16 @@
             autotextarea
         },
         props: {
-            selectedindexes: Object,
-            docid: String,
-            newnote: String,
-            wordnotedb: Object,
-            tokens: Object
+            serverip: { type: String, default : ''},
+            selectedindexes: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            newnote: { type: String, default: "" },
+            wordnotedb: { type: Object, default: null },
+            tokens: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                newnote: this.newnote,
-                wordnotedb: this.wordnotedb,
                 selectedtext: '',
-                tokens: this.tokens,
                 submitit: false
             }
         },
@@ -66,7 +62,7 @@
                 if (typeof this.selectedindexes !== 'undefined'
                     && this.selectedindexes.start !== -1
                     && this.selectedindexes.end !== -1) {
-                    let socket = io('http://localhost:8080');
+                    let socket = io(this.serverip+':8080');
                     if (typeof this.wordnotedb === 'undefined') {
                         socket.emit('savewordnote', newnote, this.docid, this.selectedindexes);
                         //TODO: get noteID from DB in callback and correct it while/after render in the background
@@ -95,7 +91,7 @@
                 if (typeof this.selectedindexes !== 'undefined'
                     && this.selectedindexes.start !== -1
                     && this.selectedindexes.end !== -1) {
-                    let socket = io('http://localhost:8080');
+                    let socket = io(this.serverip+':8080');
                     socket.emit('deletenote', this.wordnotedb.noteID);
                     this.$emit('back', this.wordnotedb.nodeID, 0);
                 }

@@ -5,11 +5,10 @@
 <script>
     export default {
         props:{
-            tokens: Array
+            tokens: { type: Array, default: function () { return [] }},
         },
         data:function () {
             return{
-                tokens: this.tokens
             }
         },
         watch: {

@@ -4,54 +4,30 @@
           v-on:mouseup="endSelection"
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
-        <span class="nonPreAlt specialBracket"
-              v-bind:class="toHighlight">{{beginBrackets}}</span
-        ><span class="nonPreAlt"
-               v-bind:class="toHighlight">{{token.content}}</span
-    ><span class="nonPreAlt specialBracket"
-           v-bind:class="toHighlight">{{endBrackets}}</span
-    ><span class="preAlt "
-           v-bind:class="classToHighlightGap">{{getWordGap}}</span>
-    </span>
+        <span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{beginBrackets}}</span><span
+            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight"
+                                                                                                              v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
-
-
 <script>
     export default {
         props: {
-            token: Object,
-            tokens: Array,
-            mentions: Array,
-            index: Number,
-            classestomark: Object,
-            selectedindexes: Object,
-            hoveredchain: Number,
-            selectedchain: Number,
-            nestedmentions: Object,
-            endOfMentions: Object,
+            token: { type: Object, default: null },
+            prevtoken: { type: Object, default: null },
+            index: { type: Number, default: -1 },
+            classestomark: { type: Object, default: null },
+            selectedindexes: { type: Object, default: null }, 
+            hoveredchain: { type: Number, default: -1 },
+            selectedchain: { type: Number, default: -1 },
+            entityindextoline: { type: Number, default: -1 },
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
-                token: this.token,
-                tokens: this.tokens,
-                mentions: this.mentions,
-                index: this.index,
-                classestomark: this.classestomark,
-                selectedindexes: this.selectedindexes,
                 htmlclass: {},
-                markgap: false,
                 tohover: false,
-                hoveredchain: this.hoveredchain,
-                selectedchain: this.selectedchain,
-                nestedmentions: this.nestedmentions,
-                color: this.color,
-                endOfMentions: this.endOfMentions,
-                nested: false,
-                mention: [],
-                nextmention: false
+                isEntityHovered: false,
             }
         },
-
         computed: {
             tobejumped: function () {
                 if (this.index === this.selectedindexes.start) {
@@ -59,7 +35,6 @@
                 }
             },
             toHighlight: function () {
-
                 let htmlclass = {};
                 if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
@@ -67,25 +42,24 @@
                 } else {
                     htmlclass['notemark'] = false;
                 }
-                if (this.mention.length > 0) {
-                    //console.log('highlight: ' + this.index + ' mention:' + JSON.stringify(this.mention));
+                if (typeof this.token.coref !== 'undefined') {
                     if (this.classestomark.coref) {
-                        for (let i = 0; i < this.mention.length; i++) {
+                        for (let i = 0; i < this.token.coref.length; i++) {
                             if (!this.tohover) {
                                 //is Representant
-                                if (this.mention[i].representative < 0) {
-                                    if (this.mention[i].mentionID === this.hoveredchain) {
+                                if (this.token.coref[i].representative < 0) {
+                                    if (this.token.coref[i].mentionID === this.hoveredchain) {
                                         htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else if (this.mention[i].mentionID === this.selectedchain) {
+                                    } else if (this.token.coref[i].mentionID === this.selectedchain) {
                                         htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
                                     }
                                     else {
                                         htmlclass['cRepresentant'] = this.classestomark.coref;
                                     }
                                 } else {
-                                    if (this.mention[i].representative === this.hoveredchain) {
+                                    if (this.token.coref[i].representative === this.hoveredchain) {
                                         htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    } else if (this.mention[i].representative === this.selectedchain) {
+                                    } else if (this.token.coref[i].representative === this.selectedchain) {
                                         htmlclass['cSelectedReferent'] = this.classestomark.coref;
                                     }
                                     else {
@@ -94,12 +68,12 @@
                                 }
                             } else {
                                 //is Representant
-                                if (this.mention[i].representative < 0) {
+                                if (this.token.coref[i].representative < 0) {
                                     htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mention[i].mentionID);
+                                    this.$emit('hoverchain', this.token.coref[i].mentionID);
                                 } else {
                                     htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.mention[i].representative);
+                                    this.$emit('hoverchain', this.token.coref[i].representative);
                                 }
 
                                 //is nested in more than one mention
@@ -107,15 +81,20 @@
                         }
                     }
                 }
-                htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                if (this.isEntityHovered == true){
+                    htmlclass[this.token.semanticClass + "_strong"] = true;
+                    htmlclass[this.token.semanticClass] = false;
+                }
+                else {
+                    htmlclass[this.token.semanticClass + "_strong"] = false;
+                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass]; 
+                }                
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
                     htmlclass['POS'] = this.classestomark['POS'];
-                    //console.log(JSON.stringify(this.classestomark));
                 } else {
-                    //console.log("else" + JSON.stringify(this.classestomark));
                 }
                 return htmlclass
             },
@@ -126,7 +105,6 @@
                 //Z3: highlight coref and this gab bc next word not part of coref mention
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
-
                 try {
                     if ((this.index) > this.selectedindexes.start
                         && (this.index) < this.selectedindexes.end) {
@@ -134,25 +112,25 @@
                     } else {
                         htmlclass['notemark'] = false;
                     }
-                    if (this.mention.length > 0) {
+                    if (typeof this.token.coref !== 'undefined') {
                         if (this.classestomark.coref) {
-                            if (this.nextmention) {
-                                for (let i = 0; i < this.mention.length; i++) {
+                            //console.log(this.token.coref.length);
+                            for (let i = 0; i < this.token.coref.length; i++) {
+                                if (this.token.coref[i].endIndex-1 > this.token.textIndex) {
                                     if (!this.tohover) {
                                         //is Representant
-
-                                        if (this.mention[i].representative < 0) {
-                                            if (this.mention[i].mentionID === this.hoveredchain) {
+                                        if (this.token.coref[i].representative < 0) {
+                                            if (this.token.coref[i].mentionID === this.hoveredchain) {
                                                 htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                            } else if (this.mention[i].mentionID === this.selectedchain) {
+                                            } else if (this.token.coref[i].mentionID === this.selectedchain) {
                                                 htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
                                             } else {
                                                 htmlclass['cRepresentant'] = this.classestomark.coref;
                                             }
                                         } else {
-                                            if (this.mention[i].representative === this.hoveredchain) {
+                                            if (this.token.coref[i].representative === this.hoveredchain) {
                                                 htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                            } else if (this.mention[i].representative === this.selectedchain) {
+                                            } else if (this.token.coref[i].representative === this.selectedchain) {
                                                 htmlclass['cSelectedReferent'] = this.classestomark.coref;
                                             } else {
                                                 htmlclass['cReferent'] = this.classestomark.coref;
@@ -160,12 +138,12 @@
                                         }
                                     } else {
                                         //is Representant
-                                        if (this.mention[i].representative < 0) {
+                                        if (this.token.coref[i].representative < 0) {
                                             htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                            this.$emit('hoverchain', this.mention[i].mentionID);
+                                            this.$emit('hoverchain', this.token.coref[i].mentionID);
                                         } else {
                                             htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                            this.$emit('hoverchain', this.mention[i].representative);
+                                            this.$emit('hoverchain', this.token.coref[i].representative);
                                         }
                                     }
                                 }
@@ -173,7 +151,7 @@
                         }
                     }
                     //TODO: check for consistency
-                    if (this.tokens[this.index - 1].semanticClass === this.tokens[this.index].semanticClass) {
+                    if (this.prevtoken !== null && this.prevtoken.semanticClass === this.token.semanticClass) {
                         htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     }
                 } catch (err) {
@@ -184,32 +162,10 @@
             beginBrackets: function () {
                 let resultingBrackets = '';
                 let bracket = '[';
-                let nested = false;
-                if (this.classestomark.coref) {
-                    for (let i = 0; i < this.mentions[0].length; i++) {
-                        if (this.index === this.mentions[0][i].startIndex + 1) {
-                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                }
-                            }
-                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                }
-                            }
-                            if (!nested) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = false;
-                            }
+                if (this.classestomark.coref && typeof this.token.coref !== 'undefined') {
+                    for (let i = 0; i < this.token.coref.length; i++) {
+                        if (this.token.coref[i].startIndex === this.token.textIndex) {
+                            resultingBrackets = resultingBrackets + bracket;
                         }
                     }
                 }
@@ -218,111 +174,82 @@
             endBrackets: function () {
                 let resultingBrackets = '';
                 let bracket = ']';
-                let nested = false;
-                if (this.classestomark.coref) {
-                    for (let i = 0; i < this.mentions[0].length; i++) {
-                        if (this.index === this.mentions[0][i].endIndex) {
-                            for (let j = 0; j < this.nestedmentions.fullyNested.length; j++) {
-                                if (this.nestedmentions.fullyNested[j].inner === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                } else if (this.nestedmentions.fullyNested[j].outer === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                }
-                            }
-                            for (let j = 0; j < this.nestedmentions.nested.length; j++) {
-                                if (this.nestedmentions.nested[j].second === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                } else if (this.nestedmentions.nested[j].first === this.mentions[0][i].mentionID) {
-                                    resultingBrackets = resultingBrackets + bracket;
-                                    nested = true;
-                                }
-                            }
-                            if (!nested) {
-                                resultingBrackets = resultingBrackets + bracket;
-                                nested = false;
-                            }
+                if (this.classestomark.coref && typeof this.token.coref !== 'undefined') {
+                    for (let i = 0; i < this.token.coref.length; i++) {
+                        if (this.token.coref[i].endIndex - 1 === this.token.textIndex) {
+                            resultingBrackets = resultingBrackets + bracket;
                         }
                     }
                 }
                 return resultingBrackets;
             },
             getWordGap: function () {
-                //console.log('Debug: Index:' + this.index + ' Tokens: ' + JSON.stringify(this.tokens));
-                //console.log('word1: ' + JSON.stringify(this.tokens[this.index - 1]));
-                let token = this.tokens[this.index];
-                let word1OffsetEnd = this.tokens[this.index - 1].offsetEnd;
-                let whitespaceInfo = this.tokens[this.index - 1].whitespaceInfo;
+                if(this.prevtoken === null){
+                    return '';
+                }
+               
                 let word2OffsetBegin = -1;
                 try {
-                    word2OffsetBegin = token.offsetBegin;
+                    word2OffsetBegin = this.token.beginOffSet;
                 } catch (err) {
-                    //console.log('offsetBegin is not defined');
                 }
                 //default Setting: 1 space * difference between Offsets
                 let gap = '';
                 if (word2OffsetBegin !== -1) {
-                    if (whitespaceInfo === -10) {
-                        //console.log('offsets: ' + word1OffsetEnd + ' ' + word2OffsetBegin);
-                        for (let i = 0; i < word2OffsetBegin - word1OffsetEnd; i++) {
-                            gap = gap + ' ';
-                        }
+                    if (this.prevtoken.whitespaceInfo === -10) {
+                        gap = Array(word2OffsetBegin - this.prevtoken.EndOffSet + 1).join(" ");
                     }
                 }
                 return gap;
             }
         },
-        mounted() {
-            this.getMentionInfo();
+        watch: {
+            wordtomarkonhoverdata: function (event) {
+                if (typeof event === 'undefined'){
+                    consol.log("WARNING: text vue event in wordtomarkonhover undefined"); 
+                    return;
+                }
+                let index = event.wordids.indexOf(this.token.wordID)
+                if(index >- 1){
+                    this.isEntityHovered = true;
+                    if (index == 0 && event.hoverstarted == "research"){
+                        this.$el.scrollIntoView();
+                        let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
+                        this.$emit('endhover', data);
+                    }
+                } else {
+                    this.isEntityHovered = false;
+                }
+            }, deep:true
         },
         methods: {
-            getMentionGap: function () {
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    //console.log('Checkpoint 2.0: ' + (this.index - 1) + ' >=? ' + this.mentions[0][i].startIndex);
-                    //console.log('Checkpoint 2.1: ' + this.index + ' <=? ' + this.mentions[0][i].endIndex);
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) < this.mentions[0][i].endIndex) {
-                        this.mention = this.mentions[0][i];
-                        break;
-                    }
-                }
-            },
-            getMentionInfo: function () {
-                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
-                //console.log('getMentionInfo');
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    // console.log('getMentionInfo: index:' + this.index
-                    //     + 'startIndex: ' + this.mentions[0][i].startIndex
-                    //     + 'endIndex: ' + this.mentions[0][i].endIndex
-                    //    + 'erfüllt: ' + ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex));
-                    if ((this.index - 1) >= this.mentions[0][i].startIndex && (this.index) <= this.mentions[0][i].endIndex) {
-                        this.mention.push(this.mentions[0][i]);
-                        //console.log('getMentionInfo: this Mention got set: index: ' + this.index + ' : ' + JSON.stringify(this.mention));
-                        try {
-                            if (this.mentions[0][i].endIndex - this.index > 0) {
-                                //console.log('has next Mention');
-                                this.nextmention = true;
-                            }
-                        } catch (err) {
-                        }
-                    }
-                }
-            },
             startSelection: function () {
                 this.$emit('startselection', this.index - 1);
             },
-            endSelection: function () {
+            endSelection: function (event) {
+                let offsets = event.target.getBoundingClientRect();
+                this.$emit('setoffsetstart', [offsets, this.token, "text"]);
                 this.$emit('endselection', this.index);
             },
             stophover: function () {
                 this.tohover = false;
                 this.$emit('hoverchain', -1);
+            },
+            hover: function (event) {
+                if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
+                    return;
+                }
+                
+                let hoverdata = {
+                    hoverstarted: "text",
+                    offsetstart: event.target.getBoundingClientRect(),
+                    startword: this.token,
+                    semanticClass: this.token.semanticClass,
+                    startresearch: undefined,
+                    wordtomarkonhover: []
+                }
+                this.$emit('starthover', hoverdata);
             }
         }
     }
 </script>
-
-<style scoped>
-
-</style>

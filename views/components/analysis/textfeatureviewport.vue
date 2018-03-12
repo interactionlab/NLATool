@@ -1,53 +1,62 @@
 <template>
     <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
-        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%;">
-        
+        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0"
+             v-on:mouseover="movetoolbar">
             <!--left grid for text stuff -->
-            <div class="mdl-cell mdl-cell--6-col" style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px;">
+            <div class="mdl-cell mdl-cell--6-col"
+                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%">
                 <div class="mdl-grid"
                      id="textWindow"
                      ref="textWindow"
                      style="overflow-y: auto; height: auto !important; display: flex; max-height: 100%;">
                     <component is="tex"
                                v-for="(token,i) in col"
-                               v-bind:key="token.wordID"
+                               v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:tokens="tokens"
-                               v-bind:mentions="mentions"
-                               v-bind:index="generatetrueindex(i+1)"
+                               v-bind:prevtoken="prevtoken(token.textIndex)"
+                               v-bind:index="token.textIndex"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
-                               v-bind:nestedmentions="nestedmentions"
                                v-bind:selectedchain="selectedchain"
+                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                               v-bind:hoverdata="hoverdata"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
-                               v-on:endselection="endselection($event)">
+                               v-on:endselection="endselection($event)"
+                               v-on:starthover="starthover($event)"
+                               v-on:endhover="endhover($event)">
                     </component>
                 </div>
             </div>
-        <!--right grid for result stuff -->
-        <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; overflow-y: auto;">
-            <keep-alive>
-                <component
-                        :is="analysismode"
-                        v-bind:tokens="tokens"
-                        v-bind:tokenstoshow="tokenstoshow"
-                        v-bind:colindex="colindex"
-                        v-bind:docid="docid"
-                        v-bind:notes="notes"
-                        v-bind:notemodes="notemodes"
-                        v-bind:researchmode="researchmode"
-                        v-bind:selectedindexes="selectedindexes"
-                        v-bind:selectedchain="selectedchain"
-                        v-bind:mentions="mentions"
-                        v-bind:showmode="showmode"
-                        v-bind:classestomark="classestomark"
-                        v-bind:contentcontrol="contentcontrol"
-                        v-on:togglesemanticlass="togglesemanticlass($event)"
-                        v-on:jumpmarktext="selectText2($event)">
-                </component>
-            </keep-alive>
+            <!--right grid for result stuff -->
+            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; margin:0; overflow-y: auto; width:50%">
+                <keep-alive>
+                    <component
+                            :is="analysismode"
+                            v-bind:serverip="serverip"
+                            v-bind:tokens="tokens"
+                            v-bind:tokenstoshow="tokenstoshow"
+                            v-bind:colindex="colindex"
+                            v-bind:docid="docid"
+                            v-bind:notes="notes"
+                            v-bind:notemodes="notemodes"
+                            v-bind:researchmode="researchmode"
+                            v-bind:selectedindexes="selectedindexes"
+                            v-bind:selectedchain="selectedchain"
+                            v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                            v-bind:mentions="mentions"
+                            v-bind:showmode="showmode"
+                            v-bind:classestomark="classestomark"
+                            v-bind:contentcontrol="contentcontrol"
+                            v-bind:hoverdata="hoverdata"
+                            v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:endhover="endhover($event)"
+                            v-on:jumpmarktext="selectText2($event)"
+                            v-on:starthover="starthover($event)">
+                    </component>
+                </keep-alive>
+            </div>
         </div>
     </div>
 </template>
@@ -60,50 +69,47 @@
 
     export default {
         props: {
-            col: Array,
-            colindex: Number,
-            splitted: Array,
-            tokens: Array,
-            notes: Array,
-            mentions: Array,
-            nestedmentions: Array,
-            selectedindexes: Object,
-            selectedchain: Number,
-            hoveredchain: Number,
-            classestomark: Object,
-            showmode: String,
-            notemodes: Object,
-            researchmode: String,
-            analysismode: String,
-            docid: Number,
-            textcolumnposition: Number,
-            tokenstoshow: Array,
-            contentcontrol: Object
+            serverip: { type: String, default: "" },
+            col: { type: Array, default: function () { return [] }},
+            colindex: { type: Number, default: -1 },
+            splitted: { type: Array, default: function () { return [] }},
+            tokens: { type: Array, default: function () { return [] }},
+            notes: { type: Array, default: function () { return [] }},
+            mentions: { type: Array, default: function () { return [] }},
+            selectedindexes: { type: Object, default: null },
+            selectedchain: { type: Number, default: -1 },
+            hoveredchain: { type: Number, default: -1 },
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            classestomark: { type: Object, default: null },
+            showmode: { type: String, default: "" },
+            notemodes: { type: Object, default: null },
+            researchmode: { type: String, default: "" },
+            analysismode: { type: String, default: "" },
+            docid: { type: Number, default: -1 },
+            textcolumnposition: { type: Number, default: -1 },
+            tokenstoshow: { type: Array, default: function () { return [] }},
+            contentcontrol: { type: Object, default: null }, 
         },
         data: function () {
             return {
-                col: this.col,
-                colindex: this.colindex,
-                splitted: this.splitted,
-                tokens: this.tokens,
-                notes: this.notes,
-                mentions: this.mentions,
-                nestedmentions: this.nestedmentions,
-                selectedindexes: this.selectedindexes,
-                selectedchain: this.selectedchain,
-                hoveredchain: this.hoveredchain,
-                classestomark: this.classestomark,
-                showmode: this.showmode,
-                notemodes: this.notemodes,
-                researchmode: this.researchmode,
-                analysismode: this.analysismode,
-                docid: this.docid,
-                textcolumnposition: this.textcolumnposition,
-                tokenstoshow: this.tokenstoshow,
-                contentcontrol: this.contentcontrol,
+                hoverdata: null,
+                entitytoline: [],
+                entityindextoline: -1
             }
         },
+        computed:{
+        },
         methods: {
+            prevtoken:function (index) {
+                if(index === 0){
+                    return null;
+                } else {
+                    return this.tokens[index-1];
+                }
+            },
+            movetoolbar: function () {
+                this.$emit('movetoolbar', this.colindex);
+            },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
                 this.$emit('hoverchain', chain);
@@ -117,43 +123,29 @@
             selectText2: function (newSelectedIndexes) {
                 this.$emit('jumpmarktext', newSelectedIndexes)
             },
-            generatetrueindex: function (wordIndex) {
-                let i;
-                let j = 0;
-                //console.log('the wordIndex Input is:' + wordIndex);
-                //console.log('the scope: ' + JSON.stringify(this.textcolumnposition));
-                for (let k = 0; k < this.textcolumnposition.start; k++) {
-                    wordIndex = wordIndex + this.splitted[k].length;
-                }
-                for (i = this.textcolumnposition.start; i < (this.colindex + this.textcolumnposition.start); i++) {
-                    wordIndex = wordIndex + this.splitted[i].length - 1;
-                    j++;
-                }
-                wordIndex = wordIndex + j;
-                //console.log('The col Index here is:' + this.colindex);
-                //console.log('The final Index is: ' + wordIndex);
-                return wordIndex;
-
-            },
-            getMentionInfo: function (index) {
-                //Corrent Complexity: O(n³) -> TODO: Reduce Complexity
-                console.log('getMentionInfo');
-                let mention = {};
-                for (let i = 0; i < this.mentions[0].length; i++) {
-                    console.log('getMentionInfo: index:' + this.index
-                        + 'startIndex: ' + this.mentions[0][i].startIndex
-                        + 'endIndex: ' + this.mentions[0][i].endIndex
-                        + 'erfüllt: ' + ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex));
-                    if ((index - 1) >= this.mentions[0][i].startIndex && (index) <= this.mentions[0][i].endIndex) {
-                        mention = this.mentions[0][i];
-                        console.log('getMentionInfo: this Mention got set: ' + JSON.stringify(this.mention));
-                        break;
-                    }
-                }
-                return mention;
-            },
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
+            },
+            endhover: function (event) {
+                this.$emit('endhover', event);
+            },
+            dynamicSort: function (property) {
+                let sortOrder = 1;
+                if (property[0] === "-") {
+                    sortOrder = -1;
+                    property = property.substr(1);
+                }
+                return function (a, b) {
+                    let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                    return result * sortOrder;
+                }
+            },
+            starthover:function (event) {
+                //console.log("TFVP starthover" + JSON.stringify(event));
+                this.entityindextoline = event[0];
+                
+                this.hoverdata = event;
+                this.$emit('starthover', event);
             },
         },
         components: {

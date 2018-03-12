@@ -17,22 +17,22 @@
                         <small class="mdc-button">ALL</small>
                     </button>
                     <button v-on:click="changeMarkerMode('PERSON')"
-                            v-bind:class="{PERSON: classestomark.PERSON}"
+                            v-bind:class="{PERSON_strong: classestomark.PERSON}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">PERSON</small>
                     </button>
                     <button v-on:click="changeMarkerMode('LOCATION')"
-                            v-bind:class="{LOCATION: classestomark.LOCATION}"
+                            v-bind:class="{LOCATION_strong: classestomark.LOCATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">LOCATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('ORGANIZATION')"
-                            v-bind:class="{ORGANIZATION: classestomark.ORGANIZATION}"
+                            v-bind:class="{ORGANIZATION_strong: classestomark.ORGANIZATION}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">ORGANIZATION</small>
                     </button>
                     <button v-on:click="changeMarkerMode('MISC')"
-                            v-bind:class="{MISC: classestomark.MISC}"
+                            v-bind:class="{MISC_strong: classestomark.MISC}"
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
@@ -76,19 +76,15 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            tokens: Array,
-            selectedindexes: Object,
-            classestomark:Object
+            selectedindexes: { type: Object, default: null },
+            classestomark:{ type: Object, default: null }
         },
         data: function () {
             return {
                 tool: 'analightertool',
                 onOff: false,
-                tokens: this.tokens,
-                selectedindexes: this.selectedindexes,
                 correctionMode: false,
                 allActive: false,
-                classestomark: this.classestomark,
                 noteModes: {
                     wordnote: true,
                     globalnote: false

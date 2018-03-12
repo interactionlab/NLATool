@@ -9,7 +9,7 @@ let desktop = 'desktop Version: ';
 let mobile = 'Mobile Version: ';
 let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'analyse.js: ';
+let Tag = 'Server: analyse.js: ';
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
@@ -102,7 +102,17 @@ io.on('connection', function (socket) {
     socket.on('changeClass', function (tokenToEdit, docID) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
+
+    socket.on('getMoreText', function(docID, endIndex, pagesize){
+        wait.launchFiber(getMoreTextResponse,socket, {docID:docID, endIndex:endIndex, pagesize: pagesize});
+    });
 });
+
+function getMoreTextResponse(socket, input){
+    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
+    console.log(Tag +  ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
+    socket.emit('sendMoreText', tokens);
+}
 
 /**
  * Changes the title of a document on the DB.
@@ -200,8 +210,13 @@ function updateNote(noteID, note) {
 }
 
 router.get('/', function (req, res, next) {
-    dbStub.fiberEstablishConnection();
-    wait.launchFiber(getAndShowText, req, res, next);
+    console.log(Tag + "load text " + req.session.docID);
+    if (req.session.docID == undefined) {
+        res.redirect('/');
+    } else {
+        dbStub.fiberEstablishConnection();
+        wait.launchFiber(getAndShowText, req, res, next);
+    }
 });
 
 router.get('/a', function (req, res, next) {
@@ -229,20 +244,26 @@ function getAndShowText(req, res) {
     //console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
     if (!isNaN(req.session.docID)) {
         let docID = req.session.docID;
+        let firstTimeCheck = new Date();
+        let deltaTime = firstTimeCheck.getTime();
+        vueData.vueTokens = selectWithInnerJoin(docID,0,30);
 
-        getTextFromDB(docID);
+        //getTextFromDB(docID);
         //console.log(textDB.tokens);
-        vueData.vueTokens = textDB.tokens;
+        //vueData.vueTokens = textDB.tokens;
         //vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
-        getCorefInfo(docID);
+        let lastTimeCheck = new Date();
+        console.log('Time Join  took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+        //getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
-        vueData.coref = textDB.coref;
+        //vueData.coref = textDB.coref;
         //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
+    console.log(Tag + 'Server sent text to /analysis');
     res.renderVue('analysis', vueData, vueRenderOptions);
 }
 
@@ -283,7 +304,7 @@ function getTextFromDB(docID) {
                 //console.log(JSON.stringify(word));
                 textDB.tokens.push(word[0]);
             } catch (err) {
-                console.log('Loading Text form DB failed: '+err);
+                console.log('Loading Text form DB failed: ' + err);
             }
         } else {
             let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
@@ -292,6 +313,157 @@ function getTextFromDB(docID) {
         }
     }
     //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
+}
+
+function selectWithInnerJoin(docID, start, amount) {
+    let tokens = [];
+    let queryObject = {
+        tables: ['textmap', 'word'],
+        columns: [{
+            tableIndex: 0,
+            name: 'docID',
+        }, {
+            tableIndex: 0,
+            name: 'wordID',
+        }, {
+            tableIndex: 0,
+            name: 'textIndex',
+        }, {
+            tableIndex: 0,
+            name: 'beginOffSet',
+        }, {
+            tableIndex: 0,
+            name: 'EndOffSet',
+        }, {
+            tableIndex: 0,
+            name: 'whitespaceInfo',
+        }, {
+            tableIndex: 1,
+            name: 'wordID',
+        }, {
+            tableIndex: 1,
+            name: 'content',
+        }, {
+            tableIndex: 1,
+            name: 'isSpecial',
+        }, {
+            tableIndex: 1,
+            name: 'semanticClass',
+        }, {
+            tableIndex: 1,
+            name: 'pos',
+        },],
+        joinConditions: [{
+            columnIndexes: [1],
+            valueColumnIndexes: [6],
+            operator: ['='],
+        }],
+        kindOfJoin: ['INNER'],
+        whereConditions: {
+            columns: ['textmap.docID'],
+            values: [docID,],
+            operators: ['='],
+        }
+    };
+    //dbAction.createInnerJoinSelectCommand(queryObject);
+    //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
+    let corefs = getCorefs(docID,start, amount);
+    for (let i = 0; i < tokens.length - 1; i++) {
+        for (let j = 0; j < corefs.length; j++) {
+            //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
+            if (tokens[i].textIndex === corefs[j].textIndex) {
+                if (typeof  tokens[i].coref === 'undefined') {
+                    tokens[i]['coref'] = [];
+                }
+                tokens[i]['coref'].push({
+                    mentionID: corefs[j].mentionID,
+                    representative: corefs[j].representative,
+                    gender: corefs[j].gender,
+                    type: corefs[j].type,
+                    number: corefs[j].number,
+                    animacy: corefs[j].animacy,
+                    startIndex: corefs[j].startIndex,
+                    endIndex: corefs[j].endIndex,
+                    kind: corefs[j].kind,
+                    relatedMention: corefs[j].relatedMention
+                });
+            }
+        }
+    }
+    return tokens;
+}
+
+function getCorefs(docID, start, amount) {
+    let queryObject = {
+        tables: ['textmap', 'corefmentions', 'nestedcorefs'],
+        columns: [{
+            tableIndex: 0,
+            name: 'docID',
+        }, {
+            tableIndex: 0,
+            name: 'textIndex',
+        }, {
+            tableIndex: 1,
+            name: 'docID',
+            alias: 'corefdocID'
+        }, {
+            tableIndex: 1,
+            name: 'mentionID',
+        }, {
+            tableIndex: 1,
+            name: 'representative',
+        }, {
+            tableIndex: 1,
+            name: 'gender',
+        }, {
+            tableIndex: 1,
+            name: 'type',
+        }, {
+            tableIndex: 1,
+            name: 'number',
+        }, {
+            tableIndex: 1,
+            name: 'animacy',
+        }, {
+            tableIndex: 1,
+            name: 'startIndex',
+        }, {
+            tableIndex: 1,
+            name: 'endIndex',
+        }, {
+            tableIndex: 2,
+            name: 'docID',
+            alias: 'nesteddocId'
+        }, {
+            tableIndex: 2,
+            name: 'mentionID',
+            alias: 'nestedMentionID'
+        }, {
+            tableIndex: 2,
+            name: 'kind',
+        }, {
+            tableIndex: 2,
+            name: 'relatedMention',
+        }],
+        joinConditions: [{
+            columnIndexes: [0, 1, 1],
+            valueColumnIndexes: [2, 9, 10],
+            operator: ['=', '>=', '<'],
+        }, {
+            columnIndexes: [3],
+            valueColumnIndexes: [12],
+            operator: ['='],
+        }],
+        kindOfJoin: ['INNER', 'LEFT'],
+        whereConditions: {
+            columns: ['textmap.docID'],
+            values: [docID],
+            operators: ['='],
+        }
+    };
+    // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
 }
 
 function getCorefInfo(docID) {

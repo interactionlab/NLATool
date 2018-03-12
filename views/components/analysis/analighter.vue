@@ -1,6 +1,7 @@
 <template>
     <div>
         <component :is="showmode"
+                   v-bind:serverip="serverip"
                    v-bind:tokens="tokens"
                    v-bind:colindex="colindex"
                    v-bind:tokenstoshow="tokenstoshow"
@@ -8,7 +9,11 @@
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
-                   v-on:togglesemanticlass="togglesemanticlass($event)">
+                   v-bind:hoverdata="hoverdata"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:togglesemanticlass="togglesemanticlass($event)"
+                   v-on:endhover="endhover($event)"
+                   v-on:starthover="starthover($event)">
 
         </component>
     </div>
@@ -19,35 +24,35 @@
     import correction from './components/analysis/correction.vue';
     import entitiesview from './components/analysis/entitiesview.vue';
 
-
     export default {
 
         props: {
-            tokens: Array,
-            selectedindexes: Object,
-            showmode: String,
-            docid: String,
-            classestomark: Object,
-            tokenstoshow:Array,
-            colindex:Number,
-            contentcontrol:Object
+            serverip: { type: String, default: "" },
+            tokens: { type: Array, default: function () { return [] }},
+            selectedindexes: { type: Object, default: null },
+            showmode: { type: String, default: "" },
+            docid: { type: Number, default: -1 },
+            classestomark: { type: Object, default: null },
+            tokenstoshow: { type: Array, default: function () { return [] }},
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            colindex: { type: Number, default: -1 },
+            contentcontrol: { type: Object, default: null },
+            hoverdata: { type: Object, default: null},
         },
         data: function () {
             return {
-                tokens: this.tokens,
-                showmode: this.showmode,
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                classestomark: this.classestomark,
-                tokenstoshow:this.tokenstoshow,
-                colindex:this.colindex,
-                contentcontrol:this.contentcontrol
             }
         },
         methods: {
             togglesemanticlass:function (newClassesToMark) {
                 this.$emit('togglesemanticlass',newClassesToMark);
-            }
+            },
+            endhover:function (event) {
+                this.$emit('endhover',event);
+            },
+            starthover:function (textIndex) {
+                this.$emit('starthover', textIndex);
+            },
         },
         components: {
             nerVue,

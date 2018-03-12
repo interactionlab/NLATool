@@ -1,6 +1,7 @@
 <template>
     <div class="mdl-cell mdl-cell--12-col contentColor height100">
         <component :is="noteMode"
+                   v-bind:serverip="serverip"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
                    v-bind:tokens="tokens"
@@ -15,21 +16,16 @@
 
     export default {
         props: {
-            wordnotesp: Array,
-            selectedindexes: Object,
-            docid: String,
-            notes: Array,
-            tokens: Object,
-            notemodes: Object
+            serverip: { type: String, default: "" },
+            wordnotesp: { type: Array, default: function () { return [] }},
+            selectedindexes: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            notes: { type: Array, default: function () { return [] }},
+            tokens: { type: Array, default: function () { return [] }},
+            notemodes: { type: Object, default: null },
         },
         data: function () {
             return {
-                wordnotesp: this.wordnotesp,
-                selectedindexes: this.selectedindexes,
-                docid: this.docid,
-                notes: this.notes,
-                tokens: this.tokens,
-                notemodes: this.notemodes
             }
         },
         methods: {

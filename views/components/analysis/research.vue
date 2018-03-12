@@ -10,7 +10,6 @@
             <form action="#">
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
-
                     <component is="researchresult"
                                v-if="resultselected"
                                v-bind:researchresult="selectedresult"
@@ -51,28 +50,22 @@
 
         mixins: [getselectedtext, filtertoken],
         props: {
-
-            selectedindexes: Object,
-            tokens: Array,
-            docid: Number,
-            selectedchain: Number,
-            mentions: Array
+            selectedindexes: { type: Object, default: null },
+            tokens: { type: Array, default: function () { return [] }},
+            docid: { type: Number, default: -1 },
+            selectedchain: { type: Number, default: -1 },
+            mentions: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
                 researchresults: [''],
-                tokens: this.tokens,
                 selectedtext: '',
-                selectedindexes: this.selectedindexes,
                 resultselected: false,
                 selectedresult: {},
                 selectedindex: -1,
-                docid: this.docid,
                 keywords: this.keywords,
-                selectedchain: this.selectedchain,
-                mentions: this.mentions,
                 mapcoordinates: [],
-                sourceQuery: ''
+                sourceQuery: '',
             }
         },
         methods: {
@@ -88,7 +81,7 @@
                                 numberOfMatches[i] = numberOfMatches[i] + 1;
                             }
                         } catch (err) {
-                            console.log('Detailed Description: ' + err + i)
+                            console.log('ERROR: research vue Detailed Description: ' + err + i)
                         }
                     }
                     tempresults.push({

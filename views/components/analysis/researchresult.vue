@@ -1,19 +1,18 @@
 <template> <!--editordocument in 8080-->
 
     <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content deleteSpaces contentColor separate">
+        <main class="mdl-layout__content deleteSpaces contentColor separate"
+                v-on:mouseout="mouseout"
+                v-on:mouseover="accentuate"
+                v-on:click="showdetail">
             <div class="mdl-grid deleteSpaces">
-                <div class="mdl-cell mdl-cell--12-col"
-                     v-if="everythingshow">
-
-                    <div v-bind:class="generalstyleclass"
-                         v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate">
+                <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
+                    <div v-bind:class="generalstyleclass">
                         <div class="mdl-grid deleteSpaces"
-                             v-if="typeof researchresult.result !== 'undefined' ">
+                             v-if="typeof researchdata.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
-                                     v-if="typeof researchresult.result !== 'undefined'">
+                                     v-if="typeof researchdata.result !== 'undefined'">
                                     {{title}}
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
@@ -26,59 +25,27 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.img">
-                                <img v-if="typeof researchresult.result.image !== 'undefined'"
-                                     v-bind:src="researchresult.result.image.contentUrl"/>
-                            </div>
-
-                            <div class="mdl-cell mdl-cell--6-col"
-                                 v-if="contentcontrol.map">
-                                <component is="googlemap"
-                                           v-bind:mapcoordinates="mapcoordinates"
-                                           v-bind:index="mapkey">
-                                </component>
-                            </div>
-                            <div v-if="contentcontrol.information">
-                                <div v-if="typeof researchresult.result.description !== 'undefined'">
-                                    {{researchresult.result.description.articleBody}}
+                            <div class="mdl-cell mdl-cell--12-col deleteSpaces">
+                                <img v-if="(localcontentcontroler.img) & (typeof researchdata.result.image !== 'undefined')"
+                                     v-bind:src="researchdata.result.image.contentUrl"
+                                     style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
+                                <div style="float: left; width: 30%; margin-right: 1em;">
+                                    <component is="googlemap" v-if="localcontentcontroler.map"
+                                               v-bind:mapcoordinates="mapcoordinates"
+                                               v-bind:index="mapkey"
+                                    >
+                                    </component>
                                 </div>
+                                <div v-if="localcontentcontroler.information">
+                                    <div v-if="typeof researchdata.result.description !== 'undefined'">
+                                        {{researchdata.result.description.articleBody}}
+                                    </div>
 
-                                <div v-if="typeof researchresult.result.detailedDescription !== 'undefined'">
-                                    {{researchresult.result.detailedDescription.articleBody}}
+                                    <div v-if="typeof researchdata.result.detailedDescription !== 'undefined'">
+                                        {{researchdata.result.detailedDescription.articleBody}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mdl-cell mdl-cell--12-col"
-                     v-else>
-                    <div v-bind:class="{researchresulthover: hover}"
-                         v-on:mouseout="accentuate"
-                         v-on:mouseover="accentuate"
-                         v-on:click="showdetail">
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result !== 'undefined'">
-                            {{researchresult.result.name}}
-                        </div>
-                        <div class="mdl-cell mdl-cell--12-col"
-                             v-if="typeof researchresult.result.description !== 'undefined'">
-                            {{researchresult.result.description.articleBody}}
-                        </div>
-                    </div>
-                    <div class="mdl-grid deleteSpaces">
-                        <div class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="saveResult">
-                                <i class="mdc-button">Save</i>
-                            </button>
-                        </div>
-                        <div v-if="showallon" class="mdl-cell mdl-cell--2-col">
-                            <button class="mdl-button mdl-js-button"
-                                    v-on:click="showallresults">
-                                <i class="mdc-button">Show All</i>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -92,52 +59,59 @@
 
     export default {
         props: {
-            researchresult: Object,
-            index: Number,
-            mapkey: Number,
-            docid: Number,
-            showallon: Boolean,
-            mapcoordinates: Array,
-            sourcequery: String,
-            semclass: String,
-            contentcontrol: Object,
+            serverip: { type: String, default: "" },
+            researchdata: { type: Object, default: null },
+            index: { type: Number, default: -1 },
+            mapkey: { type: Number, default: -1 },
+            docid: { type: Number, default: -1 },
+            mapcoordinates: { type: Array, default: function () { return [] }},
+            semclass: { type: String, default: "" },
+            contentcontrol: { type: Object, default: null },  
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {
-                showimage: false,
-                everythingshow: true,
-                researchresult: this.researchresult,
-                hover: false,
-                index: this.index,
-                docid: this.docid,
-                showallon: this.showallon,
-                mapcoordinates: this.mapcoordinates,
-                sortedtoken: this.sourcequery,
-                semclass: this.semclass,
-                mapkey: this.mapkey,
-                contentcontrol: this.contentcontrol,
+                hover: false,                
+                localcontentcontrol: {
+                    img: true,
+                    map: true,
+                    information: true
+                },                
             }
         },
         methods: {
             showallresults: function () {
                 this.$emit('showallresults');
-                this.showallon = false;
             },
             showdetail: function () {
-                this.everythingshow = !this.everythingshow;
+
+            },
+            mouseout: function () {
+                this.hover = false;
             },
             accentuate: function () {
-                this.hover = !this.hover;
+                this.hover = true;                
+                //mouseover
+                let hoverdata = {
+                    hoverstarted: "research",
+                    offsetstart: null,
+                    offsetend: this.$el.getBoundingClientRect(),
+                    startword: null,
+                    semanticClass: this.semclass,
+                    startresearch: undefined,
+                    wordtomarkonhover: this.researchdata.sourcequery.wordids,
+                }
+                this.$emit('starthover', hoverdata);
             },
+            
             saveResult: function () {
-                let socket = io('http://localhost:8080');
-                socket.emit('saveresult', this.index, this.researchresult, this.docid);
+                let socket = io(this.serverip + ':8080');
+                socket.emit('saveresult', this.index, this.researchdata, this.docid);
                 this.$emit('saveresult', this.index);
-                this.showallon = true;
             },
             showSource: function () {
                 try {
-                    let url = this.researchresult.result.detailedDescription.url;
+                    let url = this.researchdata.result.detailedDescription.url;
                     let win = window.open(url, '_blank');
                     win.focus();
                 } catch (err) {
@@ -151,29 +125,62 @@
             googlemap
         },
         computed: {
+            localcontentcontroler: function () {
+                if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
+                    this.localcontentcontrol.img = false;
+                    this.localcontentcontrol.map = false;
+                    this.localcontentcontrol.information = false;
+                } else {
+                    this.localcontentcontrol.img = true;
+                    this.localcontentcontrol.map = true;
+                    this.localcontentcontrol.information = true;
+                }
+                if (this.researchdata.sourcequery.source[0].semanticClass === 'PERSON') {
+                    this.localcontentcontrol.map = false;
+                }
+                return this.localcontentcontrol;
+            },
             generalstyleclass: function () {
                 let htmlclass = {
-                    researchresulthover: this.hover
+                    researchdatahover: this.hover
                 };
-                htmlclass[this.semclass] = true;
-                if (this.semclass === 'PERSON_BORDERED') {
-                    htmlclass['PERSON_BORDERED'] = true;
+                
+                //console.log("this.wordtomarkonhoverdata: "+JSON.stringify(this.wordtomarkonhoverdata));
+                
+                if (this.wordtomarkonhoverdata != null
+                    && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
+                    && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
+                    && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0])  > -1)
+                {
+                    htmlclass[this.semclass + "_BORDERED_strong"] = true;
+                    htmlclass[this.semclass + "_BORDERED"] = false;
+                } else {
+                    htmlclass[this.semclass + "_BORDERED_strong"] = false;
+                    htmlclass[this.semclass + "_BORDERED"] = true;
                 }
+                
                 return htmlclass;
             },
             title: function () {
                 let title = '';
-                if (typeof this.sourcequery !== 'undefined') {
-                    if (typeof this.sourcequery.name !== 'undefined') {
-                        title = title + this.sourcequery.name;
-                        if (typeof this.sourcequery.freq !== 'undefined') {
-                            title = title + ' (' + this.sourcequery.freq + ') ';
+                if (typeof this.researchdata.sourcequery !== 'undefined') {
+                    if (typeof this.researchdata.sourcequery.querys !== 'undefined') {
+                        let t = "";
+                        for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++)
+                        {
+                            if (this.researchdata.sourcequery.querys[i].length > t.length){
+                                t = this.researchdata.sourcequery.querys[i];
+                            }
+                        }                        
+                        title = title + t;
+                        if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
+                            title = title + ' (' + this.researchdata.sourcequery.freq + ') ';
                         }
                     } else {
-                        title = title + this.sourcequery;
+                        title = title + this.researchdata.sourcequery;
                     }
                 }
-                title = title + ' -> ' + this.researchresult.result.name;
+                title = title + ' -> ' + this.researchdata.result.name;
                 return title;
 
 
@@ -181,7 +188,3 @@
         }
     }
 </script>
-
-<style scoped>
-
-</style>

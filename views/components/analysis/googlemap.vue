@@ -5,18 +5,16 @@
 <script>
     export default {
         props: {
-            index: Number,
-            mapcoordinates: Array
+            index: { type: Number, default: -1 },
+            mapcoordinates: { type: Array, default: function () { return [] }}
         },
 
         data: function () {
             return {
-                index: this.index,
                 mapoptions: {
                     zoom: 14,
                     center: '',
                 },
-                mapcoordinates: this.mapcoordinates
             }
         },
         mounted() {

@@ -80,7 +80,6 @@ createAllTables = function (connection) {
  * @returns {string}
  */
 createDatabaseCommand = function () {
-    //console.log(notMedia + Tag + 'in Create Dababase' + JSON.stringify(json.database.name));
     return 'CREATE DATABASE ' + json.database.name;
 };
 
@@ -284,41 +283,64 @@ exports.createLimitedSelectCommand = function (table, columns, start, amount) {
 input:{
     tables:[],
     columns:[{
-        column: nameOfColumn,
+        tableIndex: 2
+        name: nameOfColumn,
         value: 'value'   //if not a select
         alias
     }] || *,
-
-    conditions:
-        {
+    joinCondition:{
+            columnIndexes: [],
+            valueColumnIndexes: [],
+            operator: [],
+    }
+    whereConditions:{
             column: [],
             value: [],
             operator: [],
-        },
-    kindOfJoin: ['Inner','cross','none',...]
+    },
+    kindOfJoin: ['INNER','CROSS','none',...]
 
 }
  */
-exports.createInnerJoinSelectCommand = function (input) {
-    let commandString = 'SELECT ';
-    if (input.columns === '*') {
-        commandString = input.columns + ' INNER JOIN ';
-    } else {
-        commandString = commandString + input.columns[0].column;
-        for (let i = 1; i < input.columns.length; i++) {
-            commandString = commandString + ', ' + input.columns[i].column;
-            if (typeof input.columns[i].alias !== 'undefined' && input.columns[i].alias !== null) {
-                commandString = commandString + ' as ' + input.columns[i].alias;
+exports.createInnerJoinSelectCommand = function (input, start, amount) {
+    let commandString = '';
+    if (input.tables.length > 1) {
+        commandString = 'SELECT ';
+        if (input.columns === '*') {
+            commandString = input.columns;
+        } else {
+            commandString = commandString + json.database.name + '.' + input.tables[0] + '.' + input.columns[0].name;
+            for (let i = 1; i < input.columns.length; i++) {
+                commandString = commandString + ', '
+                    + json.database.name + '.'
+                    + input.tables[input.columns[i].tableIndex]
+                    + '.' + input.columns[i].name;
+                if (typeof input.columns[i].alias !== 'undefined' && input.columns[i].alias !== null) {
+                    commandString = commandString + ' as ' + input.columns[i].alias;
+                }
             }
+
         }
-        commandString = commandString + input.kindOfJoin;
-        if (typeof input.conditions !== 'undefined' && input.conditions !== null) {
-            commandString = commandString +
-                createWhereQuery(input.conditions.columns, input.conditions.values, input.conditions.operators);
+        commandString = commandString + ' FROM ' + json.database.name + '.' + input.tables[0];
+        for (let i = 1; i < input.tables.length; i++) {
+            commandString = commandString
+                + ' ' + input.kindOfJoin[i - 1] + ' JOIN '
+                + json.database.name + '.'
+                + input.tables[i]
+                + createJoinCondition(input.columns, input.tables, input.joinConditions[i - 1]);
+        }
+        if (typeof input.whereConditions !== 'undefined' && input.whereConditions !== null) {
+            commandString = commandString + ' '
+                + createWhereQuery(input.whereConditions.columns, input.whereConditions.values, input.whereConditions.operators);
+        }
+        if (start !== undefined && amount !== undefined) {
+            commandString = commandString + ' limit ' + start + ' , ' + amount;
         }
     }
+    commandString = commandString + ';';
+    //console.log(Tag + sql + commandString);
     return commandString;
-}
+};
 
 exports.createInnerJoinCondition = function (valuesToCompare1, valuesToCompare2, operators) {
     let queryString = 'ON';
@@ -439,15 +461,36 @@ exports.createDeleteCommand = function (table, column, valueToCompare) {
 createWhereQuery = function (columns, values, operators) {
     let queryString = 'WHERE ';
     if (columns !== null && values !== null && operators !== null) {
-        queryString = queryString + columns[0] + ' ' + operators[0] + ' ' + values[0];
+        queryString = queryString + columns[0] + " " + operators[0] + " " + values[0] + " ";
         for (let i = 1; i < operators.length; i++) {
-            queryString = queryString + ' AND ' + columns[i] + ' ' + operators[i] + ' ' + values[i];
+            queryString = queryString + " AND " + columns[i] + " " + operators[i] + " " + values[i] + " ";
         }
         //console.log(notMedia + Tag + queryString);
         return queryString;
     }
     console.log(notMedia + Tag + 'Where Query Creation failed!');
     return '';
+};
+
+createJoinCondition = function (columns, tables, condition) {
+    let queryString = ' ON ';
+    let columnIndex1 = condition.columnIndexes[0];
+    let columnIndex2 = condition.valueColumnIndexes[0];
+    queryString = queryString + tables[columns[columnIndex1].tableIndex] + '.' + columns[columnIndex1].name + ' '
+        + condition.operator[0] + ' '
+        + tables[columns[columnIndex2].tableIndex] + '.' + columns[columnIndex2].name;
+    if (condition.columnIndexes.length > 0) {
+        for (let i = 1; i < condition.columnIndexes.length; i++) {
+            queryString = queryString + ' AND ';
+            columnIndex1 = condition.columnIndexes[i];
+            columnIndex2 = condition.valueColumnIndexes[i];
+            queryString = queryString
+                + tables[columns[columnIndex1].tableIndex] + '.' + columns[columnIndex1].name + ' '
+                + condition.operator[i] + ' '
+                + tables[columns[columnIndex2].tableIndex] + '.' + columns[columnIndex2].name;
+        }
+    }
+    return queryString;
 };
 
 exports.createDropDBCommand = function () {

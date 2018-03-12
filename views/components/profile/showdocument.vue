@@ -6,6 +6,7 @@
                     name="docID"
                     style="width:100%;text-align:left;text-transform:initial"
                     v-bind:value="document.docID"
+                    v-on:click="loadingClick"
             >{{document.name}}</button>
         </form>
         
@@ -26,16 +27,23 @@
 <script>
     export default {
         props: {
-            document: Object
+            document: { type: Object, default: null },
+            serverip: { type: String, default: "" },
+            displayloading : { type: String, default: "" },
         },
         data: function () {
             return {
                 ishovered: false,
-                document: this.document,
                 changing: false,
+               
             }
         },
         methods: {
+            loadingClick: function () {
+                console.log("test");
+                this.displayloading = "block";
+                this.$emit('displayloading', this.displayloading);
+            },
             showButns: function () {
                 this.ishovered = true;
             },
@@ -46,10 +54,13 @@
                 this.$emit('editing');
             },
             deleting: function () {
-                let socket = io('http://localhost:8081');
+                let socket = io(this.serverip+':8081');
                 socket.emit('deleteDocument', this.document.docID);
                 this.$emit('deleted', this.document.docID);
             },
+            hasCancelListener(){
+              return this.$listeners && this.$listeners.cancel
+            }
         },
     }
 </script>

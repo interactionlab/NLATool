@@ -9,13 +9,11 @@
 <script>
     export default {
         props:{
-            inputtext: String,
-            submitit: Boolean
+            inputtext: { type: String, default: "" },
+            submitit: { type: Boolean, default: false }
         },
         data:function () {
             return{
-                inputtext: this.inputtext,
-                submitit: this.submitit
             }
         },
         mounted: function () {
@@ -28,7 +26,7 @@
                 this.$emit('submitit', this.inputtext);
             }
         },
-        watch:{
+        watch: {
             submitit:function (newvalue) {
                 if(newvalue){
                     this.submitIt();
