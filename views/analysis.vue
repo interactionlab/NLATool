@@ -58,19 +58,18 @@
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
-                               v-bind:serverip="serverip"
                                v-bind:col="col"
                                v-bind:colindex="colIndex"
-                               v-bind:splitted="splitted"
+                               v-bind:serverip="serverip"
+                               v-bind:docid="docID"
+                               v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
                                v-bind:textcolumnposition="textcolumnposition"
-                               v-bind:tokens="vueTokens"
                                v-bind:mentions="coref"
                                v-bind:selectedindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
-                               v-bind:analysismode="analysisMode"
-                               v-bind:docid="docID"
+                               v-bind:analysismode="analysisMode"                               
                                v-bind:notes="notes"
                                v-bind:notemodes="notemodes"
                                v-bind:researchmode="researchmode"
@@ -159,9 +158,9 @@
                     maxColumnHeight: -1
                 },
                 numberOfColumns: 0,
-                splitted: [],
+                tokens: [],
+                tokenssplitted: [],
                 tokenstoshow: [],
-
                 columnsize2: 100,
                 columnsizetoolbarpos: 0,
                 textcolumnposition: {
@@ -169,7 +168,6 @@
                     end: -1,
                     difference: -1
                 },
-                tokens: [],
                 splittNotes: [],
                 resizing: true,
                 contentcontrol: {
@@ -261,32 +259,32 @@
 
             },
             showTokens: function (difference, end) {
-                this.tokenstoshow = [];
+                let tokenstoshowDUMMY = [];
                 let newtokenstoshow = [];
-                if (end > this.splitted.length) {
-                    newtokenstoshow = this.splitted.slice(0, this.splitted.length);
-                    for (let i = 0; i < newtokenstoshow.length; i++) {
-                        this.tokenstoshow.push(newtokenstoshow[i]);
-                    }
-                    this.textcolumnposition.end = this.splitted.length - 1;
+                //console.log("Analysis vue showTokens end: " + end + " difference: " + difference);
+                //console.log("Analysis vue showTokens tokenssplitted length: "+ this.tokenssplitted.length);
+                // TODO: not sure what this is all about by @sven-mayer, it workds however, it my testing it always takes the path to Analysis vue showTokens 2
+                if (end > this.tokenssplitted.length) {
+                    newtokenstoshow = this.tokenssplitted.slice(0, this.tokenssplitted.length);
+                    tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
+                    this.textcolumnposition.end = this.tokenssplitted.length - 1;
                     this.textcolumnposition.start = 0;
                 } else {
                     if (end - difference >= 0) {
-                        newtokenstoshow = this.splitted.slice(end - difference, end);
-                        for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
-                        }
+                        //console.log("Analysis vue showTokens 2");
+                        newtokenstoshow = this.tokenssplitted.slice(end - difference, end);
+                        tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
                         this.textcolumnposition.start = end - difference;
                     } else {
-                        newtokenstoshow = this.splitted.slice(0, difference);
-                        for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
-                        }
+                        //console.log("Analysis vue showTokens 3");
+                        newtokenstoshow = this.tokenssplitted.slice(0, difference);
+                        tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
                         this.textcolumnposition.start = 0;
                     }
                     this.textcolumnposition.end = end;
                 }
                 this.textcolumnposition.difference = difference;
+                this.tokenstoshow = tokenstoshowDUMMY;
             },
             changeScope: function (direction) {
                 if (direction) {
@@ -294,15 +292,15 @@
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
                     }
                 } else if (!direction) {
-                    if (this.textcolumnposition.end < this.splitted.length) {
+                    if (this.textcolumnposition.end < this.tokenssplitted.length) {
                         this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
                     }
                 }
             },
             splitNotes: function () {
-                /*for (let i = 0; i < this.splitted; i++) {
+                /*for (let i = 0; i < this.tokenssplitted; i++) {
                     for (let j = 0; j < this.notes; j++) {
-                        if (this.splitted[i][this.splitted[i].length - 1] === 0) {
+                        if (this.tokenssplitted[i][this.tokenssplitted[i].length - 1] === 0) {
                         }
                     }
                 }*/
@@ -311,21 +309,13 @@
                 let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns) + 1;
                 //console.log('new splitpoint is: ' + splitPoint);
                 let startSlice = 0;
-                this.splitted = [];
+                this.tokenssplitted = [];
                 for (let i = 0; i < this.numberOfColumns; i++) {
-                    this.splitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
+                    this.tokenssplitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
                     startSlice = startSlice + splitPoint;
                 }
                 if (startSlice < this.tokens.length) {
-                    this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
-                }
-            },
-            splitTokens2: function () {
-                this.splitted = [];
-                if (this.screenOptions.screenHeight > this.screenOptions.maxColumnHeight) {
-
-                } else {
-                    this.splitted.push(this.tokens);
+                    this.tokenssplitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
                 }
             },
             computeNumberOfColumns: function () {
@@ -364,8 +354,8 @@
                 }
             },
             starthover: function (event) {       
-                console.log("Analysis vu starthover: " + JSON.stringify(event));            
-                console.log("Analysis vu hoverdata: " + JSON.stringify(this.hoverdata));            
+                //console.log("Analysis vue starthover: " + JSON.stringify(event));            
+                //console.log("Analysis vue hoverdata: " + JSON.stringify(this.hoverdata));            
                 
                 if (this.hoverdata.hoverstarted === event.hoverstarted){
                     if ((event.hoverstarted === "text"
