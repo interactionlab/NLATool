@@ -37,7 +37,7 @@
 </template>
 <script>
     import newwordnote from './newwordnote.vue';
-    import gettokensofselectedtext from 'views/mixins/analysis/gettokensofselectedtext.js';
+    import gettokensofselectedtext from '/views/mixins/analysis/gettokensofselectedtext.js';
 
     export default {
         mixins: [gettokensofselectedtext],

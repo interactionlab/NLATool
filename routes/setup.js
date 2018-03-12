@@ -32,11 +32,12 @@ function getJSONConfig() {
 
 let vueRenderOptions = {
     head: {
-        meta: [
+        scripts: [
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+        ],
+        styles:[
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
-
         ]
     }
 };
@@ -46,7 +47,8 @@ let vueData = {
 };
 
 router.get('/', function (req, res, next) {
-    res.renderVue('setupdb', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('setupdb.vue',vueData, req.vueOptions);
 });
 
 router.post('/setNewConnection', function (req, res) {
@@ -75,9 +77,11 @@ router.post('/setNewConnection', function (req, res) {
     if (dbStub.isDBReadyForQuery()) {
         jsonConfigurator.writeFile(testJson, json, function (err, result) {
             if (err) {
-                res.renderVue('setupdb', vueData, vueRenderOptions);
+                req.vueOptions = vueRenderOptions;
+                res.renderVue('setupdb.vue',vueData, req.vueOptions);
             } else {
-                res.renderVue('setupdb', vueData, vueRenderOptions);
+                req.vueOptions = vueRenderOptions;
+                res.renderVue('setupdb.vue',vueData, req.vueOptions);
             }
         });
     }

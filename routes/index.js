@@ -32,9 +32,11 @@ const io = require('socket.io')(8090);
  */
 let vueRenderOptions = {
     head: {
-        meta: [
+        scripts: [
+            {src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+        ],
+        styles: [
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
-            {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-blue.min.css'}
         ]
     }
@@ -70,7 +72,8 @@ router.get('/', function (req, res, next) {
 
     wait.launchFiber(getLoadTextRoutine, req, res, next);
     //let vueData = setVueData();
-    res.renderVue('loadtext', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('loadtext.vue', vueData, req.vueOptions);
 });
 
 
@@ -119,7 +122,8 @@ function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
         if (!/\S/.test(text)) {
-            res.renderVue('loadtext', vueRenderOptions);
+            req.vueOptions = vueRenderOptions;
+            res.renderVue('loadtext.vue', req.vueOptions);
         } else {
             let transactionInformation = {
                 querys: [],
@@ -326,7 +330,7 @@ function addNestedInformation(input, chain, mention) {
     let tempMentions = [];
     try {
         for (let i = chain + 1; i < input.corefInfo.length; i++) {
-            for(let j = mention; j < input.corefInfo[chain].length; i++){
+            for (let j = mention; j < input.corefInfo[chain].length; i++) {
                 tempMentions = testNestedity(input.corefInfo[chain][mention], input.corefInfo[i][j]);
 
             }
@@ -348,12 +352,12 @@ function testNestedity(mention1, mention2) {
             && mention1.startIndex <= mention2.endIndex) {
             if (mention1.endIndex <= mention2.endIndex) {
                 // i Mention is in j Mention
-                mention1[nestedInfo].push({inner:mention2});
-                mention2[nestedInfo].push({outer:mention1});
+                mention1[nestedInfo].push({inner: mention2});
+                mention2[nestedInfo].push({outer: mention1});
             } else {
                 // i Mention starts after j Mention starts
-                mention1[nestedInfo].push({second:mention2});
-                mention2[nestedInfo].push({first:mention1});
+                mention1[nestedInfo].push({second: mention2});
+                mention2[nestedInfo].push({first: mention1});
 
             }
         } else if (mention2.startIndex >= mention1.startIndex

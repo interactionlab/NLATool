@@ -43,8 +43,8 @@
 
 <script>
     import researchresult from './researchresult.vue';
-    import getselectedtext from 'views/mixins/analysis/gettokensofselectedtext.js';
-    import filtertoken from 'views/mixins/analysis/filtertoken.js';
+    import getselectedtext from '/views/mixins/analysis/gettokensofselectedtext.js';
+    import filtertoken from '/views/mixins/analysis/filtertoken.js';
 
     export default {
 

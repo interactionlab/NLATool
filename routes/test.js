@@ -26,9 +26,11 @@ const wait = require('wait.for');
 
 let vueRenderOptions = {
     head: {
-        meta: [
-            {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
+        scripts: [
             {script: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'},
+        ],
+        styles: [
+            {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
         ]
     }
@@ -44,7 +46,8 @@ router.get('/', function (req, res, next) {
 
 function getTest(req, res, next) {
     dbStub.fiberEstablishConnection();
-    res.renderVue('test', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('test.vue', req.vueOptions);
 }
 
 router.post('/theFunction', function (req, res) {
@@ -63,7 +66,7 @@ function test(req, res, next) {
     transControl.getProper[2] = true;
     transControl.useProper[4] = {
         kindOfQuery: 'insert',
-        table:'accountData',
+        table: 'accountData',
         columns: ['email', 'username'],
         values: [stringifyForDB('97893gerg8o')],
         numberOfColumn: 1,
@@ -80,13 +83,14 @@ function test(req, res, next) {
         if (typeof transControl.getProper[i] === 'undefined') {
             transControl.getProper[i] = false;
         }
-        values[0] = stringifyForDB(i+300);
+        values[0] = stringifyForDB(i + 300);
         querys.push(dbAction.createInsertCommand('accountData', ['email', 'username'], values, null, null));
     }
     console.log(JSON.stringify(transControl));
     wait.for(dbStub.makeTransaction, querys, transControl);
     vueData.worked = true;
-    res.renderVue('test', vueData, vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('test.vue', req.vueOptions);
 }
 
 /**

@@ -62,8 +62,9 @@
     import headernavbar from './components/global/headernavbar.vue';
     import mainheader from './components/global/mainheader.vue';
     import document from './components/profile/document.vue';
-
+    import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     export default {
+        mixins:[filtertokenwithclass],
         data: function () {
             return {
                 displayloading: 'none'

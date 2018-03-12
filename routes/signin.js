@@ -21,11 +21,12 @@ const wait = require('wait.for');
 
 let vueRenderOptions = {
     head: {
-        meta: [
+        scripts: [
             {script: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js'},
+        ],
+        styles:[
             {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-orange.min.css'},
             {style: 'https://code.getmdl.io/1.3.0/material.indigo-orange.min.css'}
-
         ]
     }
 };
@@ -38,17 +39,20 @@ let vueData = {
 };
 
 router.get('/', function (req, res, next) {
-    res.renderVue('signin', vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('signin.vue', req.vueOptions);
 });
 
 router.post('/', function (req, res, next) {
     //try {
         if (wait.launchFiber(loginDB, req.body.user, req.body.pass)) {
             req.session.user = req.body.user;
-            res.renderVue('profile', vueRenderOptions);
+            req.vueOptions = vueRenderOptions;
+            res.renderVue('profile.vue',vueData, req.vueOptions);
         } else {
             vueData.errormsg = "Unknown User or wrong password";
-            res.renderVue('signin', vueData, vueRenderOptions);
+            req.vueOptions = vueRenderOptions;
+            res.renderVue('signin.vue',vueData, req.vueOptions);
         }
     /*}catch (err){
         console.log(Tag+'Login failed due to error:' + err);
@@ -57,7 +61,8 @@ router.post('/', function (req, res, next) {
 });
 
 router.post('/register', function (req, res, next) {
-    res.renderVue('signin', vueRenderOptions);
+    req.vueOptions = vueRenderOptions;
+    res.renderVue('signin.vue', req.vueOptions);
 });
 
 

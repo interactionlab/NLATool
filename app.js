@@ -12,7 +12,6 @@ const profile = require('./routes/profile');
 const signin = require('./routes/signin');
 const signup = require('./routes/signup');
 const test = require('./routes/test');
-const loadtext = require('./routes/loadtext');
 const setup = require('./routes/setup');
 const comment = require('./routes/comment');
 const expressVue = require('express-vue');
@@ -90,7 +89,6 @@ app.use('/signin', signin);
 app.use('/profile', profile);
 app.use('/signup', signup);
 app.use('/test', test);
-app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 app.use('/comment', comment);
 

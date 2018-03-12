@@ -275,49 +275,6 @@ function getAndShowText(req, res) {
  * later use.
  * @param docID
  */
-function getTextFromDB(docID) {
-    textDB.textMap = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('textmap',
-            [
-                'docID',
-                'wordID',
-                'textIndex',
-                'beginOffSet',
-                'EndOffSet',
-                'whitespaceInfo',
-            ],
-            [docID], ['='])));
-    //console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
-    for (let i = 0; i < textDB.textMap.length; i++) {
-        if (textDB.textMap[i].textIndex === i) {
-            try {
-                let word = JSON.parse(wait.for(dbStub.makeSQLRequest,
-                    dbAction.createSelectCommand('word',
-                        [
-                            'wordID',
-                            'content',
-                            'isSpecial',
-                            'semanticClass',
-                            'pos'
-                        ],
-                        [textDB.textMap[i].wordID], ['='])));
-                word[0]['offsetBegin'] = textDB.textMap[i].beginOffSet;
-                word[0]['offsetEnd'] = textDB.textMap[i].EndOffSet;
-                word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
-                //console.log(JSON.stringify(word));
-                textDB.tokens.push(word[0]);
-            } catch (err) {
-                console.log('Loading Text form DB failed: ' + err);
-            }
-        } else {
-            let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
-            textDB.error.push(err);
-            break;
-        }
-    }
-    //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
-}
-
 function selectWithInnerJoin(docID, start, amount) {
     let tokens = [];
     let queryObject = {
@@ -468,27 +425,6 @@ function getCorefs(docID, start, amount) {
     // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
 }
-
-function getCorefInfo(docID) {
-    if (docID !== 'NULL' && docID !== null && typeof docID !== 'undefined') {
-        let mention = JSON.parse(wait.for(dbStub.makeSQLRequest,
-            dbAction.createSelectCommand('corefmentions',
-                [
-                    'docID',
-                    'mentionID',
-                    'representative',
-                    'gender',
-                    'type',
-                    'number',
-                    'animacy',
-                    'startIndex',
-                    'endIndex'
-                ], [docID], ['='])));
-        textDB.coref.push(mention);
-        //console.log('Mention from db: ' + JSON.stringify(textDB.coref));
-    }
-}
-
 /**
  * Retrieves all wordnotes from DB
  * @param docID

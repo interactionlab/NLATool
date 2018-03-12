@@ -71,7 +71,7 @@
     </main>
 </template>
 <script>
-    import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
+    import getselectedtext from '/views/mixins/analysis/gettokensofselectedtext.js';
 
     export default {
         mixins: [getselectedtext],
