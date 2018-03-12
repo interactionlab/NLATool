@@ -9,7 +9,7 @@ let desktop = 'desktop Version: ';
 let mobile = 'Mobile Version: ';
 let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'analyse.js: ';
+let Tag = 'Server: analyse.js: ';
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
@@ -110,6 +110,7 @@ io.on('connection', function (socket) {
 
 function getMoreTextResponse(socket, input){
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
+    console.log(Tag +  ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
     socket.emit('sendMoreText', tokens);
 }
 
