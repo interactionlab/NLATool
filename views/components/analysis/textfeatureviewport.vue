@@ -69,7 +69,6 @@
     export default {
         props: {
             serverip: { type: String, default: "" },
-            col: { type: Array, default: function () { return [] }},
             columnindex: { type: Number, default: 0 },
             tokens: { type: Array, default: function () { return [] }},
             notes: { type: Array, default: function () { return [] }},
