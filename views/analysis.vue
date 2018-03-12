@@ -53,17 +53,16 @@
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div
                         style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                        v-for="(col, colIndex) in tokenstoshow"
+                        v-for="(col, columnindex) in tokenstoshow"
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:col="col"
-                               v-bind:colindex="colIndex"
+                               v-bind:columnindex="columnindex"
                                v-bind:serverip="serverip"
                                v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
-                               v-bind:textcolumnposition="textcolumnposition"
                                v-bind:mentions="coref"
                                v-bind:selectedindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
@@ -160,13 +159,9 @@
                 tokens: [],
                 tokenssplitted: [],
                 tokenstoshow: [],
+                tokenssplittedindextoshow: 0,
                 columnsize2: 100,
                 columnsizetoolbarpos: 0,
-                textcolumnposition: {
-                    start: -1,
-                    end: -1,
-                    difference: -1
-                },
                 splittNotes: [],
                 resizing: true,
                 contentcontrol: {
@@ -208,8 +203,8 @@
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
             },
-            movetoolbar: function (colIndex) {
-                this.columnsizetoolbarpos = (colIndex / this.numberofcolumns) * 100.0;
+            movetoolbar: function (columnindex) {
+                this.columnsizetoolbarpos = (columnindex / this.numberofcolumns) * 100.0;
             },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
@@ -254,45 +249,35 @@
             },
             setColumnSize2: function () {
                 this.columnsize2 = 100.0 / this.numberofcolumns;
-                this.showTokens(this.numberofcolumns, this.numberofcolumns);
+                this.showTokens();
 
             },
-            showTokens: function (difference, end) {
-                let tokenstoshowDUMMY = [];
-                let newtokenstoshow = [];
-                //console.log("Analysis vue showTokens end: " + end + " difference: " + difference);
-                //console.log("Analysis vue showTokens tokenssplitted length: "+ this.tokenssplitted.length);
-                // TODO: not sure what this is all about by @sven-mayer, it works however, it my testing it always takes the path to Analysis vue showTokens 2
-                if (end > this.tokenssplitted.length) {
-                    newtokenstoshow = this.tokenssplitted.slice(0, this.tokenssplitted.length);
-                    tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
-                    this.textcolumnposition.end = this.tokenssplitted.length - 1;
-                    this.textcolumnposition.start = 0;
+            showTokens: function () {
+                console.log("Analysis vue tokenssplitted length: " + this.tokenssplitted.length);
+                if (this.numberofcolumns === 1){
+                    this.tokenstoshow = this.tokenssplitted;
                 } else {
-                    if (end - difference >= 0) {
-                        //console.log("Analysis vue showTokens 2");
-                        newtokenstoshow = this.tokenssplitted.slice(end - difference, end);
-                        tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
-                        this.textcolumnposition.start = end - difference;
-                    } else {
-                        //console.log("Analysis vue showTokens 3");
-                        newtokenstoshow = this.tokenssplitted.slice(0, difference);
-                        tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
-                        this.textcolumnposition.start = 0;
-                    }
-                    this.textcolumnposition.end = end;
+                    console.log("Analysis vue tokenssplittedindextoshow: " + Object.prototype.toString.call(this.tokenssplittedindextoshow));
+                    console.log("Analysis vue numberofcolumns: " + Object.prototype.toString.call(this.numberofcolumns));
+                    let end = this.tokenssplittedindextoshow + this.numberofcolumns;
+                    console.log("Analysis vue end: " + end);
+                    let test = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
+                    console.log("analysis vue tokenstoshow length: "+ test.length);
+                    this.tokenstoshow = test;
                 }
-                this.textcolumnposition.difference = difference;
-                this.tokenstoshow = tokenstoshowDUMMY;
+                console.log("analysis vue tokenstoshow length: "+ this.tokenstoshow.length);
             },
             changeScope: function (direction) {
+                
                 if (direction) {
-                    if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
-                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
+                    if (this.tokenssplittedindextoshow -1 >=0){
+                        this.tokenssplittedindextoshow--;
+                        this.showTokens();
                     }
                 } else if (!direction) {
-                    if (this.textcolumnposition.end < this.tokenssplitted.length) {
-                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
+                    if (this.tokenssplittedindextoshow + this.numberofcolumns < this.tokenssplitted.length){
+                        this.tokenssplittedindextoshow++;
+                        this.showTokens();
                     }
                 }
             },
@@ -305,17 +290,22 @@
                 }*/
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberofcolumns) + 1;
-                //console.log('new splitpoint is: ' + splitPoint);
-                let startSlice = 0;
-                this.tokenssplitted = [];
-                for (let i = 0; i < this.numberofcolumns; i++) {
-                    this.tokenssplitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
-                    startSlice = startSlice + splitPoint;
+                
+                let tokenssplittedDUMMY = [];
+                if (this.numberofcolumns === 1){
+                    tokenssplittedDUMMY.push(this.tokens);
+                } else {
+                    
+                    
+                    let wordnumbertofitinonecolumn = 200;
+                    let startSlice = 0;
+                    for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
+                        tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + wordnumbertofitinonecolumn));
+                        startSlice = startSlice + wordnumbertofitinonecolumn;
+                    }
                 }
-                if (startSlice < this.tokens.length) {
-                    this.tokenssplitted[this.numberofcolumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
-                }
+                console.log("analysis vue splitTokens tokenssplittedDUMMY length: "+ tokenssplittedDUMMY.length);
+                this.tokenssplitted = tokenssplittedDUMMY
             },
             computenumberofcolumns: function () {
                 this.numberofcolumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
@@ -325,7 +315,7 @@
             },
             setnumberofcolumns: function (number) {
                 if (number > 0 && number !== this.numberofcolumns) {
-                    this.numberofcolumns = number;
+                    this.numberofcolumns = parseInt(number);
                     this.splitTokens();
                     this.setColumnSize2();
                     this.resizing = false;
