@@ -5,9 +5,7 @@
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%">
-                <div class="mdl-grid"
-                     id="textWindow"
-                     ref="textWindow"
+                <div class="mdl-grid" id="textWindow" ref="textWindow"
                      style="overflow-y: auto; height: auto !important; display: flex; max-height: 100%;">
                     <component is="tex"
                                v-for="(token,i) in col"
@@ -72,7 +70,6 @@
             serverip: { type: String, default: "" },
             col: { type: Array, default: function () { return [] }},
             colindex: { type: Number, default: -1 },
-            splitted: { type: Array, default: function () { return [] }},
             tokens: { type: Array, default: function () { return [] }},
             notes: { type: Array, default: function () { return [] }},
             mentions: { type: Array, default: function () { return [] }},
