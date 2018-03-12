@@ -24,7 +24,7 @@
                    v-bind:mapkey="index"
                    v-bind:docid="docid"
                    v-bind:showallon="true"
-                   v-bind:semclass="borderedClasses[0]"
+                   v-bind:semclass="'PERSON'"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
@@ -143,9 +143,7 @@
                 LOCATION: [],
                 ORGANIZATION: [],
                 MISC: [],
-                borderedClasses: ['PERSON',],
                 researchresults: [],
-                sortedtokens: [],
                 sourcequery:[],
             }
         },
@@ -158,31 +156,31 @@
                 let query = '';
                 let frequency = 0;
                 let searched = false;
-                this.sortedtokens.push(this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass));
+                let sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.colindex], semClass);
                 this.sourcequery.push([]);
-                for (let i = 0; i < this.sortedtokens[index].length; i++) {
-                    for (let j = 0; j < this.sortedtokens[index][i].length; j++) {
+                for (let i = 0; i < sortedtokens.length; i++) {
+                    for (let j = 0; j < sortedtokens[i].length; j++) {
                         for (let k = 0; k < this.sourcequery[index].length; k++) {
-                            if (this.sourcequery[index][k].query.indexOf(this.sortedtokens[index][i][j].content) !== -1) {
+                            if (this.sourcequery[index][k].query.indexOf(sortedtokens[i][j].content) !== -1) {
                                 searched = true;
                             }
                         }
                         if (searched === false) {
                             frequency++;
-                            query = query + ' ' + this.sortedtokens[index][i][j].content;
+                            query = query + ' ' + sortedtokens[i][j].content;
                         }
                         searched = false;
                     }
                     if (query !== '') {
                         let wordids = []
-                        for (let k = 0; k < this.sortedtokens[index][i].length; k++){
-                            wordids.push(this.sortedtokens[index][i][k].wordID);
+                        for (let k = 0; k < sortedtokens[i].length; k++){
+                            wordids.push(sortedtokens[i][k].wordID);
                         } 
                         this.searchGoogle(query, 1, semClass, {
                             freq: frequency,
                             wordids: wordids,
                             querys: [query],                            
-                            source: this.sortedtokens[index][i]
+                            source: sortedtokens[i]
                         });
                     }
                     query = '';
@@ -276,6 +274,12 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
+            tokenstoshow: function (value){
+                this.researchTokensOfClass('PERSON', 0);
+                this.researchTokensOfClass('LOCATION', 1);
+                this.researchTokensOfClass('ORGANIZATION', 2);
+                this.researchTokensOfClass('MISC', 3);
+            },
             hoverdata: {
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined'){
