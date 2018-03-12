@@ -18,7 +18,6 @@
             selectedindexes: { type: Object, default: null }, 
             hoveredchain: { type: Number, default: -1 },
             selectedchain: { type: Number, default: -1 },
-            entityindextoline: { type: Number, default: -1 },
             wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
@@ -206,21 +205,27 @@
         watch: {
             wordtomarkonhoverdata: function (event) {
                 if (typeof event === 'undefined'){
-                    consol.log("WARNING: text vue event in wordtomarkonhover undefined"); 
+                    console.log("WARNING: text vue event in wordtomarkonhover undefined"); 
                     return;
                 }
-                let index = event.wordids.indexOf(this.token.wordID)
-                if(index >- 1){
-                    this.isEntityHovered = true;
-                    if (index == 0 && event.hoverstarted == "research"){
-                        this.$el.scrollIntoView();
-                        let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
-                        this.$emit('endhover', data);
+                if (this.token.semanticClass === event.semanticClass){
+                    let index = event.wordids.indexOf(this.token.wordID)
+                    if(index >- 1){
+                        this.isEntityHovered = true;
+                        if (index == 0 && event.hoverstarted === "research"){
+                            this.$el.scrollIntoView();
+                            let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
+                            this.$emit('endhover', data);
+                        }
+                    } else if (this.isEntityHovered === true){
+                        this.isEntityHovered = false;
                     }
                 } else {
-                    this.isEntityHovered = false;
+                    if (this.isEntityHovered === true){
+                        this.isEntityHovered = false;
+                    }
                 }
-            }, deep:true
+            }
         },
         methods: {
             startSelection: function () {
