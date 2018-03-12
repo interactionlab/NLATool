@@ -9,7 +9,7 @@
     export default {
         data: function () {
             return {
-                numberofcolumns: 0,
+                numberofcolumns: 1,
             }
         },
         methods: {

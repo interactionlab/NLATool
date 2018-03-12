@@ -6,7 +6,6 @@
                 v-bind:title="title"
                 v-bind:docid="docID"
                 v-bind:route="'analysis'"
-                v-bind:numberofcolumns="numberofcolumns"
                 v-bind:preventtitleedit="false"
                 v-bind:autochecked="resizing"
                 v-on:newcolumnnumber="setnumberofcolumns($event)"
