@@ -1,9 +1,9 @@
 module.exports = {
     methods: {
         limitedfiltertokens: function (tokens, token) {
-            let resultingtokens = [];
-            let i = 0;
-            let j = 0;
+            var resultingtokens = [];
+            var i = 0;
+            var j = 0;
             if (token.textIndex - 20 > 0) {
                 i = token.textIndex - 20;
             }
@@ -22,11 +22,11 @@ module.exports = {
             return resultingtokens;
         },
         uniqCount: function (arr) {
-            let entity = [], frequency = [], prev;
+            var entity = [], frequency = [], prev;
 
             arr.sort();
 
-            for (let i = 0; i < arr.length; i++) {
+            for (var i = 0; i < arr.length; i++) {
                 if (arr[i] !== prev) {
                     entity.push(arr[i]);
                     frequency.push(1);
@@ -35,7 +35,7 @@ module.exports = {
                 }
                 prev = arr[i];
             }
-            for (let j = 0; j < entity.length; j++) {
+            for (var j = 0; j < entity.length; j++) {
                 entity[j] = {name: entity[j], freq: frequency[j]};
             }
 
@@ -46,20 +46,20 @@ module.exports = {
             return entity;
         },
         filtertokenwithclass: function (tokens, semanticClass) {
-            let resultingtokens = [];
-            let filteredTokens = [];
-            let fullTokens = [];
-            let tokenChain = [];
-            let content = '';
-            let flag = false;
-            for (let i = 0; i < tokens.length; i++) {
+            var resultingtokens = [];
+            var filteredTokens = [];
+            var fullTokens = [];
+            var tokenChain = [];
+            var content = '';
+            var flag = false;
+            for (var i = 0; i < tokens.length; i++) {
                 if (tokens[i].semanticClass === semanticClass) {
                     //merging entities of same classes e.g. first + last name
                     filteredTokens.push(tokens[i]);
                 }
             }
-            for (let i = 1; i < filteredTokens.length; i++) {
-                for (let j = 0; j < fullTokens.length; j++) {
+            for (var i = 1; i < filteredTokens.length; i++) {
+                for (var j = 0; j < fullTokens.length; j++) {
                     if (filteredTokens[i].textIndex - 1 === fullTokens[j][fullTokens[j].length - 1].textIndex) {
                         fullTokens[j].push(filteredTokens[i]);
                         flag = true;
