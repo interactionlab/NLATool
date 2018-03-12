@@ -6,7 +6,8 @@
             <div class="mdl-cell mdl-cell--6-col"
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;">
                 <div class="mdl-grid" id="textWindow" ref="textWindow"
-                     style="height: auto !important; display: flex; max-height: 100%;">
+                         style="height: auto !important; display: flex; max-height: 100%; padding:0; font-family: 'Roboto Mono', monospace;">
+                        
                     <component is="tex"
                                v-for="(token,i) in col"
                                v-bind:key="token.textIndex"
