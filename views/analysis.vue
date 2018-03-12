@@ -6,10 +6,10 @@
                 v-bind:title="title"
                 v-bind:docid="docID"
                 v-bind:route="'analysis'"
-                v-bind:numberofcolumns="numberOfColumns"
+                v-bind:numberofcolumns="numberofcolumns"
                 v-bind:preventtitleedit="false"
                 v-bind:autochecked="resizing"
-                v-on:newcolumnnumber="setNumberOfColumns($event)"
+                v-on:newcolumnnumber="setnumberofcolumns($event)"
                 v-on:contenttoggle="toogleResearchContent($event)">
         </component>
         <component
@@ -44,7 +44,7 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <div style="flex: 0;width: 100%; position: relative;">
+            <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative" >
                 <component is="textviewcontrol"
                            v-on:changescope="changeScope($event)"
                            v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}">
@@ -157,7 +157,7 @@
                     maxColumnWidth: 800,
                     maxColumnHeight: -1
                 },
-                numberOfColumns: 0,
+                numberofcolumns: 1,
                 tokens: [],
                 tokenssplitted: [],
                 tokenstoshow: [],
@@ -210,7 +210,7 @@
                 this.hoveredChain = chain;
             },
             movetoolbar: function (colIndex) {
-                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns) * 100.0;
+                this.columnsizetoolbarpos = (colIndex / this.numberofcolumns) * 100.0;
             },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
@@ -254,8 +254,8 @@
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
-                this.columnsize2 = 100.0 / this.numberOfColumns;
-                this.showTokens(this.numberOfColumns, this.numberOfColumns);
+                this.columnsize2 = 100.0 / this.numberofcolumns;
+                this.showTokens(this.numberofcolumns, this.numberofcolumns);
 
             },
             showTokens: function (difference, end) {
@@ -263,7 +263,7 @@
                 let newtokenstoshow = [];
                 //console.log("Analysis vue showTokens end: " + end + " difference: " + difference);
                 //console.log("Analysis vue showTokens tokenssplitted length: "+ this.tokenssplitted.length);
-                // TODO: not sure what this is all about by @sven-mayer, it workds however, it my testing it always takes the path to Analysis vue showTokens 2
+                // TODO: not sure what this is all about by @sven-mayer, it works however, it my testing it always takes the path to Analysis vue showTokens 2
                 if (end > this.tokenssplitted.length) {
                     newtokenstoshow = this.tokenssplitted.slice(0, this.tokenssplitted.length);
                     tokenstoshowDUMMY.push.apply(tokenstoshowDUMMY, newtokenstoshow)
@@ -306,27 +306,27 @@
                 }*/
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns) + 1;
+                let splitPoint = Math.trunc(this.tokens.length / this.numberofcolumns) + 1;
                 //console.log('new splitpoint is: ' + splitPoint);
                 let startSlice = 0;
                 this.tokenssplitted = [];
-                for (let i = 0; i < this.numberOfColumns; i++) {
+                for (let i = 0; i < this.numberofcolumns; i++) {
                     this.tokenssplitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
                     startSlice = startSlice + splitPoint;
                 }
                 if (startSlice < this.tokens.length) {
-                    this.tokenssplitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
+                    this.tokenssplitted[this.numberofcolumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
                 }
             },
-            computeNumberOfColumns: function () {
-                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
-                if (this.numberOfColumns === 0) {
-                    this.numberOfColumns++;
+            computenumberofcolumns: function () {
+                this.numberofcolumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
+                if (this.numberofcolumns === 0) {
+                    this.numberofcolumns++;
                 }
             },
-            setNumberOfColumns: function (number) {
-                if (number > 0 && number !== this.numberOfColumns) {
-                    this.numberOfColumns = number;
+            setnumberofcolumns: function (number) {
+                if (number > 0 && number !== this.numberofcolumns) {
+                    this.numberofcolumns = number;
                     this.splitTokens();
                     this.setColumnSize2();
                     this.resizing = false;
@@ -348,7 +348,7 @@
             resize: function () {
                 if (this.resizing) {
                     this.setScreenOptions();
-                    this.computeNumberOfColumns();
+                    this.computenumberofcolumns();
                     this.splitTokens();
                     this.setColumnSize2();
                 }
