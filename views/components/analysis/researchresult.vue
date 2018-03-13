@@ -2,9 +2,9 @@
 
     <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content deleteSpaces contentColor separate"
-                v-on:mouseout="mouseout"
-                v-on:mouseover="accentuate"
-                v-on:click="showdetail">
+              v-on:mouseout="mouseout"
+              v-on:mouseover="accentuate"
+              v-on:click="showdetail">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
                     <div v-bind:class="generalstyleclass">
@@ -26,17 +26,17 @@
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col deleteSpaces">
-                                <img v-if="(localcontentcontroler.img) & (typeof researchdata.result.image !== 'undefined')"
+                                <img v-if="(localcontentcontrol.img) & (typeof researchdata.result.image !== 'undefined')"
                                      v-bind:src="researchdata.result.image.contentUrl"
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
                                 <div style="float: left; width: 30%; margin-right: 1em;">
-                                    <component is="googlemap" v-if="localcontentcontroler.map"
+                                    <component is="googlemap" v-if="ifShowMap"
                                                v-bind:mapcoordinates="mapcoordinates"
                                                v-bind:index="mapkey"
                                     >
                                     </component>
                                 </div>
-                                <div v-if="localcontentcontroler.information">
+                                <div v-if="localcontentcontrol.information">
                                     <div v-if="typeof researchdata.result.description !== 'undefined'">
                                         {{researchdata.result.description.articleBody}}
                                     </div>
@@ -59,24 +59,33 @@
 
     export default {
         props: {
-            serverip: { type: String, default: "" },
-            researchdata: { type: Object, default: null },
-            index: { type: Number, default: -1 },
-            mapkey: { type: Number, default: -1 },
-            docid: { type: Number, default: -1 },
-            mapcoordinates: { type: Array, default: function () { return [] }},
-            semclass: { type: String, default: "" },
-            contentcontrol: { type: Object, default: null },  
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            serverip: {type: String, default: ""},
+            researchdata: {type: Object, default: null},
+            index: {type: Number, default: -1},
+            mapkey: {type: Number, default: -1},
+            docid: {type: Number, default: -1},
+            mapcoordinates: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            semclass: {type: String, default: ""},
+            contentcontrol: {type: Object, default: null},
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
         },
         data: function () {
             return {
-                hover: false,                
+                hover: false,
                 localcontentcontrol: {
                     img: true,
                     map: true,
-                    information: true
-                },                
+                    information: true,
+                    test: false
+                }
             }
         },
         methods: {
@@ -84,13 +93,23 @@
                 this.$emit('showallresults');
             },
             showdetail: function () {
+                if(!this.localcontentcontrol.img && !this.localcontentcontrol.map && !this.localcontentcontrol.information){
+                    this.localcontentcontrol.img = true;
+                    this.localcontentcontrol.map = true;
+                    this.localcontentcontrol.information = true;
+                } else {
+                    this.localcontentcontrol.img = false;
+                    this.localcontentcontrol.map = false;
+                    this.localcontentcontrol.information = false;
+                }
+                console.log('Clicked on result: ' + JSON.stringify(this.localcontentcontrol));
 
             },
             mouseout: function () {
                 this.hover = false;
             },
             accentuate: function () {
-                this.hover = true;                
+                this.hover = true;
                 //mouseover
                 let hoverdata = {
                     hoverstarted: "research",
@@ -100,10 +119,10 @@
                     semanticClass: this.semclass,
                     startresearch: undefined,
                     wordtomarkonhover: this.researchdata.sourcequery.wordids,
-                }
+                };
                 this.$emit('starthover', hoverdata);
             },
-            
+
             saveResult: function () {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.index, this.researchdata, this.docid);
@@ -124,39 +143,39 @@
         components: {
             googlemap
         },
+        watch: {
+            contentcontrol: {
+                handler: function (newControl) {
+                   this.localcontentcontrol = JSON.parse(JSON.stringify(newControl));
+                   console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
+                },
+                deep: true
+            }
+        },
         computed: {
-            localcontentcontroler: function () {
-                if (this.contentcontrol.img && this.contentcontrol.map && this.contentcontrol.information) {
-                    this.localcontentcontrol.img = false;
-                    this.localcontentcontrol.map = false;
-                    this.localcontentcontrol.information = false;
-                } else {
-                    this.localcontentcontrol.img = true;
-                    this.localcontentcontrol.map = true;
-                    this.localcontentcontrol.information = true;
+            ifShowMap:function () {
+                if (this.researchdata.sourcequery.source[0].semanticClass !== 'PERSON') {
+                    return this.localcontentcontrol.map;
+                } else{
+                    return false;
                 }
-                if (this.researchdata.sourcequery.source[0].semanticClass === 'PERSON') {
-                    this.localcontentcontrol.map = false;
-                }
-                return this.localcontentcontrol;
             },
             generalstyleclass: function () {
                 let htmlclass = {
                     researchdatahover: this.hover
                 };
-                
+
                 if (this.wordtomarkonhoverdata != null
                     && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
-                    && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0])  > -1)
-                {
+                    && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
                     htmlclass[this.semclass + "_BORDERED_strong"] = true;
                     htmlclass[this.semclass + "_BORDERED"] = false;
                 } else {
                     htmlclass[this.semclass + "_BORDERED_strong"] = false;
                     htmlclass[this.semclass + "_BORDERED"] = true;
                 }
-                
+
                 return htmlclass;
             },
             title: function () {
@@ -164,12 +183,11 @@
                 if (typeof this.researchdata.sourcequery !== 'undefined') {
                     if (typeof this.researchdata.sourcequery.querys !== 'undefined') {
                         let t = "";
-                        for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++)
-                        {
-                            if (this.researchdata.sourcequery.querys[i].length > t.length){
+                        for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++) {
+                            if (this.researchdata.sourcequery.querys[i].length > t.length) {
                                 t = this.researchdata.sourcequery.querys[i];
                             }
-                        }                        
+                        }
                         title = title + t;
                         if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
                             title = title + ' (' + this.researchdata.sourcequery.freq + ') ';
