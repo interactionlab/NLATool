@@ -4,13 +4,12 @@
              v-on:mouseover="movetoolbar">
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
-                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%">
-                <div class="mdl-grid"
-                     id="textWindow"
-                     ref="textWindow"
-                     style="overflow-y: auto; height: auto !important; display: flex; max-height: 100%;">
+                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;">
+                <div class="mdl-grid" id="textWindow" ref="textWindow"
+                         style="height: auto !important; display: flex; max-height: 100%; padding:0; font-family: 'Roboto Mono', monospace;">
+                        
                     <component is="tex"
-                               v-for="(token,i) in col"
+                               v-for="(token,i) in tokenstoshow[columnindex]"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
                                v-bind:nexttoken="nexttoken(token.textIndex)"
@@ -37,7 +36,7 @@
                             v-bind:serverip="serverip"
                             v-bind:tokens="tokens"
                             v-bind:tokenstoshow="tokenstoshow"
-                            v-bind:colindex="colindex"
+                            v-bind:columnindex="columnindex"
                             v-bind:docid="docid"
                             v-bind:notes="notes"
                             v-bind:notemodes="notemodes"
@@ -69,55 +68,24 @@
 
     export default {
         props: {
-            serverip: {type: String, default: ""},
-            col: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            colindex: {type: Number, default: -1},
-            splitted: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            tokens: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            notes: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            mentions: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            selectedindexes: {type: Object, default: null},
-            selectedchain: {type: Number, default: -1},
-            hoveredchain: {type: Number, default: -1},
-            hoverdata: {type: Object, default: null},
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            classestomark: {type: Object, default: null},
-            showmode: {type: String, default: ""},
-            notemodes: {type: Object, default: null},
-            researchmode: {type: String, default: ""},
-            analysismode: {type: String, default: ""},
-            docid: {type: Number, default: -1},
-            textcolumnposition: {type: Number, default: -1},
-            tokenstoshow: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            contentcontrol: {type: Object, default: null},
+            serverip: { type: String, default: "" },
+            columnindex: { type: Number, default: 0 },
+            tokens: { type: Array, default: function () { return [] }},
+            notes: { type: Array, default: function () { return [] }},
+            mentions: { type: Array, default: function () { return [] }},
+            selectedindexes: { type: Object, default: null },
+            selectedchain: { type: Number, default: -1 },
+            hoveredchain: { type: Number, default: -1 },
+            hoverdata: { type: Object, default: null },
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            classestomark: { type: Object, default: null },
+            showmode: { type: String, default: "" },
+            notemodes: { type: Object, default: null },
+            researchmode: { type: String, default: "" },
+            analysismode: { type: String, default: "" },
+            docid: { type: Number, default: -1 },
+            tokenstoshow: { type: Array, default: function () { return [] }},
+            contentcontrol: { type: Object, default: null },
         },
         data: function () {
             return {
@@ -134,7 +102,7 @@
                 }
             },
             movetoolbar: function () {
-                this.$emit('movetoolbar', this.colindex);
+                this.$emit('movetoolbar', this.columnindex);
             },
             hoverChain: function (chain) {
                 this.hoveredChain = chain;

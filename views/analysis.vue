@@ -6,10 +6,9 @@
                 v-bind:title="title"
                 v-bind:docid="docID"
                 v-bind:route="'analysis'"
-                v-bind:numberofcolumns="numberOfColumns"
                 v-bind:preventtitleedit="false"
                 v-bind:autochecked="resizing"
-                v-on:newcolumnnumber="setNumberOfColumns($event)"
+                v-on:newcolumnnumber="setnumberofcolumns($event)"
                 v-on:contenttoggle="toogleResearchContent($event)">
         </component>
         <component
@@ -44,33 +43,31 @@
                         v-on:entercorrectionmode="entercorrectionmode($event)">
                 </component>
             </div>
-            <div style="flex: 0;width: 100%; position: relative;">
+            <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative" >
                 <component is="textviewcontrol"
-                           v-on:changescope="changeScope($event)"
-                           v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}">
+                    v-bind:currentpage="currentpage"
+                    v-bind:pagecount="pagecount"
+                    v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}"
+                    v-on:changescope="changeScope($event)">
                 </component>
             </div>
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
-                <div
-                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                        v-for="(col, colIndex) in tokenstoshow"
+                <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
+                        v-for="columnindex in numberofcolumns"
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
+                               v-bind:columnindex="columnindex-1"
                                v-bind:serverip="serverip"
-                               v-bind:col="col"
-                               v-bind:colindex="colIndex"
-                               v-bind:splitted="splitted"
-                               v-bind:tokenstoshow="tokenstoshow"
-                               v-bind:textcolumnposition="textcolumnposition"
+                               v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
+                               v-bind:tokenstoshow="tokenstoshow"
                                v-bind:mentions="coref"
                                v-bind:selectedindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
-                               v-bind:analysismode="analysisMode"
-                               v-bind:docid="docID"
+                               v-bind:analysismode="analysisMode"                               
                                v-bind:notes="notes"
                                v-bind:notemodes="notemodes"
                                v-bind:researchmode="researchmode"
@@ -95,15 +92,13 @@
                    v-bind:tokens="vueTokens"
                    v-on:resize="setTokens($event)">
         </component>
-        <component is="linetohover"
-                   id="line"
+        <component is="linetohover" id="line"
                    v-if="offsetstart != null && offsetend != null"
                    v-bind:offsetstart="offsetstart"
                    v-bind:offsetend="offsetend"
                    v-bind:semanticclass="semanticclass">
         </component>
     </div>
-
 </template>
 <script>
     import research from './components/analysis/research.vue';
@@ -158,18 +153,16 @@
                     maxColumnWidth: 800,
                     maxColumnHeight: -1
                 },
-                numberOfColumns: 0,
-                splitted: [],
+                numberofcolumns: 1,
+                tokens: [],
+                tokenssplitted: [],
                 tokenstoshow: [],
-
+                tokenssplittedindextoshow: 0,
+                columnindexoflasthover:1,
+                currentpage: 1,
+                pagecount: 1,
                 columnsize2: 100,
                 columnsizetoolbarpos: 0,
-                textcolumnposition: {
-                    start: -1,
-                    end: -1,
-                    difference: -1
-                },
-                tokens: [],
                 splittNotes: [],
                 resizing: true,
                 contentcontrol: {
@@ -193,7 +186,6 @@
                         map: true,
                         information: true
                     }
-
                 }
             }
         },
@@ -211,8 +203,12 @@
             hoverChain: function (chain) {
                 this.hoveredChain = chain;
             },
-            movetoolbar: function (colIndex) {
-                this.columnsizetoolbarpos = (colIndex / this.numberOfColumns) * 100.0;
+            movetoolbar: function (columnindex) {
+                if (this.columnindexoflasthover === columnindex)
+                    return;
+                this.columnindexoflasthover = columnindex;
+                this.columnsizetoolbarpos = (this.columnindexoflasthover / this.numberofcolumns) * 100.0;
+                this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
             },
             getAnalighter: function () {
                 this.analysisMode = 'analighter';
@@ -256,90 +252,76 @@
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
-                this.columnsize2 = 100.0 / this.numberOfColumns;
-                this.showTokens(this.numberOfColumns, this.numberOfColumns);
+                this.columnsize2 = 100.0 / this.numberofcolumns;
+                this.showTokens();
 
             },
-            showTokens: function (difference, end) {
-                this.tokenstoshow = [];
-                let newtokenstoshow = [];
-                if (end > this.splitted.length) {
-                    newtokenstoshow = this.splitted.slice(0, this.splitted.length);
-                    for (let i = 0; i < newtokenstoshow.length; i++) {
-                        this.tokenstoshow.push(newtokenstoshow[i]);
-                    }
-                    this.textcolumnposition.end = this.splitted.length - 1;
-                    this.textcolumnposition.start = 0;
+            showTokens: function () {
+                if (this.numberofcolumns === 1){
+                    this.tokenstoshow = this.tokenssplitted;
                 } else {
-                    if (end - difference >= 0) {
-                        newtokenstoshow = this.splitted.slice(end - difference, end);
-                        for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
-                        }
-                        this.textcolumnposition.start = end - difference;
-                    } else {
-                        newtokenstoshow = this.splitted.slice(0, difference);
-                        for (let i = 0; i < newtokenstoshow.length; i++) {
-                            this.tokenstoshow.push.apply(this.tokenstoshow, newtokenstoshow)
-                        }
-                        this.textcolumnposition.start = 0;
-                    }
-                    this.textcolumnposition.end = end;
+                    let end = this.tokenssplittedindextoshow + this.numberofcolumns;
+                    this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
                 }
-                this.textcolumnposition.difference = difference;
             },
             changeScope: function (direction) {
+                
                 if (direction) {
-                    if (this.textcolumnposition.end >= this.textcolumnposition.difference) {
-                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end - 1);
+                    if (this.tokenssplittedindextoshow -1 >=0){
+                        this.tokenssplittedindextoshow--;
+                        this.showTokens();
+                        this.offsetstart = null;
+                        this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 } else if (!direction) {
-                    if (this.textcolumnposition.end < this.splitted.length) {
-                        this.showTokens(this.textcolumnposition.difference, this.textcolumnposition.end + 1);
+                    if (this.tokenssplittedindextoshow + this.numberofcolumns < this.tokenssplitted.length){
+                        this.tokenssplittedindextoshow++;
+                        this.showTokens();
+                        this.offsetstart = null;
+                        this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 }
             },
             splitNotes: function () {
-                /*for (let i = 0; i < this.splitted; i++) {
+                /*for (let i = 0; i < this.tokenssplitted; i++) {
                     for (let j = 0; j < this.notes; j++) {
-                        if (this.splitted[i][this.splitted[i].length - 1] === 0) {
+                        if (this.tokenssplitted[i][this.tokenssplitted[i].length - 1] === 0) {
                         }
                     }
                 }*/
             },
             splitTokens: function () {
-                let splitPoint = Math.trunc(this.tokens.length / this.numberOfColumns) + 1;
-                //console.log('new splitpoint is: ' + splitPoint);
-                let startSlice = 0;
-                this.splitted = [];
-                for (let i = 0; i < this.numberOfColumns; i++) {
-                    this.splitted.push(this.tokens.slice(startSlice, startSlice + splitPoint));
-                    startSlice = startSlice + splitPoint;
-                }
-                if (startSlice < this.tokens.length) {
-                    this.splitted[this.numberOfColumns - 1].push(this.tokens.slice(startSlice, this.tokens.length));
-                }
-            },
-            splitTokens2: function () {
-                this.splitted = [];
-                if (this.screenOptions.screenHeight > this.screenOptions.maxColumnHeight) {
-
+                
+                let tokenssplittedDUMMY = [];
+                if (this.numberofcolumns === 1){
+                    tokenssplittedDUMMY.push(this.tokens);
                 } else {
-                    this.splitted.push(this.tokens);
+                    
+                    
+                    let wordnumbertofitinonecolumn = 200;
+                    let startSlice = 0;
+                    for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
+                        tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + wordnumbertofitinonecolumn));
+                        startSlice = startSlice + wordnumbertofitinonecolumn;
+                    }
+                }
+                this.tokenssplitted = tokenssplittedDUMMY;
+                this.pagecount = this.tokenssplitted.length;
+            },
+            computenumberofcolumns: function () {
+                this.numberofcolumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
+                if (this.numberofcolumns === 0) {
+                    this.numberofcolumns++;
                 }
             },
-            computeNumberOfColumns: function () {
-                this.numberOfColumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
-                if (this.numberOfColumns === 0) {
-                    this.numberOfColumns++;
-                }
-            },
-            setNumberOfColumns: function (number) {
-                if (number > 0 && number !== this.numberOfColumns) {
-                    this.numberOfColumns = number;
-                    this.splitTokens();
-                    this.setColumnSize2();
-                    this.resizing = false;
+            setnumberofcolumns: function (number) {
+                if (number > 0) {
+                    if (number !== this.numberofcolumns){
+                        this.numberofcolumns = parseInt(number);
+                        this.splitTokens();
+                        this.setColumnSize2();
+                        this.resizing = false;
+                    }
                 } else {
                     this.resizing = true;
                     this.resize();
@@ -358,14 +340,14 @@
             resize: function () {
                 if (this.resizing) {
                     this.setScreenOptions();
-                    this.computeNumberOfColumns();
+                    this.computenumberofcolumns();
                     this.splitTokens();
                     this.setColumnSize2();
                 }
             },
             starthover: function (event) {       
-                console.log("Analysis vu starthover: " + JSON.stringify(event));            
-                console.log("Analysis vu hoverdata: " + JSON.stringify(this.hoverdata));            
+                //console.log("Analysis vue starthover: " + JSON.stringify(event));            
+                //console.log("Analysis vue hoverdata: " + JSON.stringify(this.hoverdata));            
                 
                 if (this.hoverdata.hoverstarted === event.hoverstarted){
                     if ((event.hoverstarted === "text"
