@@ -15,6 +15,7 @@ const test = require('./routes/test');
 const loadtext = require('./routes/loadtext');
 const setup = require('./routes/setup');
 const comment = require('./routes/comment');
+const imprint = require('./routes/imprint');
 const expressVue = require('express-vue');
 const ip = require('ip');
 const app = express();
@@ -99,6 +100,7 @@ app.use('/test', test);
 app.use('/loadtext', loadtext);
 app.use('/setup', setup);
 app.use('/comment', comment);
+app.use('/imprint', imprint);
 
 
 // catch 404 and forward to connectionError handler
