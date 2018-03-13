@@ -13,8 +13,8 @@
                                v-for="(token,i) in col"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:prevtoken="prevtoken(token.textIndex)"
-                               v-bind:index="token.textIndex"
+                               v-bind:nexttoken="nexttoken(token.textIndex)"
+                               v-bind:index="token.textIndex+1"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
@@ -69,41 +69,68 @@
 
     export default {
         props: {
-            serverip: { type: String, default: "" },
-            col: { type: Array, default: function () { return [] }},
-            colindex: { type: Number, default: -1 },
-            splitted: { type: Array, default: function () { return [] }},
-            tokens: { type: Array, default: function () { return [] }},
-            notes: { type: Array, default: function () { return [] }},
-            mentions: { type: Array, default: function () { return [] }},
-            selectedindexes: { type: Object, default: null },
-            selectedchain: { type: Number, default: -1 },
-            hoveredchain: { type: Number, default: -1 },
-            hoverdata: { type: Object, default: null },
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
-            classestomark: { type: Object, default: null },
-            showmode: { type: String, default: "" },
-            notemodes: { type: Object, default: null },
-            researchmode: { type: String, default: "" },
-            analysismode: { type: String, default: "" },
-            docid: { type: Number, default: -1 },
-            textcolumnposition: { type: Number, default: -1 },
-            tokenstoshow: { type: Array, default: function () { return [] }},
-            contentcontrol: { type: Object, default: null }, 
+            serverip: {type: String, default: ""},
+            col: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            colindex: {type: Number, default: -1},
+            splitted: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            notes: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            mentions: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            selectedindexes: {type: Object, default: null},
+            selectedchain: {type: Number, default: -1},
+            hoveredchain: {type: Number, default: -1},
+            hoverdata: {type: Object, default: null},
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            classestomark: {type: Object, default: null},
+            showmode: {type: String, default: ""},
+            notemodes: {type: Object, default: null},
+            researchmode: {type: String, default: ""},
+            analysismode: {type: String, default: ""},
+            docid: {type: Number, default: -1},
+            textcolumnposition: {type: Number, default: -1},
+            tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            contentcontrol: {type: Object, default: null},
         },
         data: function () {
             return {
                 entitytoline: []
             }
         },
-        computed:{
-        },
+        computed: {},
         methods: {
-            prevtoken:function (index) {
-                if(index === 0){
+            nexttoken: function (index) {
+                if (this.tokens[index + 1] === undefined) {
                     return null;
                 } else {
-                    return this.tokens[index-1];
+                    return this.tokens[index + 1];
                 }
             },
             movetoolbar: function () {
@@ -139,7 +166,7 @@
                     return result * sortOrder;
                 }
             },
-            starthover:function (event) {
+            starthover: function (event) {
                 this.$emit('starthover', event);
             },
         },
