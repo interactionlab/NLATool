@@ -53,8 +53,7 @@
             </div>
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
-                <div
-                        style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
+                <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
                         v-for="columnindex in numberofcolumns"
                         v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
@@ -93,15 +92,13 @@
                    v-bind:tokens="vueTokens"
                    v-on:resize="setTokens($event)">
         </component>
-        <component is="linetohover"
-                   id="line"
+        <component is="linetohover" id="line"
                    v-if="offsetstart != null && offsetend != null"
                    v-bind:offsetstart="offsetstart"
                    v-bind:offsetend="offsetend"
                    v-bind:semanticclass="semanticclass">
         </component>
     </div>
-
 </template>
 <script>
     import research from './components/analysis/research.vue';
@@ -189,7 +186,6 @@
                         map: true,
                         information: true
                     }
-
                 }
             }
         },
@@ -309,7 +305,6 @@
                         startSlice = startSlice + wordnumbertofitinonecolumn;
                     }
                 }
-                console.log("analysis vue splitTokens tokenssplittedDUMMY length: "+ tokenssplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;
             },
@@ -320,11 +315,13 @@
                 }
             },
             setnumberofcolumns: function (number) {
-                if (number > 0 && number !== this.numberofcolumns) {
-                    this.numberofcolumns = parseInt(number);
-                    this.splitTokens();
-                    this.setColumnSize2();
-                    this.resizing = false;
+                if (number > 0) {
+                    if (number !== this.numberofcolumns){
+                        this.numberofcolumns = parseInt(number);
+                        this.splitTokens();
+                        this.setColumnSize2();
+                        this.resizing = false;
+                    }
                 } else {
                     this.resizing = true;
                     this.resize();
