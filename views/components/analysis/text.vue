@@ -12,7 +12,7 @@
     export default {
         props: {
             token: { type: Object, default: null },
-            prevtoken: { type: Object, default: null },
+            nexttoken: { type: Object, default: null },
             index: { type: Number, default: -1 },
             classestomark: { type: Object, default: null },
             selectedindexes: { type: Object, default: null }, 
@@ -80,7 +80,7 @@
                         }
                     }
                 }
-                if (this.isEntityHovered == true){
+                if (this.isEntityHovered === true){
                     htmlclass[this.token.semanticClass + "_strong"] = true;
                     htmlclass[this.token.semanticClass] = false;
                 }
@@ -150,7 +150,7 @@
                         }
                     }
                     //TODO: check for consistency
-                    if (this.prevtoken !== null && this.prevtoken.semanticClass === this.token.semanticClass) {
+                    if (this.nexttoken !== null && this.nexttoken.semanticClass === this.token.semanticClass) {
                         htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     }
                 } catch (err) {
@@ -183,20 +183,20 @@
                 return resultingBrackets;
             },
             getWordGap: function () {
-                if(this.prevtoken === null){
+                if(this.nexttoken === null){
                     return '';
                 }
                
-                let word2OffsetBegin = -1;
+                let word2OffsetEnd = -1;
                 try {
-                    word2OffsetBegin = this.token.beginOffSet;
+                    word2OffsetEnd = this.token.EndOffSet;
                 } catch (err) {
                 }
                 //default Setting: 1 space * difference between Offsets
                 let gap = '';
-                if (word2OffsetBegin !== -1) {
-                    if (this.prevtoken.whitespaceInfo === -10) {
-                        gap = Array(word2OffsetBegin - this.prevtoken.EndOffSet + 1).join(" ");
+                if (word2OffsetEnd !== -1) {
+                    if (this.nexttoken.whitespaceInfo === -10) {
+                        gap = Array(this.nexttoken.beginOffSet - word2OffsetEnd+1).join(" ");
                     }
                 }
                 return gap;
