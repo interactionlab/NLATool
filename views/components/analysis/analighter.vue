@@ -3,7 +3,7 @@
         <component :is="showmode"
                    v-bind:serverip="serverip"
                    v-bind:tokens="tokens"
-                   v-bind:colindex="colindex"
+                   v-bind:columnindex="columnindex"
                    v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="docid"
@@ -35,7 +35,7 @@
             classestomark: { type: Object, default: null },
             tokenstoshow: { type: Array, default: function () { return [] }},
             wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
-            colindex: { type: Number, default: -1 },
+            columnindex: { type: Number, default: 0 },
             contentcontrol: { type: Object, default: null },
             hoverdata: { type: Object, default: null},
         },
