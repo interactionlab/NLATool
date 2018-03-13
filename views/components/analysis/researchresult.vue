@@ -164,7 +164,6 @@
                 let htmlclass = {
                     researchdatahover: this.hover
                 };
-
                 if (this.wordtomarkonhoverdata != null
                     && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
