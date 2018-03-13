@@ -23,7 +23,7 @@
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'">
                     <span>View Splits</span>
-                    <input type="radio" id="auto" value="true" v-bind:checked="autochecked" v-model="autochecked"/>
+                    <input type="checkbox" id="auto" value="true" v-bind:checked="autochecked" v-model="autochecked"/>
                     <input type="number" id="numberOfcolumnsInput" min="1" max="99"
                            v-model="numberofcolumns"/>
                 </li>
@@ -125,10 +125,20 @@
             }
         },
         watch: {
+            autochecked: function (autochecked){
+                if (autochecked == true){
+                    this.$emit('newcolumnnumber', 0);
+                } else {
+                    this.$emit('newcolumnnumber', this.numberofcolumns);
+                }
+            },
             numberofcolumns: function (newNumber) {
                 if (newNumber <= 0) {
                     this.numberofcolumns = 1;
                     this.$emit('newcolumnnumber', 1);
+                } else if (newNumber > 99){
+                    this.numberofcolumns = 99;
+                    this.$emit('newcolumnnumber', 99);
                 } else {
                     this.$emit('newcolumnnumber', newNumber);
                 }

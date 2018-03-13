@@ -145,8 +145,6 @@
                     researchdatahover: this.hover
                 };
                 
-                //console.log("this.wordtomarkonhoverdata: "+JSON.stringify(this.wordtomarkonhoverdata));
-                
                 if (this.wordtomarkonhoverdata != null
                     && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
