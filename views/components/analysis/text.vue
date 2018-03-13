@@ -5,20 +5,26 @@
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover">
         <span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span class="nonPreAlt specialBracket" v-bind:class="toHighlight"
-                                                                                                              v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt" v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
+            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span
+            class="nonPreAlt specialBracket" v-bind:class="toHighlight"
+            v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt"
+                                                                         v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
 </template>
 <script>
     export default {
         props: {
-            token: { type: Object, default: null },
-            nexttoken: { type: Object, default: null },
-            index: { type: Number, default: -1 },
-            classestomark: { type: Object, default: null },
-            selectedindexes: { type: Object, default: null }, 
-            hoveredchain: { type: Number, default: -1 },
-            selectedchain: { type: Number, default: -1 },
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            token: {type: Object, default: null},
+            nexttoken: {type: Object, default: null},
+            index: {type: Number, default: -1},
+            classestomark: {type: Object, default: null},
+            selectedindexes: {type: Object, default: null},
+            hoveredchain: {type: Number, default: -1},
+            selectedchain: {type: Number, default: -1},
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
         },
         data: function () {
             return {
@@ -80,14 +86,14 @@
                         }
                     }
                 }
-                if (this.isEntityHovered === true){
+                if (this.isEntityHovered === true) {
                     htmlclass[this.token.semanticClass + "_strong"] = true;
                     htmlclass[this.token.semanticClass] = false;
                 }
                 else {
                     htmlclass[this.token.semanticClass + "_strong"] = false;
-                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass]; 
-                }                
+                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                }
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
@@ -115,7 +121,7 @@
                         if (this.classestomark.coref) {
                             //console.log(this.token.coref.length);
                             for (let i = 0; i < this.token.coref.length; i++) {
-                                if (this.token.coref[i].endIndex-1 > this.token.textIndex) {
+                                if (this.token.coref[i].endIndex - 1 > this.token.textIndex) {
                                     if (!this.tohover) {
                                         //is Representant
                                         if (this.token.coref[i].representative < 0) {
@@ -183,10 +189,10 @@
                 return resultingBrackets;
             },
             getWordGap: function () {
-                if(this.nexttoken === null){
+                if (this.nexttoken === null) {
                     return '';
                 }
-               
+
                 let word2OffsetEnd = -1;
                 try {
                     word2OffsetEnd = this.token.EndOffSet;
@@ -196,7 +202,7 @@
                 let gap = '';
                 if (word2OffsetEnd !== -1) {
                     if (this.nexttoken.whitespaceInfo === -10) {
-                        gap = Array(this.nexttoken.beginOffSet - word2OffsetEnd+1).join(" ");
+                        gap = Array(this.nexttoken.beginOffSet - word2OffsetEnd + 1).join(" ");
                     }
                 }
                 return gap;
@@ -204,24 +210,24 @@
         },
         watch: {
             wordtomarkonhoverdata: function (event) {
-                if (typeof event === 'undefined'){
-                    console.log("WARNING: text vue event in wordtomarkonhover undefined"); 
+                if (typeof event === 'undefined') {
+                    console.log("WARNING: text vue event in wordtomarkonhover undefined");
                     return;
                 }
-                if (this.token.semanticClass === event.semanticClass){
+                if (this.token.semanticClass === event.semanticClass) {
                     let index = event.wordids.indexOf(this.token.wordID)
-                    if(index >- 1){
+                    if (index > -1) {
                         this.isEntityHovered = true;
-                        if (index == 0 && event.hoverstarted === "research"){
+                        if (index == 0 && event.hoverstarted === "research") {
                             this.$el.scrollIntoView();
                             let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
                             this.$emit('endhover', data);
                         }
-                    } else if (this.isEntityHovered === true){
+                    } else if (this.isEntityHovered === true) {
                         this.isEntityHovered = false;
                     }
                 } else {
-                    if (this.isEntityHovered === true){
+                    if (this.isEntityHovered === true) {
                         this.isEntityHovered = false;
                     }
                 }
@@ -244,7 +250,7 @@
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
-                
+
                 let hoverdata = {
                     hoverstarted: "text",
                     offsetstart: event.target.getBoundingClientRect(),
