@@ -522,9 +522,54 @@ pre {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+/** The overlay background*/
+.overlay {
+    /*TODO put this to the right side above the selected result*/
+    height: 100%;
+    width: 0%;
+    position: fixed;
+    z-index: 5; /*sit on top*/
+    left: 0;
+    top: 0;
+    background-color: rgb(255, 255, 255); /* w/opacity*/
+    overflow-x: hidden; /*display horizontal scroll*/
+    transition: 0.5s; /* 0.5 second transition effect to slide up or slide down the overplay*/
+}
 
-/**
-Background color for Buttons
-.mdl-button--raised{
-    background: #b3d4fc;
-}*/
+.overlay-content {
+    position: relative;
+    top: 25%;
+    width: 100%;
+    text-align: center;
+    margin-top: 30px; /*to avoid conflicts with with close button on smaller screens*/
+}
+
+/*for navigation links mybe not needed*/
+.overlay a {
+    padding: 8px;
+    text-decoration: none;
+    font-size: 36px;
+    color: #818181;
+    display: block;
+    transition: 0.3s; /* transition efect on hover(color)*/
+}
+
+/*change color when mouse is over navigation links*/
+.overlay a:hover, .overlay:focus {
+    color: #f1f1f1;
+}
+
+.overlay .closebtn {
+    position: absolute;
+    top: 25px;
+    right: 45px;
+    font-size: 60px;
+}
+
+@media screen and (max-height: 450px) {
+    .overlay a {
+        font-size: 20px;
+        top: 15px;
+        right: 35px;
+    }
+}

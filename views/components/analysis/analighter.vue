@@ -6,6 +6,7 @@
                    v-bind:columnindex="columnindex"
                    v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
+                   v-bind:selectedchain="selectedchain"
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
                    v-bind:contentcontrol="contentcontrol"
@@ -28,16 +29,17 @@
 
         props: {
             serverip: { type: String, default: "" },
-            tokens: { type: Array, default: function () { return [] }},
-            selectedindexes: { type: Object, default: null },
             showmode: { type: String, default: "" },
-            docid: { type: Number, default: -1 },
-            classestomark: { type: Object, default: null },
-            tokenstoshow: { type: Array, default: function () { return [] }},
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
-            columnindex: { type: Number, default: 0 },
+            selectedindexes: { type: Object, default: null },
             contentcontrol: { type: Object, default: null },
             hoverdata: { type: Object, default: null},
+            classestomark: { type: Object, default: null },
+            docid: { type: Number, default: -1 },
+            columnindex: { type: Number, default: 0 },
+            selectedchain: { type: Number, default: -1 },
+            tokens: { type: Array, default: function () { return [] }},
+            tokenstoshow: { type: Array, default: function () { return [] }},
+            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
         },
         data: function () {
             return {

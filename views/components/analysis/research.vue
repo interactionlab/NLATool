@@ -11,29 +11,21 @@
                 <!--Results will be displayed here. -->
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
                     <component is="researchresult"
-                               v-if="resultselected"
-                               v-bind:researchresult="selectedresult"
-                               v-bind:index="selectedindex"
-                               v-bind:docid="docid"
-                               v-bind:showallon="resultselected"
-                               v-bind:mapcoordinates="mapcoordinates"
-                               v-bind:sourcequery="sourceQuery"
-                               v-bind:contentcontrol="{img:true, map:true, information: true}"
-                               v-on:showallresults="switchresearchselected">
-                    </component>
-                    <component is="researchresult"
-                               v-else
+                               ref="personresults"
                                v-for="(researchresult,index) in researchresults"
-                               v-bind:researchresult="researchresult"
+                               v-bind:serverip="serverip"
+                               v-bind:researchdata="researchresult"
                                v-bind:key="index"
                                v-bind:index="index"
-                               v-bind:researchresults="researchresults"
+                               v-bind:mapkey="index"
                                v-bind:docid="docid"
-                               v-bind:showallon="resultselected"
-                               v-bind:mapcoordinates="mapcoordinates"
-                               v-bind:sourcequery="sourceQuery"
-                               v-bind:contentcontrol="{img:true, map:true, information: true}"
-                               v-on:saveresult="saveResult($event)">
+                               v-bind:showallon="true"
+                               v-bind:semclass="'PERSON'"
+                               v-bind:contentcontrol="contentcontrol.PERSONS"
+                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                               v-on:starthover="starthover($event)"
+                               v-on:saveresult="saveResult($event)"
+                               v-on:editresearch="editresearch($event)">
                     </component>
                 </div>
             </form>
@@ -50,11 +42,17 @@
 
         mixins: [getselectedtext, filtertoken],
         props: {
-            selectedindexes: { type: Object, default: null },
-            tokens: { type: Array, default: function () { return [] }},
-            docid: { type: Number, default: -1 },
-            selectedchain: { type: Number, default: -1 },
-            mentions: { type: Array, default: function () { return [] }},
+            serverip: { type: String, default: "" },
+            selectedindexes: {type: Object, default: null},
+            researchdatatoedit:{type: Object, default: null},
+            contentcontrol: {type: Object, default: null},
+            tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            docid: {type: Number, default: -1},
+            selectedchain: {type: Number, default: -1},
         },
         data: function () {
             return {
@@ -118,7 +116,7 @@
                 //console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
             },
-            searchGoogle: function (query, limit) {
+            searchGoogle: function (query, limit,sourcequery) {
 
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
@@ -133,7 +131,26 @@
                     //this.rerankWithKeywords(response);
                     //this.getMapCoordinates();
                     this.researchresults = response.itemListElement;
-                    this.sourceQuery = query;
+                    let data = response.itemListElement;
+                    let found = false;
+                    /*
+                    for (let i = 0; i < this[semClass].length; i++) {
+                        if (this[semClass][i].result["@id"] === data.result["@id"]) {
+                            found = true;
+                            for (let k = 0; k < sourcequery.source.length; k++) {
+                                this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                            }
+                            this[semClass][i].sourcequery.wordids.sort();
+                            this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
+                            this[semClass][i].sourcequery.freq += sourcequery.freq;
+                            this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
+                            //console.log(JSON.stringify(this[semClass][i]));
+                        }
+                    }*/
+                    if (found === false) {
+                        data["sourcequery"] = sourcequery;
+                        this[semClass].push(data);
+                    }
                     //console.log('Results: ' + JSON.stringify(this.researchresults));
 
                 });
@@ -184,12 +201,15 @@
             },
             selectedchain: {
                 handler: function (newselectedChain) {
+                    //TODO: update for new coref handling
+                    /*
                     for (let i = 0; i < this.mentions[0].length; i++) {
                         if (newselectedChain === this.mentions[0][i].mentionID) {
                             this.selectedindexes.start = this.mentions[0][i].startIndex;
                             this.selectedindexes.end = this.mentions[0][i].endIndex;
                         }
                     }
+                    */
                 },
                 deep: true
             },
