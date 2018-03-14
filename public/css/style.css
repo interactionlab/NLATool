@@ -528,7 +528,7 @@ pre {
     height: 100%;
     width: 0%;
     position: fixed;
-    z-index: 5; /*sit on top*/
+    z-index: 100; /*sit on top*/
     left: 0;
     top: 0;
     background-color: rgb(255, 255, 255); /* w/opacity*/
@@ -540,7 +540,6 @@ pre {
     position: relative;
     top: 25%;
     width: 100%;
-    text-align: center;
     margin-top: 30px; /*to avoid conflicts with with close button on smaller screens*/
 }
 
