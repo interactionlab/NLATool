@@ -118,7 +118,6 @@
             },
             accentuate: function () {
                 this.hover = true;
-                //mouseover
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,
