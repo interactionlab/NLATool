@@ -45,7 +45,6 @@
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                            v-bind:mentions="mentions"
                             v-bind:showmode="showmode"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
@@ -61,7 +60,6 @@
 </template>
 
 <script>
-    import research from './components/analysis/research.vue';
     import notes from './components/analysis/notes/notes.vue';
     import analighter from './components/analysis/analighter.vue';
     import tex from './components/analysis/text.vue';
@@ -72,7 +70,6 @@
             columnindex: { type: Number, default: 0 },
             tokens: { type: Array, default: function () { return [] }},
             notes: { type: Array, default: function () { return [] }},
-            mentions: { type: Array, default: function () { return [] }},
             selectedindexes: { type: Object, default: null },
             selectedchain: { type: Number, default: -1 },
             hoveredchain: { type: Number, default: -1 },
@@ -140,7 +137,6 @@
         },
         components: {
             tex,
-            research,
             analighter,
             notes
         }
