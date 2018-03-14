@@ -1,6 +1,24 @@
 <template>
     <div>
         <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
+        <div ref="myNav" class="overlay">
+            <a class="closebtn"
+               v-on:click="closeNav()">&times;</a>
+            <div class="overlay-content mdl-grid">
+                <div class="mdl-cell mdl-cell--6-col"></div>
+                <component is="research"
+                           class="mdl-cell mdl-cell--6-col"
+                           v-bind:serverip="serverip"
+                           v-bind:researchdatatoedit="researchdatatoedit"
+                           v-bind:tokens="tokens"
+                           v-bind:tokenstoshow="tokenstoshow"
+                           v-bind:docid="docid"
+                           v-bind:contentcontrol="contentcontrol"
+                           v-bind:selectedindexes="selectedindexes"
+                           v-bind:selectedchain="selectedchain">
+                </component>
+            </div>
+        </div>
         <div class="semClassFormate PERSON"
              ref="personresultsparent"
              v-on:click="togglesemanticlass('PERSON')">
@@ -28,7 +46,8 @@
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate LOCATION"
              ref="locationresultsparent"
@@ -123,19 +142,35 @@
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
+    import research from './components/analysis/research.vue';
 
     export default {
         mixins: [filtertokenwithclass],
         props: {
-            serverip: { type: String, default: "" },
-            tokens: { type: Array, default: function () { return [] }},
-            classestomark: { type: Object, default: null },
-            docid: { type: Number, default: -1 },
-            tokenstoshow: { type: Array, default: function () { return [] }},
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
-            columnindex: { type: Number, default: 0 },
-            contentcontrol: { type: Object, default: null },
-            hoverdata: { type: Object, default: null},
+            serverip: {type: String, default: ""},
+            tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            docid: {type: Number, default: -1},
+            selectedchain: { type: Number, default: -1 },
+            columnindex: {type: Number, default: 0},
+            classestomark: {type: Object, default: null},
+            contentcontrol: {type: Object, default: null},
+            hoverdata: {type: Object, default: null},
+            selectedindexes: { type: Object, default: null },
+
         },
         data: function () {
             return {
@@ -144,10 +179,21 @@
                 ORGANIZATION: [],
                 MISC: [],
                 researchresults: [],
-                sourcequery:[],
+                sourcequery: [],
+                researchdatatoedit: {}
             }
         },
         methods: {
+            closeNav() {
+                this.$refs.myNav.style.width = "0%";
+            },
+            openNav() {
+                this.$refs.myNav.style.width = "100%";
+            },
+            editresearch: function (researchData) {
+                this.researchdatatoedit = researchData;
+                this.openNav();
+            },
             starthover: function (event) {
                 this.$emit('starthover', event);
             },
@@ -173,13 +219,13 @@
                     }
                     if (query !== '') {
                         let wordids = []
-                        for (let k = 0; k < sortedtokens[i].length; k++){
+                        for (let k = 0; k < sortedtokens[i].length; k++) {
                             wordids.push(sortedtokens[i][k].wordID);
-                        } 
+                        }
                         this.searchGoogle(query, 1, semClass, {
                             freq: frequency,
                             wordids: wordids,
-                            querys: [query],                            
+                            querys: [query],
                             source: sortedtokens[i]
                         });
                     }
@@ -203,17 +249,16 @@
                     if (limit > 1) {
                         // this[semClass].push(this.rerankWithKeywords());
                     } else {
-                        
+
                         let data = response.itemListElement[0];
-                                               
+
                         let found = false;
-                        for(let i = 0; i < this[semClass].length; i++)
-                        {
-                            if (this[semClass][i].result["@id"] === data.result["@id"]){
+                        for (let i = 0; i < this[semClass].length; i++) {
+                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
                                 found = true;
-                                for (let k = 0; k < sourcequery.source.length; k++){
+                                for (let k = 0; k < sourcequery.source.length; k++) {
                                     this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
-                                }                                
+                                }
                                 this[semClass][i].sourcequery.wordids.sort();
                                 this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
                                 this[semClass][i].sourcequery.freq += sourcequery.freq;
@@ -221,11 +266,11 @@
                                 //console.log(JSON.stringify(this[semClass][i]));
                             }
                         }
-                        if (found === false){
+                        if (found === false) {
                             data["sourcequery"] = sourcequery;
                             this[semClass].push(data);
                         }
-                        
+
                     }
                 });
             },
@@ -276,7 +321,7 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
-            tokenstoshow: function (value){
+            tokenstoshow: function (value) {
                 this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
@@ -284,20 +329,19 @@
             },
             hoverdata: {
                 handler: function (hoverdata) {
-                    if (hoverdata === 'undefined'){
+                    if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
                     // console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
                     // console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
-                    
-                    if(hoverdata.hoverstarted == "research")
-                    {
+
+                    if (hoverdata.hoverstarted == "research") {
                         return;
                     }
-                    
+
                     let wordtomarkonhoverDUMMY = [];
                     let newwordid = -1;
-                    if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text"){
+                    if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text") {
                         newwordid = hoverdata.startword.wordID;
                     } else {
                         newwordid = hoverdata.wordids[0];
@@ -310,7 +354,7 @@
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted == "text")
                                         refElement.$el.scrollIntoView();
-                                    
+
                                     bb = refElement.$el.getBoundingClientRect();
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
                                 }
@@ -325,7 +369,7 @@
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted == "text")
                                         refElement.$el.scrollIntoView();
-                                    
+
                                     bb = refElement.$el.getBoundingClientRect();
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
                                 }
@@ -340,7 +384,7 @@
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted == "text")
                                         refElement.$el.scrollIntoView();
-                                    
+
                                     bb = refElement.$el.getBoundingClientRect();
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
                                 }
@@ -355,7 +399,7 @@
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted == "text")
                                         refElement.$el.scrollIntoView();
-                                    
+
                                     bb = refElement.$el.getBoundingClientRect();
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
                                 }
@@ -370,7 +414,8 @@
             },
         },
         components: {
-            researchresult
+            researchresult,
+            research,
         }
     }
 </script>
