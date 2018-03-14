@@ -17,7 +17,7 @@
         </component>
         
         <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;"
-                 v-if="displayloading == true">
+                 v-if="displayloading === true">
                 <div style=" margin: 0% auto;  z-index: 10;  left: 0; top: 50%; width: auto !important; max-width: 100%; color: gray; max-width:1000px; position: relative; opacity: 1;">
                     Loading...
                     <div id="progressbar2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
@@ -37,7 +37,6 @@
                         v-bind:style="{left: columnsizetoolbarpos+ '%'}"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
-                        v-on:emitresearch="getResearch"
                         v-on:changemarkermode="changeMarkerMode($event)"
                         v-on:changenotemode="changeNoteMode($event)"
                         v-on:entercorrectionmode="entercorrectionmode($event)">
