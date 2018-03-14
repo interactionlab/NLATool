@@ -4,7 +4,7 @@
         <nav class="mdl-navigation">
             <a class="mdl-navigation__link" href="/">Home</a>
             <a class="mdl-navigation__link" href="signin">Log in</a>
-            <a class="mdl-navigation__link" href="">Imprint</a>
+            <a class="mdl-navigation__link" href="imprint">Imprint</a>
         </nav>
     </div>
 </template>
