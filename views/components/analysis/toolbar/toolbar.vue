@@ -5,7 +5,6 @@
                 <!--Main Navigation:-->
                 <div class="mdl-tabs__tab-bar">
                     <a href="#analysis-panel" class="mdl-tabs__tab is-active" v-on:click="changetool('analightertool')">Analysis</a>
-                    <a href="#research-panel" class="mdl-tabs__tab" v-on:click="changetool('researchtool')">Research</a>
                     <a href="#notes-panel" class="mdl-tabs__tab" v-on:click="changetool('notestool')">Notes</a>
                 </div>
             </div>
@@ -101,8 +100,6 @@
                     this.$emit('emitanalighter');
                 } else if (tool === 'notestool') {
                     this.$emit('emitnotes');
-                } else if (tool === 'researchtool') {
-                    this.$emit('emitresearch');
                 }
                 this.tool = tool;
             },

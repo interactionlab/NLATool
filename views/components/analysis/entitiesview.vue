@@ -209,7 +209,7 @@
                         let found = false;
                         for(let i = 0; i < this[semClass].length; i++)
                         {
-                            if (this[semClass][i].result["@id"] == data.result["@id"]){
+                            if (this[semClass][i].result["@id"] === data.result["@id"]){
                                 found = true;
                                 for (let k = 0; k < sourcequery.source.length; k++){
                                     this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
@@ -221,7 +221,7 @@
                                 //console.log(JSON.stringify(this[semClass][i]));
                             }
                         }
-                        if (found == false){
+                        if (found === false){
                             data["sourcequery"] = sourcequery;
                             this[semClass].push(data);
                         }
