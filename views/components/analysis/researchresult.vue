@@ -110,7 +110,7 @@
                     this.localcontentcontrol.map = false;
                     this.localcontentcontrol.information = false;
                 }
-                console.log('Clicked on result: ' + JSON.stringify(this.localcontentcontrol));
+                //console.log('Clicked on result: ' + JSON.stringify(this.localcontentcontrol));
 
             },
             mouseout: function () {
@@ -157,7 +157,7 @@
             contentcontrol: {
                 handler: function (newControl) {
                     this.localcontentcontrol = JSON.parse(JSON.stringify(newControl));
-                    console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
+                    //console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
                 },
                 deep: true
             }
