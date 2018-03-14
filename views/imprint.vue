@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
         <component is="mainheader"
                    v-bind:serverip="serverip"
                    v-bind:title="title"
@@ -66,11 +66,8 @@
     import mainheader from './components/global/mainheader.vue';
 
     export default {
-        name: "imprint",
-        data:function () {
-            return{
-
-            }
+        data: function () {
+            return {}
         },
         components: {
             mainheader,
