@@ -138,6 +138,7 @@
                 }
             },
             editResearch: function () {
+
             }
         },
         components: {
@@ -165,7 +166,7 @@
                     researchdatahover: this.hover
                 };
                 if (this.wordtomarkonhoverdata != null
-                    && this.wordtomarkonhoverdata.wordtomarkonhover != undefined
+                    && this.wordtomarkonhoverdata.wordtomarkonhover !== undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
                     && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
                     htmlclass[this.semclass + "_BORDERED_strong"] = true;

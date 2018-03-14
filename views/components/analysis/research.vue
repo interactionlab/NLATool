@@ -2,7 +2,7 @@
     <div>
         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle(selectedtext)"
+            <input v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
                    v-model="selectedtext"
                    class="mdl-textfield__input"/>
         </div>
@@ -66,6 +66,7 @@
                 keywords: this.keywords,
                 mapcoordinates: [],
                 sourceQuery: '',
+                researchlimit: 10,
             }
         },
         methods: {
@@ -117,12 +118,12 @@
                 //console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
             },
-            searchGoogle: function (query) {
+            searchGoogle: function (query, limit) {
 
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
                     'query': query,
-                    'limit': 10,
+                    'limit': limit,
                     'indent': true,
                     'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
                 };
