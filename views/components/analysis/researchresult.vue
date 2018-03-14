@@ -111,7 +111,6 @@
                     this.localcontentcontrol.information = false;
                 }
                 //console.log('Clicked on result: ' + JSON.stringify(this.localcontentcontrol));
-
             },
             mouseout: function () {
                 this.hover = false;
