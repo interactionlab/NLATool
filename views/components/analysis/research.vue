@@ -68,6 +68,7 @@
                 mapcoordinates: [],
                 sourceQuery: '',
                 researchlimit: 10,
+                researchedtokens: []
             }
         },
         methods: {
@@ -115,10 +116,6 @@
                 }
                 return items;
             },
-            switchresearchselected: function () {
-                //console.log('Show the Selection: ' + this.resultselected)
-                this.resultselected = !this.resultselected
-            },
             searchGoogle: function (query, limit) {
 
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
@@ -134,8 +131,24 @@
                         //this.rerankWithKeywords(response);
                         //this.getMapCoordinates();
                         let data = response.itemListElement;
-                        for (let i = 0; i < data.length; i++) {
-                            data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                        if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
+                            for (let i = 0; i < data.length; i++) {
+                                data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                            }
+                        } else {
+                            let wordids = [];
+                            for (let i = 0; i < this.researchedtokens; i++) {
+                                wordids.push(this.researchedtokens[i].wordID);
+                            }
+                            let sourcequery = {
+                                freq: 1,
+                                querys: [this.selectedtext],
+                                source: this.researchedtokens,
+                                wordids: wordids
+                            };
+                            for (let i = 0; i < data.length; i++) {
+                                data[i]["sourcequery"] = sourcequery;
+                            }
                         }
                         this.researchresults = [];
                         this.researchresults.push(data);
@@ -168,7 +181,9 @@
                         this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
                         //console.log('Keywords: ' + JSON.stringify(this.keywords));
                         this.resultselected = false;
-                        this.selectedtext = this.generateText(this.gettokensofselectedtext(this.tokens, newSelectedIndexes));
+                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newSelectedIndexes)
+                        this.selectedtext = this.generateText(this.researchedtokens);
+                        console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext);
                     }
                 },

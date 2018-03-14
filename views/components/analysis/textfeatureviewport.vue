@@ -49,6 +49,7 @@
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:entercorrectionmode="entercorrectionmode($event)"
                             v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
                             v-on:starthover="starthover($event)">
@@ -91,6 +92,9 @@
         },
         computed: {},
         methods: {
+            entercorrectionmode:function(mode){
+                this.$emit('entercorrectionmode', mode);
+            },
             nexttoken: function (index) {
                 if (this.tokens[index + 1] === undefined) {
                     return null;
