@@ -37,21 +37,49 @@
             <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most
                 likely ones not to be classified. </p>
         </div>
-
+        <component is="research"
+                   class="mdl-cell mdl-cell--12-col"
+                   v-bind:serverip="serverip"
+                   v-bind:researchdatatoedit="researchdatatoedit"
+                   v-bind:tokens="tokens"
+                   v-bind:tokenstoshow="tokenstoshow"
+                   v-bind:docid="docid"
+                   v-bind:contentcontrol="contentcontrol"
+                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-bind:selectedchain="selectedchain">
+        </component>
 
     </div>
 
 </template>
 <script>
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
-
+    import research from './components/analysis/research.vue';
     export default {
         mixins: [getselectedtext],
         props: {
-            serverip: { type: String, default: "" },
-            tokens: { type: Array, default: function () { return [] }},
-            selectedindexes: { type: Object, default: null },
-            docid: { type: Number, default: -1 },
+            serverip: {type: String, default: ""},
+            tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            researchdatatoedit: {type: Object, default: null},
+            contentcontrol: {type: Object, default: null},
+            selectedindexes: {type: Object, default: null},
+            docid: {type: Number, default: -1},
+            selectedchain: {type: Number, default: -1},
         },
         data: function () {
             return {
@@ -90,6 +118,9 @@
                 this.suggestions = !this.suggestions;
                 this.$emit('toggleSuggestions', this.suggestions);
             }
+        },
+        components:{
+            research,
         }
     }
 </script>

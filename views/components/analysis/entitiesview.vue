@@ -1,25 +1,5 @@
 <template>
     <div>
-        <!--TODO after one open close period the button changed font-size and make distance between icon and button smaller-->
-        <div ref="myNav" class="overlay">
-            <a class="closebtn"
-               v-on:click="closeNav()">&times;</a>
-            <div class="overlay-content mdl-grid">
-                <div class="mdl-cell mdl-cell--6-col"></div>
-                <component is="research"
-                           class="mdl-cell mdl-cell--6-col"
-                           v-bind:serverip="serverip"
-                           v-bind:researchdatatoedit="researchdatatoedit"
-                           v-bind:tokens="tokens"
-                           v-bind:tokenstoshow="tokenstoshow"
-                           v-bind:docid="docid"
-                           v-bind:contentcontrol="contentcontrol"
-                           v-bind:selectedindexes="selectedindexes"
-                           v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                           v-bind:selectedchain="selectedchain">
-                </component>
-            </div>
-        </div>
         <div class="semClassFormate PERSON"
              ref="personresultsparent"
              v-on:click="togglesemanticlass('PERSON')">
@@ -139,7 +119,6 @@
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
-    import research from './components/analysis/research.vue';
 
     export default {
         mixins: [filtertokenwithclass],
@@ -161,12 +140,12 @@
                 }
             },
             docid: {type: Number, default: -1},
-            selectedchain: { type: Number, default: -1 },
+            selectedchain: {type: Number, default: -1},
             columnindex: {type: Number, default: 0},
             classestomark: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             hoverdata: {type: Object, default: null},
-            selectedindexes: { type: Object, default: null },
+            selectedindexes: {type: Object, default: null},
 
         },
         data: function () {
@@ -177,19 +156,11 @@
                 MISC: [],
                 researchresults: [],
                 sourcequery: [],
-                researchdatatoedit: {}
             }
         },
         methods: {
-            closeNav() {
-                this.$refs.myNav.style.width = "0%";
-            },
-            openNav() {
-                this.$refs.myNav.style.width = "100%";
-            },
             editresearch: function (researchData) {
-                this.researchdatatoedit = researchData;
-                this.openNav();
+                this.$emit('editresearch', researchData);
             },
             starthover: function (event) {
                 this.$emit('starthover', event);
@@ -412,7 +383,6 @@
         },
         components: {
             researchresult,
-            research,
         }
     }
 </script>

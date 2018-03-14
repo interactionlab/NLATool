@@ -12,9 +12,11 @@
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:hoverdata="hoverdata"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-bind:researchdatatoedit="researchdatatoedit"
                    v-on:togglesemanticlass="togglesemanticlass($event)"
                    v-on:endhover="endhover($event)"
-                   v-on:starthover="starthover($event)">
+                   v-on:starthover="starthover($event)"
+                   v-on:editresearch="editresearch($event)">
 
         </component>
     </div>
@@ -28,33 +30,55 @@
     export default {
 
         props: {
-            serverip: { type: String, default: "" },
-            showmode: { type: String, default: "" },
-            selectedindexes: { type: Object, default: null },
-            contentcontrol: { type: Object, default: null },
-            hoverdata: { type: Object, default: null},
-            classestomark: { type: Object, default: null },
-            docid: { type: Number, default: -1 },
-            columnindex: { type: Number, default: 0 },
-            selectedchain: { type: Number, default: -1 },
-            tokens: { type: Array, default: function () { return [] }},
-            tokenstoshow: { type: Array, default: function () { return [] }},
-            wordtomarkonhoverdata: { type: Array, default: function () { return [] }},
+            serverip: {type: String, default: ""},
+            showmode: {type: String, default: ""},
+            selectedindexes: {type: Object, default: null},
+            contentcontrol: {type: Object, default: null},
+            hoverdata: {type: Object, default: null},
+            classestomark: {type: Object, default: null},
+            docid: {type: Number, default: -1},
+            columnindex: {type: Number, default: 0},
+            selectedchain: {type: Number, default: -1},
+            tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            wordtomarkonhoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
         },
         data: function () {
             return {
+                researchdatatoedit: {}
             }
         },
         methods: {
-            togglesemanticlass:function (newClassesToMark) {
-                this.$emit('togglesemanticlass',newClassesToMark);
+            togglesemanticlass: function (newClassesToMark) {
+                this.$emit('togglesemanticlass', newClassesToMark);
             },
-            endhover:function (event) {
-                this.$emit('endhover',event);
+            endhover: function (event) {
+                this.$emit('endhover', event);
             },
-            starthover:function (textIndex) {
+            starthover: function (textIndex) {
                 this.$emit('starthover', textIndex);
             },
+            editresearch: function (researchData){
+                //emit for a button on toolbar. To Delete if button on toolbar not needed.
+                this.$emit('entercorrectionmode', true);
+                this.showmode = 'correction';
+                this.researchdatatoedit = researchData;
+            },
+            selectedresearch:function (researchData) {
+                this.showmode = 'entitiesview';
+            }
         },
         components: {
             nerVue,
