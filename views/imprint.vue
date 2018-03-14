@@ -25,8 +25,8 @@
             <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor
                 einer Verbraucherschlichtungsstelle teilzunehmen.</p>
             <h2>Haftung f&uuml;r Inhalte</h2>
-            <p>Als
-                Diensteanbieter sind wir gem&auml;&szlig; &sect; 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen Seiten
+            <p>Als Diensteanbieter sind wir gem&auml;&szlig; &sect; 7 Abs.1 TMG f&uuml;r eigene Inhalte auf diesen
+                Seiten
                 nach den allgemeinen Gesetzen verantwortlich. Nach &sect;&sect; 8 bis 10 TMG sind wir als
                 Diensteanbieter jedoch nicht verpflichtet, &uuml;bermittelte oder gespeicherte fremde Informationen zu
                 &uuml;berwachen oder nach Umst&auml;nden zu forschen, die auf eine rechtswidrige T&auml;tigkeit
