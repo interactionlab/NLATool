@@ -85,22 +85,19 @@
             return {
 
                 showNewClasses: false,
-                selectedtokens: [],
+
                 index: 0,
                 suggestions: false
             }
 
         },
         watch: {
-            selectedindexes: {
-                handler: function (newselectedindexes) {
-                    this.selectedtokens =
-                        this.gettokensofselectedtext(this.tokens, newselectedindexes);
-                },
-                deep: true
-            }
+
         },
         computed: {
+            selectedtokens:function () {
+                 return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
+            },
             semclassofselected: function () {
                 let tokenClass = {};
                 tokenClass[this.selectedtokens[0].semanticClass] = true;

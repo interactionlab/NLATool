@@ -11,6 +11,10 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                    v-on:click="addresearch">
+                <i class="material-icons">add_circle</i>
+            </button>
         </div>
         <component is="researchresult"
                    ref="personresults"
@@ -40,6 +44,10 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                    v-on:click="addresearch">
+                <i class="material-icons">add_circle</i>
+            </button>
         </div>
         <component is="researchresult"
                    ref="locationresults"
@@ -68,6 +76,10 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                    v-on:click="addresearch">
+                <i class="material-icons">add_circle</i>
+            </button>
         </div>
         <component is="researchresult"
                    ref="organisazionresults"
@@ -95,6 +107,10 @@
             </button>
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
+            </button>
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                    v-on:click="addresearch">
+                <i class="material-icons">add_circle</i>
             </button>
         </div>
         <component is="researchresult"
@@ -159,6 +175,9 @@
             }
         },
         methods: {
+            addresearch:function () {
+                this.$emit('editresearch');
+            },
             editresearch: function (researchData) {
                 this.$emit('editresearch', researchData);
             },
