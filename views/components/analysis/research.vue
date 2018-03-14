@@ -12,20 +12,18 @@
                 <div class="mdl-cell mdl-cell--12-col" id="resultfield">
                     <component is="researchresult"
                                ref="personresults"
-                               v-for="(researchresult,index) in researchresults"
+                               v-for="(researchresult,index) in researchresults[0]"
                                v-bind:serverip="serverip"
                                v-bind:researchdata="researchresult"
                                v-bind:key="index"
                                v-bind:index="index"
                                v-bind:mapkey="index"
                                v-bind:docid="docid"
-                               v-bind:showallon="true"
-                               v-bind:semclass="'PERSON'"
+                               v-bind:viewing="false"
                                v-bind:contentcontrol="contentcontrol.PERSONS"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:starthover="starthover($event)"
-                               v-on:saveresult="saveResult($event)"
-                               v-on:editresearch="editresearch($event)">
+                               v-on:saveresult="saveResult($event)">
                     </component>
                 </div>
             </form>
@@ -42,11 +40,16 @@
 
         mixins: [getselectedtext, filtertoken],
         props: {
-            serverip: { type: String, default: "" },
+            serverip: {type: String, default: ""},
             selectedindexes: {type: Object, default: null},
-            researchdatatoedit:{type: Object, default: null},
+            researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            wordtomarkonhoverdata: {
                 type: Array, default: function () {
                     return []
                 }
@@ -56,7 +59,7 @@
         },
         data: function () {
             return {
-                researchresults: [''],
+                researchresults: [],
                 selectedtext: '',
                 resultselected: false,
                 selectedresult: {},
@@ -116,7 +119,7 @@
                 //console.log('Show the Selection: ' + this.resultselected)
                 this.resultselected = !this.resultselected
             },
-            searchGoogle: function (query, limit,sourcequery) {
+            searchGoogle: function (query, limit) {
 
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let params = {
@@ -127,43 +130,17 @@
                 };
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
-                    //console.log('Response for Research: ' + JSON.stringify(response));
-                    //this.rerankWithKeywords(response);
-                    //this.getMapCoordinates();
-                    this.researchresults = response.itemListElement;
-                    let data = response.itemListElement;
-                    let found = false;
-                    /*
-                    for (let i = 0; i < this[semClass].length; i++) {
-                        if (this[semClass][i].result["@id"] === data.result["@id"]) {
-                            found = true;
-                            for (let k = 0; k < sourcequery.source.length; k++) {
-                                this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
-                            }
-                            this[semClass][i].sourcequery.wordids.sort();
-                            this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
-                            this[semClass][i].sourcequery.freq += sourcequery.freq;
-                            this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
-                            //console.log(JSON.stringify(this[semClass][i]));
+                        //console.log('Response for Research: ' + JSON.stringify(response));
+                        //this.rerankWithKeywords(response);
+                        //this.getMapCoordinates();
+                        let data = response.itemListElement;
+                        for (let i = 0; i < data.length; i++) {
+                            data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
                         }
-                    }*/
-                    if (found === false) {
-                        data["sourcequery"] = sourcequery;
-                        this[semClass].push(data);
+                        this.researchresults = [];
+                        this.researchresults.push(data);
                     }
-                    //console.log('Results: ' + JSON.stringify(this.researchresults));
-
-                });
-            },
-            makeCORSSecureRequest: function (url, success) {
-                let connectionParams = {
-                    type: 'GET',
-                    url: url,
-                    success: success,
-                    dataType: 'JSON',
-                };
-                let sth = new XMLHttpRequest();
-                return $.ajax(connectionParams);
+                );
             },
             saveResult: function (index) {
                 //TODO: make new variable that has the meaning of selectedIndex if there are multiple results.
@@ -172,21 +149,19 @@
                 //console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
                 this.selectedresult = this.researchresults[index];
             },
-            getMapCoordinates: function () {
-                let service_url = 'https://www.gps-coordinates.net/api/';
-
-                for (let i = 0; i < this.researchresults.length; i++) {
-                    service_url = service_url + this.researchresults[i].name;
-                    xhttp.open("GET", service_url, true);
-                    xhttp.send();
-                    xhttp.responseText;
-                    console.log("Get MapURL respinse: " + xhttp.responseText);
-                    this.mapcoordinates.push({x: response.latitude, y: response.longitude});
-                }
-            }
+            starthover: function (event) {
+                //this.$emit('starthover', event);
+            },
         },
         computed: {},
         watch: {
+            researchdatatoedit: {
+                handler: function (newData) {
+                    this.selectedtext = newData.sourcequery.querys[0];
+                    console.log('Looking for more Info about: ' + this.selectedtext);
+                    this.searchGoogle(this.selectedtext, 10);
+                }, deep: true
+            },
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {

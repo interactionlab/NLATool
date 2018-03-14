@@ -17,8 +17,14 @@
                                 </div>
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                                        v-if="viewing"
                                         v-on:click="editResearch">
                                     <i class="material-icons">edit</i>
+                                </button>
+                                <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                                        v-else
+                                        v-on:click="selectResearch">
+                                    <i class="material-icons">check</i>
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-on:click="showSource">
@@ -76,6 +82,7 @@
                     return []
                 }
             },
+            viewing: {type: Boolean, default: true}
         },
         data: function () {
             return {
@@ -85,7 +92,8 @@
                     map: true,
                     information: true,
                     test: false
-                }
+                },
+
             }
         },
         methods: {
@@ -93,7 +101,7 @@
                 this.$emit('showallresults');
             },
             showdetail: function () {
-                if(!this.localcontentcontrol.img && !this.localcontentcontrol.map && !this.localcontentcontrol.information){
+                if (!this.localcontentcontrol.img && !this.localcontentcontrol.map && !this.localcontentcontrol.information) {
                     this.localcontentcontrol.img = true;
                     this.localcontentcontrol.map = true;
                     this.localcontentcontrol.information = true;
@@ -116,13 +124,15 @@
                     offsetstart: null,
                     offsetend: this.$el.getBoundingClientRect(),
                     startword: null,
-                    semanticClass: this.semclass,
+                    semanticClass: this.researchdata.sourcequery.source[0].semanticClass,
                     startresearch: undefined,
                     wordtomarkonhover: this.researchdata.sourcequery.wordids,
                 };
                 this.$emit('starthover', hoverdata);
             },
+            selectResearch: function () {
 
+            },
             saveResult: function () {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.index, this.researchdata, this.docid);
@@ -138,7 +148,7 @@
                 }
             },
             editResearch: function () {
-                this.$emit('editresearch',this.researchdata);
+                this.$emit('editresearch', this.researchdata);
             }
         },
         components: {
@@ -147,17 +157,17 @@
         watch: {
             contentcontrol: {
                 handler: function (newControl) {
-                   this.localcontentcontrol = JSON.parse(JSON.stringify(newControl));
-                   console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
+                    this.localcontentcontrol = JSON.parse(JSON.stringify(newControl));
+                    console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
                 },
                 deep: true
             }
         },
         computed: {
-            ifShowMap:function () {
+            ifShowMap: function () {
                 if (this.researchdata.sourcequery.source[0].semanticClass !== 'PERSON') {
                     return this.localcontentcontrol.map;
-                } else{
+                } else {
                     return false;
                 }
             },
@@ -169,11 +179,11 @@
                     && this.wordtomarkonhoverdata.wordtomarkonhover !== undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
                     && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
-                    htmlclass[this.semclass + "_BORDERED_strong"] = true;
-                    htmlclass[this.semclass + "_BORDERED"] = false;
+                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED_strong"] = true;
+                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED"] = false;
                 } else {
-                    htmlclass[this.semclass + "_BORDERED_strong"] = false;
-                    htmlclass[this.semclass + "_BORDERED"] = true;
+                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED_strong"] = false;
+                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED"] = true;
                 }
 
                 return htmlclass;
