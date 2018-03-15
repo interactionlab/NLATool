@@ -96,22 +96,22 @@ io.on('connection', function (socket) {
             // wait.for(dbStub.makeSQLRequest(dbAction.createInsertCommand('notes',)));
         });
     });
-    socket.on('saveresult', function (index, researchresult, docID) {
+    socket.on('saveresult', function (docID, indexes, researchresultID,) {
         //console.log('saved Result: ');
-        wait.launchFiber(saveResult, index, researchresult, docID);
+        wait.launchFiber(saveResult, docID, indexes, researchresultID,);
     });
     socket.on('changeClass', function (tokenToEdit, docID) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
 
-    socket.on('getMoreText', function(docID, endIndex, pagesize){
-        wait.launchFiber(getMoreTextResponse,socket, {docID:docID, endIndex:endIndex, pagesize: pagesize});
+    socket.on('getMoreText', function (docID, endIndex, pagesize) {
+        wait.launchFiber(getMoreTextResponse, socket, {docID: docID, endIndex: endIndex, pagesize: pagesize});
     });
 });
 
-function getMoreTextResponse(socket, input){
+function getMoreTextResponse(socket, input) {
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
-    console.log(Tag +  ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
+    console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
     socket.emit('sendMoreText', tokens);
 }
 
@@ -127,37 +127,17 @@ function updateTitle(docID, newTitle) {
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
 }
 
-function saveResult(index, researchresult, docID) {
-    index = stringifyForDB(index);
+function saveResult(docID, indexes, researchresultID,) {
     docID = stringifyForDB(docID);
-    try {
-        if (typeof researchresult.result.image.contentUrl !== 'undefined') {
-            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-                dbAction.createInsertCommand('searchResults',
-                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
-                    [
-                        stringifyForDB(researchresult.result.image.contentUrl),
-                        stringifyForDB(researchresult.result.description.articleBody),
-                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
-                        docID
-                    ],
-                    null, null)));
-        }
-        else {
-            let selectresult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-                dbAction.createInsertCommand('searchResults',
-                    ['imageUrl', 'shortdescription', 'longdescription', 'docID'],
-                    [
-                        stringifyForDB(researchresult.result.image.contentUrl),
-                        stringifyForDB(researchresult.result.description.articleBody),
-                        stringifyForDB(researchresult.result.detailedDescription.articleBody),
-                        docID
-                    ],
-                    null, null)));
-        }
-    } catch (error) {
-        console.log('Could not save a quick Research Result because missing data: ' + error);
-    }
+    researchresultID = stringifyForDB(researchresultID);
+    let updateResult = wait.for(dbStub.makeSQLRequest,
+        dbAction.createUpdateCommand('textmap',
+            ['knowledgeGraphID'],
+            [researchresultID],
+            ['docID', 'textIndex', 'textIndex'],
+            [docID, stringifyForDB(indexes.start), stringifyForDB(indexes.end)],
+            ['=', '>=', '<']));
+    console.log(Tag + 'updated Word with a research Result: ' + updateResult);
 }
 
 /**
@@ -247,7 +227,7 @@ function getAndShowText(req, res) {
         let docID = req.session.docID;
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
-        vueData.vueTokens = selectWithInnerJoin(docID,0,30);
+        vueData.vueTokens = selectWithInnerJoin(docID, 0, 30);
 
         //getTextFromDB(docID);
         //console.log(textDB.tokens);
@@ -369,7 +349,7 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
-    let corefs = getCorefs(docID,start, amount);
+    let corefs = getCorefs(docID, start, amount);
     for (let i = 0; i < tokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
             //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);

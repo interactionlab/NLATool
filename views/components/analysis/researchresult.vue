@@ -23,7 +23,7 @@
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-else
-                                        v-on:click="selectResearch">
+                                        v-on:click="saveResult">
                                     <i class="material-icons">check</i>
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
@@ -128,13 +128,9 @@
                 };
                 this.$emit('starthover', hoverdata);
             },
-            selectResearch: function () {
-
-            },
             saveResult: function () {
-                let socket = io(this.serverip + ':8080');
-                socket.emit('saveresult', this.index, this.researchdata, this.docid);
-                this.$emit('saveresult', this.index);
+                this.$emit('saveresult', this.researchdata);
+                console.log('Save research Changes.'+ JSON.stringify(this.researchdata.result['@id']));
             },
             showSource: function () {
                 try {

@@ -38,8 +38,7 @@
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
                         v-on:changemarkermode="changeMarkerMode($event)"
-                        v-on:changenotemode="changeNoteMode($event)"
-                        v-on:entercorrectionmode="entercorrectionmode($event)">
+                        v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
             <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative" >
@@ -82,7 +81,8 @@
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:togglesemanticlass="changeMarkerMode($event)"
                                v-on:starthover="starthover($event)"
-                               v-on:endhover="endhover($event)">
+                               v-on:endhover="endhover($event)"
+                               v-on:entercorrectionmode="entercorrectionmode($event)">
                     </component>
                 </div>
             </div>
@@ -223,8 +223,10 @@
             },
             entercorrectionmode: function (correctionMode) {
                 if (correctionMode === true) {
+                    this.classesToMark.POS = correctionMode;
                     this.showMode = 'correction';
                 } else {
+                    this.classesToMark.POS = correctionMode;
                     this.showMode = 'entitiesview';
                 }
             },

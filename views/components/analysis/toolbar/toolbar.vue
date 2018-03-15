@@ -40,11 +40,6 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">Coreference</small>
                     </button>
-                    <button class="mdl-button mdl-js-button"
-                            v-on:click="setCorrectionMode()"
-                            v-bind:class="{POS: classestomark.POS}">
-                        <small class="mdc-button">Correction</small>
-                    </button>
                 </div>
 
                 <div class="mdl-tabs__panel " id="research-panel">
