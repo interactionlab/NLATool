@@ -47,7 +47,8 @@
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                   v-bind:selectedchain="selectedchain">
+                   v-bind:selectedchain="selectedchain"
+                   v-on:saveresult="saveresult($event)">
         </component>
 
     </div>
@@ -56,6 +57,7 @@
 <script>
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     import research from './components/analysis/research.vue';
+
     export default {
         mixins: [getselectedtext],
         props: {
@@ -91,12 +93,10 @@
             }
 
         },
-        watch: {
-
-        },
+        watch: {},
         computed: {
-            selectedtokens:function () {
-                 return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
+            selectedtokens: function () {
+                return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
             },
             semclassofselected: function () {
                 let tokenClass = {};
@@ -105,6 +105,9 @@
             }
         },
         methods: {
+            saveresult:function (researchdata) {
+                this.$emit('selectresearch', researchdata);
+            },
             changeClass: function (newClass) {
                 //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
                 this.selectedtokens[0].semanticClass = newClass;
@@ -116,7 +119,7 @@
                 this.$emit('toggleSuggestions', this.suggestions);
             }
         },
-        components:{
+        components: {
             research,
         }
     }

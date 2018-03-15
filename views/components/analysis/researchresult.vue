@@ -130,7 +130,7 @@
             },
             saveResult: function () {
                 this.$emit('saveresult', this.researchdata);
-                console.log('Save research Changes.'+ JSON.stringify(this.researchdata.result['@id']));
+                console.log('Save research Changes.'+ JSON.stringify(this.researchdata));
             },
             showSource: function () {
                 try {
@@ -142,6 +142,7 @@
                 }
             },
             editResearch: function () {
+                console.log('clicked edit Research');
                 this.$emit('editresearch', this.researchdata);
             }
         },
