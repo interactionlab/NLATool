@@ -37,7 +37,7 @@
                         v-bind:style="{left: columnsizetoolbarpos+ '%'}"
                         v-on:emitanalighter="getAnalighter"
                         v-on:emitnotes="getNotes"
-                        v-on:changemarkermode="changeMarkerMode($event)"
+                        v-on:updateclassestomark="updateclassestomark($event)"
                         v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
@@ -78,7 +78,6 @@
                                v-on:startselection="selectText($event,0)"
                                v-on:endselection="selectText($event,1)"
                                v-on:jumpmarktext="selectText2($event)"
-                               v-on:togglesemanticlass="changeMarkerMode($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
                                v-on:updateclassestomark="updateclassestomark($event)">
@@ -130,7 +129,8 @@
                     LOCATION: false,
                     ORGANIZATION: false,
                     MISC: false,
-                    POS: false
+                    POS: false,
+                    OTHER: false,
                 },
                 selectedtextindexes: {
                     start: -1,
@@ -182,6 +182,11 @@
                         img: true,
                         map: true,
                         information: true
+                    },
+                    OTHERS:{
+                        img: true,
+                        map: true,
+                        information: true
                     }
                 }
             }
@@ -195,6 +200,7 @@
                 this.contentcontrol.LOCATIONS[toToggle] = !this.contentcontrol.LOCATIONS[toToggle];
                 this.contentcontrol.ORGANIZATIONS[toToggle] = !this.contentcontrol.ORGANIZATIONS[toToggle];
                 this.contentcontrol.MISCS[toToggle] = !this.contentcontrol.MISCS[toToggle];
+                this.contentcontrol.OTHERS[toToggle] = !this.contentcontrol.OTHERS[toToggle];
                 this.contentcontrol.PERSONS['map'] = false;
             },
             setTokens: function (newTokens) {
