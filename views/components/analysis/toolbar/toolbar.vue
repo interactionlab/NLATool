@@ -100,11 +100,8 @@
             },
 
             allButton: function () {
-
                 if (this.allActive === false) {
-
                     this.allActive = true;
-
                     if (this.classestomark.PERSON === false) {
                         this.changeMarkerMode('PERSON');
                     }
@@ -117,11 +114,14 @@
                     if (this.classestomark.MISC === false) {
                         this.changeMarkerMode('MISC');
                     }
-
+                    if (this.classestomark.OTHER === false) {
+                        this.changeMarkerMode('OTHER');
+                    }
                     this.classestomark.PERSON = true;
                     this.classestomark.LOCATION = true;
                     this.classestomark.ORGANIZATION = true;
                     this.classestomark.MISC = true;
+                    this.classestomark.OTHER = true;
                 } else {
                     this.changeMarkerMode('PERSON');
                     this.classestomark.PERSON = false;
@@ -131,22 +131,21 @@
                     this.classestomark.ORGANIZATION = false;
                     this.changeMarkerMode('MISC');
                     this.classestomark.MISC = false;
-
+                    this.changeMarkerMode('OTHER');
+                    this.classestomark.OTHER = false;
                     this.allActive = false;
                 }
             },
-
             changeMarkerMode: function (mode) {
                 this.classestomark[mode] = !this.classestomark[mode];
-                this.$emit('changemarkermode', this.classestomark);
+                this.$emit('updateclassestomark', this.classestomark);
             },
-
             setCorrectionMode: function () {
                 //TODO: proper check if on or off, when word is selected
                 this.correctionMode = !this.correctionMode;
                 this.classestomark.POS = !this.classestomark.POS;
                 this.$emit('entercorrectionmode', this.correctionMode);
-                this.$emit('changemarkermode', this.classestomark);
+                this.$emit('updateclassestomark', this.classestomark);
             },
             toggleNoteMode: function () {
                 this.noteModes.wordnote = !this.noteModes.wordnote;

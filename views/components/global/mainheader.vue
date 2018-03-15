@@ -126,7 +126,7 @@
         },
         watch: {
             autochecked: function (autochecked){
-                if (autochecked == true){
+                if (autochecked === true){
                     this.$emit('newcolumnnumber', 0);
                 } else {
                     this.$emit('newcolumnnumber', this.numberofcolumns);

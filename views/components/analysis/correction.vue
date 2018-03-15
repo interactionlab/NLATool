@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-if="selectedtokens.length !== 0" class="mdl-grid">
-            <p class="mdl-cell mdl-cell--4-col" v-bind:class="semclassofselected">{{selectedtokens[0].content}}</p>
-            <p class="mdl-cell mdl-cell--6-col">Current Class: {{selectedtokens[0].semanticClass}}</p>
+        <div v-if="changing" class="mdl-grid">
+            <p class="mdl-cell mdl-cell--4-col" v-bind:class="currentClass">{{contentToChange}}</p>
+            <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
             <div>
                 <p class="mdl-cell mdl-cell--6-col">Make a selection: </p>
                 <button v-bind:class="{PERSON: true}"
@@ -32,7 +32,7 @@
                 </button>
             </div>
         </div>
-        <div v-if="selectedtokens.length === 0" class="mdl-grid">
+        <div v-else class="mdl-grid">
             <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. </p>
             <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most
                 likely ones not to be classified. </p>
@@ -85,9 +85,7 @@
         },
         data: function () {
             return {
-
                 showNewClasses: false,
-
                 index: 0,
                 suggestions: false
             }
@@ -96,23 +94,55 @@
         watch: {},
         computed: {
             selectedtokens: function () {
+                if(this.selectedindexes.start > -1 && this.selectedindexes.end > -1){
+                    this.researchdatatoedit = null;
+                }
                 return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
             },
             semclassofselected: function () {
-                let tokenClass = {};
-                tokenClass[this.selectedtokens[0].semanticClass] = true;
-                return tokenClass;
+                // let tokenClass = {};
+                // tokenClass[this.selectedtokens[0].semanticClass] = true;
+                // return tokenClass;
+            },
+            changing:function () {
+                let toChange = this.selectedtokens.length > 0 || this.researchdatatoedit !== null;
+                console.log('Changing: ' + toChange);
+                return toChange;
+            },
+            contentToChange:function () {
+                if(this.changing){
+                    if(this.selectedtokens.length > 0){
+                        let content = '';
+                        for(let i = 0; i < this.selectedtokens.length; i++){
+                            content = content + ' ' + this.selectedtokens[i].content;
+                        }
+                        return content;
+                    } else{
+                        return this.researchdatatoedit.sourcequery.querys[0];
+                    }
+                }
+            },
+            currentClass:function () {
+                if(this.changing){
+                    if(this.selectedtokens.length === 1){
+                        return this.selectedtokens[0].semanticClass;
+                    } else if(this.researchdatatoedit !== null){
+                        return this.researchdatatoedit.sourcequery.source[0].semanticClass;
+                    } else {
+                        return 'To many words with different semantic classes.'
+                    }
+                }
             }
         },
         methods: {
-            saveresult:function (researchdata) {
+            saveresult: function (researchdata) {
                 this.$emit('selectresearch', researchdata);
             },
             changeClass: function (newClass) {
                 //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
-                this.selectedtokens[0].semanticClass = newClass;
-                let socket = io(this.serverip + ':8080');
-                socket.emit('changeClass', this.selectedtokens[0], this.docid);
+                // this.selectedtokens[0].semanticClass = newClass;
+                // let socket = io(this.serverip + ':8080');
+                // socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;
