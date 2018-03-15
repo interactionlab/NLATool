@@ -221,6 +221,61 @@
             starthover: function (event) {
                 this.$emit('starthover', event);
             },
+            initializeEntitiesView: function () {
+                let researchedtokens = [];
+                let tempsourcequery = {};
+                let researchedentities = [];
+                let lastersearchedtoken = -1;
+                for (let i = 0; i < this.tokenstoshow.length; i++) {
+                    console.log('Checkpoint 0'+ JSON.stringify(this.tokenstoshow[i]));
+                    if (this.tokenstoshow[i].knowledgeGraphID !== 0
+                        && this.tokenstoshow[i].knowledgeGraphID !== '0'
+                        && this.tokenstoshow[i].knowledgeGraphID !== 'null'
+                        && this.tokenstoshow[i].knowledgeGraphID !== null) {
+                        researchedtokens.push(this.tokenstoshow[i]);
+                        //console.log('Checkpoint 1' + JSON.stringify(researchedtokens[i]));
+                        lastersearchedtoken = researchedtokens.length - 1;
+                        if (researchedentities.length === 0) {
+                            tempsourcequery = {
+                                freq: 1,
+                                wordids: [researchedtokens[lastersearchedtoken].wordID],
+                                querys: [researchedtokens[lastersearchedtoken].content],
+                                source: [researchedtokens[lastersearchedtoken]]
+                            };
+                            researchedentities.push(tempsourcequery);
+                            tempsourcequery = {};
+                        }
+                        for (let j = 0; j < researchedentities.length; j++) {
+                            //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
+                            console.log('Checkpoint 2.0'
+                                + researchedtokens[lastersearchedtoken] + ' =? ' + researchedentities[j]
+                                + researchedtokens[lastersearchedtoken] + '+1 =?' + researchedentities[j]);
+                            // console.log('Checkpoint 2.1'
+                            //     + researchedtokens[lastersearchedtoken].knowledgeGraphID + ' =? ' + researchedentities[j].knowledgeGraphID
+                            //     + researchedtokens[lastersearchedtoken].textIndex + '+1 =?' + researchedentities[j].textIndex);
+                            if (researchedtokens[lastersearchedtoken].knowledgeGraphID !== researchedentities[j].knowledgeGraphID
+                                || researchedtokens[lastersearchedtoken].textIndex + 1 !== researchedentities[j].textIndex) {
+                                tempsourcequery = {
+                                    freq: 1,
+                                    wordids: [researchedtokens[lastersearchedtoken].wordID],
+                                    querys: [researchedtokens[lastersearchedtoken].content],
+                                    source: [researchedtokens[lastersearchedtoken]]
+                                };
+                                researchedentities.push(tempsourcequery);
+                                tempsourcequery = {};
+                            } else {
+                                researchedentities[j].freq++;
+                                researchedentities[j].source.push(researchedtokens[lastersearchedtoken]);
+                                researchedentities[j].wordids.push(researchedtokens[lastersearchedtoken].wordID);
+                                researchedentities[j].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
+                            }
+
+                        }
+                    }
+                }
+                console.log('Checkpoint 3' + JSON.stringify(researchedentities));
+                this.searchGoogleWithResearchedEntities(researchedentities);
+            },
             researchTokensOfClass: function (semClass, index) {
                 this[semClass] = [];
                 let query = '';
@@ -256,6 +311,38 @@
                     query = '';
                     frequency = 0;
                 }
+            },
+            searchGoogleWithResearchedEntities: function (researchedentities) {
+                console.log('Checkpoint 4 ' + JSON.stringify(researchedentities));
+                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
+                let requestParams = {
+                    'indent': true,
+                    'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
+                };
+                for (let i = 0; i < researchedentities.length; i++) {
+                    requestParams['ids'] = researchedentities.sourcequery.source[0].knowledgeGraphID;
+                }
+                $.getJSON(service_url + '?callback=?', requestParams, (response) => {
+                }).done((response) => {
+                    let data = response.itemListElement;
+                    console.log('Response for initial Research: ' + JSON.stringify(data));
+                    if (data.length === researchedentities.length) {
+                        for (let i = 0; i < researchedentities.length; i++) {
+                            data[i]["sourequery"] = researchedentities[i];
+                            if (researchedentities[i].source[0].semanticClass !== 'PERSON'
+                                && researchedentities[i].source[0].semanticClass !== 'LOCATION'
+                                && researchedentities[i].source[0].semanticClass !== 'ORGANIZATION'
+                                && researchedentities[i].source[0].semanticClass !== 'MISC') {
+                                this['OTHER'].push(data[i]);
+                            } else {
+                                this[researchedentities[i].source[0].semanticClass].push(data[i]);
+                            }
+                        }
+                    } else {
+                        console.log('Something went wrong!');
+                    }
+
+                });
             },
             searchGoogle: function (query, limit, semClass, sourcequery) {
                 if (limit < 1) {
@@ -302,12 +389,12 @@
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('updateclassestomark', this.classestomark);
             },
-            saveResults: function () {
-                //console.log('TODO: Trying to save but not implemented.');
+            saveResult: function (researchdata) {
+                let socket = io(this.serverip + ':8080');
+                socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                this.$emit('saveresult', researchdata);
             },
             isElementInViewport: function (el) {
-                console.log('element here is: ' + el);
-
                 let rect = el.getBoundingClientRect();
                 return (
                     rect.top >= 0 &&
@@ -357,10 +444,11 @@
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-            this.researchTokensOfClass('PERSON', 0);
-            this.researchTokensOfClass('LOCATION', 1);
-            this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);
+            this.initializeEntitiesView();
+            // this.researchTokensOfClass('PERSON', 0);
+            // this.researchTokensOfClass('LOCATION', 1);
+            // this.researchTokensOfClass('ORGANIZATION', 2);
+            // this.researchTokensOfClass('MISC', 3);
         },
         watch: {
             researchdatatoupdate: {
@@ -375,10 +463,11 @@
                 immediate: true
             },
             tokenstoshow: function (value) {
-                this.researchTokensOfClass('PERSON', 0);
-                this.researchTokensOfClass('LOCATION', 1);
-                this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);
+                this.initializeEntitiesView();
+                // this.researchTokensOfClass('PERSON', 0);
+                // this.researchTokensOfClass('LOCATION', 1);
+                // this.researchTokensOfClass('ORGANIZATION', 2);
+                // this.researchTokensOfClass('MISC', 3);
             },
             hoverdata: {
                 handler: function (hoverdata) {

@@ -319,6 +319,9 @@ function selectWithInnerJoin(docID, start, amount) {
             tableIndex: 0,
             name: 'whitespaceInfo',
         }, {
+            tableIndex: 0,
+            name: 'knowledgeGraphID',
+        }, {
             tableIndex: 1,
             name: 'wordID',
         }, {
@@ -336,7 +339,7 @@ function selectWithInnerJoin(docID, start, amount) {
         },],
         joinConditions: [{
             columnIndexes: [1],
-            valueColumnIndexes: [6],
+            valueColumnIndexes: [7],
             operator: ['='],
         }],
         kindOfJoin: ['INNER'],
