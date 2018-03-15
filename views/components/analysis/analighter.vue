@@ -73,11 +73,11 @@
             editresearch: function (researchData){
                 //emit for a button on toolbar. To Delete if button on toolbar not needed.
                 this.$emit('entercorrectionmode', true);
-                this.showmode = 'correction';
                 this.researchdatatoedit = researchData;
             },
             selectedresearch:function (researchData) {
-                this.showmode = 'entitiesview';
+                this.$emit('entercorrectionmode', false);
+                this.researchdatatoedit = researchData;
             }
         },
         components: {

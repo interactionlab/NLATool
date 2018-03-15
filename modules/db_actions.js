@@ -410,7 +410,7 @@ exports.createUpdateCommand = function (table, columns, values, columnsToCompare
         if (valuesToCompare !== null && operators !== null) {
             commandString = commandString + ' ' + createWhereQuery(columnsToCompare, valuesToCompare, operators);
         }
-        //console.log(notMedia + Tag + commandString);
+        console.log(notMedia + Tag + commandString);
         return commandString;
     }
     console.log(notMedia + Tag + 'Update Command Creation failed!');

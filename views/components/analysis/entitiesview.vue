@@ -63,7 +63,8 @@
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate ORGANIZATION"
              ref="organisazionresultsparent"
@@ -95,7 +96,8 @@
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate MISC"
              ref="miscresultsparent"
@@ -127,7 +129,8 @@
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)">
+                   v-on:saveresult="saveResult($event)"
+                   v-on:editresearch="editresearch($event)">
         </component>
     </div>
 

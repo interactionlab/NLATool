@@ -61,8 +61,6 @@
             return {
                 researchresults: [],
                 selectedtext: '',
-                resultselected: false,
-                selectedresult: {},
                 selectedindex: -1,
                 keywords: this.keywords,
                 mapcoordinates: [],
@@ -155,12 +153,13 @@
                     }
                 );
             },
-            saveResult: function (index) {
+            saveResult: function (researchdata) {
+                let socket = io(this.serverip + ':8080');
+
+                socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+
                 //TODO: make new variable that has the meaning of selectedIndex if there are multiple results.
-                this.resultselected = true;
-                this.selectedindex = index;
                 //console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
-                this.selectedresult = this.researchresults[index];
             },
             starthover: function (event) {
                 //this.$emit('starthover', event);
@@ -170,9 +169,11 @@
         watch: {
             researchdatatoedit: {
                 handler: function (newData) {
-                    this.selectedtext = newData.sourcequery.querys[0];
-                    console.log('Looking for more Info about: ' + this.selectedtext);
-                    this.searchGoogle(this.selectedtext, 10);
+                    if (newData !== undefined && newData !== null) {
+                        this.selectedtext = newData.sourcequery.querys[0];
+                        //console.log('Looking for more Info about: ' + this.selectedtext);
+                        this.searchGoogle(this.selectedtext, 10);
+                    }
                 }, deep: true
             },
             selectedindexes: {
@@ -180,8 +181,7 @@
                     if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
                         this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
                         //console.log('Keywords: ' + JSON.stringify(this.keywords));
-                        this.resultselected = false;
-                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newSelectedIndexes)
+                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newSelectedIndexes);
                         this.selectedtext = this.generateText(this.researchedtokens);
                         console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext);
