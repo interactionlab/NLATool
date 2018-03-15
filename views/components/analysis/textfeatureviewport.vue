@@ -29,7 +29,7 @@
                 </div>
             </div>
             <!--right grid for result stuff -->
-            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; margin:0; overflow-y: auto; width:50%">
+            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; margin:0; overflow-y: auto; width:50%" ref="textviewport">
                 <keep-alive>
                     <component
                             :is="analysismode"
@@ -45,6 +45,7 @@
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                            v-bind:allowtexttoscroll="allowTextToScroll"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
@@ -102,10 +103,18 @@
         },
         data: function () {
             return {
-                entitytoline: []
+                entitytoline: [],
             }
         },
-        computed: {},
+        computed: {
+            allowTextToScroll:function () {
+                if(this.$refs["textviewport"] !== undefined) {
+                    return this.$refs["textviewport"].scrollHeight > this.$refs["textviewport"].clientHeight;
+                } else{
+                    return false;
+                }
+            }
+        },
         methods: {
             updateclassestomark:function (newClassesToMark) {
               this.$emit('updateclassestomark', newClassesToMark);
