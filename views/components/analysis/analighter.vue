@@ -16,7 +16,8 @@
                    v-on:togglesemanticlass="togglesemanticlass($event)"
                    v-on:endhover="endhover($event)"
                    v-on:starthover="starthover($event)"
-                   v-on:editresearch="editresearch($event)">
+                   v-on:editresearch="editresearch($event)"
+                   v-on:selectresearch="selectedresearch($event)">
 
         </component>
     </div>
@@ -31,7 +32,6 @@
 
         props: {
             serverip: {type: String, default: ""},
-            showmode: {type: String, default: ""},
             selectedindexes: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             hoverdata: {type: Object, default: null},
@@ -57,7 +57,8 @@
         },
         data: function () {
             return {
-                researchdatatoedit: {}
+                researchdatatoedit: {},
+                showmode: 'entitiesview'
             }
         },
         methods: {
@@ -70,14 +71,16 @@
             starthover: function (textIndex) {
                 this.$emit('starthover', textIndex);
             },
-            editresearch: function (researchData){
-                //emit for a button on toolbar. To Delete if button on toolbar not needed.
-                this.$emit('entercorrectionmode', true);
-                this.researchdatatoedit = researchData;
+            editresearch: function (researchData) {
+                this.classestomark.POS = true;
+                this.showmode = 'correction';
+                this.$emit('updateclassestomark', this.classestomark);
             },
-            selectedresearch:function (researchData) {
-                this.$emit('entercorrectionmode', false);
+            selectedresearch: function (researchData) {
+                this.classestomark.POS = false;
+                this.showmode = 'entitiesview';
                 this.researchdatatoedit = researchData;
+                this.$emit('updateclassestomark', this.classestomark);
             }
         },
         components: {

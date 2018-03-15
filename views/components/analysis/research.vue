@@ -156,6 +156,7 @@
             saveResult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                this.$emit('saveresult', researchdata);
             },
             starthover: function (event) {
                 //this.$emit('starthover', event);

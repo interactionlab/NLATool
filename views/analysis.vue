@@ -70,7 +70,6 @@
                                v-bind:notemodes="notemodes"
                                v-bind:researchmode="researchmode"
                                v-bind:selectedchain="selectedChain"
-                               v-bind:showmode="showMode"
                                v-bind:contentcontrol="contentcontrol"
                                v-bind:hoverdata="hoverdata"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -82,7 +81,7 @@
                                v-on:togglesemanticlass="changeMarkerMode($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
-                               v-on:entercorrectionmode="entercorrectionmode($event)">
+                               v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
                 </div>
             </div>
@@ -124,7 +123,6 @@
                 offsetend: null,
                 semanticclass: {},
                 analysisMode: 'analighter',
-                showMode: 'entitiesview',
                 researchmode: '',
                 classesToMark: {
                     coref: false,
@@ -189,6 +187,9 @@
             }
         },
         methods: {
+            updateclassestomark:function (newClassesToMark) {
+              this.classesToMark = newClassesToMark;
+            },
             toogleResearchContent: function (toToggle) {
                 this.contentcontrol.PERSONS[toToggle] = !this.contentcontrol.PERSONS[toToggle];
                 this.contentcontrol.LOCATIONS[toToggle] = !this.contentcontrol.LOCATIONS[toToggle];
@@ -220,15 +221,6 @@
             },
             changeMarkerMode: function (newClassesToMark) {
                 this.classesToMark = newClassesToMark;
-            },
-            entercorrectionmode: function (correctionMode) {
-                if (correctionMode === true) {
-                    this.classesToMark.POS = correctionMode;
-                    this.showMode = 'correction';
-                } else {
-                    this.classesToMark.POS = correctionMode;
-                    this.showMode = 'entitiesview';
-                }
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
