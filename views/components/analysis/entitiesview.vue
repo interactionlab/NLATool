@@ -132,6 +132,39 @@
                    v-on:saveresult="saveResult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
+        <div class="semClassFormate OTHER"
+             ref="miscresultsparent"
+             v-on:click="togglesemanticlass('OTHER')">
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
+                <i v-if="classestomark.OTHER"
+                   class="material-icons snapbtn">keyboard_arrow_down</i>
+                <i v-else class="material-icons snapbtn">keyboard_arrow_right</i>
+            </button>
+            <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
+                <b class="mdc-button snapbtn">OTHER ({{numberOfOTHER}})</b>
+            </button>
+            <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
+                    v-on:click="addresearch">
+                <i class="material-icons">add_circle</i>
+            </button>
+        </div>
+        <component is="researchresult"
+                   ref="miscresults"
+                   v-if="classestomark.OTHER"
+                   v-for="(researchresult,index5) in OTHER"
+                   v-bind:index="index5"
+                   v-bind:serverip="serverip"
+                   v-bind:researchdata="researchresult"
+                   v-bind:key="index5+ PERSON.length + LOCATION.length + ORGANIZATION.length + MISC.length"
+                   v-bind:mapkey="index5+ PERSON.length+ LOCATION.length+ ORGANIZATION.length+ MISC.length"
+                   v-bind:docid="docid"
+                   v-bind:viewing="true"
+                   v-bind:contentcontrol="contentcontrol.OTHERS"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:starthover="starthover($event)"
+                   v-on:saveresult="saveResult($event)"
+                   v-on:editresearch="editresearch($event)">
+        </component>
     </div>
 
 </template>
@@ -165,7 +198,7 @@
             contentcontrol: {type: Object, default: null},
             hoverdata: {type: Object, default: null},
             selectedindexes: {type: Object, default: null},
-
+            researchdatatoupdate: {type: Object, default: null},
         },
         data: function () {
             return {
@@ -173,12 +206,13 @@
                 LOCATION: [],
                 ORGANIZATION: [],
                 MISC: [],
+                OTHER: [],
                 researchresults: [],
                 sourcequery: [],
             }
         },
         methods: {
-            addresearch:function () {
+            addresearch: function () {
                 this.$emit('editresearch');
             },
             editresearch: function (researchData) {
@@ -266,7 +300,7 @@
             },
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
-                this.$emit('togglesemanticlass', this.classestomark);
+                this.$emit('updateclassestomark', this.classestomark);
             },
             saveResults: function () {
                 //console.log('TODO: Trying to save but not implemented.');
@@ -301,6 +335,13 @@
                     return '';
                 }
             },
+            numberOfOTHER: function () {
+                if (typeof this['OTHER'] !== 'undefined') {
+                    return this['OTHER'].length;
+                } else {
+                    return '';
+                }
+            },
         },
         mounted() {
             if (this.tokenstoshow.length === 0)
@@ -311,6 +352,17 @@
             this.researchTokensOfClass('MISC', 3);
         },
         watch: {
+            researchdatatoupdate: {
+                handler: function (newresearchdatatoupdate) {
+                    if (newresearchdatatoupdate !== null) {
+                        if (newresearchdatatoupdate.sourcequery !== undefined) {
+                            console.log('Adding new result to ' + newresearchdatatoupdate.sourcequery.source[0].semanticClass);
+                            this[newresearchdatatoupdate.sourcequery.source[0].semanticClass].push(newresearchdatatoupdate);
+                        }
+                    }
+                }, deep: true,
+                immediate: true
+            },
             tokenstoshow: function (value) {
                 this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
@@ -325,7 +377,7 @@
                     // console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
                     // console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
 
-                    if (hoverdata.hoverstarted == "research") {
+                    if (hoverdata.hoverstarted === "research") {
                         return;
                     }
 
@@ -357,7 +409,7 @@
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 let refElement = this.$refs.locationresults[i]
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted == "text")
+                                    if (hoverdata.hoverstarted === "text")
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -372,7 +424,7 @@
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 let refElement = this.$refs.organisazionresults[i]
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted == "text")
+                                    if (hoverdata.hoverstarted === "text")
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -387,7 +439,7 @@
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 let refElement = this.$refs.miscresults[i]
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted == "text")
+                                    if (hoverdata.hoverstarted === "text")
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();

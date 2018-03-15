@@ -13,7 +13,8 @@
                    v-bind:hoverdata="hoverdata"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-bind:researchdatatoedit="researchdatatoedit"
-                   v-on:togglesemanticlass="togglesemanticlass($event)"
+                   v-bind:researchdatatoupdate="researchdatatoupdate"
+                   v-on:updateclassestomark="updateclassestomark($event)"
                    v-on:endhover="endhover($event)"
                    v-on:starthover="starthover($event)"
                    v-on:editresearch="editresearch($event)"
@@ -58,12 +59,13 @@
         data: function () {
             return {
                 researchdatatoedit: {},
-                showmode: 'entitiesview'
+                researchdatatoupdate: {},
+                showmode: 'entitiesview',
             }
         },
         methods: {
-            togglesemanticlass: function (newClassesToMark) {
-                this.$emit('togglesemanticlass', newClassesToMark);
+            updateclassestomark: function (newClassesToMark) {
+                this.$emit('updateclassestomark', newClassesToMark);
             },
             endhover: function (event) {
                 this.$emit('endhover', event);
@@ -74,13 +76,17 @@
             editresearch: function (researchData) {
                 this.classestomark.POS = true;
                 this.showmode = 'correction';
+                this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
+                this.researchdatatoupdate = null;
                 this.$emit('updateclassestomark', this.classestomark);
             },
             selectedresearch: function (researchData) {
                 this.classestomark.POS = false;
+                this.researchdatatoedit = null;
                 this.showmode = 'entitiesview';
-                this.researchdatatoedit = researchData;
-                this.$emit('updateclassestomark', this.classestomark);
+                this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
+                console.log('finished Edit: ' + JSON.stringify(this.researchdatatoupdate));
+                this.updateclassestomark(this.classestomark);
             }
         },
         components: {

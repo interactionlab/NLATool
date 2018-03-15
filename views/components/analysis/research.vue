@@ -129,9 +129,11 @@
                         //this.rerankWithKeywords(response);
                         //this.getMapCoordinates();
                         let data = response.itemListElement;
-                        if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
-                            for (let i = 0; i < data.length; i++) {
-                                data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                        if (this.researchdatatoedit !== null) {
+                            if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
+                                for (let i = 0; i < data.length; i++) {
+                                    data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                                }
                             }
                         } else {
                             let wordids = [];
@@ -171,7 +173,8 @@
                         //console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext, 10);
                     }
-                }, deep: true
+                }, deep: true,
+                immediate: true
             },
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
@@ -181,7 +184,7 @@
                         this.researchedtokens = this.gettokensofselectedtext(this.tokens, newSelectedIndexes);
                         this.selectedtext = this.generateText(this.researchedtokens);
                         console.log('Looking for more Info about: ' + this.selectedtext);
-                        this.searchGoogle(this.selectedtext);
+                        this.searchGoogle(this.selectedtext, 10);
                     }
                 },
                 deep: true
