@@ -242,7 +242,7 @@
                         searched = false;
                     }
                     if (query !== '') {
-                        let wordids = []
+                        let wordids = [];
                         for (let k = 0; k < sortedtokens[i].length; k++) {
                             wordids.push(sortedtokens[i][k].wordID);
                         }
@@ -304,6 +304,17 @@
             },
             saveResults: function () {
                 //console.log('TODO: Trying to save but not implemented.');
+            },
+            isElementInViewport: function (el) {
+                console.log('element here is: ' + el);
+
+                let rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                );
             },
         },
         computed: {
@@ -392,10 +403,11 @@
                     if (hoverdata.semanticClass === 'PERSON') {
                         if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
-                                let refElement = this.$refs.personresults[i]
+                                let refElement = this.$refs.personresults[i];
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted == "text")
+                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el)) {
                                         refElement.$el.scrollIntoView();
+                                    }
 
                                     bb = refElement.$el.getBoundingClientRect();
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
@@ -407,9 +419,9 @@
                     } else if (hoverdata.semanticClass === 'LOCATION') {
                         if (typeof this.$refs["locationresults"] !== 'undefined' && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
-                                let refElement = this.$refs.locationresults[i]
+                                let refElement = this.$refs.locationresults[i];
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text")
+                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -422,9 +434,9 @@
                     } else if (hoverdata.semanticClass === "ORGANIZATION") {
                         if (typeof this.$refs["organisazionresults"] !== 'undefined' && this.$refs["organisazionresults"].length > 0) {
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
-                                let refElement = this.$refs.organisazionresults[i]
+                                let refElement = this.$refs.organisazionresults[i];
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text")
+                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -437,9 +449,9 @@
                     } else if (hoverdata.semanticClass === "MISC") {
                         if (typeof this.$refs["miscresults"] !== 'undefined' && this.$refs["miscresults"].length > 0) {
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
-                                let refElement = this.$refs.miscresults[i]
+                                let refElement = this.$refs.miscresults[i];
                                 if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text")
+                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -450,7 +462,7 @@
                             bb = this.$refs["miscresultsparent"].getBoundingClientRect();
                         }
                     }
-                    let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY}
+                    let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
                 }, deep: true
             },

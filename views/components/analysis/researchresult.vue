@@ -143,7 +143,8 @@
             editResearch: function () {
                 console.log('clicked edit Research');
                 this.$emit('editresearch', this.researchdata);
-            }
+            },
+
         },
         components: {
             googlemap

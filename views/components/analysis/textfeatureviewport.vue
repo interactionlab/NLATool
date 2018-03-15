@@ -45,7 +45,6 @@
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                            v-bind:allowtexttoscroll="allowTextToScroll"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
@@ -107,13 +106,7 @@
             }
         },
         computed: {
-            allowTextToScroll:function () {
-                if(this.$refs["textviewport"] !== undefined) {
-                    return this.$refs["textviewport"].scrollHeight > this.$refs["textviewport"].clientHeight;
-                } else{
-                    return false;
-                }
-            }
+
         },
         methods: {
             updateclassestomark:function (newClassesToMark) {
