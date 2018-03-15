@@ -1,5 +1,4 @@
 <template> <!--editordocument in 8080-->
-
     <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content deleteSpaces contentColor separate"
               v-on:mouseout="mouseout"
@@ -93,7 +92,6 @@
                     information: true,
                     test: false
                 },
-
             }
         },
         methods: {
@@ -144,7 +142,6 @@
                 console.log('clicked edit Research');
                 this.$emit('editresearch', this.researchdata);
             },
-
         },
         components: {
             googlemap
@@ -203,8 +200,6 @@
                 }
                 title = title + ' -> ' + this.researchdata.result.name;
                 return title;
-
-
             }
         }
     }
