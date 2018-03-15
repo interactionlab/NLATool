@@ -18,16 +18,16 @@
                                 <div class="mdl-layout-spacer"></div>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-if="viewing"
-                                        v-on:click="editResearch">
+                                        v-on:click.stop="editResearch">
                                     <i class="material-icons">edit</i>
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-else
-                                        v-on:click="saveResult">
+                                        v-on:click.stop="saveResult">
                                     <i class="material-icons">check</i>
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                                        v-on:click="showSource">
+                                        v-on:click.stop="showSource">
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
