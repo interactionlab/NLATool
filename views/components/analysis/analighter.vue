@@ -70,8 +70,8 @@
             endhover: function (event) {
                 this.$emit('endhover', event);
             },
-            starthover: function (textIndex) {
-                this.$emit('starthover', textIndex);
+            starthover: function (event) {
+                this.$emit('starthover', event);
             },
             editresearch: function (researchData) {
                 this.classestomark.POS = true;

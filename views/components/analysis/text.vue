@@ -25,6 +25,7 @@
                     return []
                 }
             },
+            allowtexttoscroll: {type: Boolean, default: false}
         },
         data: function () {
             return {
@@ -219,7 +220,9 @@
                     if (index > -1) {
                         this.isEntityHovered = true;
                         if (index == 0 && event.hoverstarted === "research") {
-                            this.$el.scrollIntoView();
+                            if (this.allowtexttoscroll) {
+                                this.$el.scrollIntoView();
+                            }
                             let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
                             this.$emit('endhover', data);
                         }
