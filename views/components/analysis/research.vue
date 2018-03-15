@@ -155,11 +155,7 @@
             },
             saveResult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
-
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
-
-                //TODO: make new variable that has the meaning of selectedIndex if there are multiple results.
-                //console.log('selected Result is: ' + JSON.stringify(this.researchresults[index]) + index);
             },
             starthover: function (event) {
                 //this.$emit('starthover', event);
