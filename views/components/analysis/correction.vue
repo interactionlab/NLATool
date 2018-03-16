@@ -42,7 +42,6 @@
                    v-bind:serverip="serverip"
                    v-bind:researchdatatoedit="researchdatatoedit"
                    v-bind:tokens="tokens"
-                   v-bind:tokenstoshow="tokenstoshow"
                    v-bind:docid="docid"
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:selectedindexes="selectedindexes"
@@ -63,11 +62,6 @@
         props: {
             serverip: {type: String, default: ""},
             tokens: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
-            tokenstoshow: {
                 type: Array, default: function () {
                     return []
                 }
