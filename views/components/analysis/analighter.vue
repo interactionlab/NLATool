@@ -61,6 +61,7 @@
                 researchdatatoedit: {},
                 researchdatatoupdate: {},
                 showmode: 'entitiesview',
+
             }
         },
         methods: {
@@ -70,8 +71,8 @@
             endhover: function (event) {
                 this.$emit('endhover', event);
             },
-            starthover: function (event) {
-                this.$emit('starthover', event);
+            starthover: function (textIndex) {
+                this.$emit('starthover', textIndex);
             },
             editresearch: function (researchData) {
                 this.classestomark.POS = true;
