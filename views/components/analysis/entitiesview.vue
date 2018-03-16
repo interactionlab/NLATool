@@ -442,7 +442,6 @@
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-
             //this.initializeEntitiesView();
             this.researchTokensOfClass('PERSON', 0);
             this.researchTokensOfClass('LOCATION', 1);
