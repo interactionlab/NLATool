@@ -226,13 +226,14 @@
                 let tempsourcequery = {};
                 let researchedentities = [];
                 let lastersearchedtoken = -1;
-                let pushedToEntities = false;
+                let lastentity = -1;
                 for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
                     //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
                     if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0') {
                         researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
                         lastersearchedtoken = researchedtokens.length - 1;
                         if (researchedentities.length === 0) {
+                            //console.log('Checkpoint 1.0: first entity');
                             tempsourcequery = {
                                 freq: 1,
                                 wordids: [researchedtokens[lastersearchedtoken].wordID],
@@ -242,32 +243,30 @@
                             researchedentities.push(tempsourcequery);
                             tempsourcequery = {};
                         }
-                        //console.log('checkpoint 1.1 ' + researchedentities.length + ' : ' + researchedtokens.length);
-                        for (let j = 0; j < researchedentities.length; j++) {
-                            //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
-                            if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[j].source[0].knowledgeGraphID) {
-                                console.log('Checkpoint 2.1'
-                                    + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
-                                    + researchedentities[j].source[researchedentities[j].source.length - 1].textIndex);
-                                if (researchedtokens[lastersearchedtoken].textIndex - 1
-                                    === researchedentities[j].source[researchedentities[j].source.length - 1].textIndex) {
-
-                                    researchedentities[j].freq++;
-                                    researchedentities[j].source.push(researchedtokens[lastersearchedtoken]);
-                                    researchedentities[j].wordids.push(researchedtokens[lastersearchedtoken].wordID);
-                                    researchedentities[j].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
-                                } else {
-                                    tempsourcequery = {
-                                        freq: 1,
-                                        wordids: [researchedtokens[lastersearchedtoken].wordID],
-                                        querys: [researchedtokens[lastersearchedtoken].content],
-                                        source: [researchedtokens[lastersearchedtoken]]
-                                    };
-                                    researchedentities.push(tempsourcequery);
-                                    tempsourcequery = {};
-                                    break;
-                                }
+                        lastentity = researchedentities.length - 1;
+                        //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
+                        if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[lastentity].source[0].knowledgeGraphID) {
+                            // console.log('Checkpoint 2.1: '
+                            //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
+                            //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
+                            if (researchedtokens[lastersearchedtoken].textIndex - 1
+                                === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
+                                //console.log('Checkpoint 2.2:  Adding to existing entity');
+                                researchedentities[lastentity].freq++;
+                                researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
+                                researchedentities[lastentity].wordids.push(researchedtokens[lastersearchedtoken].wordID);
+                                researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
                             }
+                        } else {
+                            //console.log('Checkpoint 2.3: new entity');
+                            tempsourcequery = {
+                                freq: 1,
+                                wordids: [researchedtokens[lastersearchedtoken].wordID],
+                                querys: [researchedtokens[lastersearchedtoken].content],
+                                source: [researchedtokens[lastersearchedtoken]]
+                            };
+                            researchedentities.push(tempsourcequery);
+                            tempsourcequery = {};
                         }
                     }
                 }
@@ -319,25 +318,33 @@
                 requestParams['ids'] = [];
                 for (let i = 0; i < researchedentities.length; i++) {
                     dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
-                    requestParams['ids'] = researchedentities[0].source[0].knowledgeGraphID.split(':')[1];
-                    console.log('Id: ' + requestParams.ids);
                 }
                 console.log('Checkpoint 5: ' + dataurl + ' : ' + JSON.stringify(requestParams));
                 $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                 }).done((response) => {
                     let data = response.itemListElement;
-                    console.log('Response for initial Research: ' + JSON.stringify(data));
+                    console.log('Response for initial Research: ' + data.length);
                     for (let i = 0; i < data.length; i++) {
-                        data[i]["sourequery"] = researchedentities[i];
-                        if (researchedentities[i].source[0].semanticClass !== 'PERSON'
-                            && researchedentities[i].source[0].semanticClass !== 'LOCATION'
-                            && researchedentities[i].source[0].semanticClass !== 'ORGANIZATION'
-                            && researchedentities[i].source[0].semanticClass !== 'MISC') {
-                            this['OTHER'].push(data[i]);
-                        } else {
-                            this[researchedentities[i].source[0].semanticClass].push(data[i]);
+                        for (let j = 0; j < researchedentities.length; j++) {
+                            if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
+                                data[i]["sourcequery"] = researchedentities[j];
+                                if (researchedentities[j].source[0].semanticClass !== 'PERSON'
+                                    && researchedentities[j].source[0].semanticClass !== 'LOCATION'
+                                    && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
+                                    && researchedentities[j].source[0].semanticClass !== 'MISC') {
+                                    this['OTHER'].push(data[i]);
+                                } else {
+                                    this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                                }
+                            }
                         }
+
                     }
+                    console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
+                    console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
+                    console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
+                    console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
+                    console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));
                 }).fail(err => {
                     console.log('Google initial search failed: ' + err);
                 });
@@ -355,37 +362,53 @@
                 };
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
-                    if (limit > 1) {
-                        // this[semClass].push(this.rerankWithKeywords());
-                    } else {
-
-                        let data = response.itemListElement[0];
-
-                        let found = false;
-                        for (let i = 0; i < this[semClass].length; i++) {
-                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
-                                found = true;
+                        let tempResult = {};
+                        if (limit > 1) {
+                            // this[semClass].push(this.rerankWithKeywords());
+                        } else {
+                            let data = response.itemListElement[0];
+                            let found = false;
+                            for (let i = 0; i < this[semClass].length; i++) {
                                 for (let k = 0; k < sourcequery.source.length; k++) {
-                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                    if (sourcequery.source[i].knowledgeGraphID === '0') {
+                                        tempResult = data;
+                                        tempResult["sourcequery"] = sourcequery;
+                                        this.saveResult2(tempResult);
+                                    }
                                 }
-                                this[semClass][i].sourcequery.wordids.sort();
-                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
-                                this[semClass][i].sourcequery.freq += sourcequery.freq;
-                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
-                                //console.log(JSON.stringify(this[semClass][i]));
+                                if (this[semClass][i].result["@id"] === data.result["@id"]) {
+                                    found = true;
+                                    for (let k = 0; k < sourcequery.source.length; k++) {
+                                        this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                    }
+                                    this[semClass][i].sourcequery.wordids.sort();
+                                    this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
+                                    this[semClass][i].sourcequery.freq += sourcequery.freq;
+                                    this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
+                                    //console.log(JSON.stringify(this[semClass][i]));
+                                }
+                            }
+                            if (found === false) {
+                                data["sourcequery"] = sourcequery;
+                                this[semClass].push(data);
                             }
                         }
-                        if (found === false) {
-                            data["sourcequery"] = sourcequery;
-                            this[semClass].push(data);
-                        }
-
                     }
-                });
+                )
+                ;
             },
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('updateclassestomark', this.classestomark);
+            },
+            saveResult2: function (researchdata) {
+                let indexes = {
+                    start: researchdata.sourcequery.source[0].textIndex,
+                    end: researchdata.sourcequery.source[researchdata.sourcequery.source.length - 1].textIndex+1
+                };
+                let socket = io(this.serverip + ':8080');
+                socket.emit('saveresult', this.docid, indexes, researchdata.result['@id']);
+                this.$emit('saveresult', researchdata);
             },
             saveResult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
@@ -409,44 +432,49 @@
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfLocations: function () {
                 if (typeof this["LOCATION"] !== 'undefined') {
                     return this["LOCATION"].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOrganizations: function () {
                 if (typeof this['ORGANIZATION'] !== 'undefined') {
                     return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfMisc: function () {
                 if (typeof this['MISC'] !== 'undefined') {
                     return this['MISC'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOTHER: function () {
                 if (typeof this['OTHER'] !== 'undefined') {
                     return this['OTHER'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
         },
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-            //this.initializeEntitiesView();
-            this.researchTokensOfClass('PERSON', 0);
+            this.initializeEntitiesView();
+          /*  this.researchTokensOfClass('PERSON', 0);
             this.researchTokensOfClass('LOCATION', 1);
             this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);
+            this.researchTokensOfClass('MISC', 3);*/
         },
         watch: {
             researchdatatoupdate: {
@@ -457,15 +485,18 @@
                             this[newresearchdatatoupdate.sourcequery.source[0].semanticClass].push(newresearchdatatoupdate);
                         }
                     }
-                }, deep: true,
-                immediate: true
+                }
+                ,
+                deep: true,
+                immediate:
+                    true
             },
             tokenstoshow: function (value) {
-                // this.initializeEntitiesView();
-                this.researchTokensOfClass('PERSON', 0);
+                this.initializeEntitiesView();
+               /*this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);
+                this.researchTokensOfClass('MISC', 3);*/
             },
             hoverdata: {
                 handler: function (hoverdata) {
@@ -551,7 +582,9 @@
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
-                }, deep: true
+                }
+                ,
+                deep: true
             },
         },
         components: {
