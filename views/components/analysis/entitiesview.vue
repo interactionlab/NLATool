@@ -310,40 +310,46 @@
             },
             searchGoogleWithResearchedEntities: function (researchedentities) {
                 //console.log('Checkpoint 4 ' + JSON.stringify(researchedentities));
+                let hasID = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let dataurl = 'key=AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ';
                 for (let i = 0; i < researchedentities.length; i++) {
                     dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
+                    hasID = true;
                 }
                 //console.log('Checkpoint 5: ' + dataurl + ' : ' + JSON.stringify(requestParams));
-                $.getJSON(service_url + '?callback=?', dataurl, (response) => {
-                }).done((response) => {
-                    let data = response.itemListElement;
-                    console.log('Response for initial Research: ' + data.length);
-                    for (let i = 0; i < data.length; i++) {
-                        for (let j = 0; j < researchedentities.length; j++) {
-                            if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
-                                data[i]["sourcequery"] = researchedentities[j];
-                                if (researchedentities[j].source[0].semanticClass !== 'PERSON'
-                                    && researchedentities[j].source[0].semanticClass !== 'LOCATION'
-                                    && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
-                                    && researchedentities[j].source[0].semanticClass !== 'MISC') {
-                                    this['OTHER'].push(data[i]);
-                                } else {
-                                    this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                if (hasID) {
+                    $.getJSON(service_url + '?callback=?', dataurl, (response) => {
+                    }).done((response) => {
+                        let data = response.itemListElement;
+                        console.log('Response for initial Research: ' + data.length);
+                        for (let i = 0; i < data.length; i++) {
+                            for (let j = 0; j < researchedentities.length; j++) {
+                                if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
+                                    data[i]["sourcequery"] = researchedentities[j];
+                                    if (researchedentities[j].source[0].semanticClass !== 'PERSON'
+                                        && researchedentities[j].source[0].semanticClass !== 'LOCATION'
+                                        && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
+                                        && researchedentities[j].source[0].semanticClass !== 'MISC') {
+                                        this['OTHER'].push(data[i]);
+                                    } else {
+                                        this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                                    }
                                 }
                             }
-                        }
 
-                    }
-                    console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
-                    console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
-                    console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
-                    console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
-                    console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));
-                }).fail(err => {
-                    console.log('Google initial search failed: ' + err);
-                });
+                        }
+                        console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
+                        console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
+                        console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
+                        console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
+                        console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));
+                    }).fail(err => {
+                        console.log('Google initial search failed: ' + err);
+                    });
+                } else{
+                    console.log('There was a token with a SemanticClass to Research but has no research on the DB');
+                }
             },
             searchGoogle: function (query, limit, semClass, sourcequery) {
                 if (limit < 1) {
@@ -464,11 +470,11 @@
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-            this.initializeEntitiesView();
-            /*  this.researchTokensOfClass('PERSON', 0);
-              this.researchTokensOfClass('LOCATION', 1);
-              this.researchTokensOfClass('ORGANIZATION', 2);
-              this.researchTokensOfClass('MISC', 3);*/
+           /* this.initializeEntitiesView();
+            this.researchTokensOfClass('PERSON', 0);
+            this.researchTokensOfClass('LOCATION', 1);
+            this.researchTokensOfClass('ORGANIZATION', 2);
+            this.researchTokensOfClass('MISC', 3);*/
         },
         watch: {
             researchdatatoupdate: {
@@ -487,10 +493,10 @@
             },
             tokenstoshow: function (value) {
                 this.initializeEntitiesView();
-                /*this.researchTokensOfClass('PERSON', 0);
-                 this.researchTokensOfClass('LOCATION', 1);
-                 this.researchTokensOfClass('ORGANIZATION', 2);
-                 this.researchTokensOfClass('MISC', 3);*/
+               /* this.researchTokensOfClass('PERSON', 0);
+                this.researchTokensOfClass('LOCATION', 1);
+                this.researchTokensOfClass('ORGANIZATION', 2);
+                this.researchTokensOfClass('MISC', 3);*/
             },
             hoverdata: {
                 handler: function (hoverdata) {
