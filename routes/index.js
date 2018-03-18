@@ -10,7 +10,7 @@ let desktop = 'desktop Version: ';
 let mobile = 'Mobile Version: ';
 let bigDesktop = 'Big Desktop Version: ';
 let notMedia = 'Not Media-Related Part: ';
-let Tag = 'index.js: ';
+let Tag = 'Server: index.js: ';
 //--------------------------------------------------------
 /**
  * Setup Configuration file Requirements:
@@ -40,9 +40,13 @@ let vueRenderOptions = {
     }
 };
 
-let results = [];
 let json2;
+wait.launchFiber(getJSONConfig);
 
+function getJSONConfig() {
+    json2 = jsonAction.getJsonConfiguration();
+    json2 = JSON.parse(json2);
+}
 
 let language = 'English';
 
@@ -50,20 +54,165 @@ let vueData = {
     lang: language
 };
 
+let allTextUploads = [];
+let switchToNewUpload = true;
 io.on('connection', function (socket) {
-    //console.log('socket check');
-    socket.on('setLanguage', function (language) {
-        //console.log('socket check2 ' + language);
-        corenlp.resetPipeline(language);
-        this.language = language;
+    socket.on('initupload', function (title) {
+        console.log(Tag + 'Recieving upload Request. ');
+        if (switchToNewUpload) {
+            wait.launchFiber(initialisingTextUpload, socket, title);
+            console.log(Tag + 'Accepting upload Request. ');
+        } else {
+            console.log(Tag + 'Declining upload Request. ');
+        }
+
+    });
+    socket.on('uploadtextparts', function (docid, start, textpart) {
+        let uploadindex = -1;
+        //TODO: inflate compressed Text here if pako is implemented on the client.
+        for (let i = 0; i < allTextUploads.length; i++) {
+            if (allTextUploads[i].docid === docid) {
+                uploadindex = i;
+                break;
+            }
+        }
+        if (uploadindex > -1) {
+            allTextUploads[uploadindex].text = stringSplice(allTextUploads[uploadindex].text, start, 0, textpart);
+            console.log(Tag + 'Uploaded: ' + docid + ' up to: ' + (start + textpart.length));
+        } else {
+            console.log(Tag + 'upload was issued before init of upload.');
+        }
+    });
+    socket.on('endupload', function (docid) {
+        console.log(Tag + 'Upload of: ' + docid + ' is finished. Start of analysis and storage');
+        let uploadIndex = -1;
+        for (let i = 0; i < allTextUploads.length; i++) {
+            if (allTextUploads[i].docid === docid) {
+                uploadIndex = i;
+                break;
+            }
+        }
+        //let firstTimeCheck = new Date();
+        wait.launchFiber(loadWrittenText,socket, allTextUploads[uploadIndex], uploadIndex);
+        //let lastTimeCheck = new Date();
+        //console.log('Time setting up transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+
     });
 });
 
-wait.launchFiber(getJSONConfig);
+function initialisingTextUpload(socket, title) {
+    title = stringifyForDB(title);
+    let documentInsertResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createInsertCommand('documents', ['name'], [title], null, null)));
+    allTextUploads.push({docid: documentInsertResult.insertId, title: title, text: ''});
+    socket.emit('resinitupload', documentInsertResult.insertId);
+}
 
-function getJSONConfig() {
-    json2 = jsonAction.getJsonConfiguration();
-    json2 = JSON.parse(json2);
+/**
+ * Fiber main function that analyses the text input with corenlp and uploads it
+ * to the database. Finally redirecting to the analysis route.
+ * @param upload
+ */
+function loadWrittenText(socket, upload, uploadIndex) {
+    if (corenlp.positiveNlpStatus()) {
+        let text = upload.text;
+        let transactionInformation = {
+            querys: [],
+            corefInfo: {},
+            transControl: {
+                docid: upload.docid,
+                getProper: [],
+                useProper: []
+            },
+            words: []
+        };
+        let firstTimeCheck = new Date();
+        let deltaTime = firstTimeCheck.getTime();
+        console.log(Tag +'Starting analysing text');
+        let parsedResult = wait.for(corenlp.analyse, text);
+        console.log(Tag +'Finished analysing text');
+        let lastTimeCheck = new Date();
+        console.log(Tag +'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+
+        transactionInformation.words = parsedResult.text;
+        transactionInformation.corefInfo = parsedResult.coref;
+        //Insert Statement to initiate a Document
+        //transactionInformation.querys.push(dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+        let helpVariable = true;
+        transactionInformation.transControl.getProper.push(helpVariable);
+        transactionInformation.querys.push(dbAction.createInsertCommand('text',
+            ['docID', 'length', 'title',],
+            [upload.docid, transactionInformation.words.length, upload.title,],
+            null, null));
+        /*firstTimeCheck = new Date();
+        deltaTime = firstTimeCheck.getTime();*/
+        let counter = 0;
+        for (let i = 0; i < transactionInformation.words.length; i++) {
+            for (let j = 0; j < transactionInformation.words[i].length; j++) {
+                transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
+                parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
+                parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
+                parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
+                parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
+
+                transactionInformation.querys.push(dbAction.createInsertCommand(
+                    'word',
+                    [
+                        'content',
+                        'isSpecial',
+                        'semanticClass',
+                        'pos'
+                    ], [
+                        transactionInformation.words[i][j],
+                        0,
+                        parsedResult.ner[i][j],
+                        parsedResult.pos[i][j]
+                    ],
+                    null, null));
+                transactionInformation.transControl.getProper[transactionInformation.querys.length - 1] = true;
+                transactionInformation.querys.push('...?');
+                transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
+                    kindOfQuery: 'insert',
+                    table: 'textmap',
+                    columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
+                    values: [-1, -1,
+                        counter,
+                        parsedResult.offsetBegin[counter],
+                        parsedResult.offsetEnd[counter],
+                        '"-10"'],
+                    numberOfColumns: [0, 1],
+                    ofResults: [0, transactionInformation.querys.length - 2],
+                    nameOfPropers: ['insertId', 'insertId'],
+                    toCompare: null,
+                    operators: null
+                };
+                counter++;
+            }
+        }
+        /* lastTimeCheck = new Date();
+         console.log('Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+         firstTimeCheck = new Date();*/
+
+        transactionInformation = saveCoref(transactionInformation, counter);
+
+        /* lastTimeCheck = new Date();
+         console.log('Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+         firstTimeCheck = new Date();*/
+
+        let transactionResults = dbStub.makeTransaction(transactionInformation);
+
+        /*lastTimeCheck = new Date();
+        console.log('Time executing transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');*/
+        transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
+        //TODO: Session logic should be changed to url request -> Issue #79
+        //req.session.docID = transactionResults[0].getProper.insertId;
+        console.log('Finished uploading annotated Text to DB. redirecting to analysis');
+        //Client should do the redirect. Thus Issue #79 must be solved on the client.
+        let url = '/analysis/?docID=' + upload.docid;
+        socket.emit('redirectToAnalysis', url);
+        //delete Upload from stack.
+        allTextUploads.splice(uploadIndex, 1);
+    }
 }
 
 router.get('/', function (req, res, next) {
@@ -80,7 +229,7 @@ router.post('/loadDocument', function (req, res) {
 
 router.post('/loadWrittenText', function (req, res) {
     console.log('Start loading Text');
-    wait.launchFiber(postLoadWrittenText, req, res, req);
+    //wait.launchFiber(postLoadWrittenText, req, res, req);
 });
 
 /**
@@ -326,7 +475,7 @@ function addNestedInformation(input, chain, mention) {
     let tempMentions = [];
     try {
         for (let i = chain + 1; i < input.corefInfo.length; i++) {
-            for(let j = mention; j < input.corefInfo[chain].length; i++){
+            for (let j = mention; j < input.corefInfo[chain].length; i++) {
                 tempMentions = testNestedity(input.corefInfo[chain][mention], input.corefInfo[i][j]);
 
             }
@@ -348,12 +497,12 @@ function testNestedity(mention1, mention2) {
             && mention1.startIndex <= mention2.endIndex) {
             if (mention1.endIndex <= mention2.endIndex) {
                 // i Mention is in j Mention
-                mention1[nestedInfo].push({inner:mention2});
-                mention2[nestedInfo].push({outer:mention1});
+                mention1[nestedInfo].push({inner: mention2});
+                mention2[nestedInfo].push({outer: mention1});
             } else {
                 // i Mention starts after j Mention starts
-                mention1[nestedInfo].push({second:mention2});
-                mention2[nestedInfo].push({first:mention1});
+                mention1[nestedInfo].push({second: mention2});
+                mention2[nestedInfo].push({first: mention1});
 
             }
         } else if (mention2.startIndex >= mention1.startIndex
@@ -402,6 +551,26 @@ function getCorefEndIndex(input, chain, mention) {
  */
 function stringifyForDB(input) {
     return '"' + input + '"';
+}
+
+/**
+ * Author: Louis@https://stackoverflow.com/questions/20817618/is-there-a-splice-method-for-strings (Accepted Answer)
+ * edit (Eric Hämmerle): name, typos
+ * @param str
+ * @param index
+ * @param count
+ * @param add
+ * @returns {*}
+ */
+function stringSplice(str, index, count, add) {
+    // We cannot pass negative indexes directly to the 2nd slicing operation.
+    if (index < 0) {
+        index = str.length + index;
+        if (index < 0) {
+            index = 0;
+        }
+    }
+    return str.slice(0, index) + (add || "") + str.slice(index + count);
 }
 
 module.exports = router;
