@@ -166,7 +166,6 @@
                    v-on:editresearch="editresearch($event)">
         </component>
     </div>
-
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
