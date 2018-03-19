@@ -473,6 +473,7 @@
             this.researchTokensOfClass('LOCATION', 1);
             this.researchTokensOfClass('ORGANIZATION', 2);
             this.researchTokensOfClass('MISC', 3);
+
         },
         watch: {
             researchdatatoupdate: {
@@ -503,7 +504,6 @@
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
                 this.researchTokensOfClass('MISC', 3);
-
             },
             hoverdata: {
                 handler: function (hoverdata) {

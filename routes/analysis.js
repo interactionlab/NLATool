@@ -354,9 +354,7 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
-    console.log('coref Check 0');
     let corefs = getCorefs(docID, start, amount);
-    console.log('coref Check 1: ' + corefs.length);
     for (let i = 0; i < tokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
             //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);

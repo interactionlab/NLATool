@@ -103,6 +103,7 @@ function initialisingTextUpload(socket, title) {
     title = stringifyForDB(title);
     let documentInsertResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
         dbAction.createInsertCommand('documents', ['name','userID'], [title, 0], null, null)));
+
     allTextUploads.push({docid: documentInsertResult.insertId, title: title, text: ''});
     socket.emit('resinitupload', documentInsertResult.insertId);
 }
