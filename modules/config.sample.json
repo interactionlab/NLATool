@@ -31,7 +31,7 @@
         "host": "localhost:9000",
         "port": "9000"
       },
-      "connection2": {
+      "connection3": {
         "host": "http://example.com",
         "port": "9000"
       }
@@ -147,12 +147,12 @@
     "column3": {
       "name": "title",
       "type": "VARCHAR",
-      "length": "20"
+      "length": "200"
     },
     "column4": {
       "name": "author",
       "type": "VARCHAR",
-      "length": "20"
+      "length": "200"
     },
     "column5": {
       "name": "year",
