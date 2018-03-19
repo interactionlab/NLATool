@@ -339,11 +339,11 @@
                             }
 
                         }
-                        console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
+                        /*console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
                         console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
                         console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
                         console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
-                        console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));
+                        console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));*/
                     }).fail(err => {
                         console.log('Google initial search failed: ' + err);
                     });
