@@ -96,7 +96,6 @@ io.on('connection', function (socket) {
         wait.launchFiber(loadWrittenText,socket, allTextUploads[uploadIndex], uploadIndex);
         //let lastTimeCheck = new Date();
         //console.log('Time setting up transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-
     });
 });
 
