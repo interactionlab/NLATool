@@ -85,12 +85,12 @@
 <script>
     export default {
         props: {
+            serverip: { type: String, default: "" },
             title: { type: String, default: "" },
             preventtitleedit: { type: Boolean, default: false},
             docid: { type: Number, default: -1 },
             route: { type: String, default: "" },
             autochecked: { type: Boolean, default: false },
-            serverip: { type: String, default: "" }
         },
         data: function () {
             return {

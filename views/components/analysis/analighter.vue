@@ -58,7 +58,7 @@
         },
         data: function () {
             return {
-                researchdatatoedit: {},
+                researchdatatoedit: null,
                 researchdatatoupdate: {},
                 showmode: 'entitiesview',
 
