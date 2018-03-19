@@ -1,0 +1,338 @@
+{
+  "database": {
+    "isTable": false,
+    "name": "nlatool",
+    "connections": {
+      "connection1": {
+        "host": "localhost",
+        "port": "3306",
+        "user": "user",
+        "password": "password",        
+        "priority": "1"
+      },
+      "connection2": {
+        "host": "localhost",
+        "port": "3306",
+        "password": "password",
+        "user": "user",
+        "priority": "2"
+      }
+    }
+  },
+  "corenlp": {
+    "isTable": false,
+    "name": "corenlp",
+    "connections": {
+      "connection1": {
+        "host": "localhost",
+        "port": "30001"
+      },
+      "connection2": {
+        "host": "localhost:9000",
+        "port": "9000"
+      },
+      "connection2": {
+        "host": "http://example.com",
+        "port": "9000"
+      }
+    }
+  },
+  "default": {
+    "isTable": false,
+    "type": "VARCHAR",
+    "AUTO_INCREMENT": false,
+    "PRIMARY": false,
+    "UNIQUE": false,
+    "null": "NOT NULL"
+  },
+  "table0": {
+    "isTable": true,
+    "name": "accountData",
+    "column1": {
+      "name": "userID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "email",
+      "UNIQUE": true,
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column3": {
+      "name": "username",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column4": {
+      "name": "password",
+      "type": "VARCHAR",
+      "length": "20"
+    }
+  },
+  "table1": {
+    "isTable": true,
+    "name": "documents",
+    "column1": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "userID",
+      "type": "INT",
+      "length": "11"
+    },
+    "column3": {
+      "name": "name",
+      "type": "VARCHAR",
+      "length": "200"
+    }
+  },
+  "table2": {
+    "isTable": true,
+    "name": "notes",
+    "column1": {
+      "name": "noteID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column3": {
+      "name": "content",
+      "type": "MEDIUMTEXT"
+    },
+    "column4": {
+      "name": "textIndex1",
+      "type": "INT",
+      "length": "11"
+    },
+    "column5": {
+      "name": "textIndex2",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6": {
+      "name": "noteIndex",
+      "type": "INT",
+      "length": "11"
+    }
+  },
+  "table3": {
+    "isTable": true,
+    "name": "text",
+    "column1": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents",
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "length",
+      "type": "INT",
+      "length": "11"
+    },
+    "column3": {
+      "name": "title",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column4": {
+      "name": "author",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5": {
+      "name": "year",
+      "type": "YEAR",
+      "length": "4"
+    },
+    "column6": {
+      "name": "lang",
+      "type": "VARCHAR",
+      "length": "11"
+    }
+  },
+  "table4": {
+    "isTable": true,
+    "name": "word",
+    "column1": {
+      "name": "wordID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "content",
+      "type": "TINYTEXT"
+    },
+    "column3": {
+      "name": "isSpecial",
+      "type": "TINYINT",
+      "length": "1"
+    },
+    "column4": {
+      "name": "semanticClass",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5": {
+      "name": "pos",
+      "type": "VARCHAR",
+      "length": "20"
+    }
+  },
+  "table5": {
+    "isTable": true,
+    "name": "textmap",
+    "column1": {
+      "name": "wordID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "word"
+    },
+    "column2": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column3": {
+      "name": "textIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column4": {
+      "name": "beginOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column5": {
+      "name": "EndOffSet",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6": {
+      "name": "whitespaceInfo",
+      "type": "INT",
+      "length": "11"
+    },
+    "column7": {
+      "name": "knowledgeGraphID",
+      "type": "VARCHAR",
+      "length": "25",
+      "null": "NULL"
+    }
+  },
+  "table6": {
+    "isTable": true,
+    "name": "textnote",
+    "column1": {
+      "name": "textnoteID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true
+    },
+    "column2": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column3": {
+      "name": "content",
+      "type": "MEDIUMTEXT"
+    }
+  },
+  "table7": {
+    "isTable": true,
+    "name": "corefmentions",
+    "column1": {
+      "name": "mentionID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column2": {
+      "name": "representative",
+      "type": "INT",
+      "length": "11"
+    },
+    "column3": {
+      "name": "gender",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column4": {
+      "name": "type",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5": {
+      "name": "number",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column6": {
+      "name": "animacy",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column7": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column8": {
+      "name": "startIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column9": {
+      "name": "endIndex",
+      "type": "INT",
+      "length": "11"
+    }
+  },
+  "table8": {
+    "isTable": true,
+    "name": "nestedcorefs",
+    "column1": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column2": {
+      "name": "mentionID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "corefmentions"
+    },
+    "column3": {
+      "name": "kind",
+      "type":"VARCHAR",
+      "length":"11"
+    },
+    "column4":{
+      "name": "relatedMention",
+      "type": "INT",
+      "length": "11"
+    }
+  }
+}
