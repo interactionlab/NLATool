@@ -1,3 +1,6 @@
+#Config Files
+/modules/config.json
+
 # Logs
 logs
 *.log
