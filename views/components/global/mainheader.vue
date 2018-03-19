@@ -68,15 +68,9 @@
             </button>
             <!-- Some examples for headerbutton-->
             <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="headerbtn">
-                <a class="mdl-navigation__link" href="profile">
-                    <li class="mdl-menu__item">Profile</li>
-                </a>
-                <a class="mdl-navigation__link" href="signin">
-                    <li class="mdl-menu__item">Sign In</li>
-                </a>
-                <a class="mdl-navigation__link" href="signin">
-                    <li class="mdl-menu__item">Sign Out</li>
-                </a>
+                <li class="mdl-menu__item" v-on:click="redirectTo('profile')">Profile</li>
+                <li class="mdl-menu__item" v-on:click="redirectTo('signin')">Sign In</li>
+                <li class="mdl-menu__item" v-on:click="redirectTo('signin')">Sign Out</li>
             </ul>
 
         </div>
@@ -85,12 +79,12 @@
 <script>
     export default {
         props: {
-            serverip: { type: String, default: "" },
-            title: { type: String, default: "" },
-            preventtitleedit: { type: Boolean, default: false},
-            docid: { type: Number, default: -1 },
-            route: { type: String, default: "" },
-            autochecked: { type: Boolean, default: false },
+            serverip: {type: String, default: ""},
+            title: {type: String, default: ""},
+            preventtitleedit: {type: Boolean, default: false},
+            docid: {type: Number, default: -1},
+            route: {type: String, default: ""},
+            autochecked: {type: Boolean, default: false},
         },
         data: function () {
             return {
@@ -103,9 +97,13 @@
             }
         },
         methods: {
+            redirectTo: function (route) {
+                let url ='/' + route;
+                window.location.replace(url);
+            },
             editTitle: function () {
                 this.title = this.newTitle;
-                let socket = io(this.serverip +':8080');
+                let socket = io(this.serverip + ':8080');
                 socket.emit('changeTitle', this.docid, this.newTitle);
                 this.editingtitle = false;
             },
@@ -125,8 +123,8 @@
             }
         },
         watch: {
-            autochecked: function (autochecked){
-                if (autochecked === true){
+            autochecked: function (autochecked) {
+                if (autochecked === true) {
                     this.$emit('newcolumnnumber', 0);
                 } else {
                     this.$emit('newcolumnnumber', this.numberofcolumns);
@@ -136,7 +134,7 @@
                 if (newNumber <= 0) {
                     this.numberofcolumns = 1;
                     this.$emit('newcolumnnumber', 1);
-                } else if (newNumber > 99){
+                } else if (newNumber > 99) {
                     this.numberofcolumns = 99;
                     this.$emit('newcolumnnumber', 99);
                 } else {
