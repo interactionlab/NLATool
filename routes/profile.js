@@ -76,9 +76,9 @@ router.post('/loadMoreDocuments', function (req, res, next) {
 });
 
 router.post('/loadDocument', function (req, res, next) {
-    req.session.docID = req.body.docID;
+    //req.session.docID = req.body.docID;
     //console.log(JSON.stringify(req.body));
-    res.redirect('/analysis');
+    res.redirect('/analysis/?docID='+req.body.docID);
 });
 
 /**

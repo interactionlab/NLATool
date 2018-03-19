@@ -191,17 +191,18 @@ function updateNote(noteID, note) {
 }
 
 router.get('/', function (req, res, next) {
-    console.log(Tag + "load text " + req.session.docID);
-    if (req.session.docID == undefined) {
+    console.log(Tag + "loading document: " + (req.session.docID || req.query.docID));
+    if (req.session.docID === undefined && req.query.docID === undefined) {
+        console.log(Tag + 'Id of Document (docID) was not defined');
         res.redirect('/');
     } else {
-        dbStub.fiberEstablishConnection();
+        //dbStub.fiberEstablishConnection();
         wait.launchFiber(getAndShowText, req, res, next);
     }
 });
 
 router.get('/a', function (req, res, next) {
-    dbStub.fiberEstablishConnection();
+    //dbStub.fiberEstablishConnection();
     res.renderVue('analysis', vueData, vueRenderOptions);
 });
 
@@ -222,9 +223,9 @@ router.post('/clearText', function (req, res) {
  */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
-    //console.log(notMedia + Tag + 'Document Id from Session is: ' + req.session.docID);
-    if (!isNaN(req.session.docID)) {
-        let docID = req.session.docID;
+    console.log(Tag + 'Document Id from Session is: ' + req.session.docID + ' or: ' + req.query.docID);
+    if (!isNaN(req.session.docID) || !isNaN(req.query.docID)) {
+        let docID = (req.query.docID || req.session.docID);
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
         vueData.vueTokens = selectWithInnerJoin(docID, 0, 30);
@@ -241,7 +242,7 @@ function getAndShowText(req, res) {
         //getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         //vueData.coref = textDB.coref;
-        //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
+        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     console.log(Tag + 'Server sent text to /analysis');
