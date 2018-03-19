@@ -346,7 +346,7 @@
                     }).fail(err => {
                         console.log('Google initial search failed: ' + err);
                     });
-                } else{
+                } else {
                     console.log('There was a token with a SemanticClass to Research but has no research on the DB');
                 }
             },
@@ -463,8 +463,7 @@
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
         },
         mounted() {
             if (this.tokenstoshow.length === 0)
@@ -478,21 +477,29 @@
         watch: {
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
+                    let semClass = '';
                     if (newresearchdatatoupdate !== null) {
                         if (newresearchdatatoupdate.sourcequery !== undefined) {
-                            console.log('Adding new result to ' + newresearchdatatoupdate.sourcequery.source[0].semanticClass);
-                            this[newresearchdatatoupdate.sourcequery.source[0].semanticClass].push(newresearchdatatoupdate);
+                            semClass = newresearchdatatoupdate.sourcequery.source[0].semanticClass;
+                            if (semClass !== undefined) {
+                                if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
+                                    console.log('Adding new result to OTHER');
+                                    this['OTHER'].push(newresearchdatatoupdate);
+                                } else {
+                                    console.log('Adding new result to ' + semClass);
+                                    this[semClass].push(newresearchdatatoupdate);
+                                }
+                            }
                         }
                     }
-                }
-                ,
+                },
                 deep: true,
                 immediate:
                     true
             },
             tokenstoshow: function (value) {
                 this.initializeEntitiesView();
-               this.researchTokensOfClass('PERSON', 0);
+                this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
                 this.researchTokensOfClass('MISC', 3);
@@ -582,8 +589,7 @@
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
-                }
-                ,
+                },
                 deep: true
             },
         },

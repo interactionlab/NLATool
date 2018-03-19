@@ -138,7 +138,7 @@ function saveResult(docID, indexes, researchresultID,) {
             ['docID', 'textIndex', 'textIndex'],
             [docID, stringifyForDB(indexes.start), stringifyForDB(indexes.end)],
             ['=', '>=', '<']));
-    console.log(Tag + 'updated Word with a research Result: ' + updateResult);
+    console.log(Tag + 'updated Word with a research Result: ');
 }
 
 /**
