@@ -334,7 +334,7 @@ exports.createInnerJoinSelectCommand = function (input, start, amount) {
                 + createWhereQuery(input.whereConditions.columns, input.whereConditions.values, input.whereConditions.operators);
         }
         if (start !== undefined && amount !== undefined) {
-            commandString = commandString + ' limit ' + start + ' , ' + amount;
+            commandString = commandString + ' limit ' + amount + ' OFFSET ' + start;
         }
     }
     commandString = commandString + ';';

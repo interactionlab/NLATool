@@ -112,6 +112,7 @@ io.on('connection', function (socket) {
 function getMoreTextResponse(socket, input) {
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
     console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
+    //console.log(Tag + 'Part: ' + JSON.stringify(tokens));
     socket.emit('sendMoreText', tokens);
 }
 
@@ -354,7 +355,9 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
+    console.log('coref Check 0');
     let corefs = getCorefs(docID, start, amount);
+    console.log('coref Check 1: ' + corefs.length);
     for (let i = 0; i < tokens.length - 1; i++) {
         for (let j = 0; j < corefs.length; j++) {
             //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
@@ -362,6 +365,7 @@ function selectWithInnerJoin(docID, start, amount) {
                 if (typeof  tokens[i].coref === 'undefined') {
                     tokens[i]['coref'] = [];
                 }
+                console.log('coref Check 2 pushing Mention');
                 tokens[i]['coref'].push({
                     mentionID: corefs[j].mentionID,
                     representative: corefs[j].representative,
@@ -448,6 +452,8 @@ function getCorefs(docID, start, amount) {
             operators: ['='],
         }
     };
+    console.log('params: ' + start + ' : ' + amount);
+    console.log(Tag+ 'Query: ' +dbAction.createInnerJoinSelectCommand(queryObject, start, amount));
     // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
 }

@@ -469,11 +469,11 @@
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-           /* this.initializeEntitiesView();
+            this.initializeEntitiesView();
             this.researchTokensOfClass('PERSON', 0);
             this.researchTokensOfClass('LOCATION', 1);
             this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);*/
+            this.researchTokensOfClass('MISC', 3);
         },
         watch: {
             researchdatatoupdate: {
@@ -492,10 +492,10 @@
             },
             tokenstoshow: function (value) {
                 this.initializeEntitiesView();
-               /* this.researchTokensOfClass('PERSON', 0);
+               this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);*/
+                this.researchTokensOfClass('MISC', 3);
             },
             hoverdata: {
                 handler: function (hoverdata) {
