@@ -112,7 +112,6 @@ io.on('connection', function (socket) {
 function getMoreTextResponse(socket, input) {
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
     console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
-    //console.log(Tag + 'Part: ' + JSON.stringify(tokens));
     socket.emit('sendMoreText', tokens);
 }
 
@@ -365,7 +364,6 @@ function selectWithInnerJoin(docID, start, amount) {
                 if (typeof  tokens[i].coref === 'undefined') {
                     tokens[i]['coref'] = [];
                 }
-                console.log('coref Check 2 pushing Mention');
                 tokens[i]['coref'].push({
                     mentionID: corefs[j].mentionID,
                     representative: corefs[j].representative,
@@ -452,8 +450,6 @@ function getCorefs(docID, start, amount) {
             operators: ['='],
         }
     };
-    console.log('params: ' + start + ' : ' + amount);
-    console.log(Tag+ 'Query: ' +dbAction.createInnerJoinSelectCommand(queryObject, start, amount));
     // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
 }
