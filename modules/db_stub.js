@@ -274,7 +274,7 @@ function changeValuesForQuery(transControl, results, index) {
         //console.log(transControl.useProper[index].ofResults[i]);
         tempProperResult = JSON.parse(results[transControl.useProper[index].ofResults[i]].getProper);
         transControl.useProper[index].values[transControl.useProper[index].numberOfColumns[i]]
-            = '"' + tempProperResult[transControl.useProper[index].nameOfPropers[i]] + '"';
+            = '"' + (tempProperResult[transControl.useProper[index].nameOfPropers[i]] || transControl.docid)  + '"';
     }
     return transControl;
 }
