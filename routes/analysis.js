@@ -125,6 +125,7 @@ function updateTitle(docID, newTitle) {
     docID = dbAction.stringifyForDB(docID);
     newTitle = dbAction.stringifyForDB(newTitle);
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
+    wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('text', ['title'], [newTitle], ['docID'], [docID], ['=']));
 }
 
 function saveResult(docID, indexes, researchresultID,) {
