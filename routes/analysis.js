@@ -110,8 +110,11 @@ io.on('connection', function (socket) {
 });
 
 function getMoreTextResponse(socket, input) {
+    let firstTimeCheck = new Date();
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
-    console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
+    let lastTimeCheck = new Date();
+    console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex + ' took: '
+        + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
     socket.emit('sendMoreText', tokens);
 }
 

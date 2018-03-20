@@ -372,29 +372,33 @@
                     } else {
                         let data = response.itemListElement[0];
                         let found = false;
-                        for (let i = 0; i < this[semClass].length; i++) {
-                            for (let k = 0; k < sourcequery.source.length; k++) {
-                                if (sourcequery.source[i].knowledgeGraphID === '0') {
-                                    tempResult = data;
-                                    tempResult["sourcequery"] = sourcequery;
-                                    this.saveResult2(tempResult);
+                        if (sourcequery !== undefined) {
+                            if (sourcequery.source !== undefined && sourcequery.source.length > 0) {
+                                for (let i = 0; i < this[semClass].length; i++) {
+                                    for (let k = 0; k < sourcequery.source.length; k++) {
+                                        if (sourcequery.source[i].knowledgeGraphID === '0') {
+                                            tempResult = data;
+                                            tempResult["sourcequery"] = sourcequery;
+                                            this.saveResult2(tempResult);
+                                        }
+                                    }
+                                    if (this[semClass][i].result["@id"] === data.result["@id"]) {
+                                        found = true;
+                                        for (let k = 0; k < sourcequery.source.length; k++) {
+                                            this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                        }
+                                        this[semClass][i].sourcequery.wordids.sort();
+                                        this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
+                                        this[semClass][i].sourcequery.freq += sourcequery.freq;
+                                        this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
+                                        //console.log(JSON.stringify(this[semClass][i]));
+                                    }
+                                }
+                                if (found === false) {
+                                    data["sourcequery"] = sourcequery;
+                                    this[semClass].push(data);
                                 }
                             }
-                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
-                                found = true;
-                                for (let k = 0; k < sourcequery.source.length; k++) {
-                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
-                                }
-                                this[semClass][i].sourcequery.wordids.sort();
-                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
-                                this[semClass][i].sourcequery.freq += sourcequery.freq;
-                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
-                                //console.log(JSON.stringify(this[semClass][i]));
-                            }
-                        }
-                        if (found === false) {
-                            data["sourcequery"] = sourcequery;
-                            this[semClass].push(data);
                         }
                     }
                 });
