@@ -228,7 +228,10 @@
                 let lastentity = -1;
                 for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
                     //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
-                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0') {
+                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0'
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 0
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 'null'
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== null) {
                         researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
                         lastersearchedtoken = researchedtokens.length - 1;
                         if (researchedentities.length === 0) {
