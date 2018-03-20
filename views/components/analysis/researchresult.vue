@@ -69,11 +69,6 @@
             index: {type: Number, default: -1},
             mapkey: {type: Number, default: -1},
             docid: {type: Number, default: -1},
-            mapcoordinates: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
             semclass: {type: String, default: ""},
             contentcontrol: {type: Object, default: null},
             wordtomarkonhoverdata: {
@@ -91,6 +86,11 @@
                     map: true,
                     information: true,
                     test: false
+                },
+                mapcoordinates: {
+                    type: Array, default: function () {
+                        return []
+                    }
                 },
             }
         },
@@ -114,6 +114,7 @@
                 this.hover = false;
             },
             accentuate: function () {
+                //console.log(JSON.stringify(this.researchdata));
                 this.hover = true;
                 let hoverdata = {
                     hoverstarted: "research",
