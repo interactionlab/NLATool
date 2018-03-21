@@ -1,10 +1,12 @@
 <template>
-    <div class="googlemap" :id="index"></div>
+    <img v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center=37.530101,38.600062&zoom=14&size=400x640&key='+googleapikey" style="width: 100%;" />
+    
 </template>
 
 <script>
     export default {
         props: {
+            googleapikey: {type: String, default: ""},
             index: { type: Number, default: -1 },
             mapcoordinates: { type: Array, default: function () { return [] }}
         },
@@ -16,15 +18,6 @@
                     center: '',
                 },
             }
-        },
-        mounted() {
-            //console.log('MapName: ' + this.index);
-            var element = document.getElementById(this.index);
-            this.mapoptions = {
-                zoom: 14,
-                center: new google.maps.LatLng(51.501527, -0.1921837)
-            };
-            var map = new google.maps.Map(element, this.mapoptions);
         },
         methods: {
             setmapcoordinates: function (x, y) {
