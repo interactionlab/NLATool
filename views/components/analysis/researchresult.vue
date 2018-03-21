@@ -66,6 +66,7 @@
     export default {
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             researchdata: {type: Object, default: null},
             index: {type: Number, default: -1},
             mapkey: {type: Number, default: -1},
@@ -81,7 +82,6 @@
         },
         data: function () {
             return {
-                googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
                 hover: false,
                 localcontentcontrol: {
                     img: true,

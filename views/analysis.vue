@@ -58,6 +58,7 @@
                                is="textfeatureviewport"
                                v-bind:columnindex="columnindex-1"
                                v-bind:serverip="serverip"
+                               v-bind:googleapikey="googleapikey"
                                v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
@@ -114,6 +115,7 @@
     export default {
         data: function () {
             return {
+                googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
                 moreData: null,
                 displayloading: true,
                 hoverdata: {},

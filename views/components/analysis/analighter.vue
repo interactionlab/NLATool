@@ -2,6 +2,7 @@
     <div>
         <component :is="showmode"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:tokens="tokens"
                    v-bind:columnindex="columnindex"
                    v-bind:tokenstoshow="tokenstoshow"
@@ -33,6 +34,7 @@
 
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             selectedindexes: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             hoverdata: {type: Object, default: null},

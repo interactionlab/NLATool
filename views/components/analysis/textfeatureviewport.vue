@@ -33,6 +33,7 @@
                     <component
                             :is="analysismode"
                             v-bind:serverip="serverip"
+                            v-bind:googleapikey="googleapikey"
                             v-bind:tokens="tokens"
                             v-bind:tokenstoshow="tokenstoshow"
                             v-bind:columnindex="columnindex"
@@ -67,6 +68,7 @@
     export default {
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             columnindex: {type: Number, default: 0},
             tokens: {
                 type: Array, default: function () {

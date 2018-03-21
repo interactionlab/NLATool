@@ -40,9 +40,10 @@
         <component is="research"
                    class="mdl-cell mdl-cell--12-col"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
+                   v-bind:docid="docid"
                    v-bind:researchdatatoedit="researchdatatoedit"
                    v-bind:tokens="tokens"
-                   v-bind:docid="docid"
                    v-bind:contentcontrol="contentcontrol"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -61,6 +62,7 @@
         mixins: [getselectedtext],
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             tokens: {
                 type: Array, default: function () {
                     return []
