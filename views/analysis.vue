@@ -297,7 +297,7 @@
                 } else {
                     
                     
-                    let wordnumbertofitinonecolumn = 200;
+                    let wordnumbertofitinonecolumn = 1200;
                     let startSlice = 0;
                     for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
                         tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + wordnumbertofitinonecolumn));
