@@ -12,7 +12,6 @@
                                v-for="(token,i) in tokenstoshow[columnindex]"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:nexttoken="nexttoken(token.textIndex)"
                                v-bind:index="token.textIndex+1"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
