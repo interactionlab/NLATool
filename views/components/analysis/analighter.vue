@@ -77,7 +77,11 @@
             editresearch: function (researchData) {
                 this.classestomark.POS = true;
                 this.showmode = 'correction';
-                this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
+                if(researchData !== undefined) {
+                    this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
+                } else{
+                    this.researchdatatoedit = null;
+                }
                 this.researchdatatoupdate = null;
                 this.$emit('updateclassestomark', this.classestomark);
             },

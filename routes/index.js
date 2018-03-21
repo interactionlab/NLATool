@@ -93,7 +93,7 @@ io.on('connection', function (socket) {
             }
         }
         //let firstTimeCheck = new Date();
-        wait.launchFiber(loadWrittenText,socket, allTextUploads[uploadIndex], uploadIndex);
+        wait.launchFiber(loadWrittenText, socket, allTextUploads[uploadIndex], uploadIndex);
         //let lastTimeCheck = new Date();
         //console.log('Time setting up transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
     });
@@ -102,7 +102,7 @@ io.on('connection', function (socket) {
 function initialisingTextUpload(socket, title) {
     title = stringifyForDB(title);
     let documentInsertResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createInsertCommand('documents', ['name'], [title], null, null)));
+        dbAction.createInsertCommand('documents', ['name', 'userID'], [title, 0], null, null)));
     allTextUploads.push({docid: documentInsertResult.insertId, title: title, text: ''});
     socket.emit('resinitupload', documentInsertResult.insertId);
 }
@@ -127,11 +127,11 @@ function loadWrittenText(socket, upload, uploadIndex) {
         };
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
-        console.log(Tag +'Starting analysing text');
+        console.log(Tag + 'Starting analysing text');
         let parsedResult = wait.for(corenlp.analyse, text);
-        console.log(Tag +'Finished analysing text');
+        console.log(Tag + 'Finished analysing text');
         let lastTimeCheck = new Date();
-        console.log(Tag +'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
+        console.log(Tag + 'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
 
         transactionInformation.words = parsedResult.text;
         transactionInformation.corefInfo = parsedResult.coref;
@@ -140,10 +140,10 @@ function loadWrittenText(socket, upload, uploadIndex) {
         let helpVariable = true;
         transactionInformation.transControl.getProper.push(helpVariable);
         transactionInformation.querys.push(dbAction.createInsertCommand('text',
-            ['docID', 'length', 'title',],
-            [upload.docid, transactionInformation.words.length, upload.title,],
+            ['docID', 'length', 'title', 'author', 'year', 'lang'],
+            [upload.docid, transactionInformation.words.length, upload.title, '"To Implement"', 2049, '"en"'],
             null, null));
-        console.log(Tag +'metaInfo uploaded');
+        console.log(Tag + 'metaInfo uploaded');
         firstTimeCheck = new Date();
         deltaTime = firstTimeCheck.getTime();
         let counter = 0;
@@ -190,29 +190,26 @@ function loadWrittenText(socket, upload, uploadIndex) {
             }
         }
         lastTimeCheck = new Date();
-         console.log(Tag +'Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-         firstTimeCheck = new Date();
-        console.log(Tag +'Preparing Coref');
+        console.log(Tag + 'Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+        firstTimeCheck = new Date();
+        console.log(Tag + 'Preparing Coref');
         transactionInformation = saveCoref(transactionInformation, counter);
 
-         lastTimeCheck = new Date();
-         console.log(Tag +'Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-         firstTimeCheck = new Date();
+        lastTimeCheck = new Date();
+        console.log(Tag + 'Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+        firstTimeCheck = new Date();
         console.log(Tag + 'making transaction');
         let transactionResults = dbStub.makeTransaction(transactionInformation);
 
         lastTimeCheck = new Date();
-        console.log(Tag +'Time executing transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-        //transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
-        //TODO: Session logic should be changed to url request -> Issue #79
-        //req.session.docID = transactionResults[0].getProper.insertId;
+        console.log(Tag + 'Time executing transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
         console.log('Finished uploading annotated Text to DB. redirecting to analysis');
         //Client should do the redirect. Thus Issue #79 must be solved on the client.
         let url = '/analysis/?docID=' + upload.docid;
         socket.emit('redirectToAnalysis', url);
         console.log(Tag + 'delete Upload from stack.');
         allTextUploads.splice(uploadIndex, 1);
-    } else{
+    } else {
         console.log(Tag + 'Corenlp Status is wrong');
     }
 }
@@ -310,11 +307,14 @@ function postLoadWrittenText(req, res, next) {
             transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
                 kindOfQuery: 'insert',
                 table: 'text',
-                columns: ['docID', 'length', 'title', 'lang'],
+                columns: ['docID', 'length', 'title', 'lang', 'author', 'year'],
                 values: [-1,
                     transactionInformation.words.length,
                     title,
-                    lang],
+                    lang,
+                    'To Implement',
+                    2048
+                ],
                 numberOfColumns: [0],
                 ofResults: [0],
                 nameOfPropers: ['insertId'],

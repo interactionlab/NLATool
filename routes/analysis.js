@@ -110,8 +110,12 @@ io.on('connection', function (socket) {
 });
 
 function getMoreTextResponse(socket, input) {
+    let firstTimeCheck = new Date();
     let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
-    console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex);
+    let lastTimeCheck = new Date();
+    console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex + ' took: '
+        + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+    //console.log(Tag + 'Content of part: ' + JSON.stringify(tokens));
     socket.emit('sendMoreText', tokens);
 }
 
@@ -129,6 +133,7 @@ function updateTitle(docID, newTitle) {
 }
 
 function saveResult(docID, indexes, researchresultID,) {
+    let firstTimeCheck = new Date();
     docID = stringifyForDB(docID);
     researchresultID = stringifyForDB(researchresultID);
     let updateResult = wait.for(dbStub.makeSQLRequest,
@@ -138,7 +143,9 @@ function saveResult(docID, indexes, researchresultID,) {
             ['docID', 'textIndex', 'textIndex'],
             [docID, stringifyForDB(indexes.start), stringifyForDB(indexes.end)],
             ['=', '>=', '<']));
-    console.log(Tag + 'updated Word with a research Result: ' + updateResult);
+    let lastTimeCheck = new Date();
+    console.log(Tag + 'updated Word for: '+ docID+ ' at '+indexes.start + ' to ' + indexes.end + ' with a research Result. took: '
+    + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
 }
 
 /**
@@ -230,11 +237,6 @@ function getAndShowText(req, res) {
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
         vueData.vueTokens = selectWithInnerJoin(docID, 0, 30);
-
-        //getTextFromDB(docID);
-        //console.log(textDB.tokens);
-        //vueData.vueTokens = textDB.tokens;
-        //vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
@@ -243,7 +245,7 @@ function getAndShowText(req, res) {
         //getCorefInfo(docID);
         vueData.meta = textDB.textMetaData;
         //vueData.coref = textDB.coref;
-        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
+        //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     console.log(Tag + 'Server sent text to /analysis');
@@ -443,13 +445,14 @@ function getCorefs(docID, start, amount) {
         }],
         kindOfJoin: ['INNER', 'LEFT'],
         whereConditions: {
-            columns: ['textmap.docID'],
-            values: [docID],
-            operators: ['='],
+            columns: ['textmap.docID', 'textmap.textIndex', 'textmap.textIndex'],
+            values: [docID, start, start + amount],
+            operators: ['=', '>=', '<='],
         }
     };
-    // console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
+    //console.log(Tag + 'Coref Query: ' + dbAction.createInnerJoinSelectCommand(queryObject));
+    //console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
 }
 
 function getCorefInfo(docID) {

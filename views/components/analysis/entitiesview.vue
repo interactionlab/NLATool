@@ -228,7 +228,10 @@
                 let lastentity = -1;
                 for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
                     //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
-                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0') {
+                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0'
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 0
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 'null'
+                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== null) {
                         researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
                         lastersearchedtoken = researchedtokens.length - 1;
                         if (researchedentities.length === 0) {
@@ -346,7 +349,7 @@
                     }).fail(err => {
                         console.log('Google initial search failed: ' + err);
                     });
-                } else{
+                } else {
                     console.log('There was a token with a SemanticClass to Research but has no research on the DB');
                 }
             },
@@ -367,31 +370,39 @@
                     if (limit > 1) {
                         // this[semClass].push(this.rerankWithKeywords());
                     } else {
-                        let data = response.itemListElement[0];
-                        let found = false;
-                        for (let i = 0; i < this[semClass].length; i++) {
-                            for (let k = 0; k < sourcequery.source.length; k++) {
-                                if (sourcequery.source[i].knowledgeGraphID === '0') {
-                                    tempResult = data;
-                                    tempResult["sourcequery"] = sourcequery;
-                                    this.saveResult2(tempResult);
+                        if (response !== undefined && response.itemListElement.length > 0) {
+                            let data = response.itemListElement[0];
+                            let found = false;
+                            if (sourcequery !== undefined) {
+                                if (sourcequery.source !== undefined) {
+                                    if (sourcequery.source.length > 0) {
+                                        for (let i = 0; i < this[semClass].length; i++) {
+                                            for (let k = 0; k < sourcequery.source.length; k++) {
+                                                if (sourcequery.source[i].knowledgeGraphID === '0') {
+                                                    tempResult = data;
+                                                    tempResult["sourcequery"] = sourcequery;
+                                                    this.saveResult2(tempResult);
+                                                }
+                                            }
+                                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
+                                                found = true;
+                                                for (let k = 0; k < sourcequery.source.length; k++) {
+                                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                                }
+                                                this[semClass][i].sourcequery.wordids.sort();
+                                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
+                                                this[semClass][i].sourcequery.freq += sourcequery.freq;
+                                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
+                                                //console.log(JSON.stringify(this[semClass][i]));
+                                            }
+                                        }
+                                        if (found === false) {
+                                            data["sourcequery"] = sourcequery;
+                                            this[semClass].push(data);
+                                        }
+                                    }
                                 }
                             }
-                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
-                                found = true;
-                                for (let k = 0; k < sourcequery.source.length; k++) {
-                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
-                                }
-                                this[semClass][i].sourcequery.wordids.sort();
-                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
-                                this[semClass][i].sourcequery.freq += sourcequery.freq;
-                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
-                                //console.log(JSON.stringify(this[semClass][i]));
-                            }
-                        }
-                        if (found === false) {
-                            data["sourcequery"] = sourcequery;
-                            this[semClass].push(data);
                         }
                     }
                 });
@@ -463,39 +474,47 @@
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
         },
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-           /* this.initializeEntitiesView();
+            this.initializeEntitiesView();
             this.researchTokensOfClass('PERSON', 0);
             this.researchTokensOfClass('LOCATION', 1);
             this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);*/
+            this.researchTokensOfClass('MISC', 3);
+
         },
         watch: {
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
+                    let semClass = '';
                     if (newresearchdatatoupdate !== null) {
                         if (newresearchdatatoupdate.sourcequery !== undefined) {
-                            console.log('Adding new result to ' + newresearchdatatoupdate.sourcequery.source[0].semanticClass);
-                            this[newresearchdatatoupdate.sourcequery.source[0].semanticClass].push(newresearchdatatoupdate);
+                            semClass = newresearchdatatoupdate.sourcequery.source[0].semanticClass;
+                            if (semClass !== undefined) {
+                                if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
+                                    console.log('Adding new result to OTHER');
+                                    this['OTHER'].push(newresearchdatatoupdate);
+                                } else {
+                                    console.log('Adding new result to ' + semClass);
+                                    this[semClass].push(newresearchdatatoupdate);
+                                }
+                            }
                         }
                     }
-                }
-                ,
+                },
                 deep: true,
                 immediate:
                     true
             },
             tokenstoshow: function (value) {
                 this.initializeEntitiesView();
-               /* this.researchTokensOfClass('PERSON', 0);
+                this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);*/
+                this.researchTokensOfClass('MISC', 3);
             },
             hoverdata: {
                 handler: function (hoverdata) {
@@ -581,8 +600,7 @@
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
-                }
-                ,
+                },
                 deep: true
             },
         },
