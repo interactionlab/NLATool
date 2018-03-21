@@ -91,6 +91,12 @@
       "name": "name",
       "type": "VARCHAR",
       "length": "200"
+    },
+    "column4": {
+      "name": "loadingStatus",
+      "type": "INT",
+      "length": "3",
+      "null": "NULL"
     }
   },
   "table2": {
