@@ -36,7 +36,8 @@
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
                                 <div style="float: left; width: 30%; margin-right: 1em;">
                                     <component is="googlemap" v-if="ifShowMap"
-                                               v-bind:mapcoordinates="mapcoordinates"
+                                               v-bind:name="researchdata.result.name"
+                                               v-bind:googleapikey="googleapikey"
                                                v-bind:index="mapkey"
                                     >
                                     </component>
@@ -80,6 +81,7 @@
         },
         data: function () {
             return {
+                googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
                 hover: false,
                 localcontentcontrol: {
                     img: true,
