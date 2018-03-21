@@ -28,8 +28,10 @@
                 this.mapcoordinates = data;           
                 let lat = this.mapcoordinates.location.lat;
                 let lng = this.mapcoordinates.location.lng;
-                this.url = 'https://maps.googleapis.com/maps/api/staticmap?center='+lat+','+lng+'&zoom=14&size=640x400&key=' + this.googleapikey;
-                console.log('Response for Research: ' + this.url);
+                
+               
+                this.url = 'https://maps.googleapis.com/maps/api/staticmap?center='+lat+','+lng+'&size=640x400&visible=' + this.mapcoordinates.viewport.northeast.lat + ',' + this.mapcoordinates.viewport.northeast.lng + '|' + this.mapcoordinates.viewport.southwest.lat + ',' + this.mapcoordinates.viewport.southwest.lng + '&markers=color:red%7Clabel:A%7C'+lat+','+lng+'&key=' + this.googleapikey;
+                console.log('Response for Research: ' + JSON.stringify(this.mapcoordinates));
             },
             getData: function(fAfter){
                 let service_url = 'https://maps.googleapis.com/maps/api/geocode/json';
@@ -39,7 +41,6 @@
                     format: "jsonp"
                 };
                 $.getJSON(service_url, params, function (json) {
-                    console.log('Response for Research: ' + this.url);
                     if (fAfter !== undefined){
                         if (json.results[0].geometry  !== undefined){
                             fAfter(json.results[0].geometry);

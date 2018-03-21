@@ -125,7 +125,6 @@
                 };
                 $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
-                        console.log('Response for Research: ' + JSON.stringify(response));
                         //this.rerankWithKeywords(response);
                         //this.getMapCoordinates();
                         let data = response.itemListElement;
