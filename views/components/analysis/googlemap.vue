@@ -1,18 +1,19 @@
 <template>
-    <img v-bind:src="'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center=37.530101,38.600062&zoom=14&size=400x640&key='+googleapikey" style="width: 100%;" />
-    
+    <img v-if="url != ''" v-bind:src="url" style="width: 100%;" />
 </template>
 
 <script>
     export default {
         props: {
             googleapikey: {type: String, default: ""},
+            name: {type: String, default: ""},
             index: { type: Number, default: -1 },
-            mapcoordinates: { type: Array, default: function () { return [] }}
         },
 
         data: function () {
             return {
+                url : '',
+                mapcoordinates: [],
                 mapoptions: {
                     zoom: 14,
                     center: '',
@@ -23,13 +24,38 @@
             setmapcoordinates: function (x, y) {
                 this.mapoptions.center = new google.map.LatLng(x, y);
 
+            },
+            fAfter: function(data){
+                this.mapcoordinates = data;           
+                let lat = this.mapcoordinates.location.lat;
+                let lng = this.mapcoordinates.location.lng;
+                this.url = 'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center='+lat+','+lng+'&zoom=14&size=640x400&key=' + this.googleapikey;
+                console.log('Response for Research: ' + this.url);
+            },
+            getData: function(fAfter){
+                let service_url = 'https://maps.googleapis.com/maps/api/geocode/json';
+                let params = {
+                    address: this.name,
+                    key: this.googleapikey,
+                    format: "jsonp"
+                };
+                
+                $.getJSON(service_url, params, function (json) {
+                    console.log('Response for Research: ' + this.url);
+                    if (fAfter !== undefined){
+                        fAfter(json.results[0].geometry);
+                    } else {
+                        console.log('fAfter is undefined');
+                    }
+                });
             }
         },
+        mounted() {
+            this.getData(this.fAfter);
+        },
         watch: {
-            mapcoordinates: {
-                handler: function (newmapcoordinates) {
-                    this.setmapcoordinates(newmapcoordinates[this.index].x, newmapcoordinates[this.index].y);
-                }
+            url: function () {
+                console.log('URL changes' + this.url);
             }
         }
     }
