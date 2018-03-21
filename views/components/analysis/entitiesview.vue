@@ -235,7 +235,6 @@
                         researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
                         lastersearchedtoken = researchedtokens.length - 1;
                         if (researchedentities.length === 0) {
-                            //console.log('Checkpoint 1.0: first entity');
                             tempsourcequery = {
                                 freq: 1,
                                 wordids: [researchedtokens[lastersearchedtoken].wordID],
