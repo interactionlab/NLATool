@@ -203,9 +203,6 @@ function loadWrittenText(socket, upload, uploadIndex) {
 
         lastTimeCheck = new Date();
         console.log(Tag + 'Time executing transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-        //transactionResults[0].getProper = JSON.parse(transactionResults[0].getProper);
-        //TODO: Session logic should be changed to url request -> Issue #79
-        //req.session.docID = transactionResults[0].getProper.insertId;
         console.log('Finished uploading annotated Text to DB. redirecting to analysis');
         //Client should do the redirect. Thus Issue #79 must be solved on the client.
         let url = '/analysis/?docID=' + upload.docid;
