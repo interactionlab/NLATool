@@ -15,6 +15,7 @@
                            v-for="(researchresult,index) in researchresults[0]"
                            v-bind:serverip="serverip"
                            v-bind:researchdata="researchresult"
+                           v-bind:googleapikey="googleapikey"
                            v-bind:key="index"
                            v-bind:index="index"
                            v-bind:mapkey="index"
@@ -115,17 +116,16 @@
                 return items;
             },
             searchGoogle: function (query, limit) {
-
-                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
+                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search?callback=?';
                 let params = {
                     'query': query,
                     'limit': limit,
                     'indent': true,
-                    'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
+                    'key': this.googleapikey,
                 };
-                $.getJSON(service_url + '?callback=?', params, (response) => {
+                $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
-                        //console.log('Response for Research: ' + JSON.stringify(response));
+                        console.log('Response for Research: ' + JSON.stringify(response));
                         //this.rerankWithKeywords(response);
                         //this.getMapCoordinates();
                         let data = response.itemListElement;

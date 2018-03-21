@@ -23,13 +23,12 @@
         methods: {
             setmapcoordinates: function (x, y) {
                 this.mapoptions.center = new google.map.LatLng(x, y);
-
             },
             fAfter: function(data){
                 this.mapcoordinates = data;           
                 let lat = this.mapcoordinates.location.lat;
                 let lng = this.mapcoordinates.location.lng;
-                this.url = 'https://maps.googleapis.com/maps/api/staticmap?maptype=satellite&center='+lat+','+lng+'&zoom=14&size=640x400&key=' + this.googleapikey;
+                this.url = 'https://maps.googleapis.com/maps/api/staticmap?center='+lat+','+lng+'&zoom=14&size=640x400&key=' + this.googleapikey;
                 console.log('Response for Research: ' + this.url);
             },
             getData: function(fAfter){
@@ -39,13 +38,14 @@
                     key: this.googleapikey,
                     format: "jsonp"
                 };
-                
                 $.getJSON(service_url, params, function (json) {
                     console.log('Response for Research: ' + this.url);
                     if (fAfter !== undefined){
-                        fAfter(json.results[0].geometry);
-                    } else {
-                        console.log('fAfter is undefined');
+                        if (json.results[0].geometry  !== undefined){
+                            fAfter(json.results[0].geometry);
+                        } else {
+                            console.log('WARNING: Google Geocoding API not activated.');
+                        }
                     }
                 });
             }

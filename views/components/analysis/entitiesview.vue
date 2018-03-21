@@ -21,6 +21,7 @@
                    v-if="classestomark.PERSON"
                    v-for="(researchresult,index) in PERSON"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:researchdata="researchresult"
                    v-bind:key="index"
                    v-bind:index="index"
@@ -54,6 +55,7 @@
                    v-if="classestomark.LOCATION"
                    v-for="(researchresult,index2) in LOCATION"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:researchdata="researchresult"
                    v-bind:key="index2+ PERSON.length"
                    v-bind:index="index2"
@@ -87,6 +89,7 @@
                    v-if="classestomark.ORGANIZATION"
                    v-for="(researchresult,index3) in ORGANIZATION"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:researchdata="researchresult"
                    v-bind:key="index3+ PERSON.length + LOCATION.length"
                    v-bind:index="index3"
@@ -121,6 +124,7 @@
                    v-for="(researchresult,index4) in MISC"
                    v-bind:index="index4"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:researchdata="researchresult"
                    v-bind:key="index4+ PERSON.length + LOCATION.length + ORGANIZATION.length"
                    v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
@@ -154,6 +158,7 @@
                    v-for="(researchresult,index5) in OTHER"
                    v-bind:index="index5"
                    v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
                    v-bind:researchdata="researchresult"
                    v-bind:key="index5+ PERSON.length + LOCATION.length + ORGANIZATION.length + MISC.length"
                    v-bind:mapkey="index5+ PERSON.length+ LOCATION.length+ ORGANIZATION.length+ MISC.length"
@@ -175,6 +180,7 @@
         mixins: [filtertokenwithclass],
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             tokens: {
                 type: Array, default: function () {
                     return []
@@ -311,35 +317,37 @@
                 }
             },
             searchGoogleWithResearchedEntities: function (researchedentities) {
-                //console.log('Checkpoint 4 ' + JSON.stringify(researchedentities));
                 let hasID = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let dataurl = 'key=AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ';
+                let dataurl = 'key='+this.googleapikey;
                 for (let i = 0; i < researchedentities.length; i++) {
                     dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
                     hasID = true;
                 }
-                //console.log('Checkpoint 5: ' + dataurl + ' : ' + JSON.stringify(requestParams));
                 if (hasID) {
                     $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                     }).done((response) => {
                         let data = response.itemListElement;
-                        console.log('Response for initial Research: ' + data.length);
-                        for (let i = 0; i < data.length; i++) {
-                            for (let j = 0; j < researchedentities.length; j++) {
-                                if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
-                                    data[i]["sourcequery"] = researchedentities[j];
-                                    if (researchedentities[j].source[0].semanticClass !== 'PERSON'
-                                        && researchedentities[j].source[0].semanticClass !== 'LOCATION'
-                                        && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
-                                        && researchedentities[j].source[0].semanticClass !== 'MISC') {
-                                        this['OTHER'].push(data[i]);
-                                    } else {
-                                        this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                        if(response.error !== undefined && response.error.code === 400 ) {
+                            console.log('WARNING: Google Knowledge Graph Search API not activated.');
+                        } else {
+                            //console.log('Response for initial Research: ' + data.length);
+                            for (let i = 0; i < data.length; i++) {
+                                for (let j = 0; j < researchedentities.length; j++) {
+                                    if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
+                                        data[i]["sourcequery"] = researchedentities[j];
+                                        if (researchedentities[j].source[0].semanticClass !== 'PERSON'
+                                            && researchedentities[j].source[0].semanticClass !== 'LOCATION'
+                                            && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
+                                            && researchedentities[j].source[0].semanticClass !== 'MISC') {
+                                            this['OTHER'].push(data[i]);
+                                        } else {
+                                            this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                                        }
                                     }
                                 }
-                            }
 
+                            }
                         }
                         /*console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
                         console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
@@ -362,7 +370,7 @@
                     'query': query,
                     'limit': limit,
                     'indent': true,
-                    'key': 'AIzaSyAf3z_eNF3RKsZxoy7SXEGPD3v-9bNfgfQ',
+                    'key': this.googleapikey,
                 };
                 $.getJSON(service_url + '?callback=?', params, (response) => {
                 }).done((response) => {
