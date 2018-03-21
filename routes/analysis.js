@@ -64,7 +64,8 @@ let vueData = {
     docID: 293,
     meta: null,
     title: 'NLA - Natural Language Analyse Tool',
-    coref: null
+    coref: null,
+    googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
 };
 
 //--------------------------------------------------------

@@ -25,7 +25,7 @@
                 this.mapoptions.center = new google.map.LatLng(x, y);
             },
             fAfter: function(data){
-                this.mapcoordinates = data;           
+                this.mapcoordinates = data;
                 let lat = this.mapcoordinates.location.lat;
                 let lng = this.mapcoordinates.location.lng;
                 

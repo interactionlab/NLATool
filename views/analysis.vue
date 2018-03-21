@@ -115,7 +115,6 @@
     export default {
         data: function () {
             return {
-                googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
                 moreData: null,
                 displayloading: true,
                 hoverdata: {},
