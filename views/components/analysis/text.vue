@@ -8,7 +8,7 @@
             class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span
             class="nonPreAlt specialBracket" v-bind:class="toHighlight"
             v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt"
-                                                                         v-bind:class="classToHighlightGap">{{getWordGap}}</span></span>
+                                                                         v-bind:class="classToHighlightGap">{{getWordGap2}}</span></span>
 </template>
 <script>
     export default {
@@ -164,10 +164,9 @@
                             }
                         }
                     }
-                    //TODO: check for consistency
-                    if (this.nexttoken !== null && this.nexttoken.semanticClass === this.token.semanticClass) {
-                        htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                    }
+                    // if (this.nexttoken !== null && this.nexttoken.semanticClass === this.token.semanticClass) {
+                    //     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                    // }
                 } catch (err) {
                     //console.log('Got out of the array' + err);
                 }
@@ -197,25 +196,19 @@
                 }
                 return resultingBrackets;
             },
-            getWordGap: function () {
-                if (this.nexttoken === null) {
+            getWordGap2: function () {
+                if (this.token.whitespaceInfo > 0) {
+                    return new Array(this.token.whitespaceInfo + 1).join(' ');
+                } else if(this.token.whitespaceInfo === 0){
                     return '';
+                } else if(this.token.whitespaceInfo === -10) {
+                    return ' ';
+                } else {
+                    return '<br>';
                 }
 
-                let word2OffsetEnd = -1;
-                try {
-                    word2OffsetEnd = this.token.EndOffSet;
-                } catch (err) {
-                }
-                //default Setting: 1 space * difference between Offsets
-                let gap = '';
-                if (word2OffsetEnd !== -1) {
-                    if (this.nexttoken.whitespaceInfo === -10) {
-                        gap = Array(this.nexttoken.beginOffSet - word2OffsetEnd + 1).join(" ");
-                    }
-                }
-                return gap;
-            }
+            },
+
         },
         watch: {
             wordtomarkonhoverdata: function (event) {
@@ -227,7 +220,7 @@
                     let index = event.wordids.indexOf(this.token.wordID)
                     if (index > -1) {
                         this.isEntityHovered = true;
-                        if (index == 0 && event.hoverstarted === "research") {
+                        if (index === 0 && event.hoverstarted === "research") {
                             if (this.allowtexttoscroll) {
                                 this.$el.scrollIntoView();
                             }
@@ -269,7 +262,7 @@
                     semanticClass: this.token.semanticClass,
                     startresearch: undefined,
                     wordtomarkonhover: []
-                }
+                };
                 this.$emit('starthover', hoverdata);
             }
         }

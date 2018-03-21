@@ -145,15 +145,18 @@ function loadWrittenText(socket, upload, uploadIndex) {
             null, null));
         console.log(Tag + 'metaInfo uploaded');
         firstTimeCheck = new Date();
-        deltaTime = firstTimeCheck.getTime();
-        let counter = 0;
+
+        let whitespace = 0;
+        let counter = 1;
         for (let i = 0; i < transactionInformation.words.length; i++) {
-            for (let j = 0; j < transactionInformation.words[i].length; j++) {
-                transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
-                parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
-                parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
-                parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
-                parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
+            for (let j = 1; j <= transactionInformation.words[i].length; j++) {
+                transactionInformation.words[i][j-1] = stringifyForDB(transactionInformation.words[i][j - 1]);
+                parsedResult.ner[i][j-1] = stringifyForDB(parsedResult.ner[i][j - 1]);
+                parsedResult.pos[i][j-1] = stringifyForDB(parsedResult.pos[i][j - 1]);
+                whitespace = parsedResult.offsetBegin[counter] -  parsedResult.offsetEnd[counter - 1]  ;
+                console.log('whitespace is: ' + whitespace);
+                parsedResult.offsetBegin[counter-1] = stringifyForDB(parsedResult.offsetBegin[counter - 1]);
+                parsedResult.offsetEnd[counter-1] = stringifyForDB(parsedResult.offsetEnd[counter - 1]);
 
                 transactionInformation.querys.push(dbAction.createInsertCommand(
                     'word',
@@ -163,10 +166,10 @@ function loadWrittenText(socket, upload, uploadIndex) {
                         'semanticClass',
                         'pos'
                     ], [
-                        transactionInformation.words[i][j],
+                        transactionInformation.words[i][j - 1],
                         0,
-                        parsedResult.ner[i][j],
-                        parsedResult.pos[i][j]
+                        parsedResult.ner[i][j - 1],
+                        parsedResult.pos[i][j - 1]
                     ],
                     null, null));
                 transactionInformation.transControl.getProper[transactionInformation.querys.length - 1] = true;
@@ -177,9 +180,9 @@ function loadWrittenText(socket, upload, uploadIndex) {
                     columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
                     values: [-1, -1,
                         counter,
-                        parsedResult.offsetBegin[counter],
-                        parsedResult.offsetEnd[counter],
-                        '"-10"'],
+                        parsedResult.offsetBegin[counter - 1],
+                        parsedResult.offsetEnd[counter - 1],
+                        stringifyForDB(whitespace)],
                     numberOfColumns: [0, 1],
                     ofResults: [0, transactionInformation.querys.length - 2],
                     nameOfPropers: ['insertId', 'insertId'],
