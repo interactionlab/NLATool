@@ -235,6 +235,18 @@
       "type": "VARCHAR",
       "length": "25",
       "null": "NULL"
+    },
+    "column8": {
+      "name": "lat",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column9": {
+      "name": "lng",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
     }
   },
   "table6": {

@@ -237,11 +237,6 @@ function getAndShowText(req, res) {
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
         vueData.vueTokens = selectWithInnerJoin(docID, 0, 30);
-
-        //getTextFromDB(docID);
-        //console.log(textDB.tokens);
-        //vueData.vueTokens = textDB.tokens;
-        //vueData.vueText = buildText();
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
