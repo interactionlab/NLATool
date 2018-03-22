@@ -114,14 +114,14 @@
                 handler: function (newSelectedIndexes) {
                     //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
-                        this.manipulateword(i, 'selected', false);
-                        this.manipulateword(i, 'selectedgap', false);
+                        this.manipulateword(i - this.indexCorrector, 'selected', false);
+                        this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
                     }
                     if (newSelectedIndexes.start > -1 && newSelectedIndexes.end > -1) {
                         for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
-                            this.manipulateword(i, 'selected', true);
+                            this.manipulateword(i - this.indexCorrector, 'selected', true);
                             if (i < newSelectedIndexes.end - 1) {
-                                this.manipulateword(i, 'selectedgap', true);
+                                this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
                             }
                         }
                         this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
@@ -134,21 +134,23 @@
                     let text = this.$refs['text'];
                     let i = 0;
                     let j = 0;
+                    let correctedIndex = 0;
                     if (newHoverData.startword !== undefined && newHoverData.startword !== null) {
                         if (this.highlightedhovered !== null) {
                             if (this.highlightedhovered.startword !== null) {
-                                while (text[this.highlightedhovered.startword.textIndex].token.semanticClass
-                                === text[this.highlightedhovered.startword.textIndex + j].token.semanticClass) {
-                                    this.manipulateword(this.highlightedhovered.startword.textIndex + j, 'entityhover', false);
-                                    this.manipulateword(this.highlightedhovered.startword.textIndex + j, 'entityhovergap', false);
+                                correctedIndex = this.highlightedhovered.startword.textIndex - this.indexCorrector;
+                                while (text[correctedIndex].token.semanticClass
+                                === text[correctedIndex + j].token.semanticClass) {
+                                    this.manipulateword(correctedIndex + j, 'entityhover', false);
+                                    this.manipulateword(correctedIndex + j, 'entityhovergap', false);
                                     j++;
                                 }
                                 j = 0;
-                                while (text[this.highlightedhovered.startword.textIndex].token.semanticClass
-                                === text[this.highlightedhovered.startword.textIndex - j].token.semanticClass) {
-                                    if (this.highlightedhovered.startword.textIndex - j > 0) {
-                                        this.manipulateword(this.highlightedhovered.startword.textIndex - j, 'entityhover', false);
-                                        this.manipulateword(this.highlightedhovered.startword.textIndex - j, 'entityhovergap', false);
+                                while (text[correctedIndex].token.semanticClass
+                                === text[correctedIndex - j].token.semanticClass) {
+                                    if (correctedIndex - j > 0) {
+                                        this.manipulateword(correctedIndex - j, 'entityhover', false);
+                                        this.manipulateword(correctedIndex - j, 'entityhovergap', false);
                                         j++;
                                     } else {
                                         break;
@@ -156,16 +158,17 @@
                                 }
                             }
                         }
-                        while (text[newHoverData.startword.textIndex].token.semanticClass === text[newHoverData.startword.textIndex + i].token.semanticClass) {
-                            this.manipulateword(newHoverData.startword.textIndex + i, 'entityhover', true);
-                            this.manipulateword(newHoverData.startword.textIndex + i, 'entityhovergap', true);
+                        correctedIndex = newHoverData.startword.textIndex - this.indexCorrector;
+                        while (text[correctedIndex].token.semanticClass === text[correctedIndex + i].token.semanticClass) {
+                            this.manipulateword(correctedIndex + i, 'entityhover', true);
+                            this.manipulateword(correctedIndex + i, 'entityhovergap', true);
                             i++;
                         }
                         i = 0;
-                        while (text[newHoverData.startword.textIndex].token.semanticClass === text[newHoverData.startword.textIndex - i].token.semanticClass) {
-                            if (newHoverData.startword.textIndex - i > 0) {
-                                this.manipulateword(newHoverData.startword.textIndex - i, 'entityhover', true);
-                                this.manipulateword(newHoverData.startword.textIndex - i, 'entityhovergap', true);
+                        while (text[correctedIndex].token.semanticClass === text[correctedIndex - i].token.semanticClass) {
+                            if (correctedIndex - i > 0) {
+                                this.manipulateword(correctedIndex - i, 'entityhover', true);
+                                this.manipulateword(correctedIndex - i, 'entityhovergap', true);
                                 i++;
                             } else {
                                 break;
@@ -176,9 +179,18 @@
                 }, deep: true,
             }
         },
-        computed: {},
+        computed: {
+            indexCorrector: function () {
+                let tempcorrector = 0;
+                for (let i = 0; i < this.columnindex; i++) {
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length;
+                }
+                return tempcorrector;
+            }
+        },
         methods: {
             manipulateword: function (textIndex, prop, value) {
+                console.log('Changing word at: ' + textIndex);
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             scrolltoword: function (textIndex) {
