@@ -18,7 +18,6 @@
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
-                               v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
                                v-on:endselection="endselection($event)"

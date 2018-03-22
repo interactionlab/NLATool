@@ -24,11 +24,6 @@
             classestomark: {type: Object, default: null},
             hoveredchain: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
         },
         data: function () {
             return {
