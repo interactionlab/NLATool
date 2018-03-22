@@ -3,12 +3,18 @@
           v-on:mousedown="startSelection"
           v-on:mouseup="endSelection"
           v-on:mouseover="tohover = true"
-          v-on:mouseout="stophover">
-        <span class="nonPreAlt specialBracket" v-bind:class="toHighlight" v-if="token.coref !== undefined">{{beginBrackets}}</span><span
-            class="nonPreAlt" v-bind:class="toHighlight" v-on:mouseover="hover">{{token.content}}</span><span
-            class="nonPreAlt specialBracket" v-bind:class="toHighlight"
-            v-if="token.coref !== undefined">{{endBrackets}}</span><span class="preAlt"
-                                                                         v-bind:class="classToHighlightGap">{{getWordGap2}}</span></span>
+          v-on:mouseout="stophover"><span
+            class="nonPreAlt specialBracket"
+            v-bind:class="toHighlight"
+            v-if="token.coref !== undefined">{{beginBrackets}}</span><span
+            class="nonPreAlt"
+            v-bind:class="toHighlight"
+            v-on:mouseover="hover">{{token.content}}</span><span
+            class="nonPreAlt specialBracket"
+            v-bind:class="toHighlight"
+            v-if="token.coref !== undefined">{{endBrackets}}</span><span
+            class="preAlt"
+            v-bind:class="classToHighlightGap">{{getWordGap2}}</span></span>
 </template>
 <script>
     export default {
@@ -254,16 +260,18 @@
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
-
-                let hoverdata = {
-                    hoverstarted: "text",
-                    offsetstart: event.target.getBoundingClientRect(),
-                    startword: this.token,
-                    semanticClass: this.token.semanticClass,
-                    startresearch: undefined,
-                    wordtomarkonhover: []
-                };
-                this.$emit('starthover', hoverdata);
+                
+                if(this.classestomark[this.token.semanticClass] == true){
+                    let hoverdata = {
+                        hoverstarted: "text",
+                        offsetstart: event.target.getBoundingClientRect(),
+                        startword: this.token,
+                        semanticClass: this.token.semanticClass,
+                        startresearch: undefined,
+                        wordtomarkonhover: []
+                    };
+                    this.$emit('starthover', hoverdata);
+                }
             }
         }
     }
