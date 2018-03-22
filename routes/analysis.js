@@ -55,7 +55,7 @@ let vueRenderOptions = {
 // {script: '/socket.io/socket.io.js'},
 
 var configData = JSON.parse(fs.readFileSync("./modules/config.json"));
-if (configData.googleapikey === undefined){
+if (configData.googleapikey === undefined || configData.googleapikey === "" || configData.googleapikey === "YOUR_GOOGLE_API_KEY"){
     console.error("WARNING: No Google API Key specified");
 }
 /**
@@ -66,9 +66,9 @@ let vueData = {
     vueText: null,
     vueTokens: null,
     notes: null,
-    docID: 293,
+    docID: null,
     meta: null,
-    title: 'NLA - Natural Language Analyse Tool',
+    title: configData.projecttitle,
     coref: null,
     googleapikey: configData.googleapikey,
 };
@@ -504,7 +504,7 @@ function getTextMetaData(docID) {
     if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].title.length > 0) {
         vueData.title = textDB.textMetaData[0].title;
     } else {
-        vueData.title = 'NLA - Natural Language Analyse Tool';
+        vueData.title = configData.projecttitle;
     }
 }
 

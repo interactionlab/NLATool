@@ -42,6 +42,7 @@
         mixins: [getselectedtext, filtertoken],
         props: {
             serverip: {type: String, default: ""},
+            googleapikey: {type: String, default: ""},
             selectedindexes: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
@@ -123,34 +124,39 @@
                     'indent': true,
                     'key': this.googleapikey,
                 };
+                console.log(this.googleapikey);
                 $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
-                        //this.rerankWithKeywords(response);
-                        //this.getMapCoordinates();
-                        let data = response.itemListElement;
-                        if (this.researchdatatoedit !== null) {
-                            if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
+                        if (response.error !== undefined){
+                            console.error("WARNING: Google knowledge graph result error"); 
+                        } else {
+                            //this.rerankWithKeywords(response);
+                            //this.getMapCoordinates();
+                            let data = response.itemListElement;
+                            if (this.researchdatatoedit !== null) {
+                                if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
+                                    for (let i = 0; i < data.length; i++) {
+                                        data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                                    }
+                                }
+                            } else {
+                                let wordids = [];
+                                for (let i = 0; i < this.researchedtokens; i++) {
+                                    wordids.push(this.researchedtokens[i].wordID);
+                                }
+                                let sourcequery = {
+                                    freq: 1,
+                                    querys: [this.selectedtext],
+                                    source: this.researchedtokens,
+                                    wordids: wordids
+                                };
                                 for (let i = 0; i < data.length; i++) {
-                                    data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+                                    data[i]["sourcequery"] = sourcequery;
                                 }
                             }
-                        } else {
-                            let wordids = [];
-                            for (let i = 0; i < this.researchedtokens; i++) {
-                                wordids.push(this.researchedtokens[i].wordID);
-                            }
-                            let sourcequery = {
-                                freq: 1,
-                                querys: [this.selectedtext],
-                                source: this.researchedtokens,
-                                wordids: wordids
-                            };
-                            for (let i = 0; i < data.length; i++) {
-                                data[i]["sourcequery"] = sourcequery;
-                            }
+                            this.researchresults = [];
+                            this.researchresults.push(data);
                         }
-                        this.researchresults = [];
-                        this.researchresults.push(data);
                     }
                 );
             },
