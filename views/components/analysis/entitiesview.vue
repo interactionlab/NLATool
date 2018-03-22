@@ -243,7 +243,7 @@
                         if (researchedentities.length === 0) {
                             tempsourcequery = {
                                 freq: 1,
-                                wordids: [researchedtokens[lastersearchedtoken].wordID],
+                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
                                 querys: [researchedtokens[lastersearchedtoken].content],
                                 source: [researchedtokens[lastersearchedtoken]]
                             };
@@ -261,14 +261,14 @@
                                 //console.log('Checkpoint 2.2:  Adding to existing entity');
                                 researchedentities[lastentity].freq++;
                                 researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
-                                researchedentities[lastentity].wordids.push(researchedtokens[lastersearchedtoken].wordID);
+                                researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
                                 researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
                             }
                         } else {
                             //console.log('Checkpoint 2.3: new entity');
                             tempsourcequery = {
                                 freq: 1,
-                                wordids: [researchedtokens[lastersearchedtoken].wordID],
+                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
                                 querys: [researchedtokens[lastersearchedtoken].content],
                                 source: [researchedtokens[lastersearchedtoken]]
                             };
@@ -300,13 +300,13 @@
                         searched = false;
                     }
                     if (query !== '') {
-                        let wordids = [];
+                        let textindexes = [];
                         for (let k = 0; k < sortedtokens[i].length; k++) {
-                            wordids.push(sortedtokens[i][k].wordID);
+                            textindexes.push(sortedtokens[i][k].textIndex);
                         }
                         this.searchGoogle(query, 1, semClass, {
                             freq: frequency,
-                            wordids: wordids,
+                            textindexes: textindexes,
                             querys: [query],
                             source: sortedtokens[i]
                         });
@@ -394,9 +394,9 @@
                                             if (this[semClass][i].result["@id"] === data.result["@id"]) {
                                                 found = true;
                                                 for (let k = 0; k < sourcequery.source.length; k++) {
-                                                    this[semClass][i].sourcequery.wordids.push(sourcequery.source[k].wordID);
+                                                    this[semClass][i].sourcequery.textindexes.push(sourcequery.source[k].textIndex);
                                                 }
-                                                this[semClass][i].sourcequery.wordids.sort();
+                                                this[semClass][i].sourcequery.textindexes.sort();
                                                 this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
                                                 this[semClass][i].sourcequery.freq += sourcequery.freq;
                                                 this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
@@ -449,32 +449,28 @@
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfLocations: function () {
                 if (typeof this["LOCATION"] !== 'undefined') {
                     return this["LOCATION"].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfOrganizations: function () {
                 if (typeof this['ORGANIZATION'] !== 'undefined') {
                     return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfMisc: function () {
                 if (typeof this['MISC'] !== 'undefined') {
                     return this['MISC'].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfOTHER: function () {
                 if (typeof this['OTHER'] !== 'undefined') {
                     return this['OTHER'].length;
@@ -538,22 +534,22 @@
                     let wordtomarkonhoverDUMMY = [];
                     let newwordid = -1;
                     if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text") {
-                        newwordid = hoverdata.startword.wordID;
+                        newwordid = hoverdata.startword.textIndex;
                     } else {
-                        newwordid = hoverdata.wordids[0];
+                        newwordid = hoverdata.textindexes[0];
                     }
                     let bb = null;
                     if (hoverdata.semanticClass === 'PERSON') {
                         if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
                                 let refElement = this.$refs.personresults[i];
-                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el)) {
                                         refElement.$el.scrollIntoView();
                                     }
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
                         } else {
@@ -563,12 +559,12 @@
                         if (typeof this.$refs["locationresults"] !== 'undefined' && this.$refs["locationresults"].length > 0) {
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 let refElement = this.$refs.locationresults[i];
-                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
                         } else {
@@ -578,12 +574,12 @@
                         if (typeof this.$refs["organisazionresults"] !== 'undefined' && this.$refs["organisazionresults"].length > 0) {
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 let refElement = this.$refs.organisazionresults[i];
-                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
                         } else {
@@ -593,12 +589,12 @@
                         if (typeof this.$refs["miscresults"] !== 'undefined' && this.$refs["miscresults"].length > 0) {
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 let refElement = this.$refs.miscresults[i];
-                                if (refElement.researchdata.sourcequery.wordids.indexOf(newwordid) > -1) {
+                                if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
                                     if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.wordids
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
                         } else {

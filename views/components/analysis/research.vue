@@ -140,15 +140,15 @@
                                     }
                                 }
                             } else {
-                                let wordids = [];
+                                let textindexes = [];
                                 for (let i = 0; i < this.researchedtokens; i++) {
-                                    wordids.push(this.researchedtokens[i].wordID);
+                                    textindexes.push(this.researchedtokens[i].textIndex);
                                 }
                                 let sourcequery = {
                                     freq: 1,
                                     querys: [this.selectedtext],
                                     source: this.researchedtokens,
-                                    wordids: wordids
+                                    textindexes: textindexes
                                 };
                                 for (let i = 0; i < data.length; i++) {
                                     data[i]["sourcequery"] = sourcequery;

@@ -18,7 +18,6 @@
                                v-bind:classestomark="classestomark"
                                v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
-                               v-bind:hoverdata="hoverdata"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
@@ -107,6 +106,7 @@
                 entitytoline: [],
                 selectedindexesmarked: {start: -1, end: -1},
                 highlightedhovered: null,
+                wortomarkonhoverold: null,
             }
         },
         watch: {
@@ -129,8 +129,36 @@
                     }
                 }, deep: true
             },
+            wordtomarkonhoverdata: function (newWordToMarkOnHover) {
+                //console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
+                if (newWordToMarkOnHover.textindexes.length > 0) {
+                    if (this.wortomarkonhoverold !== null) {
+                        if (this.wortomarkonhoverold.textindexes.length > 0) {
+                            for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
+                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
+                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
+                            }
+                        }
+                    }
+                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
+                        this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
+                        this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
+
+                    }
+                    this.scrolltoword(newWordToMarkOnHover.textindexes[0] - this.indexCorrector);
+                    if (this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector] !== undefined) {
+                        let data = {
+                            hoverended: "text",
+                            offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector].$el.getBoundingClientRect()
+                        };
+
+                        this.$emit('endhover', data);
+                    }
+                }
+            },
             hoverdata: {
                 handler: function (newHoverData) {
+                    //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
                     let text = this.$refs['text'];
                     let i = 0;
                     let j = 0;
@@ -190,11 +218,22 @@
         },
         methods: {
             manipulateword: function (textIndex, prop, value) {
-                console.log('Changing word at: ' + textIndex);
+                //console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             scrolltoword: function (textIndex) {
-                this.$refs['text'][textIndex].scrollIntoView();
+                if (this.allowtexttoscroll(this.$refs['text'][textIndex])) {
+                    this.$refs['text'][textIndex].$el.scrollIntoView();
+                }
+            },
+            allowtexttoscroll: function (element) {
+                let rect = element.$el.getBoundingClientRect();
+                return !(
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                );
             },
             updateclassestomark: function (newClassesToMark) {
                 this.$emit('updateclassestomark', newClassesToMark);

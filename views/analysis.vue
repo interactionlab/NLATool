@@ -370,7 +370,7 @@
                 if(event.hoverstarted === "text"){
                     this.offsetstart = event.offsetstart;
                 } else if(event.hoverstarted === "research") {
-                    this.wordtomarkonhoverdata = {wordids: event.wordtomarkonhover, hoverstarted: "research", semanticClass: this.hoverdata.semanticClass};
+                    this.wordtomarkonhoverdata = {textindexes: event.wordtomarkonhover, hoverstarted: "research", semanticClass: this.hoverdata.semanticClass};
                     this.offsetend = event.offsetend;
                 }
 
@@ -378,7 +378,7 @@
             endhover: function (event) {
                 //console.log("analysis vue endhover:" + JSON.stringify(event));
                 if (event.hoverended === "research"){
-                    this.wordtomarkonhoverdata = {wordids: event.wordtomarkonhover, hoverstarted: "text", semanticClass: this.hoverdata.semanticClass};
+                    this.wordtomarkonhoverdata = {textindexes: event.wordtomarkonhover, hoverstarted: "text", semanticClass: this.hoverdata.semanticClass};
                     this.offsetend = event.offsetend;
                 } else if (event.hoverended === "text"){
                     this.offsetstart = event.offsetstart;

@@ -125,7 +125,7 @@
                     startword: null,
                     semanticClass: this.researchdata.sourcequery.source[0].semanticClass,
                     startresearch: undefined,
-                    wordtomarkonhover: this.researchdata.sourcequery.wordids,
+                    wordtomarkonhover: this.researchdata.sourcequery.textindexes,
                 };
                 this.$emit('starthover', hoverdata);
             },
@@ -173,7 +173,7 @@
                 if (this.wordtomarkonhoverdata != null
                     && this.wordtomarkonhoverdata.wordtomarkonhover !== undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
-                    && this.researchdata.sourcequery.wordids.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
+                    && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
                     htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED_strong"] = true;
                     htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED"] = false;
                 } else {

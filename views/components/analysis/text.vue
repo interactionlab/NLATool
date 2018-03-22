@@ -208,35 +208,11 @@
 
         },
         watch: {
-            wordtomarkonhoverdata: function (event) {
-                if (typeof event === 'undefined') {
-                    console.log("WARNING: text vue event in wordtomarkonhover undefined");
-                    return;
-                }
-                if (this.token.semanticClass === event.semanticClass) {
-                    let index = event.wordids.indexOf(this.token.wordID)
-                    if (index > -1) {
-                        this.isEntityHovered = true;
-                        if (index === 0 && event.hoverstarted === "research") {
-                            if (this.allowtexttoscroll) {
-                                this.$el.scrollIntoView();
-                            }
-                            let data = {hoverended: "text", offsetstart: this.$el.getBoundingClientRect()};
-                            this.$emit('endhover', data);
-                        }
-                    } else if (this.isEntityHovered === true) {
-                        this.isEntityHovered = false;
-                    }
-                } else {
-                    if (this.isEntityHovered === true) {
-                        this.isEntityHovered = false;
-                    }
-                }
-            }
+
         },
         methods: {
             changeProperty: function (prop, value) {
-                console.log('Changing property in: ' + this.index + ': ' + prop + ' to: ' + value);
+                //console.log('Changing property in: ' + this.index + ': ' + prop + ' to: ' + value);
                 this[prop] = value;
             },
             startSelection: function () {
@@ -256,7 +232,7 @@
                     return;
                 }
 
-                if (this.classestomark[this.token.semanticClass] == true) {
+                if (this.classestomark[this.token.semanticClass] === true) {
                     let hoverdata = {
                         hoverstarted: "text",
                         offsetstart: event.target.getBoundingClientRect(),
