@@ -18,6 +18,7 @@ const dbStub = require('../modules/db_stub');
 const dbAction = require('../modules/db_actions');
 const wait = require('wait.for');
 const io = require('socket.io')(8080);
+const fs = require("fs");
 
 /**
  * Object for temporal space.
@@ -53,6 +54,10 @@ let vueRenderOptions = {
 //{script: '/javascripts/mark.js'},
 // {script: '/socket.io/socket.io.js'},
 
+var configData = JSON.parse(fs.readFileSync("./modules/config.json"));
+if (configData.googleapikey === undefined){
+    console.error("WARNING: No Google API Key specified");
+}
 /**
  * Vue data object to be set for this route.
  * @type {{vueText: null, vueTokens: null}}
@@ -65,7 +70,7 @@ let vueData = {
     meta: null,
     title: 'NLA - Natural Language Analyse Tool',
     coref: null,
-    googleapikey: 'AIzaSyASV3YugE8bkENgyHXtarEBZpGQwzT1ssg',
+    googleapikey: configData.googleapikey,
 };
 
 //--------------------------------------------------------
