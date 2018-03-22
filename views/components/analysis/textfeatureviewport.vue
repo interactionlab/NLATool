@@ -114,10 +114,14 @@
                     //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
                         this.manipulateword(i, 'selected', false);
+                        this.manipulateword(i, 'selectedgap', false);
                     }
                     if (newSelectedIndexes.start > -1 && newSelectedIndexes.end > -1) {
                         for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
                             this.manipulateword(i, 'selected', true);
+                            if (i < newSelectedIndexes.end - 1) {
+                                this.manipulateword(i, 'selectedgap', true);
+                            }
                         }
                         this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
                         //console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
@@ -136,7 +140,7 @@
             manipulateword: function (textIndex, prop, value) {
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
-            scrolltoword:function (textIndex) {
+            scrolltoword: function (textIndex) {
                 this.$refs['text'][textIndex].scrollIntoView();
             },
             updateclassestomark: function (newClassesToMark) {

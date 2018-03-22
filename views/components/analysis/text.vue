@@ -36,6 +36,7 @@
                 tohover: false,
                 isEntityHovered: false,
                 selected: false,
+                selectedgap: false,
             }
         },
         computed: {
@@ -50,12 +51,6 @@
             },
             toHighlight: function () {
                 let htmlclass = {};
-               /* if (this.index > this.selectedindexes.start
-                    && this.index <= this.selectedindexes.end) {
-                    htmlclass['notemark'] = true;
-                } else {
-                    htmlclass['notemark'] = false;
-                }*/
                 htmlclass['notemark'] = this.selected;
                 if (typeof this.token.coref !== 'undefined') {
                     if (this.classestomark.coref) {
@@ -121,7 +116,7 @@
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
                 try {
-                    htmlclass['notemark'] = this.selected;
+                    htmlclass['notemark'] = this.selectedgap;
                     if (typeof this.token.coref !== 'undefined') {
                         if (this.classestomark.coref) {
                             //console.log(this.token.coref.length);
