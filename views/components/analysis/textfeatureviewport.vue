@@ -106,11 +106,12 @@
             return {
                 entitytoline: [],
                 selectedindexesmarked: {start: -1, end: -1},
+                highlightedhovered: null,
             }
         },
         watch: {
             selectedindexes: {
-                handler: function (newSelectedIndexes, oldSelectedIndexes) {
+                handler: function (newSelectedIndexes) {
                     //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
                         this.manipulateword(i, 'selected', false);
@@ -129,9 +130,49 @@
                 }, deep: true
             },
             hoverdata: {
-                handler: function (newHoverData, oldHoverData) {
-                    console.log(JSON.stringify(newHoverData));
-
+                handler: function (newHoverData) {
+                    let text = this.$refs['text'];
+                    let i = 0;
+                    let j = 0;
+                    if (newHoverData.startword !== undefined && newHoverData.startword !== null) {
+                        if (this.highlightedhovered !== null) {
+                            if (this.highlightedhovered.startword !== null) {
+                                while (text[this.highlightedhovered.startword.textIndex].token.semanticClass
+                                === text[this.highlightedhovered.startword.textIndex + j].token.semanticClass) {
+                                    this.manipulateword(this.highlightedhovered.startword.textIndex + j, 'entityhover', false);
+                                    this.manipulateword(this.highlightedhovered.startword.textIndex + j, 'entityhovergap', false);
+                                    j++;
+                                }
+                                j = 0;
+                                while (text[this.highlightedhovered.startword.textIndex].token.semanticClass
+                                === text[this.highlightedhovered.startword.textIndex - j].token.semanticClass) {
+                                    if (this.highlightedhovered.startword.textIndex - j > 0) {
+                                        this.manipulateword(this.highlightedhovered.startword.textIndex - j, 'entityhover', false);
+                                        this.manipulateword(this.highlightedhovered.startword.textIndex - j, 'entityhovergap', false);
+                                        j++;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        while (text[newHoverData.startword.textIndex].token.semanticClass === text[newHoverData.startword.textIndex + i].token.semanticClass) {
+                            this.manipulateword(newHoverData.startword.textIndex + i, 'entityhover', true);
+                            this.manipulateword(newHoverData.startword.textIndex + i, 'entityhovergap', true);
+                            i++;
+                        }
+                        i = 0;
+                        while (text[newHoverData.startword.textIndex].token.semanticClass === text[newHoverData.startword.textIndex - i].token.semanticClass) {
+                            if (newHoverData.startword.textIndex - i > 0) {
+                                this.manipulateword(newHoverData.startword.textIndex - i, 'entityhover', true);
+                                this.manipulateword(newHoverData.startword.textIndex - i, 'entityhovergap', true);
+                                i++;
+                            } else {
+                                break;
+                            }
+                        }
+                        this.highlightedhovered = newHoverData;
+                    }
                 }, deep: true,
             }
         },

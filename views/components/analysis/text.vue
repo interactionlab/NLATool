@@ -37,6 +37,8 @@
                 isEntityHovered: false,
                 selected: false,
                 selectedgap: false,
+                entityhover: false,
+                entityhovergap: false,
             }
         },
         computed: {
@@ -91,14 +93,16 @@
                         }
                     }
                 }
-                if (this.isEntityHovered === true) {
-                    htmlclass[this.token.semanticClass + "_strong"] = true;
-                    htmlclass[this.token.semanticClass] = false;
-                }
-                else {
-                    htmlclass[this.token.semanticClass + "_strong"] = false;
-                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                }
+                htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                htmlclass[this.token.semanticClass + "_strong"] = this.entityhover;
+                /* if (this.isEntityHovered === true) {
+                     htmlclass[this.token.semanticClass + "_strong"] = true;
+                     htmlclass[this.token.semanticClass] = false;
+                 }
+                 else {
+                     htmlclass[this.token.semanticClass + "_strong"] = false;
+                     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                 }*/
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
 
@@ -155,6 +159,8 @@
                             }
                         }
                     }
+                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                    htmlclass[this.token.semanticClass + "_strong"] = this.entityhovergap;
                     // if (this.nexttoken !== null && this.nexttoken.semanticClass === this.token.semanticClass) {
                     //     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     // }
@@ -190,9 +196,9 @@
             getWordGap2: function () {
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
-                } else if(this.token.whitespaceInfo === 0){
+                } else if (this.token.whitespaceInfo === 0) {
                     return '';
-                } else if(this.token.whitespaceInfo === -10) {
+                } else if (this.token.whitespaceInfo === -10) {
                     return ' ';
                 } else {
                     return '<br>';
@@ -229,8 +235,8 @@
             }
         },
         methods: {
-            changeProperty:function (prop, value) {
-                //console.log('Changing property: ' + prop + ' to: '+ value);
+            changeProperty: function (prop, value) {
+                console.log('Changing property in: ' + this.index + ': ' + prop + ' to: ' + value);
                 this[prop] = value;
             },
             startSelection: function () {
@@ -249,8 +255,8 @@
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
-                
-                if(this.classestomark[this.token.semanticClass] == true){
+
+                if (this.classestomark[this.token.semanticClass] == true) {
                     let hoverdata = {
                         hoverstarted: "text",
                         offsetstart: event.target.getBoundingClientRect(),
