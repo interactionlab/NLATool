@@ -9,6 +9,7 @@
                      style="height: auto !important; display: flex; max-height: 100%; padding:0; font-family: 'Roboto Mono', monospace;">
 
                     <component is="tex"
+                               ref="text"
                                v-for="(token,i) in tokenstoshow[columnindex]"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
@@ -28,7 +29,8 @@
                 </div>
             </div>
             <!--right grid for result stuff -->
-            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; margin:0; overflow-y: auto; width:50%" ref="textviewport">
+            <div class="mdl-cell mdl-cell--6-col" style="max-height: 100%; margin:0; overflow-y: auto; width:50%"
+                 ref="textviewport">
                 <keep-alive>
                     <component
                             :is="analysismode"
@@ -41,7 +43,6 @@
                             v-bind:notes="notes"
                             v-bind:notemodes="notemodes"
                             v-bind:researchmode="researchmode"
-                            v-bind:selectedindexes="selectedindexes"
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -104,21 +105,42 @@
         data: function () {
             return {
                 entitytoline: [],
+                selectedindexesmarked: {start: -1, end: -1},
             }
         },
-        computed: {
-
-        },
-        methods: {
-            updateclassestomark:function (newClassesToMark) {
-              this.$emit('updateclassestomark', newClassesToMark);
+        watch: {
+            selectedindexes: {
+                handler: function (newSelectedIndexes, oldSelectedIndexes) {
+                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                    for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
+                        this.manipulateword(i, 'selected', false);
+                    }
+                    if (newSelectedIndexes.start > -1 && newSelectedIndexes.end > -1) {
+                        for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
+                            this.manipulateword(i, 'selected', true);
+                        }
+                        this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
+                        //console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                    }
+                }, deep: true
             },
-            nexttoken: function (index) {
-                if (this.tokens[index + 1] === undefined) {
-                    return null;
-                } else {
-                    return this.tokens[index + 1];
-                }
+            hoverdata: {
+                handler: function (newHoverData, oldHoverData) {
+                    console.log(JSON.stringify(newHoverData));
+
+                }, deep: true,
+            }
+        },
+        computed: {},
+        methods: {
+            manipulateword: function (textIndex, prop, value) {
+                this.$refs['text'][textIndex].changeProperty(prop, value);
+            },
+            scrolltoword:function (textIndex) {
+                this.$refs['text'][textIndex].scrollIntoView();
+            },
+            updateclassestomark: function (newClassesToMark) {
+                this.$emit('updateclassestomark', newClassesToMark);
             },
             movetoolbar: function () {
                 this.$emit('movetoolbar', this.columnindex);
@@ -134,7 +156,8 @@
                 this.$emit('endselection', index);
             },
             selectText2: function (newSelectedIndexes) {
-                this.$emit('jumpmarktext', newSelectedIndexes)
+                this.$emit('jumpmarktext', newSelectedIndexes);
+                this.scrolltoword(newSelectedIndexes.start);
             },
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);

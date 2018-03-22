@@ -1,6 +1,5 @@
 <template>
-    <span v-bind:name="tobejumped"
-          v-on:mousedown="startSelection"
+    <span v-on:mousedown="startSelection"
           v-on:mouseup="endSelection"
           v-on:mouseover="tohover = true"
           v-on:mouseout="stophover"><span
@@ -23,7 +22,6 @@
             nexttoken: {type: Object, default: null},
             index: {type: Number, default: -1},
             classestomark: {type: Object, default: null},
-            selectedindexes: {type: Object, default: null},
             hoveredchain: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
             wordtomarkonhoverdata: {
@@ -37,6 +35,7 @@
                 htmlclass: {},
                 tohover: false,
                 isEntityHovered: false,
+                selected: false,
             }
         },
         computed: {
@@ -49,19 +48,15 @@
                     rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
                 );
             },
-            tobejumped: function () {
-                if (this.index === this.selectedindexes.start) {
-                    return this.index;
-                }
-            },
             toHighlight: function () {
                 let htmlclass = {};
-                if (this.index > this.selectedindexes.start
+               /* if (this.index > this.selectedindexes.start
                     && this.index <= this.selectedindexes.end) {
                     htmlclass['notemark'] = true;
                 } else {
                     htmlclass['notemark'] = false;
-                }
+                }*/
+                htmlclass['notemark'] = this.selected;
                 if (typeof this.token.coref !== 'undefined') {
                     if (this.classestomark.coref) {
                         for (let i = 0; i < this.token.coref.length; i++) {
@@ -126,12 +121,7 @@
                 //Z4: highlight gab if next word part of coref mention
                 //Z5: highlight if user marks next word too
                 try {
-                    if ((this.index) > this.selectedindexes.start
-                        && (this.index) < this.selectedindexes.end) {
-                        htmlclass['notemark'] = true;
-                    } else {
-                        htmlclass['notemark'] = false;
-                    }
+                    htmlclass['notemark'] = this.selected;
                     if (typeof this.token.coref !== 'undefined') {
                         if (this.classestomark.coref) {
                             //console.log(this.token.coref.length);
@@ -244,6 +234,10 @@
             }
         },
         methods: {
+            changeProperty:function (prop, value) {
+                //console.log('Changing property: ' + prop + ' to: '+ value);
+                this[prop] = value;
+            },
             startSelection: function () {
                 this.$emit('startselection', this.index - 1);
             },
