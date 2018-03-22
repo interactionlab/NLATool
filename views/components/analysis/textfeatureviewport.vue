@@ -144,6 +144,7 @@
                         this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
 
                     }
+                    this.wortomarkonhoverold = newWordToMarkOnHover;
                     this.scrolltoword(newWordToMarkOnHover.textindexes[0] - this.indexCorrector);
                     if (this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector] !== undefined) {
                         let data = {
