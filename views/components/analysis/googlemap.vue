@@ -1,7 +1,6 @@
 <template>
-    <img v-if="url != ''" v-bind:src="url" style="width: 100%;" />
+    <a v-if="url != ''" v-bind:href="mapsurl" target="_blank"><img v-bind:src="url" style="width: 100%;" /></a>
 </template>
-
 <script>
     export default {
         props: {
@@ -13,6 +12,7 @@
         data: function () {
             return {
                 url : '',
+                mapsurl : '',
                 mapcoordinates: [],
                 mapoptions: {
                     zoom: 14,
@@ -31,7 +31,7 @@
                 
                
                 this.url = 'https://maps.googleapis.com/maps/api/staticmap?center='+lat+','+lng+'&size=640x400&visible=' + this.mapcoordinates.viewport.northeast.lat + ',' + this.mapcoordinates.viewport.northeast.lng + '|' + this.mapcoordinates.viewport.southwest.lat + ',' + this.mapcoordinates.viewport.southwest.lng + '&markers=color:red%7Clabel:A%7C'+lat+','+lng+'&key=' + this.googleapikey;
-                console.log('Response for Research: ' + JSON.stringify(this.mapcoordinates));
+                this.mapsurl = 'https://www.google.com/maps/search/?api=1&query='+ this.name;
             },
             getData: function(fAfter){
                 let service_url = 'https://maps.googleapis.com/maps/api/geocode/json';
