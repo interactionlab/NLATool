@@ -19,7 +19,6 @@
     export default {
         props: {
             token: {type: Object, default: null},
-            nexttoken: {type: Object, default: null},
             index: {type: Number, default: -1},
             classestomark: {type: Object, default: null},
             hoveredchain: {type: Number, default: -1},
@@ -34,18 +33,11 @@
                 selectedgap: false,
                 entityhover: false,
                 entityhovergap: false,
+                partofhoveredchain: false,
+                partofselectedchain: false,
             }
         },
         computed: {
-            allowtexttoscroll: function () {
-                let rect = this.$el.getBoundingClientRect();
-                return !(
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-                );
-            },
             toHighlight: function () {
                 let htmlclass = {};
                 htmlclass['notemark'] = this.selected;
@@ -82,25 +74,14 @@
                                     htmlclass['cHoverReferent'] = this.classestomark.coref;
                                     this.$emit('hoverchain', this.token.coref[i].representative);
                                 }
-
-                                //is nested in more than one mention
                             }
                         }
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                 htmlclass[this.token.semanticClass + "_strong"] = this.entityhover;
-                /* if (this.isEntityHovered === true) {
-                     htmlclass[this.token.semanticClass + "_strong"] = true;
-                     htmlclass[this.token.semanticClass] = false;
-                 }
-                 else {
-                     htmlclass[this.token.semanticClass + "_strong"] = false;
-                     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                 }*/
 
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
-
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
                     htmlclass['POS'] = this.classestomark['POS'];
                 } else {
@@ -156,9 +137,6 @@
                     }
                     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                     htmlclass[this.token.semanticClass + "_strong"] = this.entityhovergap;
-                    // if (this.nexttoken !== null && this.nexttoken.semanticClass === this.token.semanticClass) {
-                    //     htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                    // }
                 } catch (err) {
                     //console.log('Got out of the array' + err);
                 }

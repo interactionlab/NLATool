@@ -205,6 +205,11 @@
                         this.highlightedhovered = newHoverData;
                     }
                 }, deep: true,
+            },
+            selectedchain:function (newChain) {
+                if(this.classestomark.coref){
+                    
+                }
             }
         },
         computed: {
@@ -242,7 +247,6 @@
                 this.$emit('movetoolbar', this.columnindex);
             },
             hoverChain: function (chain) {
-                this.hoveredChain = chain;
                 this.$emit('hoverchain', chain);
             },
             startselection: function (index) {
