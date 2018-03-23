@@ -15,15 +15,15 @@
                 is="headernavbar"
                 v-bind:title_small="title_small">
         </component>
-        
+
         <div style="background-color: black; opacity: 0.6; z-index: 10; position: fixed; width: 100%; height: 100%; max-height: 100%;"
-                 v-if="displayloading === true">
-                <div style=" margin: 0% auto;  z-index: 10;  left: 0; top: 50%; width: auto !important; max-width: 100%; color: gray; max-width:1000px; position: relative; opacity: 1;">
-                    Loading...
-                    <div id="progressbar2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
-                         style="width: auto !important; max-width: 100%;"></div>
-                </div>
+             v-if="displayloading === true">
+            <div style=" margin: 0% auto;  z-index: 10;  left: 0; top: 50%; width: auto !important; max-width: 100%; color: gray; max-width:1000px; position: relative; opacity: 1;">
+                Loading...
+                <div id="progressbar2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"
+                     style="width: auto !important; max-width: 100%;"></div>
             </div>
+        </div>
 
         <main class="mdl-layout__content"
               style="display: flex; flex-flow: row wrap; width: 100%; flex-direction: column;">
@@ -41,19 +41,19 @@
                         v-on:changenotemode="changeNoteMode($event)">
                 </component>
             </div>
-            <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative" >
+            <div v-if="numberofcolumns !== 1" style="flex: 0;width: 100%; position: relative">
                 <component is="textviewcontrol"
-                    v-bind:currentpage="currentpage"
-                    v-bind:pagecount="pagecount"
-                    v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}"
-                    v-on:changescope="changeScope($event)">
+                           v-bind:currentpage="currentpage"
+                           v-bind:pagecount="pagecount"
+                           v-bind:style="{left: columnsizetoolbarpos + '%', width : columnsize2 + '%'}"
+                           v-on:changescope="changeScope($event)">
                 </component>
             </div>
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                        v-for="columnindex in numberofcolumns"
-                        v-bind:style="{width : columnsize2 + '%'}">
+                     v-for="columnindex in numberofcolumns"
+                     v-bind:style="{width : columnsize2 + '%'}">
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:columnindex="columnindex-1"
@@ -62,11 +62,11 @@
                                v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
-                               v-bind:mentions="coref"
+                               v-bind:coref="coref"
                                v-bind:selectedindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
-                               v-bind:analysismode="analysisMode"                               
+                               v-bind:analysismode="analysisMode"
                                v-bind:notes="notes"
                                v-bind:notemodes="notemodes"
                                v-bind:researchmode="researchmode"
@@ -141,7 +141,7 @@
                     wordnote: true,
                     globalnote: false
                 },
-                hoveredChain: -1,
+                hoveredChain: [],
                 selectedChain: -1,
                 screenOptions: {
                     screenWidth: -1,
@@ -156,7 +156,7 @@
                 tokenssplitted: [],
                 tokenstoshow: [],
                 tokenssplittedindextoshow: 0,
-                columnindexoflasthover:1,
+                columnindexoflasthover: 1,
                 currentpage: 1,
                 pagecount: 1,
                 columnsize2: 100,
@@ -184,17 +184,18 @@
                         map: true,
                         information: true
                     },
-                    OTHERS:{
+                    OTHERS: {
                         img: true,
                         map: true,
                         information: true
                     }
-                }
+                },
+
             }
         },
         methods: {
-            updateclassestomark:function (newClassesToMark) {
-              this.classesToMark = newClassesToMark;
+            updateclassestomark: function (newClassesToMark) {
+                this.classesToMark = newClassesToMark;
             },
             toogleResearchContent: function (toToggle) {
                 this.contentcontrol.PERSONS[toToggle] = !this.contentcontrol.PERSONS[toToggle];
@@ -208,7 +209,22 @@
                 this.tokens = newTokens;
             },
             hoverChain: function (chain) {
-                this.hoveredChain = chain;
+                let represantativeFound = false;
+                if (chain !== -1) {
+                    this.hoveredChain = [];
+                    for (let i = 0; i < this.coref.length; i++) {
+                        //Representative
+                        console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
+                        if (this.coref[i].startIndex >= chain && this.coref[i].startIndex <= chain) {
+                            this.hoveredChain.push({
+                                start: this.coref[i].startIndex,
+                                end: this.coref[i].endIndex,
+                            });
+                        }
+                    }
+                } else{
+                    this.hoveredChain = null;
+                }
             },
             movetoolbar: function (columnindex) {
                 if (this.columnindexoflasthover === columnindex)
@@ -257,7 +273,7 @@
 
             },
             showTokens: function () {
-                if (this.numberofcolumns === 1){
+                if (this.numberofcolumns === 1) {
                     this.tokenstoshow = this.tokenssplitted;
                 } else {
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
@@ -265,16 +281,16 @@
                 }
             },
             changeScope: function (direction) {
-                
+
                 if (direction) {
-                    if (this.tokenssplittedindextoshow -1 >=0){
+                    if (this.tokenssplittedindextoshow - 1 >= 0) {
                         this.tokenssplittedindextoshow--;
                         this.showTokens();
                         this.offsetstart = null;
                         this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 } else if (!direction) {
-                    if (this.tokenssplittedindextoshow + this.numberofcolumns < this.tokenssplitted.length){
+                    if (this.tokenssplittedindextoshow + this.numberofcolumns < this.tokenssplitted.length) {
                         this.tokenssplittedindextoshow++;
                         this.showTokens();
                         this.offsetstart = null;
@@ -291,13 +307,13 @@
                 }*/
             },
             splitTokens: function () {
-                
+
                 let tokenssplittedDUMMY = [];
-                if (this.numberofcolumns === 1){
+                if (this.numberofcolumns === 1) {
                     tokenssplittedDUMMY.push(this.tokens);
                 } else {
-                    
-                    
+
+
                     let wordnumbertofitinonecolumn = 200;
                     let startSlice = 0;
                     for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
@@ -316,7 +332,7 @@
             },
             setnumberofcolumns: function (number) {
                 if (number > 0) {
-                    if (number !== this.numberofcolumns){
+                    if (number !== this.numberofcolumns) {
                         this.numberofcolumns = parseInt(number);
                         this.splitTokens();
                         this.setColumnSize2();
@@ -345,42 +361,50 @@
                     this.setColumnSize2();
                 }
             },
-            starthover: function (event) {       
+            starthover: function (event) {
                 //console.log("Analysis vue starthover: " + JSON.stringify(event));            
                 //console.log("Analysis vue hoverdata: " + JSON.stringify(this.hoverdata));            
-                
-                if (this.hoverdata.hoverstarted === event.hoverstarted){
+
+                if (this.hoverdata.hoverstarted === event.hoverstarted) {
                     if ((event.hoverstarted === "text"
                             && this.hoverdata.offsetstart !== null && this.hoverdata.offsetstart.x === event.offsetstart.x
-                            && this.hoverdata.offsetstart.y === event.offsetstart.y) || 
+                            && this.hoverdata.offsetstart.y === event.offsetstart.y) ||
                         (event.hoverstarted === "research"
                             && this.hoverdata.offsetend.x === event.offsetend.x
-                            && this.hoverdata.offsetend.y === event.offsetend.y)){
-                    //console.log("Same hover");
-                    return;
+                            && this.hoverdata.offsetend.y === event.offsetend.y)) {
+                        //console.log("Same hover");
+                        return;
                     }
                 }
                 this.hoverdata = event;
                 let classofcolor = event.semanticClass + "_strong";
                 let whereFrom = event.hoverstarted;
-                
+
                 this.semanticclass = {};
-                this.semanticclass[classofcolor]= true;
-                
-                if(event.hoverstarted === "text"){
+                this.semanticclass[classofcolor] = true;
+
+                if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
-                } else if(event.hoverstarted === "research") {
-                    this.wordtomarkonhoverdata = {textindexes: event.wordtomarkonhover, hoverstarted: "research", semanticClass: this.hoverdata.semanticClass};
+                } else if (event.hoverstarted === "research") {
+                    this.wordtomarkonhoverdata = {
+                        textindexes: event.wordtomarkonhover,
+                        hoverstarted: "research",
+                        semanticClass: this.hoverdata.semanticClass
+                    };
                     this.offsetend = event.offsetend;
                 }
 
             },
             endhover: function (event) {
                 //console.log("analysis vue endhover:" + JSON.stringify(event));
-                if (event.hoverended === "research"){
-                    this.wordtomarkonhoverdata = {textindexes: event.wordtomarkonhover, hoverstarted: "text", semanticClass: this.hoverdata.semanticClass};
+                if (event.hoverended === "research") {
+                    this.wordtomarkonhoverdata = {
+                        textindexes: event.wordtomarkonhover,
+                        hoverstarted: "text",
+                        semanticClass: this.hoverdata.semanticClass
+                    };
                     this.offsetend = event.offsetend;
-                } else if (event.hoverended === "text"){
+                } else if (event.hoverended === "text") {
                     this.offsetstart = event.offsetstart;
                 }
             },
@@ -408,8 +432,8 @@
         watch: {
             moreData: {
                 handler: function (newData) {
-                    if (newData.length > 0){
-                        
+                    if (newData.length > 0) {
+
                         this.tokens.push.apply(this.tokens, newData);
                         this.getMoreText(this.tokens[0].docID, 500);
                     } else {

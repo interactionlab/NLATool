@@ -5,13 +5,13 @@
           v-on:mouseout="stophover"><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
-            v-if="token.coref !== undefined">{{beginBrackets}}</span><span
+            v-if="classestomark.coref">{{bracketleft}}</span><span
             class="nonPreAlt"
             v-bind:class="toHighlight"
             v-on:mouseover="hover">{{token.content}}</span><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
-            v-if="token.coref !== undefined">{{endBrackets}}</span><span
+            v-if="classestomark.coref">{{bracketright}}</span><span
             class="preAlt"
             v-bind:class="classToHighlightGap">{{getWordGap2}}</span></span>
 </template>
@@ -35,52 +35,41 @@
                 entityhovergap: false,
                 partofhoveredchain: false,
                 partofselectedchain: false,
+                partofChain: false,
+                representative: false,
+                bracketleft: '',
+                bracketright: '',
             }
         },
         computed: {
             toHighlight: function () {
                 let htmlclass = {};
-                htmlclass['notemark'] = this.selected;
-                if (typeof this.token.coref !== 'undefined') {
-                    if (this.classestomark.coref) {
-                        for (let i = 0; i < this.token.coref.length; i++) {
-                            if (!this.tohover) {
-                                //is Representant
-                                if (this.token.coref[i].representative < 0) {
-                                    if (this.token.coref[i].mentionID === this.hoveredchain) {
-                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else if (this.token.coref[i].mentionID === this.selectedchain) {
-                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                    }
-                                    else {
-                                        htmlclass['cRepresentant'] = this.classestomark.coref;
-                                    }
-                                } else {
-                                    if (this.token.coref[i].representative === this.hoveredchain) {
-                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    } else if (this.token.coref[i].representative === this.selectedchain) {
-                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                    }
-                                    else {
-                                        htmlclass['cReferent'] = this.classestomark.coref;
-                                    }
-                                }
-                            } else {
-                                //is Representant
-                                if (this.token.coref[i].representative < 0) {
-                                    htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.token.coref[i].mentionID);
-                                } else {
-                                    htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    this.$emit('hoverchain', this.token.coref[i].representative);
-                                }
-                            }
+                if (this.classestomark.coref) {
+                    if (this.partofChain) {
+                        htmlclass['cReferent'] = this.classestomark.coref;
+                        if (this.representative === true) {
+                            htmlclass['cReferent'] = false;
+                            htmlclass['cRepresentant'] = this.classestomark.coref;
+                        }
+                    }
+                    if (this.partofhoveredchain) {
+                        if (this.representative) {
+                            htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                        } else {
+                            htmlclass['cHoverReferent'] = this.classestomark.coref;
+                        }
+                    }
+                    if (this.partofselectedchain) {
+                        if (this.representative) {
+                            htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                        } else {
+                            htmlclass['cSelectedReferent'] = this.classestomark.coref;
                         }
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
                 htmlclass[this.token.semanticClass + "_strong"] = this.entityhover;
-
+                htmlclass['notemark'] = this.selected;
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
                     htmlclass['POS'] = this.classestomark['POS'];
@@ -97,41 +86,26 @@
                 //Z5: highlight if user marks next word too
                 try {
                     htmlclass['notemark'] = this.selectedgap;
-                    if (typeof this.token.coref !== 'undefined') {
-                        if (this.classestomark.coref) {
-                            //console.log(this.token.coref.length);
-                            for (let i = 0; i < this.token.coref.length; i++) {
-                                if (this.token.coref[i].endIndex - 1 > this.token.textIndex) {
-                                    if (!this.tohover) {
-                                        //is Representant
-                                        if (this.token.coref[i].representative < 0) {
-                                            if (this.token.coref[i].mentionID === this.hoveredchain) {
-                                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                            } else if (this.token.coref[i].mentionID === this.selectedchain) {
-                                                htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                            } else {
-                                                htmlclass['cRepresentant'] = this.classestomark.coref;
-                                            }
-                                        } else {
-                                            if (this.token.coref[i].representative === this.hoveredchain) {
-                                                htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                            } else if (this.token.coref[i].representative === this.selectedchain) {
-                                                htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                            } else {
-                                                htmlclass['cReferent'] = this.classestomark.coref;
-                                            }
-                                        }
-                                    } else {
-                                        //is Representant
-                                        if (this.token.coref[i].representative < 0) {
-                                            htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                            this.$emit('hoverchain', this.token.coref[i].mentionID);
-                                        } else {
-                                            htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                            this.$emit('hoverchain', this.token.coref[i].representative);
-                                        }
-                                    }
-                                }
+                    if (this.classestomark.coref) {
+                        if (this.partofChain) {
+                            htmlclass['cReferent'] = this.classestomark.coref;
+                            if (this.representative === true) {
+                                htmlclass['cReferent'] = false;
+                                htmlclass['cRepresentant'] = this.classestomark.coref;
+                            }
+                        }
+                        if (this.partofhoveredchain) {
+                            if (this.representative) {
+                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                            } else {
+                                htmlclass['cHoverReferent'] = this.classestomark.coref;
+                            }
+                        }
+                        if (this.partofselectedchain) {
+                            if (this.representative) {
+                                htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                            } else {
+                                htmlclass['cSelectedReferent'] = this.classestomark.coref;
                             }
                         }
                     }
@@ -141,30 +115,6 @@
                     //console.log('Got out of the array' + err);
                 }
                 return htmlclass;
-            },
-            beginBrackets: function () {
-                let resultingBrackets = '';
-                let bracket = '[';
-                if (this.classestomark.coref && typeof this.token.coref !== 'undefined') {
-                    for (let i = 0; i < this.token.coref.length; i++) {
-                        if (this.token.coref[i].startIndex === this.token.textIndex) {
-                            resultingBrackets = resultingBrackets + bracket;
-                        }
-                    }
-                }
-                return resultingBrackets;
-            },
-            endBrackets: function () {
-                let resultingBrackets = '';
-                let bracket = ']';
-                if (this.classestomark.coref && typeof this.token.coref !== 'undefined') {
-                    for (let i = 0; i < this.token.coref.length; i++) {
-                        if (this.token.coref[i].endIndex - 1 === this.token.textIndex) {
-                            resultingBrackets = resultingBrackets + bracket;
-                        }
-                    }
-                }
-                return resultingBrackets;
             },
             getWordGap2: function () {
                 if (this.token.whitespaceInfo > 0) {
@@ -180,10 +130,14 @@
             },
 
         },
-        watch: {
-
-        },
+        watch: {},
         methods: {
+            addBracketLeft: function () {
+                this.bracketleft += '[';
+            },
+            addBracketRight: function () {
+                this.bracketright += ']';
+            },
             changeProperty: function (prop, value) {
                 //console.log('Changing property in: ' + this.index + ': ' + prop + ' to: ' + value);
                 this[prop] = value;
@@ -204,7 +158,11 @@
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
-
+                if (this.classestomark.coref) {
+                    if (this.partofChain) {
+                        this.$emit('hoverchain', this.token.textIndex);
+                    }
+                }
                 if (this.classestomark[this.token.semanticClass] === true) {
                     let hoverdata = {
                         hoverstarted: "text",

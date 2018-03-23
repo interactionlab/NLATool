@@ -16,7 +16,6 @@
                                v-bind:index="token.textIndex+1"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
-                               v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
@@ -82,7 +81,11 @@
             selectedindexes: {type: Object, default: null},
             selectedchain: {type: Number, default: -1},
             hoveredchain: {type: Number, default: -1},
-            hoverdata: {type: Object, default: null},
+            hoverdata: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
             wordtomarkonhoverdata: {
                 type: Array, default: function () {
                     return []
@@ -98,6 +101,11 @@
                     return []
                 }
             },
+            coref: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
             contentcontrol: {type: Object, default: null},
         },
         data: function () {
@@ -106,6 +114,8 @@
                 selectedindexesmarked: {start: -1, end: -1},
                 highlightedhovered: null,
                 wortomarkonhoverold: null,
+                oldhoveredchain: null,
+                corefset: false,
             }
         },
         watch: {
@@ -206,11 +216,46 @@
                     }
                 }, deep: true,
             },
-            selectedchain:function (newChain) {
-                if(this.classestomark.coref){
-                    
+            hoveredchain: function (newChain) {
+                if (this.classestomark.coref) {
+                    if (this.oldhoveredchain !== null) {
+                        for (let i = 0; i < this.oldhoveredchain.length; i++) {
+                            for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
+                                this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', false);
+                            }
+                        }
+                    }
+                    if (newChain !== null) {
+                        for (let i = 0; i < newChain.length; i++) {
+                            for (let j = newChain[i].start; j < newChain[i].end; j++) {
+                                this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);
+                                //this.manipulateword(j - this.indexCorrector, 'representative', newChain[i].representative);
+                            }
+                        }
+                    }
+                    this.oldhoveredchain = newChain;
                 }
-            }
+            },
+            classestomark: {
+                handler: function (corefmode) {
+                    if (!this.corefset) {
+                        if (corefmode.coref) {
+                            for (let i = 0; i < this.coref.length; i++) {
+                                //console.log('coref ' + i + ' is: ' + JSON.stringify(this.coref[i]));
+                                for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
+                                    this.manipulateword(j - this.indexCorrector, 'partofChain', true);
+                                    if (this.coref[i].representative === -1) {
+                                        this.manipulateword(j - this.indexCorrector, 'representative', true);
+                                    }
+                                }
+                                this.$refs['text'][this.coref[i].startIndex - this.indexCorrector].addBracketLeft();
+                                this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();
+                            }
+                            this.corefset = true;
+                        }
+                    }
+                }, deep: true
+            },
         },
         computed: {
             indexCorrector: function () {

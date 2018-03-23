@@ -234,46 +234,48 @@
                 let lastentity = -1;
                 for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
                     //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
-                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0'
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 0
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 'null'
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== null) {
-                        researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
-                        lastersearchedtoken = researchedtokens.length - 1;
-                        if (researchedentities.length === 0) {
-                            tempsourcequery = {
-                                freq: 1,
-                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                querys: [researchedtokens[lastersearchedtoken].content],
-                                source: [researchedtokens[lastersearchedtoken]]
-                            };
-                            researchedentities.push(tempsourcequery);
-                            tempsourcequery = {};
-                        }
-                        lastentity = researchedentities.length - 1;
-                        //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
-                        if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[lastentity].source[0].knowledgeGraphID) {
-                            // console.log('Checkpoint 2.1: '
-                            //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
-                            //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
-                            if (researchedtokens[lastersearchedtoken].textIndex - 1
-                                === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
-                                //console.log('Checkpoint 2.2:  Adding to existing entity');
-                                researchedentities[lastentity].freq++;
-                                researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
-                                researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
-                                researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
+                    for (let j = 0; j < this.tokenstoshow[this.columnindex][i].researchedentities.length; j++) {
+                        if (this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== '0'
+                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 0
+                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 'null'
+                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== null) {
+                            researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
+                            lastersearchedtoken = researchedtokens.length - 1;
+                            if (researchedentities.length === 0) {
+                                tempsourcequery = {
+                                    freq: 1,
+                                    textindexes: [researchedtokens[lastersearchedtoken].textIndex],
+                                    querys: [researchedtokens[lastersearchedtoken].content],
+                                    source: [researchedtokens[lastersearchedtoken]]
+                                };
+                                researchedentities.push(tempsourcequery);
+                                tempsourcequery = {};
                             }
-                        } else {
-                            //console.log('Checkpoint 2.3: new entity');
-                            tempsourcequery = {
-                                freq: 1,
-                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                querys: [researchedtokens[lastersearchedtoken].content],
-                                source: [researchedtokens[lastersearchedtoken]]
-                            };
-                            researchedentities.push(tempsourcequery);
-                            tempsourcequery = {};
+                            lastentity = researchedentities.length - 1;
+                            //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
+                            if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[lastentity].source[0].knowledgeGraphID) {
+                                // console.log('Checkpoint 2.1: '
+                                //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
+                                //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
+                                if (researchedtokens[lastersearchedtoken].textIndex - 1
+                                    === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
+                                    //console.log('Checkpoint 2.2:  Adding to existing entity');
+                                    researchedentities[lastentity].freq++;
+                                    researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
+                                    researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
+                                    researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
+                                }
+                            } else {
+                                //console.log('Checkpoint 2.3: new entity');
+                                tempsourcequery = {
+                                    freq: 1,
+                                    textindexes: [researchedtokens[lastersearchedtoken].textIndex],
+                                    querys: [researchedtokens[lastersearchedtoken].content],
+                                    source: [researchedtokens[lastersearchedtoken]]
+                                };
+                                researchedentities.push(tempsourcequery);
+                                tempsourcequery = {};
+                            }
                         }
                     }
                 }
@@ -318,16 +320,16 @@
             searchGoogleWithResearchedEntities: function (researchedentities) {
                 let hasID = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let dataurl = 'key='+this.googleapikey;
+                let dataurl = 'key=' + this.googleapikey;
                 for (let i = 0; i < researchedentities.length; i++) {
-                    dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
+                    //dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
                     hasID = true;
                 }
                 if (hasID) {
                     $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                     }).done((response) => {
                         let data = response.itemListElement;
-                        if(response.error !== undefined && response.error.code === 400 ) {
+                        if (response.error !== undefined && response.error.code === 400) {
                             console.log('WARNING: Google Knowledge Graph Search API not activated.');
                         } else {
                             //console.log('Response for initial Research: ' + data.length);
@@ -513,7 +515,7 @@
                     true
             },
             tokenstoshow: function (value) {
-                this.initializeEntitiesView();
+                //this.initializeEntitiesView();
                 this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
