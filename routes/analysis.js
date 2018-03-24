@@ -252,7 +252,7 @@ function getAndShowText(req, res) {
         getCorefInfo(docID);
         vueData.coref = textDB.coref;
         //console.log('All corefs are: ' + JSON.stringify(vueData.coref));
-        console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
+        //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     console.log(Tag + 'Server sent text to /analysis');
