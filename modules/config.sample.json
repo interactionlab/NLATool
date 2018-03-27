@@ -349,7 +349,9 @@
     "column2": {
       "name": "entityID",
       "type": "INT",
-      "length": "11"
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
     },
     "column3": {
       "name": "query",

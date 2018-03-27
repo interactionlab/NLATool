@@ -121,7 +121,7 @@
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
-                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                    console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.newSelectedIndexes));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
                         this.manipulateword(i - this.indexCorrector, 'selected', false);
                         this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
@@ -134,7 +134,7 @@
                             }
                         }
                         this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
-                        //console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                        console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     }
                 }, deep: true
             },

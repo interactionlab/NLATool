@@ -1,14 +1,13 @@
 <template>
     <span v-on:mousedown="startSelection"
           v-on:mouseup="endSelection"
-          v-on:mouseover="tohover = true"
+          v-on:mouseover="hover"
           v-on:mouseout="stophover"><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
             v-if="classestomark.coref">{{bracketleft}}</span><span
             class="nonPreAlt"
-            v-bind:class="toHighlight"
-            v-on:mouseover="hover">{{token.content}}</span><span
+            v-bind:class="toHighlight">{{token.content}}</span><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
             v-if="classestomark.coref">{{bracketright}}</span><span
@@ -143,18 +142,20 @@
                 this[prop] = value;
             },
             startSelection: function () {
-                this.$emit('startselection', this.index - 1);
+                console.log('index selecting is:' + (this.token.textIndex-1));
+                this.$emit('startselection', this.token.textIndex-1);
             },
             endSelection: function (event) {
                 let offsets = event.target.getBoundingClientRect();
                 this.$emit('setoffsetstart', [offsets, this.token, "text"]);
-                this.$emit('endselection', this.index);
+                this.$emit('endselection', this.token.textIndex);
             },
             stophover: function () {
                 this.tohover = false;
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
+                this.tohover = true;
                 if (this.classestomark.coref) {
                     //console.log('hovering: ' +this.token.textIndex + ' which is part of Chain?:' + this.partofChain);
                     if (this.partofChain) {

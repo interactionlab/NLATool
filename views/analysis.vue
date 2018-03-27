@@ -215,8 +215,8 @@
                     let mentionID = -2;
                     for (let i = 0; i < this.coref.length; i++) {
                         //Representative
-                        //console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
-                        if (this.coref[i].startIndex <= chain && this.coref[i].endIndex > chain) {
+                        console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
+                        if (this.coref[i].startIndex <= chain && this.coref[i].endIndex >= chain) {
                             if (this.coref[i].representative === -1) {
                                 mentionID = this.coref[i].mentionID;
                             } else {
@@ -227,16 +227,21 @@
                                 start: this.coref[i].startIndex,
                                 end: this.coref[i].endIndex,
                             });
+                            break;
                         }
                     }
-                    for (let i = 0; i < this.coref.length; i++) {
-                        if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
-                            //console.log('is part of Chain: ? ' + JSON.stringify(this.coref[i]));
-                            temphoveredChain.push({
-                                start: this.coref[i].startIndex,
-                                end: this.coref[i].endIndex,
-                            });
+                    if (mentionID !== -2) {
+                        for (let i = 0; i < this.coref.length; i++) {
+                            if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
+                                //console.log('is part of Chain: ? ' + JSON.stringify(this.coref[i]));
+                                temphoveredChain.push({
+                                    start: this.coref[i].startIndex,
+                                    end: this.coref[i].endIndex,
+                                });
+                            }
                         }
+                    } else{
+                        console.log('couldnt match a corefmention to the hovered word');
                     }
                     this.hoveredChain = temphoveredChain;
                 } else {
@@ -430,7 +435,7 @@
             },
             getMoreText: function (docID, pagesize) {
                 var self = this;
-                let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
+                let endIndex = this.tokens[this.tokens.length - 1].textIndex ;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
                 console.log('requesting next part of text of ' + docID + ' at ' + endIndex);
