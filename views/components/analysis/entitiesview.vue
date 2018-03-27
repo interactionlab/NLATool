@@ -253,7 +253,7 @@
                             }
                             lastentity = researchedentities.length - 1;
                             //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
-                            if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[lastentity].source[0].knowledgeGraphID) {
+                            if (researchedtokens[lastersearchedtoken].kgID === researchedentities[lastentity].source[0].kgID) {
                                 // console.log('Checkpoint 2.1: '
                                 //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
                                 //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
@@ -322,7 +322,6 @@
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let dataurl = 'key=' + this.googleapikey;
                 for (let i = 0; i < researchedentities.length; i++) {
-                    //dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
                     hasID = true;
                 }
                 if (hasID) {
@@ -335,7 +334,7 @@
                             //console.log('Response for initial Research: ' + data.length);
                             for (let i = 0; i < data.length; i++) {
                                 for (let j = 0; j < researchedentities.length; j++) {
-                                    if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
+                                    if (data[i].result['@id'] === researchedentities[j].source[0].kgID) {
                                         data[i]["sourcequery"] = researchedentities[j];
                                         if (researchedentities[j].source[0].semanticClass !== 'PERSON'
                                             && researchedentities[j].source[0].semanticClass !== 'LOCATION'
@@ -387,7 +386,7 @@
                                     if (sourcequery.source.length > 0) {
                                         for (let i = 0; i < this[semClass].length; i++) {
                                             for (let k = 0; k < sourcequery.source.length; k++) {
-                                                if (sourcequery.source[i].knowledgeGraphID === '0') {
+                                                if (sourcequery.source[i].kgID === '0') {
                                                     tempResult = data;
                                                     tempResult["sourcequery"] = sourcequery;
                                                     this.saveResult2(tempResult);
