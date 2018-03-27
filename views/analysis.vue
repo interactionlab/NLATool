@@ -211,18 +211,35 @@
             hoverChain: function (chain) {
                 let represantativeFound = false;
                 if (chain !== -1) {
-                    this.hoveredChain = [];
+                    let temphoveredChain = [];
+                    let mentionID = -2;
                     for (let i = 0; i < this.coref.length; i++) {
                         //Representative
-                        console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
-                        if (this.coref[i].startIndex >= chain && this.coref[i].startIndex <= chain) {
-                            this.hoveredChain.push({
+                        //console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
+                        if (this.coref[i].startIndex <= chain && this.coref[i].endIndex > chain) {
+                            if (this.coref[i].representative === -1) {
+                                mentionID = this.coref[i].mentionID;
+                            } else {
+                                mentionID = this.coref[i].representative;
+                            }
+                            //console.log('hovered Mention by ID: ' + JSON.stringify(this.coref[i]));
+                            temphoveredChain.push({
                                 start: this.coref[i].startIndex,
                                 end: this.coref[i].endIndex,
                             });
                         }
                     }
-                } else{
+                    for (let i = 0; i < this.coref.length; i++) {
+                        if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
+                            //console.log('is part of Chain: ? ' + JSON.stringify(this.coref[i]));
+                            temphoveredChain.push({
+                                start: this.coref[i].startIndex,
+                                end: this.coref[i].endIndex,
+                            });
+                        }
+                    }
+                    this.hoveredChain = temphoveredChain;
+                } else {
                     this.hoveredChain = null;
                 }
             },

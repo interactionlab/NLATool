@@ -217,6 +217,7 @@
                 }, deep: true,
             },
             hoveredchain: function (newChain) {
+                console.log('The new watched Chain: ' + JSON.stringify(newChain));
                 if (this.classestomark.coref) {
                     if (this.oldhoveredchain !== null) {
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
@@ -225,7 +226,7 @@
                             }
                         }
                     }
-                    if (newChain !== null) {
+                    if (newChain !== null && newChain.length !== 0) {
                         for (let i = 0; i < newChain.length; i++) {
                             for (let j = newChain[i].start; j < newChain[i].end; j++) {
                                 this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);

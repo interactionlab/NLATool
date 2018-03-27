@@ -155,13 +155,14 @@
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
-                if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
-                    return;
-                }
                 if (this.classestomark.coref) {
+                    //console.log('hovering: ' +this.token.textIndex + ' which is part of Chain?:' + this.partofChain);
                     if (this.partofChain) {
                         this.$emit('hoverchain', this.token.textIndex);
                     }
+                }
+                if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
+                    return;
                 }
                 if (this.classestomark[this.token.semanticClass] === true) {
                     let hoverdata = {
