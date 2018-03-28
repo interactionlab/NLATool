@@ -500,7 +500,6 @@ makeColumnDescriptionComparableToJson = function (sqlResult, table) {
     let column = 'column';
     for (let i = 0; i < sqlResult.length; i++) {
         column = column + (i + 1);
-        console.log(column);
         columns[column] = {};
         for (let setting in sqlResult[i]) {
             if (setting === 'Field') {
