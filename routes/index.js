@@ -309,6 +309,9 @@ function loadWrittenText(socket, upload, uploadIndex) {
                 parsedResult.ner[i][j - 1] = stringifyForDB(parsedResult.ner[i][j - 1]);
                 parsedResult.pos[i][j - 1] = stringifyForDB(parsedResult.pos[i][j - 1]);
                 whitespace = parsedResult.offsetBegin[counter] - parsedResult.offsetEnd[counter - 1];
+                if(isNaN(whitespace)){
+                    whitespace = 0;
+                }
                 parsedResult.offsetBegin[counter - 1] = stringifyForDB(parsedResult.offsetBegin[counter - 1]);
                 parsedResult.offsetEnd[counter - 1] = stringifyForDB(parsedResult.offsetEnd[counter - 1]);
 
