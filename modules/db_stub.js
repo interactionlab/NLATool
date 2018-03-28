@@ -500,6 +500,7 @@ makeColumnDescriptionComparableToJson = function (sqlResult, table) {
     let column = 'column';
     for (let i = 0; i < sqlResult.length; i++) {
         column = column + (i + 1);
+        console.log(column);
         columns[column] = {};
         for (let setting in sqlResult[i]) {
             if (setting === 'Field') {
@@ -548,7 +549,7 @@ makeColumnDescriptionComparableToJson = function (sqlResult, table) {
                 }
             }
         }
-        column = jsonAction.setCharAt(column, column.length - 1, '');
+        column = 'column';
     }
     //console.log(notMedia + Tag + 'Result of makeColumnDescriptionComparable: ' + JSON.stringify(columns));
     return columns;

@@ -137,45 +137,50 @@ function getLocationInformation(docID, textIndexes, name, upload) {
             json: true
         }, function (error, response, body) {
             if (!error && response.statusCode === 200) {
-                if (body.results[0].geometry !== undefined) {
-                    console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
-                    upload['lat'] = body.results[0].geometry.location.lat;
-                    upload['lng'] = body.results[0].geometry.location.lng;
-                    upload['northEastLat'] = body.results[0].geometry.viewport.northeast.lat;
-                    upload['northEastLng'] = body.results[0].geometry.viewport.northeast.lng;
-                    upload['southWestLat'] = body.results[0].geometry.viewport.southwest.lat;
-                    upload['southwestLng'] = body.results[0].geometry.viewport.southwest.lng;
-                    dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
-                        ['docID',
-                            'query',
-                            'semanticClass',
-                            'startIndex',
-                            'endIndex',
-                            'kgID',
-                            'lat', 'lng',
-                            'northEastLat', 'northEastLng',
-                            'southWestLat', 'southwestLng'],
-                        [stringifyForDB(upload.docID),
-                            stringifyForDB(upload.query),
-                            stringifyForDB(upload.semanticClass),
-                            stringifyForDB(upload.startIndex),
-                            stringifyForDB(upload.endIndex),
-                            stringifyForDB(upload.kgID),
-                            stringifyForDB(upload.lat),
-                            stringifyForDB(upload.lng),
-                            stringifyForDB(upload.northEastLat),
-                            stringifyForDB(upload.northEastLng),
-                            stringifyForDB(upload.southWestLat),
-                            stringifyForDB(upload.southwestLng)],
-                        null, null), function (err, response) {
-                        if (err) {
-                            console.log(Tag + err);
+                if (body.results !== undefined) {
+                    if (body.results[0] !== undefined) {
+                        if (body.results[0].geometry !== undefined) {
+                            console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
+                            upload['lat'] = body.results[0].geometry.location.lat;
+                            upload['lng'] = body.results[0].geometry.location.lng;
+                            upload['northEastLat'] = body.results[0].geometry.viewport.northeast.lat;
+                            upload['northEastLng'] = body.results[0].geometry.viewport.northeast.lng;
+                            upload['southWestLat'] = body.results[0].geometry.viewport.southwest.lat;
+                            upload['southwestLng'] = body.results[0].geometry.viewport.southwest.lng;
+                            dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
+                                ['docID',
+                                    'query',
+                                    'semanticClass',
+                                    'startIndex',
+                                    'endIndex',
+                                    'kgID',
+                                    'lat', 'lng',
+                                    'northEastLat', 'northEastLng',
+                                    'southWestLat', 'southwestLng'],
+                                [stringifyForDB(upload.docID),
+                                    stringifyForDB(upload.query),
+                                    stringifyForDB(upload.semanticClass),
+                                    stringifyForDB(upload.startIndex),
+                                    stringifyForDB(upload.endIndex),
+                                    stringifyForDB(upload.kgID),
+                                    stringifyForDB(upload.lat),
+                                    stringifyForDB(upload.lng),
+                                    stringifyForDB(upload.northEastLat),
+                                    stringifyForDB(upload.northEastLng),
+                                    stringifyForDB(upload.southWestLat),
+                                    stringifyForDB(upload.southwestLng)],
+                                null, null), function (err, response) {
+                                if (err) {
+                                    console.log(Tag + err);
+                                } else {
+                                    //console.log(Tag + JSON.stringify(response));
+                                }
+                            });
+
                         } else {
-                            console.log(Tag + JSON.stringify(response));
+                            console.log('WARNING: Google Geocoding API not activated.');
                         }
-                    });
-                } else {
-                    console.log('WARNING: Google Geocoding API not activated.');
+                    }
                 }
             }
         });
@@ -221,34 +226,33 @@ function processSegement(docID, list) {
                 researchUpload['kgID'] = graphID;
                 name = body.itemListElement[0].result["name"];
                 console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
-
+                if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
+                    getLocationInformation(docID, textIndexes, name, researchUpload);
+                } else {
+                    dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
+                        ['docID',
+                            'query',
+                            'semanticClass',
+                            'startIndex',
+                            'endIndex',
+                            'kgID',],
+                        [stringifyForDB(researchUpload.docID),
+                            stringifyForDB(researchUpload.query),
+                            stringifyForDB(researchUpload.semanticClass),
+                            stringifyForDB(researchUpload.startIndex),
+                            stringifyForDB(researchUpload.endIndex),
+                            stringifyForDB(researchUpload.kgID),
+                        ],
+                        null, null), function (err, response) {
+                        if (err) {
+                            console.log(Tag + err);
+                        } else {
+                            //console.log(Tag + JSON.stringify(response));
+                        }
+                    });
+                }
             } catch (err) {
                 console.log(Tag + 'the Result for ' + query + ' is undefined: ' + err);
-            }
-            if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
-                getLocationInformation(docID, textIndexes, name, researchUpload);
-            } else {
-                dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
-                    ['docID',
-                        'query',
-                        'semanticClass',
-                        'startIndex',
-                        'endIndex',
-                        'kgID',],
-                    [stringifyForDB(researchUpload.docID),
-                        stringifyForDB(researchUpload.query),
-                        stringifyForDB(researchUpload.semanticClass),
-                        stringifyForDB(researchUpload.startIndex),
-                        stringifyForDB(researchUpload.endIndex),
-                        stringifyForDB(researchUpload.kgID),
-                    ],
-                    null, null), function (err, response) {
-                    if (err) {
-                        console.log(Tag + err);
-                    } else {
-                        console.log(Tag + JSON.stringify(response));
-                    }
-                });
             }
         } else {
             console.log(Tag + 'request to retrieve researched Entities failed: ' + error);
