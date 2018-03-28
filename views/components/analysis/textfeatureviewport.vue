@@ -190,7 +190,7 @@
                                     this.manipulateword(correctedIndex + j, 'entityhovergap', false);
                                     j++;
                                 }
-                                j = 0;
+                                j = 1;
                                 while (text[correctedIndex].token.semanticClass
                                 === text[correctedIndex - j].token.semanticClass) {
                                     if (correctedIndex - j > 0) {
@@ -269,7 +269,7 @@
             indexCorrector: function () {
                 let tempcorrector = 0;
                 for (let i = 0; i < this.columnindex; i++) {
-                    tempcorrector = tempcorrector + this.tokenstoshow[i].length;
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length-1;
                 }
                 return tempcorrector;
             }

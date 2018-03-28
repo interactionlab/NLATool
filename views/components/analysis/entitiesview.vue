@@ -333,7 +333,6 @@
                     dataurl += '&ids='+ this.researchedentities[i].kgID.replace("kg:","");
                     hasID = true;
                 }
-                console.log('Requesting: '+dataurl);
                 if (hasID) {
                     $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                     }).done((response) => {
@@ -535,8 +534,8 @@
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    // console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
-                    // console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
+                    console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
 
                     if (hoverdata.hoverstarted === "research") {
                         return;
@@ -560,7 +559,7 @@
                                     }
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes;
                                 }
                             }
                         } else {

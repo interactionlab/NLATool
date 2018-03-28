@@ -149,7 +149,7 @@
         mounted(){
             let textIndexes = [];
             for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
-                for (let j = this.researchdata.sourcequery.entities.startIndex; j < this.researchdata.sourcequery.entities.endIndex; j++) {
+                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j < this.researchdata.sourcequery.entities[i].endIndex; j++) {
                     textIndexes.push(j);
                 }
             }
