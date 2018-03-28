@@ -42,6 +42,8 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
+                            v-bind:researchedentities="researchedentities"
+                            v-bind:selectedindexes="selectedindexes"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
@@ -68,6 +70,11 @@
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
             columnindex: {type: Number, default: 0},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []

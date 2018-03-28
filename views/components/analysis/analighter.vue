@@ -5,6 +5,7 @@
                    v-bind:googleapikey="googleapikey"
                    v-bind:tokens="tokens"
                    v-bind:columnindex="columnindex"
+                   v-bind:researchedentities="researchedentities"
                    v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:selectedchain="selectedchain"
@@ -42,6 +43,11 @@
             docid: {type: Number, default: -1},
             columnindex: {type: Number, default: 0},
             selectedchain: {type: Number, default: -1},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []

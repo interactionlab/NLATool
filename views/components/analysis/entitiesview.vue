@@ -181,6 +181,11 @@
         props: {
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []
@@ -234,47 +239,49 @@
                 let lastentity = -1;
                 for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
                     //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
-                    for (let j = 0; j < this.tokenstoshow[this.columnindex][i].researchedentities.length; j++) {
-                        if (this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== '0'
-                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 0
-                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 'null'
-                            && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== null) {
-                            researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
-                            lastersearchedtoken = researchedtokens.length - 1;
-                            if (researchedentities.length === 0) {
-                                tempsourcequery = {
-                                    freq: 1,
-                                    textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                    querys: [researchedtokens[lastersearchedtoken].content],
-                                    source: [researchedtokens[lastersearchedtoken]]
-                                };
-                                researchedentities.push(tempsourcequery);
-                                tempsourcequery = {};
-                            }
-                            lastentity = researchedentities.length - 1;
-                            //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
-                            if (researchedtokens[lastersearchedtoken].kgID === researchedentities[lastentity].source[0].kgID) {
-                                // console.log('Checkpoint 2.1: '
-                                //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
-                                //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
-                                if (researchedtokens[lastersearchedtoken].textIndex - 1
-                                    === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
-                                    //console.log('Checkpoint 2.2:  Adding to existing entity');
-                                    researchedentities[lastentity].freq++;
-                                    researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
-                                    researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
-                                    researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
+                    if (this.tokenstoshow[this.columnindex][i].researchedentities !== undefined) {
+                        for (let j = 0; j < this.tokenstoshow[this.columnindex][i].researchedentities.length; j++) {
+                            if (this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== '0'
+                                && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 0
+                                && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== 'null'
+                                && this.tokenstoshow[this.columnindex][i].researchedentities[j].kgID !== null) {
+                                researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
+                                lastersearchedtoken = researchedtokens.length - 1;
+                                if (researchedentities.length === 0) {
+                                    tempsourcequery = {
+                                        freq: 1,
+                                        textindexes: [researchedtokens[lastersearchedtoken].textIndex],
+                                        querys: [researchedtokens[lastersearchedtoken].content],
+                                        source: [researchedtokens[lastersearchedtoken]]
+                                    };
+                                    researchedentities.push(tempsourcequery);
+                                    tempsourcequery = {};
                                 }
-                            } else {
-                                //console.log('Checkpoint 2.3: new entity');
-                                tempsourcequery = {
-                                    freq: 1,
-                                    textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                    querys: [researchedtokens[lastersearchedtoken].content],
-                                    source: [researchedtokens[lastersearchedtoken]]
-                                };
-                                researchedentities.push(tempsourcequery);
-                                tempsourcequery = {};
+                                lastentity = researchedentities.length - 1;
+                                //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
+                                if (researchedtokens[lastersearchedtoken].kgID === researchedentities[lastentity].source[0].kgID) {
+                                    // console.log('Checkpoint 2.1: '
+                                    //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
+                                    //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
+                                    if (researchedtokens[lastersearchedtoken].textIndex - 1
+                                        === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
+                                        //console.log('Checkpoint 2.2:  Adding to existing entity');
+                                        researchedentities[lastentity].freq++;
+                                        researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
+                                        researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
+                                        researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
+                                    }
+                                } else {
+                                    //console.log('Checkpoint 2.3: new entity');
+                                    tempsourcequery = {
+                                        freq: 1,
+                                        textindexes: [researchedtokens[lastersearchedtoken].textIndex],
+                                        querys: [researchedtokens[lastersearchedtoken].content],
+                                        source: [researchedtokens[lastersearchedtoken]]
+                                    };
+                                    researchedentities.push(tempsourcequery);
+                                    tempsourcequery = {};
+                                }
                             }
                         }
                     }
@@ -317,13 +324,16 @@
                     frequency = 0;
                 }
             },
-            searchGoogleWithResearchedEntities: function (researchedentities) {
+            searchGoogleWithResearchedEntities: function () {
                 let hasID = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let dataurl = 'key=' + this.googleapikey;
-                for (let i = 0; i < researchedentities.length; i++) {
+                for (let i = 0; i < this.researchedentities.length; i++) {
+                    //console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]));
+                    dataurl += '&ids='+ this.researchedentities[i].kgID.replace("kg:","");
                     hasID = true;
                 }
+                console.log('Requesting: '+dataurl);
                 if (hasID) {
                     $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                     }).done((response) => {
@@ -333,16 +343,16 @@
                         } else {
                             //console.log('Response for initial Research: ' + data.length);
                             for (let i = 0; i < data.length; i++) {
-                                for (let j = 0; j < researchedentities.length; j++) {
-                                    if (data[i].result['@id'] === researchedentities[j].source[0].kgID) {
-                                        data[i]["sourcequery"] = researchedentities[j];
-                                        if (researchedentities[j].source[0].semanticClass !== 'PERSON'
-                                            && researchedentities[j].source[0].semanticClass !== 'LOCATION'
-                                            && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
-                                            && researchedentities[j].source[0].semanticClass !== 'MISC') {
+                                for (let j = 0; j < this.researchedentities.length; j++) {
+                                    if (data[i].result['@id'] === this.researchedentities[j].kgID) {
+                                        data[i]["sourcequery"] = this.researchedentities[j];
+                                        if (this.researchedentities[j].entities[0].semanticClass !== 'PERSON'
+                                            && this.researchedentities[j].entities[0].semanticClass !== 'LOCATION'
+                                            && this.researchedentities[j].entities[0].semanticClass !== 'ORGANIZATION'
+                                            && this.researchedentities[j].entities[0].semanticClass !== 'MISC') {
                                             this['OTHER'].push(data[i]);
                                         } else {
-                                            this[researchedentities[j].source[0].semanticClass].push(data[i]);
+                                            this[this.researchedentities[j].entities[0].semanticClass].push(data[i]);
                                         }
                                     }
                                 }
@@ -483,11 +493,11 @@
         mounted() {
             if (this.tokenstoshow.length === 0)
                 return;
-            this.initializeEntitiesView();
-            this.researchTokensOfClass('PERSON', 0);
-            this.researchTokensOfClass('LOCATION', 1);
-            this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);
+            this.searchGoogleWithResearchedEntities();
+            /* this.researchTokensOfClass('PERSON', 0);
+             this.researchTokensOfClass('LOCATION', 1);
+             this.researchTokensOfClass('ORGANIZATION', 2);
+             this.researchTokensOfClass('MISC', 3);*/
 
         },
         watch: {
@@ -514,11 +524,11 @@
                     true
             },
             tokenstoshow: function (value) {
-                //this.initializeEntitiesView();
-                this.researchTokensOfClass('PERSON', 0);
+                this.searchGoogleWithResearchedEntities();
+                /*this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);
+                this.researchTokensOfClass('MISC', 3);*/
             },
             hoverdata: {
                 handler: function (hoverdata) {

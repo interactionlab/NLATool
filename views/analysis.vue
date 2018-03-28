@@ -73,6 +73,7 @@
                                v-bind:selectedchain="selectedChain"
                                v-bind:contentcontrol="contentcontrol"
                                v-bind:hoverdata="hoverdata"
+                               v-bind:researchedentities="researchedEntities"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"

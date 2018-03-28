@@ -123,7 +123,7 @@
                     offsetstart: null,
                     offsetend: this.$el.getBoundingClientRect(),
                     startword: null,
-                    semanticClass: this.researchdata.sourcequery.source[0].semanticClass,
+                    semanticClass: this.researchdata.sourcequery.entities[0].semanticClass,
                     startresearch: undefined,
                     wordtomarkonhover: this.researchdata.sourcequery.textindexes,
                 };
@@ -146,6 +146,15 @@
                 this.$emit('editresearch', this.researchdata);
             },
         },
+        mounted(){
+            let textIndexes = [];
+            for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
+                for (let j = this.researchdata.sourcequery.entities.startIndex; j < this.researchdata.sourcequery.entities.endIndex; j++) {
+                    textIndexes.push(j);
+                }
+            }
+            this.researchdata.sourcequery['textindexes'] = textIndexes;
+        },
         components: {
             googlemap
         },
@@ -160,7 +169,7 @@
         },
         computed: {
             ifShowMap: function () {
-                if (this.researchdata.sourcequery.source[0].semanticClass !== 'PERSON') {
+                if (this.researchdata.sourcequery.entities[0].semanticClass !== 'PERSON') {
                     return this.localcontentcontrol.map;
                 } else {
                     return false;
@@ -174,11 +183,11 @@
                     && this.wordtomarkonhoverdata.wordtomarkonhover !== undefined
                     && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
                     && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
-                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED_strong"] = true;
-                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED"] = false;
+                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED_strong"] = true;
+                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED"] = false;
                 } else {
-                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED_strong"] = false;
-                    htmlclass[this.researchdata.sourcequery.source[0].semanticClass + "_BORDERED"] = true;
+                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED_strong"] = false;
+                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED"] = true;
                 }
 
                 return htmlclass;
@@ -186,14 +195,15 @@
             title: function () {
                 let title = '';
                 if (typeof this.researchdata.sourcequery !== 'undefined') {
-                    if (typeof this.researchdata.sourcequery.querys !== 'undefined') {
-                        let t = "";
-                        for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++) {
+                    if (typeof this.researchdata.sourcequery.entities[0].query !== 'undefined') {
+                        //let t = "";
+                        title = this.researchdata.sourcequery.entities[0].query;
+                        /*for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++) {
                             if (this.researchdata.sourcequery.querys[i].length > t.length) {
                                 t = this.researchdata.sourcequery.querys[i];
                             }
                         }
-                        title = title + t;
+                        title = title + t;*/
                         if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
                             title = title + ' (' + this.researchdata.sourcequery.freq + ') ';
                         }

@@ -31,7 +31,8 @@ let textDB = {
     tokens: [],
     error: [],
     text: '',
-    coref: []
+    coref: [],
+    researchedEntities: []
 };
 
 /**
@@ -63,13 +64,13 @@ if (configData.googleapikey === undefined || configData.googleapikey === "" || c
  * @type {{vueText: null, vueTokens: null}}
  */
 let vueData = {
-    vueText: null,
     vueTokens: null,
     notes: null,
     docID: null,
     meta: null,
     title: configData.projecttitle,
     coref: null,
+    researchedEntities: null,
     googleapikey: configData.googleapikey,
 };
 
@@ -250,61 +251,15 @@ function getAndShowText(req, res) {
         console.log('Time Join  took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
         vueData.meta = textDB.textMetaData;
         getCorefInfo(docID);
+        getResearchedEntities2(docID);
         vueData.coref = textDB.coref;
+        vueData.researchedEntities = textDB.researchedEntities
         //console.log('All corefs are: ' + JSON.stringify(vueData.coref));
         //console.log(notMedia + Tag + 'Final Data sent to the client: ' + JSON.stringify(vueData));
     }
     resetTextDB();
     console.log(Tag + 'Server sent text to /analysis');
     res.renderVue('analysis', vueData, vueRenderOptions);
-}
-
-/**
- * Gets all the tokens of the uploaded text and fills the textDB Object with them for
- * later use.
- * @param docID
- */
-function getTextFromDB(docID) {
-    textDB.textMap = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('textmap',
-            [
-                'docID',
-                'wordID',
-                'textIndex',
-                'beginOffSet',
-                'EndOffSet',
-                'whitespaceInfo',
-            ],
-            [docID], ['='])));
-    //console.log(notMedia + Tag + 'Result of selecting text in textmap: ' + JSON.stringify(textDB.textMap));
-    for (let i = 0; i < textDB.textMap.length; i++) {
-        if (textDB.textMap[i].textIndex === i) {
-            try {
-                let word = JSON.parse(wait.for(dbStub.makeSQLRequest,
-                    dbAction.createSelectCommand('word',
-                        [
-                            'wordID',
-                            'content',
-                            'isSpecial',
-                            'semanticClass',
-                            'pos'
-                        ],
-                        [textDB.textMap[i].wordID], ['='])));
-                word[0]['offsetBegin'] = textDB.textMap[i].beginOffSet;
-                word[0]['offsetEnd'] = textDB.textMap[i].EndOffSet;
-                word[0]['whitespaceInfo'] = textDB.textMap[i].whitespaceInfo;
-                //console.log(JSON.stringify(word));
-                textDB.tokens.push(word[0]);
-            } catch (err) {
-                console.log('Loading Text form DB failed: ' + err);
-            }
-        } else {
-            let err = new Error('Iteration is not synchronized with the counter attribute of the textMap.');
-            textDB.error.push(err);
-            break;
-        }
-    }
-    //console.log(notMedia + Tag '+ 'the current Word List:' + JSON.stringify(textDB.tokens));
 }
 
 function selectWithInnerJoin(docID, start, amount) {
@@ -361,101 +316,51 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
-    let researchedEntities = getResearchedEntities(docID, start, amount);
-    //textDB.coref = getCorefs(docID, start, amount);
-    for (let i = 0; i < tokens.length - 1; i++) {
-        for (let j = 0; j < researchedEntities.length; j++) {
-            //console.log('Word: ' + vueData.vueTokens[i].content + ':' + vueData.vueTokens[i].textIndex + ' = ' + corefs[j].textIndex);
-            if (tokens[i].textIndex === researchedEntities[j].textIndex) {
-                if (typeof  tokens[i].entities === 'undefined') {
-                    tokens[i]['entities'] = [];
-                }
-                tokens[i]['entities'].push({
-                    entityID: researchedEntities[j].entityID,
-                    query: researchedEntities[j].query,
-                    semanticClass: researchedEntities[j].semanticClass,
-                    startIndex: researchedEntities[j].startIndex,
-                    endIndex: researchedEntities[j].endIndex,
-                    kgID: researchedEntities[j].kgID,
-                    lat: researchedEntities[j].lat,
-                    lng: researchedEntities[j].lng,
-                    northEastLat: researchedEntities[j].northEastLat,
-                    northEastLng: researchedEntities[j].northEastLng,
-                    southWestLat: researchedEntities[j].southWestLat,
-                    southWestLng: researchedEntities[j].southWestLng
-                });
-            }
-        }
-    }
     return tokens;
 }
 
-function getResearchedEntities(docID, start, amount) {
-    let queryObject = {
-        tables: ['textmap', 'researchedentities'],
-        columns: [
-            {
-                tableIndex: 0,
-                name: 'docID',
-            }, {
-                tableIndex: 0,
-                name: 'textIndex',
-            }, {
-                tableIndex: 1,
-                name: 'docID',
-                alias: 'researchedDocID'
-            }, {
-                tableIndex: 1,
-                name: 'entityID',
-            }, {
-                tableIndex: 1,
-                name: 'startIndex',
-            }, {
-                tableIndex: 1,
-                name: 'endIndex',
-            }, {
-                tableIndex: 1,
-                name: 'query',
-            }, {
-                tableIndex: 1,
-                name: 'semanticClass',
-            }, {
-                tableIndex: 1,
-                name: 'kgID',
-            }, {
-                tableIndex: 1,
-                name: 'lat',
-            }, {
-                tableIndex: 1,
-                name: 'lng',
-            }, {
-                tableIndex: 1,
-                name: 'northEastLat',
-            }, {
-                tableIndex: 1,
-                name: 'northEastLng',
-            }, {
-                tableIndex: 1,
-                name: 'southWestLat',
-            }, {
-                tableIndex: 1,
-                name: 'southWestLng',
-            }],
-        joinConditions: [{
-            columnIndexes: [0, 1, 1],
-            valueColumnIndexes: [2, 4, 5],
-            operator: ['=', '>=', '<'],
-        }],
-        kindOfJoin: ['INNER'],
-        whereConditions: {
-            columns: ['textmap.docID', 'textmap.textIndex', 'textmap.textIndex'],
-            values: [docID, start, start + amount],
-            operators: ['=', '>=', '<='],
+function getResearchedEntities2(docID) {
+    if (docID !== 'NULL' && docID !== null && typeof docID !== 'undefined') {
+        let researched = JSON.parse(wait.for(dbStub.makeSQLRequest,
+            dbAction.createSelectCommand('researchedentities',
+                [
+                    'docID',
+                    'entityID',
+                    'query',
+                    'semanticClass',
+                    'startIndex',
+                    'endIndex',
+                    'kgID',
+                    'lat',
+                    'lng',
+                    'northEastLat',
+                    'northEastLng',
+                    'southWestLat',
+                    'southWestLng'
+                ], [docID], ['='])));
+        //console.log(JSON.stringify(researched));
+        textDB.researchedEntities = mapEntitiesToID(researched);
+        //console.log(Tag + 'Researched Entities are: ' + JSON.stringify(textDB.researchedEntities));
+    }
+}
+
+function mapEntitiesToID(researchedEntities) {
+    let mappedEntities = [];
+    for (let i = 0; i < researchedEntities.length - 1; i++) {
+        mappedEntities.push({
+            kgID: researchedEntities[i].kgID,
+            entities: [researchedEntities[i]],
+            freq: 1
+        });
+        for (let j = i + 1; j < researchedEntities.length; j++) {
+            if (mappedEntities[i].kgID === researchedEntities[j].kgID) {
+                mappedEntities[i].entities.push(researchedEntities[j]);
+                mappedEntities[i].freq++;
+                researchedEntities.splice(j, 1);
+            }
         }
-    };
-    //console.log(Tag + 'researchedEntities Query: ' + dbAction.createInnerJoinSelectCommand(queryObject));
-    //console.log(Tag + 'Response for Inner Join COREF: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
-    return JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    }
+    return mappedEntities;
 }
 
 function getCorefs(docID, start, amount) {

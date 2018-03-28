@@ -233,7 +233,7 @@ findAndTranslateForeignKeySettings = function () {
  * @param operators
  * @returns {*}
  */
-exports.createSelectCommand = function (table, columns, valuesToCompare, operators) {
+exports.createSelectCommand = function (table, columns, valuesToCompare, operators, start, amount) {
     let commandString = 'SELECT ';
     if (table !== null) {
         if (columns !== null) {
@@ -247,6 +247,9 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
         }
         commandString = commandString + ' ' + createWhereQuery(columns, valuesToCompare, operators);
         //console.log(notMedia + Tag + sql + commandString);
+        if (start !== undefined && amount !== undefined) {
+            commandString = commandString + ' limit ' + start + ' , ' + amount;
+        }
         return commandString;
     } else {
         commandString = commandString + json.database.name;
