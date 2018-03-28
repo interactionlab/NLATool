@@ -39,6 +39,7 @@
                                                v-bind:name="researchdata.result.name"
                                                v-bind:googleapikey="googleapikey"
                                                v-bind:index="mapkey"
+                                               v-bind:researchedentity="researchdata.sourcequery.entities[0]"
                                     >
                                     </component>
                                 </div>

@@ -534,8 +534,8 @@
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
-                    console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
+                    //console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    //console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
 
                     if (hoverdata.hoverstarted === "research") {
                         return;
