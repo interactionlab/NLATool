@@ -67,6 +67,7 @@
                     }
                 }
                 htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                //TODO: Highlighting for 'OTHER'
                 htmlclass[this.token.semanticClass + "_strong"] = this.entityhover;
                 htmlclass['notemark'] = this.selected;
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
@@ -162,6 +163,7 @@
                         this.$emit('hoverchain', this.token.textIndex);
                     }
                 }
+                console.log('hovered Token:' + JSON.stringify(this.token));
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }

@@ -175,7 +175,7 @@
             },
             hoverdata: {
                 handler: function (newHoverData) {
-                    //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
+                    console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
                     let text = this.$refs['text'];
                     let i = 0;
                     let j = 0;
@@ -183,14 +183,14 @@
                     if (newHoverData.startword !== undefined && newHoverData.startword !== null) {
                         if (this.highlightedhovered !== null) {
                             if (this.highlightedhovered.startword !== null) {
-                                correctedIndex = this.highlightedhovered.startword.textIndex - this.indexCorrector;
+                                correctedIndex = this.highlightedhovered.startword.textIndex - 1 - this.indexCorrector;
                                 while (text[correctedIndex].token.semanticClass
                                 === text[correctedIndex + j].token.semanticClass) {
                                     this.manipulateword(correctedIndex + j, 'entityhover', false);
                                     this.manipulateword(correctedIndex + j, 'entityhovergap', false);
                                     j++;
                                 }
-                                j = 1;
+                                j = 0;
                                 while (text[correctedIndex].token.semanticClass
                                 === text[correctedIndex - j].token.semanticClass) {
                                     if (correctedIndex - j > 0) {
@@ -203,7 +203,7 @@
                                 }
                             }
                         }
-                        correctedIndex = newHoverData.startword.textIndex - this.indexCorrector;
+                        correctedIndex = newHoverData.startword.textIndex - 1 - this.indexCorrector;
                         while (text[correctedIndex].token.semanticClass === text[correctedIndex + i].token.semanticClass) {
                             this.manipulateword(correctedIndex + i, 'entityhover', true);
                             this.manipulateword(correctedIndex + i, 'entityhovergap', true);
@@ -269,7 +269,7 @@
             indexCorrector: function () {
                 let tempcorrector = 0;
                 for (let i = 0; i < this.columnindex; i++) {
-                    tempcorrector = tempcorrector + this.tokenstoshow[i].length-1;
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length - 1;
                 }
                 return tempcorrector;
             }
@@ -280,18 +280,23 @@
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             scrolltoword: function (textIndex) {
+                //console.log('allowed to scroll? :' + textIndex);
                 if (this.allowtexttoscroll(this.$refs['text'][textIndex])) {
+                    //console.log('scrolling to :' + textIndex);
                     this.$refs['text'][textIndex].$el.scrollIntoView();
                 }
             },
             allowtexttoscroll: function (element) {
                 let rect = element.$el.getBoundingClientRect();
-                return !(
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
-                );
+                //console.log('Position of element to scroll:' + JSON.stringify(rect));
+
+                const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
+                const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+                const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+                const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+                console.log('height:' + windowHeight + ' width: ' + windowWidth);
+
+                return (!vertInView && !horInView);
             },
             updateclassestomark: function (newClassesToMark) {
                 this.$emit('updateclassestomark', newClassesToMark);

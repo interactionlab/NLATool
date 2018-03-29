@@ -147,13 +147,16 @@
                 this.$emit('editresearch', this.researchdata);
             },
         },
-        mounted(){
+        mounted() {
             let textIndexes = [];
             for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
-                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j < this.researchdata.sourcequery.entities[i].endIndex; j++) {
-                    textIndexes.push(j);
+                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
+                    if (j - 1 > 0) {
+                        textIndexes.push(j - 1);
+                    }
                 }
             }
+            console.log('textindexes for Result:' + this.researchdata.kgID + ': ' + textIndexes);
             this.researchdata.sourcequery['textindexes'] = textIndexes;
         },
         components: {
