@@ -216,7 +216,7 @@
                     let mentionID = -2;
                     for (let i = 0; i < this.coref.length; i++) {
                         //Representative
-                        console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
+                        //console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
                         if (this.coref[i].startIndex <= chain && this.coref[i].endIndex >= chain) {
                             if (this.coref[i].representative === -1) {
                                 mentionID = this.coref[i].mentionID;
@@ -337,7 +337,7 @@
                 } else {
 
 
-                    let wordnumbertofitinonecolumn = 200;
+                    let wordnumbertofitinonecolumn = 1200;
                     let startSlice = 0;
                     for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
                         tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + wordnumbertofitinonecolumn));
