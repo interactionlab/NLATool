@@ -163,7 +163,7 @@
                         this.$emit('hoverchain', this.token.textIndex);
                     }
                 }
-                console.log('hovered Token:' + JSON.stringify(this.token));
+                //console.log('hovered Token:' + JSON.stringify(this.token));
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }

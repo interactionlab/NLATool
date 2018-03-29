@@ -124,7 +124,6 @@
                     'indent': true,
                     'key': this.googleapikey,
                 };
-                console.log(this.googleapikey);
                 $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
                         if (response.error !== undefined){
@@ -132,6 +131,7 @@
                         } else {
                             //this.rerankWithKeywords(response);
                             //this.getMapCoordinates();
+                            console.log('got here');
                             let data = response.itemListElement;
                             if (this.researchdatatoedit !== null) {
                                 if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
@@ -174,7 +174,7 @@
             researchdatatoedit: {
                 handler: function (newData) {
                     if (newData !== undefined && newData !== null) {
-                        this.selectedtext = newData.sourcequery.querys[0];
+                        this.selectedtext = newData.sourcequery.entities[0].query;
                         //console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext, 10);
                     }

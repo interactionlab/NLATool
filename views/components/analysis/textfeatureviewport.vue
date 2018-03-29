@@ -123,12 +123,13 @@
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
                 corefset: false,
+                indexCorrector: 0,
             }
         },
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
-                    console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.newSelectedIndexes));
+                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.newSelectedIndexes));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
                         this.manipulateword(i - this.indexCorrector, 'selected', false);
                         this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
@@ -141,7 +142,7 @@
                             }
                         }
                         this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
-                        console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                        // console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     }
                 }, deep: true
             },
@@ -175,7 +176,7 @@
             },
             hoverdata: {
                 handler: function (newHoverData) {
-                    console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
+                    //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
                     let text = this.$refs['text'];
                     let i = 0;
                     let j = 0;
@@ -265,18 +266,18 @@
                 }, deep: true
             },
         },
-        computed: {
-            indexCorrector: function () {
-                let tempcorrector = 0;
-                for (let i = 0; i < this.columnindex; i++) {
-                    tempcorrector = tempcorrector + this.tokenstoshow[i].length - 1;
-                }
-                return tempcorrector;
+        mounted(){
+            let tempcorrector = 0;
+            for (let i = 0; i < this.columnindex; i++) {
+                tempcorrector = tempcorrector + this.tokenstoshow[i].length - 1;
             }
+            this.indexCorrector = tempcorrector;
+        },
+        computed: {
         },
         methods: {
             manipulateword: function (textIndex, prop, value) {
-                //console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
+                console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             scrolltoword: function (textIndex) {

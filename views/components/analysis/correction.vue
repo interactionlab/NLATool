@@ -114,7 +114,7 @@
                         }
                         return content;
                     } else {
-                        return this.researchdatatoedit.sourcequery.querys[0];
+                        return this.researchdatatoedit.sourcequery.entities[0];
                     }
                 }
             },
