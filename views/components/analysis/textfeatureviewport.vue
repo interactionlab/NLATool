@@ -281,21 +281,19 @@
             },
             scrolltoword: function (textIndex) {
                 //console.log('allowed to scroll? :' + textIndex);
-                if (this.allowtexttoscroll(this.$refs['text'][textIndex])) {
+                if (this.allowscroll(this.$refs['text'][textIndex])) {
                     //console.log('scrolling to :' + textIndex);
                     this.$refs['text'][textIndex].$el.scrollIntoView();
                 }
             },
-            allowtexttoscroll: function (element) {
+            allowscroll: function (element) {
                 let rect = element.$el.getBoundingClientRect();
                 //console.log('Position of element to scroll:' + JSON.stringify(rect));
-
-                const windowHeight = (window.innerHeight || document.documentElement.clientHeight);
-                const windowWidth = (window.innerWidth || document.documentElement.clientWidth);
+                const windowHeight = (window.innerHeight || element.$el.parentElement.parentElement.clientHeight);
+                const windowWidth = (window.innerWidth || element.$el.parentElement.parentElement.clientWidth);
                 const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
                 const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
                 console.log('height:' + windowHeight + ' width: ' + windowWidth);
-
                 return (!vertInView && !horInView);
             },
             updateclassestomark: function (newClassesToMark) {

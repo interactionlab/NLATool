@@ -416,7 +416,6 @@
                     };
                     this.offsetend = event.offsetend;
                 }
-
             },
             endhover: function (event) {
                 //console.log("analysis vue endhover:" + JSON.stringify(event));
