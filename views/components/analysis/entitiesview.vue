@@ -328,10 +328,16 @@
                 let hasID = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let dataurl = 'key=' + this.googleapikey;
+                console.log('getting kg Info: ' + this.researchedentities.length);
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                    //console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]));
-                    dataurl += '&ids='+ this.researchedentities[i].kgID.replace("kg:","");
-                    hasID = true;
+                    console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]) + ' : ' + this.indexCorrector);
+                    for (let j = 0; j < this.researchedentities[i].entities.length; j++) {
+                        if (this.researchedentities[i].entities[j].startIndex >= this.indexCorrector
+                            && this.researchedentities[i].entities[j].endIndex < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
+                            dataurl += '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
+                            hasID = true;
+                        }
+                    }
                 }
                 if (hasID) {
                     $.getJSON(service_url + '?callback=?', dataurl, (response) => {
@@ -453,6 +459,13 @@
             },
         },
         computed: {
+            indexCorrector: function () {
+                let tempcorrector = 0;
+                for (let i = 0; i < this.columnindex; i++) {
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length;
+                }
+                return tempcorrector;
+            },
             numberOfPersons: function () {
                 if (typeof this["PERSON"] !== 'undefined') {
                     return this["PERSON"].length;
