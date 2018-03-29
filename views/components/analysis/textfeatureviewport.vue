@@ -271,7 +271,7 @@
             for (let i = 0; i < this.columnindex; i++) {
                 tempcorrector = tempcorrector + this.tokenstoshow[i].length - 1;
             }
-            this.indexCorrector = tempcorrector;
+            this.indexCorrector = JSON.parse(JSON.stringify(tempcorrector));
         },
         computed: {
         },
