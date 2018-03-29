@@ -32,7 +32,7 @@
             },
             showButns: function () {
                 this.ishovered = true;
-                console.log('got hovered!');
+                //console.log('got hovered!');
             },
             hideButns: function () {
                 this.ishovered = false;

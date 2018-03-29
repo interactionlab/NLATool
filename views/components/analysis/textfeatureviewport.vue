@@ -238,13 +238,17 @@
                         }
                     }
                     if (newChain !== null && newChain.length !== 0) {
+                        let last = 0;
                         for (let i = 0; i < newChain.length; i++) {
                             if (newChain[i].start >= this.indexCorrector
                                 && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = newChain[i].start; j < newChain[i].end; j++) {
+                                    last++;
                                     this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);
                                     //this.manipulateword(j - this.getIndexCorrector(), 'representative', newChain[i].representative);
                                 }
+                                this.manipulateword(last - 1 - this.indexCorrector, 'isLastTokenToHighlight', true);
+                                last = 0;
                             }
                         }
                     }
