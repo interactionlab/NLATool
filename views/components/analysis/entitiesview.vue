@@ -248,7 +248,7 @@
                 let entityincolumn = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
                 let dataurl = 'key=' + this.googleapikey;
-                //console.log('getting kg Info: ' + this.researchedentities.length);
+                console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
 
                 for (let i = 0; i < this.researchedentities.length; i++) {
                    // console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]) + ' : ' + this.indexCorrector);

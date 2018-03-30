@@ -153,16 +153,14 @@
         mounted() {
             let textIndexes = [];
             for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
-                if (this.researchdata.sourcequery.entities[i].startIndex >= this.indexcorrector
-                    && this.researchdata.sourcequery.entities[i].endIndex < this.indexcorrector + this.columnlength) {
-                    //console.log('Entity Indexes: ' + this.researchdata.sourcequery.entities[i].startIndex + '-' + this.researchdata.sourcequery.entities[i].endIndex);
-                    for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
-                        if (j - 1 > 0) {
-                            textIndexes.push(j - 1);
-                        }
+                //console.log('Entity Indexes: ' + this.researchdata.sourcequery.entities[i].startIndex + '-' + this.researchdata.sourcequery.entities[i].endIndex);
+                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
+                    if (j - 1 > 0) {
+                        textIndexes.push(j - 1);
                     }
                 }
             }
+
             //console.log(JSON.stringify(this.researchdata));
             if (textIndexes.length === 0) {
                 console.log('for ' + JSON.stringify(this.researchdata.sourcequery.entities) + 'was no word word found in column' + this.columnindex);
