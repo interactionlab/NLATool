@@ -160,7 +160,6 @@
                     for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                         this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
                         this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
-
                     }
                     this.wortomarkonhoverold = newWordToMarkOnHover;
                     this.scrolltoword(newWordToMarkOnHover.textindexes[0] - this.indexCorrector);

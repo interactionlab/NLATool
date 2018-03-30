@@ -22,11 +22,6 @@
                     v-on:click="back">
                 <i class="material-icons">clear</i>
             </button>
-            <button class="mdl-button  mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                    v-on:click="deleting"
-                    id="noteMenu">
-                <i class="material-icons">delete</i>
-            </button>
         </div>
     </div>
 </template>
@@ -79,6 +74,7 @@
                     } else {
                         socket.emit('updatewordnote', this.wordnotedb.noteID, newnote);
                         this.wordnotedb.content = newnote;
+                        this.selectedtext = '';
                         this.$emit('back', [this.wordnotedb.noteID, 2, this.wordnotedb]);
                     }
                 }
