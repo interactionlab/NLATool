@@ -336,7 +336,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
                     table: 'textmap',
                     columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
                     values: [-1, -1,
-                        counter,
+                        counter-1,
                         parsedResult.offsetBegin[counter - 1],
                         parsedResult.offsetEnd[counter - 1],
                         stringifyForDB(whitespace)],
@@ -425,7 +425,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
         let wordInDB = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, undefined, undefined)));
         //console.log(JSON.stringify(wordInDB));
         let last = 0;
-        for (let i = 1; i < wordInDB.length; i++) {
+        for (let i = 0; i < wordInDB.length; i++) {
             //console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
             if (wordInDB[i].textIndex - wordInDB[last].textIndex !== i - last) {
                 processSegement(upload.docid, wordInDB.slice(last, i));

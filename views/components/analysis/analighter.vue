@@ -58,11 +58,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
         },
         data: function () {
             return {

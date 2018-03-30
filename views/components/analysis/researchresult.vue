@@ -39,7 +39,7 @@
                                                v-bind:name="researchdata.result.name"
                                                v-bind:googleapikey="googleapikey"
                                                v-bind:index="mapkey"
-                                               v-bind:researchedentity="researchdata.sourcequery.entities[0]"
+                                               v-bind:researchedentity="researchdata.sourcequery"
                                     >
                                     </component>
                                 </div>
@@ -77,11 +77,7 @@
             indexcorrector: {type: Number, default: 0},
             columnlength: {type: Number, default: 0},
             columnindex: {type: Number, default: 0},
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             viewing: {type: Boolean, default: true}
         },
         data: function () {
@@ -122,14 +118,16 @@
             accentuate: function () {
                 //console.log(JSON.stringify(this.researchdata));
                 this.hover = true;
+                console.log("RR " + this.columnindex);
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,
                     offsetend: this.$el.getBoundingClientRect(),
                     startword: null,
-                    semanticClass: this.researchdata.sourcequery.entities[0].semanticClass,
+                    semanticClass: this.researchdata.sourcequery.semanticClass,
                     startresearch: undefined,
                     wordtomarkonhover: this.researchdata.sourcequery.textindexes,
+                    columnindex: this.columnindex
                 };
                 this.$emit('starthover', hoverdata);
             },
@@ -151,23 +149,15 @@
             },
         },
         mounted() {
-            let textIndexes = [];
-            for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
-                //console.log('Entity Indexes: ' + this.researchdata.sourcequery.entities[i].startIndex + '-' + this.researchdata.sourcequery.entities[i].endIndex);
-                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
-                    if (j - 1 > 0) {
-                        textIndexes.push(j - 1);
-                    }
-                }
-            }
+
 
             //console.log(JSON.stringify(this.researchdata));
-            if (textIndexes.length === 0) {
+            /*if (textIndexes.length === 0) {
                 console.log('for ' + JSON.stringify(this.researchdata.sourcequery.entities) + 'was no word word found in column' + this.columnindex);
                 console.log('at IndexCorrector: ' + this.indexcorrector);
             }
             //console.log('textindexes for Result:' + this.researchdata.entities[0].kgID + ': ' + textIndexes);
-            this.researchdata.sourcequery['textindexes'] = textIndexes;
+            this.researchdata.sourcequery['textindexes'] = textIndexes;*/
         },
         components: {
             googlemap
@@ -183,7 +173,7 @@
         },
         computed: {
             ifShowMap: function () {
-                if (this.researchdata.sourcequery.entities[0].semanticClass !== 'PERSON') {
+                if (this.researchdata.sourcequery.semanticClass !== 'PERSON') {
                     return this.localcontentcontrol.map;
                 } else {
                     return false;
@@ -193,15 +183,17 @@
                 let htmlclass = {
                     researchdatahover: this.hover
                 };
-                if (this.wordtomarkonhoverdata != null
-                    && this.wordtomarkonhoverdata.wordtomarkonhover !== undefined
-                    && this.wordtomarkonhoverdata.wordtomarkonhover.length > 0
-                    && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.wordtomarkonhover[0]) > -1) {
-                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED_strong"] = true;
-                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED"] = false;
+                if (this.wordtomarkonhoverdata.textindexes !== undefined
+                    && this.wordtomarkonhoverdata.textindexes.length > 0
+                    && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.textindexes[0]) > -1) {
+
+                    console.log(JSON.stringify(this.wordtomarkonhoverdata));
+                    console.log(JSON.stringify(this.researchdata.sourcequery.textindexes));
+                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
+                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
                 } else {
-                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED_strong"] = false;
-                    htmlclass[this.researchdata.sourcequery.entities[0].semanticClass + "_BORDERED"] = true;
+                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = false;
+                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = true;
                 }
 
                 return htmlclass;
@@ -209,9 +201,9 @@
             title: function () {
                 let title = '';
                 if (typeof this.researchdata.sourcequery !== 'undefined') {
-                    if (typeof this.researchdata.sourcequery.entities[0].query !== 'undefined') {
+                    if (typeof this.researchdata.sourcequery.query !== 'undefined') {
                         //let t = "";
-                        title = this.researchdata.sourcequery.entities[0].query;
+                        title = this.researchdata.sourcequery.query[0];
                         /*for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++) {
                             if (this.researchdata.sourcequery.querys[i].length > t.length) {
                                 t = this.researchdata.sourcequery.querys[i];

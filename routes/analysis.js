@@ -314,7 +314,7 @@ function selectWithInnerJoin(docID, start, amount) {
         }
     };
     //dbAction.createInnerJoinSelectCommand(queryObject);
-    //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+    //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
     return tokens;
 }
@@ -344,9 +344,58 @@ function getResearchedEntities2(docID) {
     }
 }
 
+
 function mapEntitiesToID(researchedEntities) {
-    let mappedEntities = [];
+    let mappedEntities = {};
     for (let i = 0; i < researchedEntities.length - 1; i++) {
+        let key = [researchedEntities[i].kgID, researchedEntities[i].semanticClass];
+        if (key in mappedEntities) {
+            mappedEntities[key].freq += 1
+            mappedEntities[key].entityID.push(researchedEntities[i].entityID);
+            mappedEntities[key].startIndex.push(researchedEntities[i].startIndex);
+            mappedEntities[key].endIndex.push(researchedEntities[i].endIndex);
+            mappedEntities[key].query.push(researchedEntities[i].query);
+        } else {
+            let obj = {
+                freq: 1,
+                entityID: [researchedEntities[i].entityID],
+                startIndex: [researchedEntities[i].startIndex],
+                endIndex: [researchedEntities[i].endIndex],
+                query: [researchedEntities[i].query],
+                semanticClass: researchedEntities[i].semanticClass,
+                docID: researchedEntities[i].docID,
+                kgID: researchedEntities[i].kgID,
+                lat: researchedEntities[i].lat,
+                lng: researchedEntities[i].lng,
+                northEastLat: researchedEntities[i].northEastLat,
+                northEastLng: researchedEntities[i].northEastLng,
+                southWestLat: researchedEntities[i].southWestLat,
+                southWestLng: researchedEntities[i].southWestLng,
+                textindexes: []
+
+            }
+            mappedEntities[key] = obj;
+        }
+    }
+
+    //console.log(JSON.stringify(mappedEntities));
+    let arr = Object.keys(mappedEntities).map(function(key){
+        return mappedEntities[key];
+    });
+
+    for (let i = 0; i < arr.length; i++) {
+        for (let k = 0;k < arr[i].startIndex.length; k++) {
+            for (let j = arr[i].startIndex[k]; j <= arr[i].endIndex[k]; j++) {
+                if (j - 1 > 0) {
+                    arr[i].textindexes.push(j);
+                }
+            }
+        }
+        arr[i].textindexes = arr[i].textindexes.sort((a, b) => a - b);
+    }
+    return arr;
+
+    /*for (let i = 0; i < researchedEntities.length - 1; i++) {
         mappedEntities.push({
             kgID: researchedEntities[i].kgID,
             entities: [researchedEntities[i]],
@@ -359,8 +408,7 @@ function mapEntitiesToID(researchedEntities) {
                 researchedEntities.splice(j, 1);
             }
         }
-    }
-    return mappedEntities;
+    }*/
 }
 
 function getCorefs(docID, start, amount) {

@@ -18,7 +18,7 @@
     export default {
         props: {
             token: {type: Object, default: null},
-            index: {type: Number, default: -1},
+            columnindex: {type: Number, default: -1},
             classestomark: {type: Object, default: null},
             hoveredchain: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
@@ -139,12 +139,11 @@
                 this.bracketright += ']';
             },
             changeProperty: function (prop, value) {
-                //console.log('Changing property in: ' + this.index + ': ' + prop + ' to: ' + value);
                 this[prop] = value;
             },
             startSelection: function () {
-                console.log('index selecting is:' + (this.token.textIndex-1));
-                this.$emit('startselection', this.token.textIndex-1);
+                console.log('index selecting is:' + (this.token.textIndex));
+                this.$emit('startselection', this.token.textIndex);
             },
             endSelection: function (event) {
                 let offsets = event.target.getBoundingClientRect();
@@ -174,8 +173,10 @@
                         startword: this.token,
                         semanticClass: this.token.semanticClass,
                         startresearch: undefined,
-                        wordtomarkonhover: []
+                        wordtomarkonhover: [],
+                        columnindex: this.columnindex
                     };
+                    console.log(JSON.stringify(this.token));
                     this.$emit('starthover', hoverdata);
                 }
             }

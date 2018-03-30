@@ -13,7 +13,7 @@
                                v-for="(token,i) in tokenstoshow[columnindex]"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:index="token.textIndex+1"
+                               v-bind:columnindex="columnindex"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
                                v-bind:selectedchain="selectedchain"
@@ -93,11 +93,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             classestomark: {type: Object, default: null},
             notemodes: {type: Object, default: null},
             researchmode: {type: String, default: ""},
@@ -172,26 +168,38 @@
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
                         }
-
                     }
-                    console.log("TEST X");
+
                     this.wortomarkonhoverold = newWordToMarkOnHover;
-                    this.scrolltoword(newWordToMarkOnHover.textindexes[0] - this.indexCorrector);
+                    console.log(newWordToMarkOnHover.columnindex);
+                    if (newWordToMarkOnHover.columnindex === this.columnindex) {
+                        console.log(newWordToMarkOnHover.textindexes);
+                        let index = -1;
+                        for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
+                            console.log(newWordToMarkOnHover.textindexes[k]);
+                            let dis = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
+                            if (dis >= 0) {
+                                index = k;
+                                break;
+                            }
+                        }
 
-                    console.log("TEST 5");
-                    if (this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector] !== undefined) {
+                        if (index !== -1) {
+                            this.scrolltoword(newWordToMarkOnHover.textindexes[index]);
 
-                        console.log("TEST 3");
-                        let data = {
-                            hoverended: "text",
-                            offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector].$el.getBoundingClientRect()
-                        };
+                            if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector] !== undefined) {
+                                let data = {
+                                    hoverended: "text",
+                                    offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
+                                };
+                                this.$emit('endhover', data);
+                            }
 
-                        console.log("TEST 2");
-                        this.$emit('endhover', data);
+                        }
                     }
                 }
-            },
+            }
+            ,
             hoverdata: {
                 handler: function (newHoverData) {
                     //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
@@ -202,7 +210,7 @@
                     if (newHoverData.startword !== undefined && newHoverData.startword !== null) {
                         if (this.highlightedhovered !== null) {
                             if (this.highlightedhovered.startword !== null) {
-                                correctedIndex = this.highlightedhovered.startword.textIndex - 1 - this.indexCorrector;
+                                correctedIndex = this.highlightedhovered.startword.textIndex - this.indexCorrector;
                                 if (correctedIndex >= 0) {
                                     if (text[correctedIndex] === undefined) {
                                         console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
@@ -233,7 +241,7 @@
                                 }
                             }
                         }
-                        correctedIndex = newHoverData.startword.textIndex - 1 - this.indexCorrector;
+                        correctedIndex = newHoverData.startword.textIndex - this.indexCorrector;
                         if (correctedIndex >= 0) {
                             if (text[correctedIndex] === undefined) {
                                 console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
@@ -262,8 +270,11 @@
                             this.highlightedhovered = newHoverData;
                         }
                     }
-                }, deep: true,
-            },
+                }
+                ,
+                deep: true,
+            }
+            ,
             hoveredchain: function (newChain) {
                 //console.log('The new watched Chain: ' + JSON.stringify(newChain));
                 if (this.classestomark.coref) {
@@ -290,7 +301,8 @@
                     }
                     this.oldhoveredchain = newChain;
                 }
-            },
+            }
+            ,
             classestomark: {
                 handler: function (corefmode) {
                     if (!this.corefset) {
@@ -312,8 +324,11 @@
                             this.corefset = true;
                         }
                     }
-                }, deep: true
-            },
+                }
+                ,
+                deep: true
+            }
+            ,
         },
         mounted() {
         },
@@ -333,10 +348,10 @@
             },
             scrolltoword: function (textIndex) {
                 console.log('allowed to scroll? :' + textIndex);
-                if (textIndex < 0){
+                if (textIndex  - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
                     return;
                 }
-                else if (this.allowscroll(this.$refs['text'][textIndex])) {
+                else if (this.allowscroll(this.$refs['text'][textIndex  - this.indexCorrector])) {
                     console.log('scrolling to :' + textIndex);
                     this.$refs['text'][textIndex].$el.scrollIntoView();
                 }

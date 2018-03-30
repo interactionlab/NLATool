@@ -29,6 +29,7 @@
                    v-bind:docid="docid"
                    v-bind:viewing="true"
                    v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -65,6 +66,7 @@
                    v-bind:docid="docid"
                    v-bind:viewing="true"
                    v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -101,6 +103,7 @@
                    v-bind:docid="docid"
                    v-bind:viewing="true"
                    v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -137,6 +140,7 @@
                    v-bind:docid="docid"
                    v-bind:viewing="true"
                    v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
@@ -243,85 +247,78 @@
                 this.$emit('starthover', event);
             },
             searchGoogleWithResearchedEntities: function () {
+                if (this.researchedentities.length === 0 || this.tokenstoshow === undefined || this.tokenstoshow.length === 0)
+                    return;
+
+                this['PERSON'].splice(0, this['PERSON'].length)
+                this['LOCATION'].splice(0, this['LOCATION'].length)
+                this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length)
+                this['MISC'].splice(0, this['MISC'].length)
+                this['OTHER'].splice(0, this['OTHER'].length)
+
                 let localresearchedentities = [];
-                let hasID = false;
-                let entityincolumn = false;
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let dataurl = 'key=' + this.googleapikey;
-                console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
+                //console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
 
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                   // console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]) + ' : ' + this.indexCorrector);
-                    if (!entityincolumn) {
-                        localresearchedentities.pop();
-                    }
-                    localresearchedentities.push({
-                        kgID: this.researchedentities[i].kgID,
-                        entities: [],
-                        freq: this.researchedentities[i].freq
-                    });
-                    entityincolumn = false;
-                    for (let j = 0; j < this.researchedentities[i].entities.length; j++) {
-                        //console.log('Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
-                        if (this.researchedentities[i].entities[j].startIndex >= this.indexCorrector
-                            && this.researchedentities[i].entities[j].endIndex < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
-                            //console.log('accepted Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
-                            localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i].entities[j]);
-                            dataurl += '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
-                            hasID = true;
-                            entityincolumn = true;
+                    //console.log(JSON.stringify(this.researchedentities[i]))
+                    let found = false;
+                    for (let j = 0; j < this.researchedentities[i].startIndex.length; j++) {
+                        if (this.researchedentities[i].startIndex[j] >= this.indexCorrector
+                            && this.researchedentities[i].endIndex[j] < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
+                            found = true;
+                            //console.log("FOUND: " + this.researchedentities[i].query);
+                            break;
                         }
-
                     }
-                }
-                console.log('Column range: ' + this.indexCorrector + ': ' + (this.tokenstoshow[this.columnindex].length + this.indexCorrector));
-                //console.log('researcheEntities in this column: '+ JSON.stringify(localresearchedentities));
-                console.log('Request to' + dataurl);
-                if (hasID) {
-                    $.getJSON(service_url + '?callback=?', dataurl, (response) => {
-                    }).done((response) => {
-                        let data = response.itemListElement;
-                        if (response.error !== undefined && response.error.code === 400) {
-                            console.log('WARNING: Google Knowledge Graph Search API not activated.');
-                        } else {
-                            //console.log('Response for initial Research: ' + data.length);
-                            for (let i = 0; i < data.length; i++) {
-                                for (let j = 0; j < localresearchedentities.length; j++) {
-                                    if (data[i].result['@id'] === localresearchedentities[j].kgID) {
-                                        //console.log('Mapped entity: ' + JSON.stringify(localresearchedentities[j]));
-                                        data[i]["sourcequery"] = localresearchedentities[j];
-                                        for (let k = 0; k < localresearchedentities[j].entities.length; k++) {
-                                            if (localresearchedentities[j].entities[k].semanticClass !== 'PERSON'
-                                                && localresearchedentities[j].entities[k].semanticClass !== 'LOCATION'
-                                                && localresearchedentities[j].entities[k].semanticClass !== 'ORGANIZATION'
-                                                && localresearchedentities[j].entities[k].semanticClass !== 'MISC') {
+                    if (found) {
+                        //localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i]);
+                        localresearchedentities.push(this.researchedentities[i]);
+                        let dataurl = 'key=' + this.googleapikey + '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
+
+                        $.getJSON(service_url + '?callback=?', dataurl, (response) => {
+                        }).done((response) => {
+                            let data = response.itemListElement;
+                            //console.log(JSON.stringify(data));
+                            if (response.error !== undefined && response.error.code === 400) {
+                                console.log('WARNING: Google Knowledge Graph Search API not activated.');
+                            } else {
+                                //console.log('Response for initial Research: ' + data.length);
+                                for (let i = 0; i < data.length; i++) {
+                                    for (let j = 0; j < localresearchedentities.length; j++) {
+                                        if (data[i].result['@id'] === localresearchedentities[j].kgID) {
+                                            //console.log('Mapped entity: ' + JSON.stringify(localresearchedentities[j]));
+                                            data[i]["sourcequery"] = localresearchedentities[j];
+
+                                            if (localresearchedentities[j].semanticClass !== 'PERSON'
+                                                && localresearchedentities[j].semanticClass !== 'LOCATION'
+                                                && localresearchedentities[j].semanticClass !== 'ORGANIZATION'
+                                                && localresearchedentities[j].semanticClass !== 'MISC') {
                                                 this['OTHER'].push(data[i]);
                                             } else {
-                                                this[localresearchedentities[j].entities[k].semanticClass].push(data[i]);
+                                                this[localresearchedentities[j].semanticClass].push(data[i]);
                                             }
+
                                         }
-
                                     }
-                                }
 
+                                }
                             }
-                        }
-                        /* console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
-                         console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
-                         console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
-                         console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
-                         console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));*/
-                    }).fail(err => {
-                        console.log('Google initial search failed: ' + err);
-                    });
-                } else {
-                    console.log('There was a token with a SemanticClass to Research but has no research on the DB');
+                        }).fail(err => {
+                            console.log('Google initial search failed: ' + err);
+                        });
+
+                    }
                 }
+                //console.log('Column range: ' + this.indexCorrector + ': ' + (this.tokenstoshow[this.columnindex].length + this.indexCorrector));
+                //console.log('researcheEntities in this column: '+ JSON.stringify(localresearchedentities));
+                //console.log('Request to ' + service_url + '?callback=?'+ dataurl);
             },
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('updateclassestomark', this.classestomark);
-            },
+            }
+            ,
             saveResult2: function (researchdata) {
                 let indexes = {
                     start: researchdata.sourcequery.source[0].textIndex,
@@ -330,12 +327,14 @@
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, indexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            },
+            }
+            ,
             saveResult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            },
+            }
+            ,
             isElementInViewport: function (el) {
                 let rect = el.getBoundingClientRect();
                 return (
@@ -344,7 +343,8 @@
                     rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
                     rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
                 );
-            },
+            }
+            ,
         },
         computed: {
             indexCorrector: function () {
@@ -353,53 +353,59 @@
                     tempcorrector = tempcorrector + this.tokenstoshow[i].length;
                 }
                 return tempcorrector;
-            },
+            }
+            ,
             numberOfPersons: function () {
                 if (typeof this["PERSON"] !== 'undefined') {
                     return this["PERSON"].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfLocations: function () {
                 if (typeof this["LOCATION"] !== 'undefined') {
                     return this["LOCATION"].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOrganizations: function () {
                 if (typeof this['ORGANIZATION'] !== 'undefined') {
                     return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfMisc: function () {
                 if (typeof this['MISC'] !== 'undefined') {
                     return this['MISC'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOTHER: function () {
                 if (typeof this['OTHER'] !== 'undefined') {
                     return this['OTHER'].length;
                 } else {
                     return '';
                 }
-            },
-        },
+            }
+            ,
+        }
+        ,
         mounted() {
-            if (this.tokenstoshow.length === 0)
-                return;
             this.searchGoogleWithResearchedEntities();
             /* this.researchTokensOfClass('PERSON', 0);
              this.researchTokensOfClass('LOCATION', 1);
              this.researchTokensOfClass('ORGANIZATION', 2);
              this.researchTokensOfClass('MISC', 3);*/
 
-        },
+        }
+        ,
         watch: {
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
@@ -418,44 +424,46 @@
                             }
                         }
                     }
-                },
+                }
+                ,
                 deep: true,
                 immediate:
                     true
-            },
+            }
+            ,
             tokenstoshow: function (value) {
                 this.searchGoogleWithResearchedEntities();
                 /*this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
                 this.researchTokensOfClass('MISC', 3);*/
-            },
+            }
+            ,
             hoverdata: {
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    //console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
                     //console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
 
                     if (hoverdata.hoverstarted === "research") {
                         return;
                     }
 
-                    let wordtomarkonhoverDUMMY = [];
-                    let newwordid = -1;
-                    if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text") {
-                        newwordid = hoverdata.startword.textIndex;
-                    } else {
-                        newwordid = hoverdata.textindexes[0];
+                    if (this.columnindex !== hoverdata.columnindex){
+                        return;
                     }
+
+                    let wordtomarkonhoverDUMMY = [];
+                    let newwordid = hoverdata.startword.textIndex;
                     let bb = null;
                     if (hoverdata.semanticClass === 'PERSON') {
                         if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
                                 let refElement = this.$refs.personresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el)) {
+                                    if (!this.isElementInViewport(refElement.$el)) {
                                         refElement.$el.scrollIntoView();
                                     }
 
@@ -471,7 +479,7 @@
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 let refElement = this.$refs.locationresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -486,7 +494,7 @@
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 let refElement = this.$refs.organisazionresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -501,7 +509,7 @@
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 let refElement = this.$refs.miscresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -513,12 +521,15 @@
                         }
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
+                    //console.log(JSON.stringify(data));
                     this.$emit('endhover', data);
                 }
                 ,
                 deep: true
-            },
-        },
+            }
+            ,
+        }
+        ,
         components: {
             researchresult,
         }

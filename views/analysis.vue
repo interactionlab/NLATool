@@ -119,7 +119,7 @@
                 moreData: null,
                 displayloading: true,
                 hoverdata: {},
-                wordtomarkonhoverdata: [],
+                wordtomarkonhoverdata: {},
                 offsetstart: null,
                 offsetend: null,
                 semanticclass: {},
@@ -409,10 +409,12 @@
                 if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
                 } else if (event.hoverstarted === "research") {
+                    console.log("Analysis " + event.columnindex);
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
                         hoverstarted: "research",
-                        semanticClass: this.hoverdata.semanticClass
+                        semanticClass: this.hoverdata.semanticClass,
+                        columnindex: event.columnindex
                     };
                     this.offsetend = event.offsetend;
                 }
@@ -423,7 +425,8 @@
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
                         hoverstarted: "text",
-                        semanticClass: this.hoverdata.semanticClass
+                        semanticClass: this.hoverdata.semanticClass,
+                        columnindex: event.columnindex
                     };
                     this.offsetend = event.offsetend;
                 } else if (event.hoverended === "text") {
@@ -435,7 +438,7 @@
             },
             getMoreText: function (docID, pagesize) {
                 var self = this;
-                let endIndex = this.tokens[this.tokens.length - 1].textIndex ;
+                let endIndex = this.tokens[this.tokens.length - 1].textIndex+1 ;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
                 console.log('requesting next part of text of ' + docID + ' at ' + endIndex);
@@ -454,8 +457,8 @@
         watch: {
             moreData: {
                 handler: function (newData) {
+                    console.log(JSON.stringify(newData))
                     if (newData.length > 0) {
-
                         this.tokens.push.apply(this.tokens, newData);
                         this.getMoreText(this.tokens[0].docID, 500);
                     } else {
