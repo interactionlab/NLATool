@@ -140,6 +140,7 @@ function updateTitle(docID, newTitle) {
 }
 
 function saveResult(docID, indexes, researchresultID,) {
+    console.log(JSON.stringify(indexes));
     let firstTimeCheck = new Date();
     docID = stringifyForDB(docID);
     researchresultID = stringifyForDB(researchresultID);

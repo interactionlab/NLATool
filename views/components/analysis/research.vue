@@ -51,11 +51,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             docid: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
         },
@@ -162,6 +158,7 @@
             },
             saveResult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
+                console.log('Saving on server: '+JSON.stringify(researchdata));
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
             },
@@ -174,7 +171,7 @@
             researchdatatoedit: {
                 handler: function (newData) {
                     if (newData !== undefined && newData !== null) {
-                        this.selectedtext = newData.sourcequery.entities[0].query;
+                        this.selectedtext = newData.sourcequery.query[0];
                         //console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext, 10);
                     }

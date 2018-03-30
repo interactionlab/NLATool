@@ -74,11 +74,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             selectedindexes: {type: Object, default: null},
@@ -91,20 +87,13 @@
                 index: 0,
                 suggestions: false
             }
-
         },
-        watch: {},
         computed: {
             selectedtokens: function () {
                 if (this.selectedindexes.start > -1 && this.selectedindexes.end > -1) {
                     this.researchdatatoedit = null;
                 }
                 return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
-            },
-            semclassofselected: function () {
-                // let tokenClass = {};
-                // tokenClass[this.selectedtokens[0].semanticClass] = true;
-                // return tokenClass;
             },
             changing: function () {
                 let toChange = this.selectedtokens.length > 0 || this.researchdatatoedit !== null;
@@ -120,7 +109,7 @@
                         }
                         return content;
                     } else {
-                        return this.researchdatatoedit.sourcequery.entities[0];
+                        return this.researchdatatoedit.sourcequery.query[0];
                     }
                 }
             },
@@ -129,7 +118,7 @@
                     if (this.selectedtokens.length === 1) {
                         return this.selectedtokens[0].semanticClass;
                     } else if (this.researchdatatoedit !== null) {
-                        return this.researchdatatoedit.sourcequery.source[0].semanticClass;
+                        return this.researchdatatoedit.sourcequery.semanticClass;
                     } else {
                         return 'To many words with different semantic classes.'
                     }
@@ -141,7 +130,7 @@
                 this.$emit('selectedclass');
             },
             saveresult: function (researchdata) {
-                this.$emit('selectresearch', researchdata);
+                this.$emit('saveresult', researchdata);
             },
             changeClass: function (newClass) {
                 //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);

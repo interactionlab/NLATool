@@ -412,7 +412,7 @@
                     let semClass = '';
                     if (newresearchdatatoupdate !== null) {
                         if (newresearchdatatoupdate.sourcequery !== undefined) {
-                            semClass = newresearchdatatoupdate.sourcequery.source[0].semanticClass;
+                            semClass = newresearchdatatoupdate.sourcequery.semanticClass;
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
                                     console.log('Adding new result to OTHER');

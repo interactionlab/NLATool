@@ -20,7 +20,7 @@
                    v-on:endhover="endhover($event)"
                    v-on:starthover="starthover($event)"
                    v-on:editresearch="editresearch($event)"
-                   v-on:selectresearch="selectedresearch($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:selectclass="selectedclass()"
         >
 
@@ -91,7 +91,7 @@
                 this.researchdatatoupdate = null;
                 this.$emit('updateclassestomark', this.classestomark);
             },
-            selectedresearch: function (researchData) {
+            saveresult: function (researchData) {
                 this.classestomark.POS = false;
                 this.researchdatatoedit = null;
                 this.showmode = 'entitiesview';
