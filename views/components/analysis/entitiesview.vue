@@ -251,7 +251,7 @@
                 //console.log('getting kg Info: ' + this.researchedentities.length);
 
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                    console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]) + ' : ' + this.indexCorrector);
+                   // console.log('Researched Entity: ' + JSON.stringify(this.researchedentities[i]) + ' : ' + this.indexCorrector);
                     if (!entityincolumn) {
                         localresearchedentities.pop();
                     }
@@ -262,10 +262,10 @@
                     });
                     entityincolumn = false;
                     for (let j = 0; j < this.researchedentities[i].entities.length; j++) {
-                        console.log('Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
+                        //console.log('Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
                         if (this.researchedentities[i].entities[j].startIndex >= this.indexCorrector
                             && this.researchedentities[i].entities[j].endIndex < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
-                            console.log('accepted Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
+                            //console.log('accepted Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
                             localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i].entities[j]);
                             dataurl += '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
                             hasID = true;
