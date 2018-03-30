@@ -138,7 +138,7 @@
         },
         methods: {
             back: function () {
-                this.$emit('back', [-10, -10, -10]);
+                this.$emit('selectedclass');
             },
             saveresult: function (researchdata) {
                 this.$emit('selectresearch', researchdata);
