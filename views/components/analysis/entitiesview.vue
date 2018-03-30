@@ -266,7 +266,7 @@
                         if (this.researchedentities[i].entities[j].startIndex >= this.indexCorrector
                             && this.researchedentities[i].entities[j].endIndex < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
                             console.log('accepted Entity: ' + JSON.stringify(this.researchedentities[i].entities[j]) + ': ' + this.indexCorrector);
-                            localresearchedentities[i].entities.push(this.researchedentities[i].entities[j]);
+                            localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i].entities[j]);
                             dataurl += '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
                             hasID = true;
                             entityincolumn = true;
