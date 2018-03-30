@@ -74,6 +74,9 @@
             docid: {type: Number, default: -1},
             semclass: {type: String, default: ""},
             contentcontrol: {type: Object, default: null},
+            indexcorrector: {type: Number, default: 0},
+            columnlength: {type: Number, default: 0},
+            columnindex: {type: Number, default: 0},
             wordtomarkonhoverdata: {
                 type: Array, default: function () {
                     return []
@@ -150,13 +153,22 @@
         mounted() {
             let textIndexes = [];
             for (let i = 0; i < this.researchdata.sourcequery.entities.length; i++) {
-                for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
-                    if (j - 1 > 0) {
-                        textIndexes.push(j - 1);
+                if (this.researchdata.sourcequery.entities[i].startIndex >= this.indexcorrector
+                    && this.researchdata.sourcequery.entities[i].endIndex < this.indexcorrector + this.columnlength) {
+                    //console.log('Entity Indexes: ' + this.researchdata.sourcequery.entities[i].startIndex + '-' + this.researchdata.sourcequery.entities[i].endIndex);
+                    for (let j = this.researchdata.sourcequery.entities[i].startIndex; j <= this.researchdata.sourcequery.entities[i].endIndex; j++) {
+                        if (j - 1 > 0) {
+                            textIndexes.push(j - 1);
+                        }
                     }
                 }
             }
-            console.log('textindexes for Result:' + this.researchdata.kgID + ': ' + textIndexes);
+            //console.log(JSON.stringify(this.researchdata));
+            if (textIndexes.length === 0) {
+                console.log('for ' + JSON.stringify(this.researchdata.sourcequery.entities) + 'was no word word found in column' + this.columnindex);
+                console.log('at IndexCorrector: ' + this.indexcorrector);
+            }
+            //console.log('textindexes for Result:' + this.researchdata.entities[0].kgID + ': ' + textIndexes);
             this.researchdata.sourcequery['textindexes'] = textIndexes;
         },
         components: {
