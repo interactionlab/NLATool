@@ -3,6 +3,12 @@
         <div v-if="changing" class="mdl-grid">
             <p class="mdl-cell mdl-cell--4-col" v-bind:class="currentClass">{{contentToChange}}</p>
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
+
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    v-on:click="back">
+                <i class="material-icons">clear</i>
+            </button>
+
             <div>
                 <p class="mdl-cell mdl-cell--6-col">Make a selection: </p>
                 <button v-bind:class="{PERSON: true}"
@@ -131,14 +137,17 @@
             }
         },
         methods: {
+            back: function () {
+                this.$emit('selectedclass');
+            },
             saveresult: function (researchdata) {
                 this.$emit('selectresearch', researchdata);
             },
             changeClass: function (newClass) {
                 //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
-                // this.selectedtokens[0].semanticClass = newClass;
-                // let socket = io(this.serverip + ':8080');
-                // socket.emit('changeClass', this.selectedtokens[0], this.docid);
+                 this.selectedtokens[0].semanticClass = newClass;
+                 let socket = io(this.serverip + ':8080');
+                 socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;

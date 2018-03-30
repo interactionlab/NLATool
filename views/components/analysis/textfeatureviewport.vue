@@ -161,8 +161,7 @@
                             }
                         }
                     }
-                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
-                        if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
+                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) { if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
                             && newWordToMarkOnHover.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
                             console.log("TEST" + k);
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
@@ -289,13 +288,17 @@
                         }
                     }
                     if (newChain !== null && newChain.length !== 0) {
+                        let last = 0;
                         for (let i = 0; i < newChain.length; i++) {
                             if (newChain[i].start >= this.indexCorrector
                                 && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = newChain[i].start; j < newChain[i].end; j++) {
+                                    last++;
                                     this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);
                                     //this.manipulateword(j - this.getIndexCorrector(), 'representative', newChain[i].representative);
                                 }
+                                this.manipulateword(last - 1 - this.indexCorrector, 'isLastTokenToHighlight', true);
+                                last = 0;
                             }
                         }
                     }

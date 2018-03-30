@@ -36,6 +36,7 @@
                 partofselectedchain: false,
                 partofChain: false,
                 representative: false,
+                isLastTokenToHighlight: false,
                 bracketleft: '',
                 bracketright: '',
             }
@@ -88,34 +89,41 @@
                     htmlclass['notemark'] = this.selectedgap;
                     if (this.classestomark.coref) {
                         if (this.partofChain) {
-                            htmlclass['cReferent'] = this.classestomark.coref;
-                            if (this.representative === true) {
-                                htmlclass['cReferent'] = false;
-                                htmlclass['cRepresentant'] = this.classestomark.coref;
-                            }
-                        }
-                        if (this.partofhoveredchain) {
-                            if (this.representative) {
-                                htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                            } else {
-                                htmlclass['cHoverReferent'] = this.classestomark.coref;
-                            }
-                        }
-                        if (this.partofselectedchain) {
-                            if (this.representative) {
-                                htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                            } else {
-                                htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                            if (!this.isLastTokenToHighlight) {
+                                htmlclass['cReferent'] = this.classestomark.coref;
+                                if (this.representative === true) {
+                                    htmlclass['cReferent'] = false;
+                                    htmlclass['cRepresentant'] = this.classestomark.coref;
+                                }
+                                if (this.partofhoveredchain) {
+                                    if (this.representative) {
+                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
+                                    } else {
+                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
+                                    }
+                                }
+                                if (this.partofselectedchain) {
+                                    if (this.representative) {
+                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
+                                    } else {
+                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
+                                    }
+                                }
                             }
                         }
                     }
-                    htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                    htmlclass[this.token.semanticClass + "_strong"] = this.entityhovergap;
-                } catch (err) {
+                    if (!this.isLastTokenToHighlight) {
+                        htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                        htmlclass[this.token.semanticClass + "_strong"] = this.entityhovergap;
+                    }
+                }
+                catch
+                    (err) {
                     //console.log('Got out of the array' + err);
                 }
                 return htmlclass;
-            },
+            }
+            ,
             getWordGap2: function () {
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
@@ -127,7 +135,8 @@
                     return '<br>';
                 }
 
-            },
+            }
+            ,
 
         },
         watch: {},

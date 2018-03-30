@@ -76,7 +76,7 @@
                             break;
                         }
                     }
-                    this.notes.splice(i, 1);
+                    this.notes.splice(i+1, 1);
                 } else if (noteToChange[1] === 1) {
                     //new
                     this.notes.splice(this.notes.length, 0, noteToChange[2]);
