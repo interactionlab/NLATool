@@ -139,12 +139,13 @@ function updateTitle(docID, newTitle) {
 }
 
 function saveResult(docID, indexes, researchresultID) {
-    console.log("saveResult indexes: " + JSON.stringify(indexes));
+    console.log(Tag + 'docID: ' + docID + " add reseach " + researchresultID + " index: " + JSON.stringify(indexes));
     let firstTimeCheck = new Date();
     docID = stringifyForDB(docID);
     researchresultID = stringifyForDB(researchresultID);
+    let updateResult = null;
     for (let i = 0; i < indexes.start.length; i++){
-        let updateResult = wait.for(dbStub.makeSQLRequest,
+        updateResult = wait.for(dbStub.makeSQLRequest,
             dbAction.createUpdateCommand('researchedentities',
                 ['kgID'],
                 [researchresultID],
@@ -153,6 +154,18 @@ function saveResult(docID, indexes, researchresultID) {
                 ['=', '=', '=']));
         console.log(Tag + 'updated Word for: ' + docID + ' at ' + indexes.start[i] + ' to ' + indexes.end[i] + ' with a research Result.');
     }
+    updateResult = JSON.parse(updateResult);
+    console.log(Tag + "updateResult: " + JSON.stringify(updateResult));
+    if (indexes.start.length === 1 && updateResult !== null && updateResult.affectedRows === 0){
+        
+        let addedResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
+        dbAction.createInsertCommand('researchedentities',
+            ['docID', 'kgID', 'query', 'startIndex', 'endIndex', 'semanticClass'],
+            [docID, researchresultID, stringifyForDB(indexes.query), stringifyForDB(indexes.start[0]), stringifyForDB(indexes.end[0]), stringifyForDB(indexes.semanticClass)],
+            null, null)));
+        console.log(Tag + "addedResult: " + JSON.stringify(addedResult));
+    }
+    
     let lastTimeCheck = new Date();
     console.log('Time for transcation took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
 }

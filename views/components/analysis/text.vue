@@ -20,7 +20,6 @@
             token: {type: Object, default: null},
             columnindex: {type: Number, default: -1},
             classestomark: {type: Object, default: null},
-            hoveredchain: {type: Number, default: -1},
             selectedtextindexes: {type: Object, default: null}
         },
         data: function () {
@@ -125,6 +124,7 @@
             }
             ,
             getWordGap2: function () {
+                console.log(JSON.stringify(this.token));
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
                 } else if (this.token.whitespaceInfo === 0) {

@@ -60,6 +60,7 @@
                    v-bind:selectedtextindexes="selectedtextindexes"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-bind:selectedchain="selectedchain"
+                   v-bind:semanticclass="semanticClass"
                    v-on:saveresult="saveresult($event)">
         </component>
 
@@ -91,7 +92,8 @@
             return {
                 showNewClasses: false,
                 index: 0,
-                suggestions: false
+                suggestions: false,
+                semanticClass: ""
             }
         },
         computed: {
@@ -121,12 +123,14 @@
             currentClass: function () {
                 if (this.changing) {
                     if (this.selectedtokens !== null && this.selectedtokens.length === 1 && this.selectedtokens[0] !== undefined ) {
-                        return this.selectedtokens[0].semanticClass;
+                        this.semanticClass = this.selectedtokens[0].semanticClass;
                     } else if (this.researchdatatoedit !== null) {
-                        return this.researchdatatoedit.sourcequery.semanticClass;
+                        this.semanticClass = this.researchdatatoedit.sourcequery.semanticClass;
                     } else {
+                        this.semanticClass = "";
                         return 'No semantic class selected.'
                     }
+                    return this.semanticClass;
                 }
             }
         },
@@ -139,6 +143,7 @@
             },
             changeClass: function (newClass) {
                 this.selectedtokens[0].semanticClass = newClass;
+                this.semanticClass = newClass;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },

@@ -41,6 +41,7 @@
         mixins: [getselectedtext, filtertoken],
         props: {
             serverip: {type: String, default: ""},
+            
             googleapikey: {type: String, default: ""},
             selectedtextindexes: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
@@ -50,6 +51,7 @@
                     return []
                 }
             },
+            semanticclass: {type: String, default: ""},
             wordtomarkonhoverdata: {type: Object, default: null},
             docid: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
@@ -164,8 +166,14 @@
                     console.log('Saving on server multi object: ' + JSON.stringify(obj));
                     socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
                 } else {
-                    console.log('Saving on server single object: ' + JSON.stringify(this.selectedtextindexes));
-                    socket.emit('saveresult', this.docid, this.selectedtextindexes, researchdata.result['@id']);
+                    let sendObj = {
+                        start: [this.selectedtextindexes.start],
+                        end:   [this.selectedtextindexes.end],
+                        query: this.selectedtext,
+                        semanticClass: this.semanticclass,
+                    };
+                    console.log('Saving on server single object: ' + JSON.stringify(sendObj));
+                    socket.emit('saveresult', this.docid, sendObj, researchdata.result['@id']);
                 }
                 
                 this.$emit('saveresult', researchdata);
