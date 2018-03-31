@@ -145,12 +145,12 @@ function saveResult(docID, indexes, researchresultID) {
     researchresultID = stringifyForDB(researchresultID);
     for (let i = 0; i < indexes.start.length; i++){
         let updateResult = wait.for(dbStub.makeSQLRequest,
-            dbAction.createUpdateCommand('textmap',
-                ['knowledgeGraphID'],
+            dbAction.createUpdateCommand('researchedentities',
+                ['kgID'],
                 [researchresultID],
-                ['docID', 'textIndex', 'textIndex'],
+                ['docID', 'startIndex', 'endIndex'],
                 [docID, stringifyForDB(indexes.start[i]), stringifyForDB(indexes.end[i])],
-                ['=', '>=', '<']));
+                ['=', '=', '=']));
         console.log(Tag + 'updated Word for: ' + docID + ' at ' + indexes.start[i] + ' to ' + indexes.end[i] + ' with a research Result.');
     }
     let lastTimeCheck = new Date();
