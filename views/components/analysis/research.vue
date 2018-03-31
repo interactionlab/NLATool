@@ -127,7 +127,6 @@
                         } else {
                             //this.rerankWithKeywords(response);
                             //this.getMapCoordinates();
-                            console.log('got here');
                             let data = response.itemListElement;
                             if (this.researchdatatoedit !== null) {
                                 if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
@@ -159,16 +158,15 @@
             saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 
-                console.log('Saving on server1: ' + JSON.stringify(this.researchdatatoedit));
                 if (this.researchdatatoedit !== undefined){
                     let obj = {
                         start: this.researchdatatoedit.sourcequery.startIndex,
                         end: this.researchdatatoedit.sourcequery.endIndex
                     };
-                    console.log('Saving on server1: ' + JSON.stringify(obj));
+                    console.log('Saving on server multi object: ' + JSON.stringify(obj));
                     socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
                 } else {
-                    console.log('Saving on server2: ' + JSON.stringify(this.selectedindexes));
+                    console.log('Saving on server single object: ' + JSON.stringify(this.selectedindexes));
                     socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 }
                 

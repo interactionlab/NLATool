@@ -120,6 +120,7 @@
                 entitytoline: [],
                 selectedindexesmarked: {start: -1, end: -1},
                 highlightedhovered: null,
+                isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
                 corefset: false,
@@ -151,7 +152,7 @@
                 }, deep: true
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
-                console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
+                //console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
                 if (newWordToMarkOnHover.textindexes.length > 0) {
                     if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
 
@@ -167,7 +168,6 @@
                     }
                     for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) { if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
                             && newWordToMarkOnHover.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
-                            console.log("TEST" + k);
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
                         }
@@ -177,13 +177,12 @@
                     
                     this.wortomarkonhoverold = newWordToMarkOnHover;
                     if (newWordToMarkOnHover.columnindex === this.columnindex) {
-                        console.log("newWordToMarkOnHover" + newWordToMarkOnHover.textindexes);
+                        //console.log("newWordToMarkOnHover" + newWordToMarkOnHover.textindexes);
                         let index = -1;
                         if (this.numberofcolumns == 1){
                             console.log("one one column for hover");
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                                 let textIndex = newWordToMarkOnHover.textindexes[k];
-                                console.log(textIndex);
                                 if(this.isElementInViewport(this.$refs['text'][textIndex].$el)){
                                     index = k;
                                     break;
@@ -195,7 +194,6 @@
                             }
                         } else {
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
-                                console.log(newWordToMarkOnHover.textindexes[k]);
                                 let dis = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
                                 if (dis >= 0) {
                                     index = k;
@@ -342,7 +340,6 @@
                                     this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();
                                 }
                             }
-                            console.log('corefs all set!');
                             this.corefset = true;
                         }
                     }
@@ -365,8 +362,9 @@
         },
         methods: {
             onscrolltext : function(event) {
-                console.log("onscrolltext");
-                removehoverline([]);
+                if (this.isRemoveLineOnScrollActive){
+                    this.removehoverline([]);
+                }
             },
             removehoverline : function(data) {
                 this.$emit('removehoverline', data);
@@ -386,22 +384,19 @@
                 );
             },
             scrolltoword: function (textIndex) {
-                console.log('allowed to scroll? :' + textIndex);
                 if (textIndex  - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
-                    console.log('reject');
                     return;
                 }
-                //else if (this.allowscroll(this.$refs['text'][textIndex  - this.indexCorrector])) {
+                this.isRemoveLineOnScrollActive = false;
                 this.$refs['text'][textIndex].$el.scrollIntoView();
+                this.isRemoveLineOnScrollActive = true;
             },
             allowscroll: function (element) {                
                 let rect = element.$el.getBoundingClientRect();
-                console.log('Position of element to scroll:' + JSON.stringify(rect));
                 const windowHeight = (window.innerHeight || element.$el.parentElement.parentElement.clientHeight);
                 const windowWidth = (window.innerWidth || element.$el.parentElement.parentElement.clientWidth);
                 const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
                 const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
-                console.log('height:' + windowHeight + ' width: ' + windowWidth);
                 return (!vertInView && !horInView);
             },
             updateclassestomark: function (newClassesToMark) {

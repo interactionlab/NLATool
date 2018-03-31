@@ -244,7 +244,7 @@
                             }
                         }
                     } else{
-                        console.log('couldnt match a corefmention to the hovered word');
+                        console.log('WARNING: couldnt match a corefmention to the hovered word');
                     }
                     this.hoveredChain = temphoveredChain;
                 } else {
@@ -411,7 +411,7 @@
                 if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
                 } else if (event.hoverstarted === "research") {
-                    console.log("Analysis " + event.columnindex);
+                    //console.log("Analysis " + event.columnindex);
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
                         hoverstarted: "research",
@@ -462,7 +462,6 @@
         watch: {
             moreData: {
                 handler: function (newData) {
-                    console.log(JSON.stringify(newData))
                     if (newData.length > 0) {
                         this.tokens.push.apply(this.tokens, newData);
                         this.getMoreText(this.tokens[0].docID, 500);
@@ -470,7 +469,6 @@
                         this.resize();
                         this.displayloading = false;
                     }
-                    //console.log('after ' + this.tokens.length);
                 }, deep: true
             },
             selectedtextindexes: {

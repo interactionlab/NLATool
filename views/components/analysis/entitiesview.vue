@@ -305,14 +305,11 @@
                                 }
                             }
                         }).fail(err => {
-                            console.log('Google initial search failed: ' + err);
+                            console.log('ERROR: Google initial search failed: ' + err);
                         });
 
                     }
                 }
-                //console.log('Column range: ' + this.indexCorrector + ': ' + (this.tokenstoshow[this.columnindex].length + this.indexCorrector));
-                //console.log('researcheEntities in this column: '+ JSON.stringify(localresearchedentities));
-                //console.log('Request to ' + service_url + '?callback=?'+ dataurl);
             },
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
@@ -444,9 +441,8 @@
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
-                    //console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
-
+                    //console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    
                     if (hoverdata.hoverstarted === "research") {
                         return;
                     }

@@ -97,7 +97,6 @@
             },
             changing: function () {
                 let toChange = this.selectedtokens.length > 0 || this.researchdatatoedit !== null;
-                console.log('Changing: ' + toChange);
                 return toChange;
             },
             contentToChange: function () {
@@ -127,17 +126,15 @@
         },
         methods: {
             switchtoentities: function (event) {
-            console.log("switchtoentities");
                 this.$emit('switchtoentities');
             },
             saveresult: function (researchdata) {
                 this.$emit('saveresult', researchdata);
             },
             changeClass: function (newClass) {
-                //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
-                 this.selectedtokens[0].semanticClass = newClass;
-                 let socket = io(this.serverip + ':8080');
-                 socket.emit('changeClass', this.selectedtokens[0], this.docid);
+                this.selectedtokens[0].semanticClass = newClass;
+                let socket = io(this.serverip + ':8080');
+                socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;

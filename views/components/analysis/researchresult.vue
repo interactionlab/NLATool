@@ -116,9 +116,7 @@
                 this.hover = false;
             },
             accentuate: function () {
-                //console.log(JSON.stringify(this.researchdata));
                 this.hover = true;
-                console.log("RR " + this.columnindex);
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,
@@ -144,20 +142,8 @@
                 }
             },
             editResearch: function () {
-                console.log('clicked edit Research');
                 this.$emit('editresearch', this.researchdata);
             },
-        },
-        mounted() {
-
-
-            //console.log(JSON.stringify(this.researchdata));
-            /*if (textIndexes.length === 0) {
-                console.log('for ' + JSON.stringify(this.researchdata.sourcequery.entities) + 'was no word word found in column' + this.columnindex);
-                console.log('at IndexCorrector: ' + this.indexcorrector);
-            }
-            //console.log('textindexes for Result:' + this.researchdata.entities[0].kgID + ': ' + textIndexes);
-            this.researchdata.sourcequery['textindexes'] = textIndexes;*/
         },
         components: {
             googlemap
@@ -187,8 +173,8 @@
                     && this.wordtomarkonhoverdata.textindexes.length > 0
                     && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.textindexes[0]) > -1) {
 
-                    console.log(JSON.stringify(this.wordtomarkonhoverdata));
-                    console.log(JSON.stringify(this.researchdata.sourcequery.textindexes));
+                    //console.log(JSON.stringify(this.wordtomarkonhoverdata));
+                    //console.log(JSON.stringify(this.researchdata.sourcequery.textindexes));
                     htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
                     htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
                 } else {

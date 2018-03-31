@@ -13,20 +13,11 @@
         data: function () {
             return {
                 url: '',
-                mapsurl: '',
-                mapcoordinates: [],
-                mapoptions: {
-                    zoom: 14,
-                    center: '',
-                },
+                mapsurl: ''
             }
         },
         methods: {
-            setmapcoordinates: function (x, y) {
-                this.mapoptions.center = new google.map.LatLng(x, y);
-            },
-            fAfter: function (data) {
-                this.mapcoordinates = data;
+            setmap: function () {
                 let lat = this.researchedentity.lat;
                 let lng = this.researchedentity.lng;
 
@@ -42,33 +33,11 @@
                     + this.researchedentity.lng
                     + '&key=' + this.googleapikey;
                 this.mapsurl = 'https://www.google.com/maps/search/?api=1&query=' + this.name;
-            },
-            getData: function (fAfter) {
-                let service_url = 'https://maps.googleapis.com/maps/api/geocode/json';
-                let params = {
-                    address: this.name,
-                    key: this.googleapikey,
-                    format: "jsonp"
-                };
-                $.getJSON(service_url, params, function (json) {
-                    if (fAfter !== undefined) {
-                        if (json.results[0].geometry !== undefined) {
-                            fAfter(json.results[0].geometry);
-                        } else {
-                            console.log('WARNING: Google Geocoding API not activated.');
-                        }
-                    }
-                });
             }
         },
         mounted() {
-            this.getData(this.fAfter);
+            this.setmap();
         },
-        watch: {
-            url: function () {
-                console.log('URL changes' + this.url);
-            }
-        }
     }
 </script>
 

@@ -98,7 +98,6 @@
                 this.showmode = 'entitiesview';
                 this.$emit('removehoverline', []);
                 this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
-                //console.log('finished Edit: ' + JSON.stringify(this.researchdatatoupdate));
                 this.updateclassestomark(this.classestomark);
             },
             switchtoentities: function () {

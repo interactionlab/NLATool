@@ -151,7 +151,6 @@
                 this[prop] = value;
             },
             startSelection: function () {
-                console.log('index selecting is:' + (this.token.textIndex));
                 this.$emit('startselection', this.token.textIndex);
             },
             endSelection: function (event) {
@@ -171,7 +170,6 @@
                         this.$emit('hoverchain', this.token.textIndex);
                     }
                 }
-                //console.log('hovered Token:' + JSON.stringify(this.token));
                 if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
                     return;
                 }
@@ -185,7 +183,6 @@
                         wordtomarkonhover: [],
                         columnindex: this.columnindex
                     };
-                    console.log(JSON.stringify(this.token));
                     this.$emit('starthover', hoverdata);
                 }
             }
