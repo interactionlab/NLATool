@@ -40,7 +40,6 @@ let vueRenderOptions = {
     }
 };
 
-let results = [];
 let json2;
 wait.launchFiber(getJSONConfig);
 
@@ -114,14 +113,8 @@ function postLoadWrittenText(req, res, next) {
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 
-            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name', 'userID', 'loadingStatus'], [title, 0, 0, 0], null, null));
+            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name', 'userID', 'loadingStatus', 'length', 'title'], [title, 0, 0, 0 , words.length, title], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
-            //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
-            wait.for(sendSQL, dbAction.createInsertCommand(
-                'text',
-                ['docID', 'length', 'title'],
-                [documentInsertResult.insertId, words.length, title],
-                null, null));
             req.session.docID = documentInsertResult.insertId;
 
             //TODO: check if word + NER Tag exists already
@@ -151,19 +144,9 @@ function postLoadWrittenText(req, res, next) {
             }
             corenlp.resetResults(); 
 
-            
-            dbAction.createUpdateCommand('documents', ['loadingStatus'], [1], ['docID'], [documentInsertResult.insertId])
+            wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['loadingStatus'], [1], ['docID'], [docID], ['=']));
             res.redirect('/analysis');
         }
-    }
-}
-
-function sendSQL(command) {
-    try {
-        let result = wait.for(dbStub.makeSQLRequest, command);
-        results.push(result);
-    } catch (err) {
-        results.push(err);
     }
 }
 

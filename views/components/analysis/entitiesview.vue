@@ -258,7 +258,7 @@
 
                 let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                //console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
+                console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
 
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     //console.log(JSON.stringify(this.researchedentities[i]))
@@ -430,10 +430,6 @@
             ,
             tokenstoshow: function (value) {
                 this.searchGoogleWithResearchedEntities();
-                /*this.researchTokensOfClass('PERSON', 0);
-                this.researchTokensOfClass('LOCATION', 1);
-                this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);*/
             }
             ,
             hoverdata: {
