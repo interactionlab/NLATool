@@ -1,11 +1,19 @@
 <template>
     <div style="padding:0px;margin:0px;width: 100%;">
-        <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
-            <!-- shows the clicked word -->
-            <input v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
-                   v-model="selectedtext"
-                   class="mdl-textfield__input"/>
+        <div style="padding:0.4em;width:100%;">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
+                    style="width:100%;">
+                <input id="advancedsearch" 
+                        type="text" 
+                        name="advancedsearch"
+                        class="mdl-textfield__input"
+                        v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
+                        v-model="selectedtext" />
+                <label class="mdl-textfield__label"
+                     for="advancedsearch">For an advanced search ...</label>
+            </div>
         </div>
+             
         <!--Results will be displayed here. -->
         <div class="mdl-cell mdl-cell--12-col"
                 style="padding:0px;margin:0px;width: 100%"
@@ -197,6 +205,10 @@
         computed: {},
         mounted: function (){
             this.handleselectedtextindexes(this.selectedtextindexes);
+            this.$nextTick(() => {
+                componentHandler.upgradeDom();
+                componentHandler.upgradeAllRegistered();
+            });
         },
         watch: {
             researchdatatoedit: {
@@ -229,6 +241,9 @@
                 },
                 deep: true
             },
+        },
+        created() {
+            
         },
         components: {
             researchresult

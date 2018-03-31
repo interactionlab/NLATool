@@ -22,9 +22,7 @@
                    v-on:starthover="starthover($event)"
                    v-on:editresearch="editresearch($event)"
                    v-on:saveresult="saveresult($event)"
-                   v-on:switchtoentities="switchtoentities($event)"
-        >
-
+                   v-on:switchtoentities="switchtoentities($event)">
         </component>
     </div>
 </template>

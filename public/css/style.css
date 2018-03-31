@@ -385,6 +385,13 @@ pre {
 }
 
 /**semantic Class highlight in Text*/
+.ERROR {
+    background: #EEEEEE;
+}
+
+.O {
+    background: #EEEEEE;
+}
 .PERSON {
     background: #fae8e1;
 }

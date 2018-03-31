@@ -6,10 +6,6 @@ const nlpPort = 4000;
  * Tags for console Errors::
  * @type {string}
  */
-let desktop = 'desktop Version: ';
-let mobile = 'Mobile Version: ';
-let bigDesktop = 'Big Desktop Version: ';
-let notMedia = 'Not Media-Related Part: ';
 let Tag = 'index.js: ';
 //--------------------------------------------------------
 /**
@@ -33,9 +29,7 @@ const corenlp = require('../modules/corenlp');
 let vueRenderOptions = {
     head: {
         meta: [
-            {script: '/javascripts/data_management.js'},
-            {style: 'https://code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
-            {style: 'https://storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-green.min.css'}
+            {script: '/javascripts/data_management.js'}
         ]
     }
 };
@@ -107,8 +101,8 @@ function postLoadWrittenText(req, res, next) {
             //let parsedText = wait.for(corenlp.parse,text);
             let parsedResult = wait.for(corenlp.analyse, text);
             //let parsedResultSentence = wait.for(corenlp.analyseSentence, text);
-            //console.log(notMedia + Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
-            //console.log(notMedia + Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
+            //console.log(Tag + 'the parsedText from corenlp is: ' + JSON.stringify(parsedResult));
+            //console.log(Tag + 'the parsedTex Sentence from corenlp is: ' + JSON.stringify(parsedResult));
             //let words = uword(text);
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
