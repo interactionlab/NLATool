@@ -1,7 +1,8 @@
 <template>
     <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
         <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0"
-             v-on:mouseover="movetoolbar">
+             v-on:mouseover="movetoolbar"
+             ref="column">
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;" v-on:scroll="onscrolltext">
@@ -203,10 +204,12 @@
                         }
 
                         if (index !== -1) {
+                            let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
+                        
                             if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector] !== undefined) {
                                 let data = {
                                     hoverended: "text",
-                                    offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
+                                    offsetstart: bb
                                 };
                                 this.$emit('endhover', data);
                             }
@@ -422,6 +425,28 @@
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
             endhover: function (event) {
+                console.log(JSON.stringify(event));
+                if (event.hoverended == "research"){
+                    let bb = event.offsetend;
+                    //correct bb
+                    let rect = this.$refs['column'].getBoundingClientRect();
+                    console.log("HÄ? " + JSON.stringify(this.$el.scrollTop));
+                    console.log("HÄ? " + JSON.stringify(rect));
+                    console.log("HÄ? " + JSON.stringify(bb));
+                    if (bb.top < rect.top){
+                        bb = JSON.parse(JSON.stringify(event.offsetend));
+                        console.log("cap top");
+                        bb.top = rect.top;
+                        bb.height = bb.bottom - bb.top;
+                    }
+                    if (bb.bottom > rect.bottom){
+                        bb = JSON.parse(JSON.stringify(event.offsetend));
+                        console.log("cap bottom");
+                        bb.bottom = rect.bottom;
+                        bb.height = bb.bottom - bb.top;
+                    }
+                    event.offsetend = bb;
+                }    
                 this.$emit('endhover', event);
             },
             dynamicSort: function (property) {
@@ -436,6 +461,24 @@
                 }
             },
             starthover: function (event) {
+                //correct bb
+                if (event.hoverstarted == "research"){
+                    let bb = event.offsetend;
+                    let rect = this.$refs['column'].getBoundingClientRect();
+                    if (bb.top < rect.top){
+                        bb = JSON.parse(JSON.stringify(event.offsetend));
+                        console.log("cap top");
+                        bb.top = rect.top;
+                        bb.height = bb.bottom - bb.top;
+                    }
+                    if (bb.bottom > rect.bottom){
+                        bb = JSON.parse(JSON.stringify(event.offsetend));
+                        console.log("cap bottom");
+                        bb.bottom = rect.bottom;
+                        bb.height = bb.bottom - bb.top;
+                    }
+                    event.offsetend = bb;
+                }                
                 this.$emit('starthover', event);
             },
         },

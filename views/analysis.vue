@@ -54,8 +54,7 @@
                 <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
                      v-for="columnindex in numberofcolumns"
                      v-bind:style="{width : columnsize2 + '%'}">
-                    <component id="textfeatureviewport"
-                               is="textfeatureviewport"
+                    <component is="textfeatureviewport"
                                v-bind:columnindex="columnindex-1"
                                v-bind:numberofcolumns="numberofcolumns"
                                v-bind:serverip="serverip"
