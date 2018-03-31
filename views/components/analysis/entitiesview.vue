@@ -229,6 +229,7 @@
             hoverdata: {type: Object, default: null},
             selectedindexes: {type: Object, default: null},
             researchdatatoupdate: {type: Object, default: null},
+            parentviewport: {type: Object, default: null},
         },
         data: function () {
             return {
@@ -263,7 +264,7 @@
 
                 let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
+                //console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
 
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     //console.log(JSON.stringify(this.researchedentities[i]))
@@ -340,10 +341,8 @@
             isElementInViewport: function (el) {
                 let rect = el.getBoundingClientRect();
                 return (
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+                    rect.top >= this.parentviewport.top &&
+                    rect.bottom <= this.parentviewport.bottom
                 );
             }
             ,
@@ -468,8 +467,12 @@
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes;
                                 }
                             }
-                        } else {
-                            bb = this.$refs["personresultsparent"].getBoundingClientRect();
+                        }
+                        if (bb == null){
+                            let el = this.$refs["personresultsparent"]
+                            if (!this.isElementInViewport(el))
+                                el.scrollIntoView();
+                            bb = el.getBoundingClientRect();
                         }
                     } else if (hoverdata.semanticClass === 'LOCATION') {
                         if (typeof this.$refs["locationresults"] !== 'undefined' && this.$refs["locationresults"].length > 0) {
@@ -483,8 +486,12 @@
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
-                        } else {
-                            bb = this.$refs["locationresultsparent"].getBoundingClientRect();
+                        }
+                        if (bb == null){
+                            let el = this.$refs["locationresultsparent"]
+                            if (!this.isElementInViewport(el))
+                                el.scrollIntoView();
+                            bb = el.getBoundingClientRect();
                         }
                     } else if (hoverdata.semanticClass === "ORGANIZATION") {
                         if (typeof this.$refs["organisazionresults"] !== 'undefined' && this.$refs["organisazionresults"].length > 0) {
@@ -498,8 +505,12 @@
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
-                        } else {
-                            bb = this.$refs["organisazionresultsparent"].getBoundingClientRect();
+                        }
+                        if (bb == null){
+                            let el = this.$refs["organisazionresultsparent"]
+                            if (!this.isElementInViewport(el))
+                                el.scrollIntoView();
+                            bb = el.getBoundingClientRect();
                         }
                     } else if (hoverdata.semanticClass === "MISC") {
                         if (typeof this.$refs["miscresults"] !== 'undefined' && this.$refs["miscresults"].length > 0) {
@@ -513,8 +524,12 @@
                                     wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
                                 }
                             }
-                        } else {
-                            bb = this.$refs["miscresultsparent"].getBoundingClientRect();
+                        }
+                        if (bb == null){
+                            let el = this.$refs["miscresultsparent"]
+                            if (!this.isElementInViewport(el))
+                                el.scrollIntoView();
+                            bb = el.getBoundingClientRect();
                         }
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};

@@ -87,11 +87,8 @@
                         matches: numberOfMatches[i]
                     });
                 }
-                //console.log('tempresults to sort Alpha: ' + JSON.stringify(tempresults));
-                //console.log('NumberOfMatches to sort Alpha: ' + numberOfMatches);
                 numberOfMatches = this.insertionSort(numberOfMatches);
                 numberOfMatches.reverse();
-                //console.log('NumberOfMatches to sort after Alpha: ' + numberOfMatches);
                 for (let i = 0; i < numberOfMatches.length; i++) {
                     for (let j = 0; j < tempresults.length; j++) {
                         if (numberOfMatches[i] === tempresults[j].matches) {
@@ -178,15 +175,13 @@
             },
             handleselectedtextindexes: function(newselectedtextindexes) {
                 if (newselectedtextindexes.start !== -1 && newselectedtextindexes.end !== -1) {
-                    console.log("test");
-                    console.log(JSON.stringify(this.gettokensofselectedtext(this.tokens, newselectedtextindexes)));
+                    //console.log(JSON.stringify(this.gettokensofselectedtext(this.tokens, newselectedtextindexes)));
                     this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newselectedtextindexes)[0]);
                     
-                    console.log('Keywords: ' + JSON.stringify(this.keywords));
+                    //console.log('Keywords: ' + JSON.stringify(this.keywords));
                     this.researchedtokens = this.gettokensofselectedtext(this.tokens, newselectedtextindexes);
-                    console.log('researchedtokens: ' + JSON.stringify(this.researchedtokens));
                     this.selectedtext = this.generateTextForSeach(this.researchedtokens);
-                    console.log('Looking for more Info about: ' + this.selectedtext);
+                    //console.log('Looking for more Info about: ' + this.selectedtext);
                     this.searchGoogle(this.selectedtext, 10);
                 }
             }

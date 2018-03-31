@@ -40,13 +40,13 @@
             editing: function (newTitle) {
                 if (this.changing === 'showdoc') {
                     this.newtitle = this.document.name;
-                    console.log('newtitle Var is set:' + this.newtitle + JSON.stringify(this.document));
+                    //console.log('newtitle Var is set:' + this.newtitle + JSON.stringify(this.document));
                     this.changing = 'editdoc';
                 }
                 else {
                     this.changing = 'showdoc';
                     this.document.name = newTitle;
-                    console.log('showing this title now: '+ this.document.name);
+                    //console.log('showing this title now: '+ this.document.name);
                 }
             },
             deleted:function(docID){

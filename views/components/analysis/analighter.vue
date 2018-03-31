@@ -16,6 +16,7 @@
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-bind:researchdatatoedit="researchdatatoedit"
                    v-bind:researchdatatoupdate="researchdatatoupdate"
+                   v-bind:parentviewport="parentviewport"
                    v-on:updateclassestomark="updateclassestomark($event)"
                    v-on:endhover="endhover($event)"
                    v-on:starthover="starthover($event)"
@@ -61,6 +62,7 @@
                 }
             },
             wordtomarkonhoverdata: {type: Object, default: null},
+            parentviewport: {type: Object, default: null},
         },
         data: function () {
             return {

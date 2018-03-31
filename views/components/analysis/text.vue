@@ -169,7 +169,6 @@
             
                 this.tohover = true;
                 if (this.classestomark.coref) {
-                    //console.log('hovering: ' +this.token.textIndex + ' which is part of Chain?:' + this.partofChain);
                     if (this.partofChain) {
                         this.$emit('hoverchain', this.token.textIndex);
                     }
@@ -178,7 +177,6 @@
                     return;
                 }
                 if (this.classestomark[this.token.semanticClass] === true) {
-                    console.log(JSON.stringify(this.token));
                     let hoverdata = {
                         hoverstarted: "text",
                         offsetstart: this.$el.getBoundingClientRect(),

@@ -133,7 +133,6 @@
                 this.$emit('starthover', hoverdata);
             },
             saveresult: function () {
-                console.log(JSON.stringify(this.researchdata));
                 this.$emit('saveresult', this.researchdata);
             },
             showSource: function () {
@@ -177,8 +176,6 @@
                     && this.wordtomarkonhoverdata.textindexes.length > 0
                     && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.textindexes[0]) > -1) {
 
-                    //console.log(JSON.stringify(this.wordtomarkonhoverdata));
-                    //console.log(JSON.stringify(this.researchdata.sourcequery.textindexes));
                     htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
                     htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
                 } else {
@@ -189,7 +186,6 @@
                 return htmlclass;
             },
             title: function () {
-                //console.log(JSON.stringify(this.researchdata.sourcequery.query));
                 let title = '';
                 if (this.researchdata.sourcequery !== undefined) {
                     if (this.researchdata.sourcequery.query !== undefined) {    
@@ -201,22 +197,17 @@
                             }
                         }                        
                     } else {
-                        console.log(JSON.stringify(this.researchdata));
                         for (let i = 0; i < this.researchdata.sourcequery.source.length && i < 2; i++) {
                             title += this.researchdata.sourcequery.source[i].content;
                             title += " ";
                         }
-                        console.log(title);
                         if (this.researchdata.sourcequery.source.length > 4){
                             title += "[...] ";
                         }
                         let start = this.researchdata.sourcequery.source.length - 1;
-                        console.log(start);
                         if (start < 2){
-                            console.log("cut");
                             start = 2;
                         }
-                        console.log(start);
                         for (let i = start; i < this.researchdata.sourcequery.source.length; i++) {
                             title += this.researchdata.sourcequery.source[i].content;
                             title += " ";

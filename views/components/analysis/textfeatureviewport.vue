@@ -51,6 +51,7 @@
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
+                            v-bind:parentviewport="parentviewport"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:entercorrectionmode="entercorrectionmode($event)"
                             v-on:endhover="endhover($event)"
@@ -120,6 +121,7 @@
         data: function () {
             return {
                 entitytoline: [],
+                parentviewport: {},
                 selectedindexesmarked: {start: -1, end: -1},
                 highlightedhovered: null,
                 isRemoveLineOnScrollActive: true,
@@ -203,7 +205,6 @@
                         //console.log("newWordToMarkOnHover" + newWordToMarkOnHover.textindexes);
                         let index = -1;
                         if (this.numberofcolumns == 1){
-                            console.log("one one column for hover");
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                                 let textIndex = newWordToMarkOnHover.textindexes[k];
                                 if(this.isElementInViewport(this.$refs['text'][textIndex].$el)){
@@ -375,6 +376,7 @@
             ,
         },
         mounted() {
+            this.calcparentviewport();
         },
         computed: {
             indexCorrector: function () {
@@ -386,12 +388,15 @@
             }
         },
         methods: {
-            onscrolltext : function(event) {
+            calcparentviewport: function(){
+                this.parentviewport = this.$refs['column'].getBoundingClientRect();
+            },
+            onscrolltext: function(event) {
                 if (this.isRemoveLineOnScrollActive){
                     this.removehoverline([]);
                 }
             },
-            removehoverline : function(data) {
+            removehoverline: function(data) {
                 this.$emit('removehoverline', data);
             },
             manipulateword: function (textIndex, prop, value) {
