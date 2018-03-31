@@ -24,7 +24,7 @@
                            v-bind:contentcontrol="contentcontrol.PERSONS"
                            v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                            v-on:starthover="starthover($event)"
-                           v-on:saveresult="saveResult($event)">
+                           v-on:saveresult="saveresult($event)">
                 </component>
             </div>
 
@@ -156,10 +156,22 @@
                     }
                 );
             },
-            saveResult: function (researchdata) {
+            saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
-                console.log('Saving on server: '+JSON.stringify(researchdata));
-                socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                
+                console.log('Saving on server1: ' + JSON.stringify(this.researchdatatoedit));
+                if (this.researchdatatoedit !== undefined){
+                    let obj = {
+                        start: this.researchdatatoedit.sourcequery.startIndex,
+                        end: this.researchdatatoedit.sourcequery.endIndex
+                    };
+                    console.log('Saving on server1: ' + JSON.stringify(obj));
+                    socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
+                } else {
+                    console.log('Saving on server2: ' + JSON.stringify(this.selectedindexes));
+                    socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                }
+                
                 this.$emit('saveresult', researchdata);
             },
             starthover: function (event) {

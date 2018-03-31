@@ -34,7 +34,7 @@
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate LOCATION"
@@ -71,7 +71,7 @@
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate ORGANIZATION"
@@ -108,7 +108,7 @@
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate MISC"
@@ -145,7 +145,7 @@
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate OTHER"
@@ -182,7 +182,7 @@
                    v-bind:contentcontrol="contentcontrol.OTHERS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
     </div>
@@ -321,15 +321,15 @@
             ,
             saveResult2: function (researchdata) {
                 let indexes = {
-                    start: researchdata.sourcequery.source[0].textIndex,
-                    end: researchdata.sourcequery.source[researchdata.sourcequery.source.length - 1].textIndex + 1
+                    start: [researchdata.sourcequery.source[0].textIndex],
+                    end: [researchdata.sourcequery.source[researchdata.sourcequery.source.length - 1].textIndex + 1]
                 };
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, indexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
             }
             ,
-            saveResult: function (researchdata) {
+            saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);

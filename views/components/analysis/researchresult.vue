@@ -22,7 +22,7 @@
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                                         v-else
-                                        v-on:click.stop="saveResult">
+                                        v-on:click.stop="saveresult">
                                     <i class="material-icons">check</i>
                                 </button>
                                 <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
@@ -131,7 +131,7 @@
                 };
                 this.$emit('starthover', hoverdata);
             },
-            saveResult: function () {
+            saveresult: function () {
                 this.$emit('saveresult', this.researchdata);
             },
             showSource: function () {

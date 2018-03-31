@@ -139,21 +139,23 @@ function updateTitle(docID, newTitle) {
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('text', ['title'], [newTitle], ['docID'], [docID], ['=']));
 }
 
-function saveResult(docID, indexes, researchresultID,) {
-    console.log(JSON.stringify(indexes));
+function saveResult(docID, indexes, researchresultID) {
+    console.log("saveResult indexes: " + JSON.stringify(indexes));
     let firstTimeCheck = new Date();
     docID = stringifyForDB(docID);
     researchresultID = stringifyForDB(researchresultID);
-    let updateResult = wait.for(dbStub.makeSQLRequest,
-        dbAction.createUpdateCommand('textmap',
-            ['knowledgeGraphID'],
-            [researchresultID],
-            ['docID', 'textIndex', 'textIndex'],
-            [docID, stringifyForDB(indexes.start), stringifyForDB(indexes.end)],
-            ['=', '>=', '<']));
+    for (let i = 0; i < indexes.start.length; i++){
+        let updateResult = wait.for(dbStub.makeSQLRequest,
+            dbAction.createUpdateCommand('textmap',
+                ['knowledgeGraphID'],
+                [researchresultID],
+                ['docID', 'textIndex', 'textIndex'],
+                [docID, stringifyForDB(indexes.start[i]), stringifyForDB(indexes.end[i])],
+                ['=', '>=', '<']));
+        console.log(Tag + 'updated Word for: ' + docID + ' at ' + indexes.start[i] + ' to ' + indexes.end[i] + ' with a research Result.');
+    }
     let lastTimeCheck = new Date();
-    console.log(Tag + 'updated Word for: ' + docID + ' at ' + indexes.start + ' to ' + indexes.end + ' with a research Result. took: '
-        + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+    console.log('Time for transcation took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
 }
 
 /**
