@@ -83,6 +83,7 @@
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
+                               v-on:removehoverline="removehoverline($event)"
                                v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
                 </div>
@@ -433,6 +434,9 @@
                 } else if (event.hoverended === "text") {
                     this.offsetstart = event.offsetstart;
                 }
+            },
+            removehoverline: function (event) {
+                this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {
                 this.moreData = value;

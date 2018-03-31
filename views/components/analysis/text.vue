@@ -178,7 +178,7 @@
                 if (this.classestomark[this.token.semanticClass] === true) {
                     let hoverdata = {
                         hoverstarted: "text",
-                        offsetstart: event.target.getBoundingClientRect(),
+                        offsetstart: this.$el.getBoundingClientRect(),
                         startword: this.token,
                         semanticClass: this.token.semanticClass,
                         startresearch: undefined,

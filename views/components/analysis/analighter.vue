@@ -83,6 +83,7 @@
             editresearch: function (researchData) {
                 this.classestomark.POS = true;
                 this.showmode = 'correction';
+                this.$emit('removehoverline', []);
                 if (researchData !== undefined) {
                     this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
                 } else {
@@ -95,6 +96,7 @@
                 this.classestomark.POS = false;
                 this.researchdatatoedit = null;
                 this.showmode = 'entitiesview';
+                this.$emit('removehoverline', []);
                 this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
                 console.log('finished Edit: ' + JSON.stringify(this.researchdatatoupdate));
                 this.updateclassestomark(this.classestomark);
@@ -102,6 +104,7 @@
             selectedclass: function () {
                 this.classestomark.POS = false;
                 this.showmode = 'entitiesview';
+                this.$emit('removehoverline', []);
                 this.updateclassestomark(this.classestomark);
             }
         },
