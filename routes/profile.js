@@ -130,9 +130,11 @@ function loadMoreDocuments(req, res, next) {
 function getDocuments(start, amount) {
     profileData.documents = JSON.parse(wait.for(
         dbStub.makeSQLRequest,
-        dbAction.createLimitedSelectCommand(
+        dbAction.createSelectCommand(
             'documents',
-            ['docID', 'userID', 'name'],
+            ['loadingStatus', 'docID', 'userID', 'name'],
+            ['-1'],
+            ['>'],
             start, amount
         )
     ));
@@ -159,13 +161,14 @@ function updateTitle(docID, newTitle) {
 
 function deleteDocument(docID) {
     docID = dbAction.stringifyForDB(docID);
-    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('corefmentions', ['docID'], [docID]));
-    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('searchResults', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['loadingStatus'], [-1], ['docID'], [docID], ['=']));
+    /*wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('corefmentions', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('researchedentities', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('notes', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('text', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textmap', ['docID'], [docID]));
     wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('textnote', [docID], [docID]));
-    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('documents', ['docID'], [docID]));
+    wait.for(dbStub.makeSQLRequest, dbAction.createDeleteCommand('documents', ['docID'], [docID]));*/
 }
 
 module.exports = router;

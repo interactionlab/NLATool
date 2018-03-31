@@ -151,8 +151,7 @@ function postLoadWrittenText(req, res, next) {
             }
             corenlp.resetResults(); 
 
-            
-            dbAction.createUpdateCommand('documents', ['loadingStatus'], [1], ['docID'], [documentInsertResult.insertId])
+            wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['loadingStatus'], [1], ['docID'], [docID], ['=']));
             res.redirect('/analysis');
         }
     }
