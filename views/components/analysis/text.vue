@@ -148,10 +148,14 @@
         },
         methods: {
             simplifySemanticClass: function(){
-                if (this.token.semanticClass === 'DATE' || this.token.semanticClass === 'NUMBER'){
-                    this.semanticClassSimplified = 'OTHER';
-                } else {
+                if (this.token.semanticClass === 'PERSON'
+                        || this.token.semanticClass === 'ORGANIZATION'
+                        || this.token.semanticClass === 'LOCATION'
+                        || this.token.semanticClass === 'MISC'
+                        || this.token.semanticClass === 'O'){
                     this.semanticClassSimplified = this.token.semanticClass;
+                } else {
+                    this.semanticClassSimplified = 'OTHER';
                 }
             },
             addBracketLeft: function () {

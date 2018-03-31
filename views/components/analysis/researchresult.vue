@@ -120,12 +120,20 @@
             accentuate: function () {
                 this.hover = true;
                 //console.log(JSON.stringify( this.researchdata.sourcequery));
+                let semanticClassSimplified = "OTHER";
+                
+                if (semanticClassSimplified === 'PERSON'
+                    || semanticClassSimplified === 'ORGANIZATION'
+                    || semanticClassSimplified === 'LOCATION'
+                    || semanticClassSimplified === 'MISC')
+                    semanticClassSimplified = this.researchdata.sourcequery.semanticClass;
+                    
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,
                     offsetend: this.$el.getBoundingClientRect(),
                     startword: null,
-                    semanticClass: this.researchdata.sourcequery.semanticClass,
+                    semanticClass: semanticClassSimplified,
                     startresearch: undefined,
                     wordtomarkonhover: this.researchdata.sourcequery.textindexes,
                     columnindex: this.columnindex
@@ -162,7 +170,9 @@
         },
         computed: {
             ifShowMap: function () {
-                if (this.researchdata.sourcequery.semanticClass !== 'PERSON') {
+                if (this.researchdata.sourcequery.semanticClass === 'LOCATION'          
+                    || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
+                    || this.researchdata.sourcequery.semanticClass === 'MISC') {
                     return this.localcontentcontrol.map;
                 } else {
                     return false;
@@ -176,11 +186,27 @@
                     && this.wordtomarkonhoverdata.textindexes.length > 0
                     && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.textindexes[0]) > -1) {
 
-                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
-                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
+                    if (this.researchdata.sourcequery.semanticClass === "PERSON" || 
+                        this.researchdata.sourcequery.semanticClass === "LOCATION" || 
+                        this.researchdata.sourcequery.semanticClass === "MISC" || 
+                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION"){
+                        htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
+                        htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
+                    } else {
+                        htmlclass["OTHER_BORDERED_strong"] = true;
+                        htmlclass["OTHER_BORDERED"] = false;
+                    }
                 } else {
-                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = false;
-                    htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = true;
+                    if (this.researchdata.sourcequery.semanticClass === "PERSON" || 
+                        this.researchdata.sourcequery.semanticClass === "LOCATION" || 
+                        this.researchdata.sourcequery.semanticClass === "MISC" || 
+                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION"){
+                        htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = false;
+                        htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = true;
+                    } else {
+                        htmlclass["OTHER_BORDERED_strong"] = false;
+                        htmlclass["OTHER_BORDERED"] = true;
+                    }
                 }
 
                 return htmlclass;
