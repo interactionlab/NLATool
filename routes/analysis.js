@@ -388,9 +388,7 @@ function mapEntitiesToID(researchedEntities) {
     for (let i = 0; i < arr.length; i++) {
         for (let k = 0;k < arr[i].startIndex.length; k++) {
             for (let j = arr[i].startIndex[k]; j <= arr[i].endIndex[k]; j++) {
-                if (j - 1 > 0) {
-                    arr[i].textindexes.push(j);
-                }
+                arr[i].textindexes.push(j);
             }
         }
         arr[i].textindexes = arr[i].textindexes.sort((a, b) => a - b);

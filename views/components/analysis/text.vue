@@ -174,6 +174,7 @@
                     return;
                 }
                 if (this.classestomark[this.token.semanticClass] === true) {
+                    console.log(JSON.stringify(this.token));
                     let hoverdata = {
                         hoverstarted: "text",
                         offsetstart: this.$el.getBoundingClientRect(),
