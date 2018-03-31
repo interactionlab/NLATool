@@ -345,7 +345,7 @@ pre {
 
 /** semantic Class highlight for results */
 .PERSON_BORDERED {
-    border-left: #fae8e1 4px solid;
+    border-left: #f5c6b5 4px solid;
     padding: 0.4em;
 }
 
@@ -355,7 +355,7 @@ pre {
 }
 
 .LOCATION_BORDERED {
-    border-left: #faf4e1 4px solid;
+    border-left: #f9ebba 4px solid;
     padding: 0.4em;
 }
 
@@ -365,7 +365,7 @@ pre {
 }
 
 .ORGANIZATION_BORDERED {
-    border-left: #e6f2e6 4px solid;
+    border-left: #b8e1b9 4px solid;
     padding: 0.4em;
 }
 
@@ -375,12 +375,22 @@ pre {
 }
 
 .MISC_BORDERED {
-    border-left: #e4e9f5 4px solid;
+    border-left: #bccae8 4px solid;
     padding-left: 0.4em;
 }
 
 .MISC_BORDERED_strong {
     border-left: #7b98d4 4px solid;
+    padding-left: 0.4em;
+}
+
+.OTHER_BORDERED {
+    border-left: #ecb0ee 4px solid;
+    padding-left: 0.4em;
+}
+
+.OTHER_BORDERED_strong {
+    border-left: #a211a7 4px solid;
     padding-left: 0.4em;
 }
 
@@ -393,7 +403,7 @@ pre {
     background: #EEEEEE;
 }
 .PERSON {
-    background: #fae8e1;
+    background: #f5c6b5;
 }
 
 .PERSON_strong {
@@ -401,7 +411,7 @@ pre {
 }
 
 .LOCATION {
-    background: #faf4e1;
+    background: #f9ebba;
 }
 
 .LOCATION_strong {
@@ -409,7 +419,7 @@ pre {
 }
 
 .ORGANIZATION {
-    background: #e6f2e6;
+    background: #b8e1b9;
 }
 
 .ORGANIZATION_strong {
@@ -417,11 +427,19 @@ pre {
 }
 
 .MISC {
-    background: #e4e9f5;
+    background: #bccae8;
 }
 
 .MISC_strong {
     background: #7b98d4;
+}
+
+.OTHER {
+    background: #ecb0ee;
+}
+
+.OTHER_strong {
+    background: #a211a7;
 }
 
 .POS {
