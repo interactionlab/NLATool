@@ -131,6 +131,7 @@
                 this.$emit('starthover', hoverdata);
             },
             saveresult: function () {
+                console.log(JSON.stringify(this.researchdata));
                 this.$emit('saveresult', this.researchdata);
             },
             showSource: function () {

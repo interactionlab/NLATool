@@ -132,10 +132,11 @@
         watch: {
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    if (this.selectedindexesmarked.hover != -1 || this.selectedindexesmarked.end != -1){
+                    //unhover old words
+                    if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1){
                         let start =  this.selectedindexesmarked.start;
                         let end = this.selectedindexesmarked.hover;
-                        if (this.selectedindexesmarked.end != -1){
+                        if (this.selectedindexesmarked.end !== -1){
                             let end = this.selectedindexesmarked.end;
                         }
                         
@@ -151,21 +152,18 @@
                             }
                         }
                     }
-                    
-                    
-                    if (newSelectedIndexes.hover != -1 || newSelectedIndexes.end != -1){
+                    //hover new words
+                    if (newSelectedIndexes.hover !== -1 || newSelectedIndexes.end !== -1){
                         let start =  newSelectedIndexes.start;
                         let end = newSelectedIndexes.hover;
-                        if (newSelectedIndexes.end != -1){
+                        if (newSelectedIndexes.end !== -1){
                             let end = newSelectedIndexes.end;
                         }
-                        
                         if (start > end){
                             let dummy = end;
                             end = start;
                             start = dummy;
                         }
-                        console.log(start + ", " + end);
                         for (let i = start; i <= end; i++) {
                             if (i - this.indexCorrector >= 0) {
                                 this.manipulateword(i - this.indexCorrector, 'selected', true);
@@ -173,7 +171,6 @@
                             }
                         }
                     }
-                    
                     this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
                 }, deep: true
             },

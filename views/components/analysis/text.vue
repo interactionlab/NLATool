@@ -162,7 +162,7 @@
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
-                console.log(JSON.stringify(this.selectedtextindexes));
+                //console.log(JSON.stringify(this.selectedtextindexes));
                 if (this.selectedtextindexes.start != -1 && this.selectedtextindexes.done == false){
                     this.$emit('hoverduringselection', this.token.textIndex);
                 }

@@ -7,7 +7,6 @@
                    class="mdl-textfield__input"/>
         </div>
         <div class="mdl-cell mdl-cell--12-col contentColor">
-
             <!--Results will be displayed here. -->
             <div class="mdl-cell mdl-cell--12-col" id="resultfield">
                 <component is="researchresult"
@@ -156,9 +155,11 @@
                 );
             },
             saveresult: function (researchdata) {
+                console.log('Saving...' + JSON.stringify(this.researchdatatoedit));
+                                        
                 let socket = io(this.serverip + ':8080');
                 
-                if (this.researchdatatoedit !== undefined){
+                if (this.researchdatatoedit !== undefined && this.researchdatatoedit !== null){
                     let obj = {
                         start: this.researchdatatoedit.sourcequery.startIndex,
                         end: this.researchdatatoedit.sourcequery.endIndex
@@ -175,8 +176,25 @@
             starthover: function (event) {
                 //this.$emit('starthover', event);
             },
+            handleselectedtextindexes: function(newselectedtextindexes) {
+                if (newselectedtextindexes.start !== -1 && newselectedtextindexes.end !== -1) {
+                    console.log("test");
+                    console.log(JSON.stringify(this.gettokensofselectedtext(this.tokens, newselectedtextindexes)));
+                    this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newselectedtextindexes)[0]);
+                    
+                    console.log('Keywords: ' + JSON.stringify(this.keywords));
+                    this.researchedtokens = this.gettokensofselectedtext(this.tokens, newselectedtextindexes);
+                    console.log('researchedtokens: ' + JSON.stringify(this.researchedtokens));
+                    this.selectedtext = this.generateTextForSeach(this.researchedtokens);
+                    console.log('Looking for more Info about: ' + this.selectedtext);
+                    this.searchGoogle(this.selectedtext, 10);
+                }
+            }
         },
         computed: {},
+        mounted: function (){
+            this.handleselectedtextindexes(this.selectedtextindexes);
+        },
         watch: {
             researchdatatoedit: {
                 handler: function (newData) {
@@ -190,14 +208,7 @@
             },
             selectedtextindexes: {
                 handler: function (newselectedtextindexes) {
-                    if (newselectedtextindexes.start !== -1 && newselectedtextindexes.end !== -1) {
-                        this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newselectedtextindexes)[0]);
-                        //console.log('Keywords: ' + JSON.stringify(this.keywords));
-                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newselectedtextindexes);
-                        this.selectedtext = this.generateText(this.researchedtokens);
-                        console.log('Looking for more Info about: ' + this.selectedtext);
-                        this.searchGoogle(this.selectedtext, 10);
-                    }
+                    this.handleselectedtextindexes(newselectedtextindexes)
                 },
                 deep: true
             },

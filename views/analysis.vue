@@ -301,7 +301,7 @@
                         done: true
                     };
                 }
-                console.log(JSON.stringify(this.selectedtextindexes));
+                //console.log(JSON.stringify(this.selectedtextindexes));
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedtextindexes = newSelectedIndexes;

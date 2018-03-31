@@ -9,21 +9,30 @@ module.exports = {
         gettokensofselectedtext: function (alltokens, indexes) {
             let resultingTokens = [];
             //console.log('start: ' + indexes.start + ' end: '+ indexes.end);
-            for (let i = indexes.start; i < indexes.end; i++) {
-                resultingTokens.push(alltokens[i]);
+            if (indexes.start !== -1 && indexes.end !== -1){            
+                for (let i = indexes.start; i <= indexes.end; i++) {
+                    resultingTokens.push(alltokens[i]);
+                }
             }
             //console.log(JSON.stringify(resultingTokens));
             return resultingTokens;
         },
         generateText: function (tokens) {
             let text = '';
-            let gap = '';
-            for (let i = 1; i <= tokens.length; i++) {
-                text = text + tokens[i - 1].content;
-                gap = this.getWordGap(tokens, i);
-                text = text + gap;
+            for (let i = 0; i < tokens.length; i++) {
+                text += tokens[i].content;
+                text += this.getWordGap(tokens, i);
             }
-            //console.log(text);
+            return text;
+        },
+        generateTextForSeach: function (tokens) {
+            let text = '';
+            for (let i = 0; i < tokens.length; i++) {
+                text += tokens[i].content;
+                if (i < tokens.length-1){
+                    text += ' '
+                }
+            }
             return text;
         },
         getWordGap: function (tokens, index) {

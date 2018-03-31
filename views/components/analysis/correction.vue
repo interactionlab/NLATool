@@ -5,6 +5,7 @@
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
 
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    style="float: right;"
                     v-on:click="switchtoentities">
                 <i class="material-icons">clear</i>
             </button>
@@ -39,7 +40,12 @@
             </div>
         </div>
         <div v-else class="mdl-grid">
-            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. </p>
+            
+            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    style="float: right;"
+                    v-on:click="switchtoentities">
+                <i class="material-icons">clear</i>
+            </button></p>
             <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most
                 likely ones not to be classified. </p>
         </div>
@@ -114,7 +120,12 @@
             },
             currentClass: function () {
                 if (this.changing) {
-                    if (this.selectedtokens.length === 1) {
+                    console.log("selectedtokens prop : " + JSON.stringify(this.selectedtokens));
+                    console.log("selectedtokens prop : " + JSON.stringify(this.selectedtokens[0]));
+                    console.log("researchdatatoedit prop : " + JSON.stringify(this.researchdatatoedit));
+                    
+                    if (this.selectedtokens !== null && this.selectedtokens.length === 1 && this.selectedtokens[0] !== undefined ) {
+                        console.log("computed prop : " + JSON.stringify(this.selectedtokens));
                         return this.selectedtokens[0].semanticClass;
                     } else if (this.researchdatatoedit !== null) {
                         return this.researchdatatoedit.sourcequery.semanticClass;
