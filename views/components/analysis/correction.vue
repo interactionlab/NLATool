@@ -120,12 +120,7 @@
             },
             currentClass: function () {
                 if (this.changing) {
-                    console.log("selectedtokens prop : " + JSON.stringify(this.selectedtokens));
-                    console.log("selectedtokens prop : " + JSON.stringify(this.selectedtokens[0]));
-                    console.log("researchdatatoedit prop : " + JSON.stringify(this.researchdatatoedit));
-                    
                     if (this.selectedtokens !== null && this.selectedtokens.length === 1 && this.selectedtokens[0] !== undefined ) {
-                        console.log("computed prop : " + JSON.stringify(this.selectedtokens));
                         return this.selectedtokens[0].semanticClass;
                     } else if (this.researchdatatoedit !== null) {
                         return this.researchdatatoedit.sourcequery.semanticClass;
