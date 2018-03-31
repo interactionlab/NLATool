@@ -201,6 +201,17 @@
         methods: {
             updateclassestomark: function (newClassesToMark) {
                 this.classesToMark = newClassesToMark;
+                if (this.hoverdata !== null
+                    && this.hoverdata.semanticClass !== undefined
+                    && this.classesToMark[this.hoverdata.semanticClass] == false) {
+                    this.removehoverline([]);
+                    this.wordtomarkonhoverdata = {
+                        textindexes: [],
+                        hoverstarted: "text",
+                        semanticClass: 'ERROR',
+                        columnindex: -1
+                    };
+                }
             },
             toogleResearchContent: function (toToggle) {
                 this.contentcontrol.PERSONS[toToggle] = !this.contentcontrol.PERSONS[toToggle];
@@ -209,6 +220,7 @@
                 this.contentcontrol.MISCS[toToggle] = !this.contentcontrol.MISCS[toToggle];
                 this.contentcontrol.OTHERS[toToggle] = !this.contentcontrol.OTHERS[toToggle];
                 this.contentcontrol.PERSONS['map'] = false;
+                
             },
             setTokens: function (newTokens) {
                 this.tokens = newTokens;
@@ -267,9 +279,6 @@
             getNotes: function () {
                 this.removehoverline([]);
                 this.analysisMode = 'notes';
-            },
-            changeMarkerMode: function (newClassesToMark) {
-                this.classesToMark = newClassesToMark;
             },
             selectText: function (index, modus) {
                 if (modus === 0) {

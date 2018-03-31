@@ -27,8 +27,6 @@
     </div>
 </template>
 <script>
-    import nerVue from './components/analysis/ner.vue';
-    import necVue from './components/analysis/nec.vue';
     import correction from './components/analysis/correction.vue';
     import entitiesview from './components/analysis/entitiesview.vue';
 
@@ -108,8 +106,6 @@
             }
         },
         components: {
-            nerVue,
-            necVue,
             correction,
             entitiesview
         }

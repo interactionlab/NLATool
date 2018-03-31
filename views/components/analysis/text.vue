@@ -124,7 +124,7 @@
             }
             ,
             getWordGap2: function () {
-                console.log(JSON.stringify(this.token));
+                //console.log(JSON.stringify(this.token));
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
                 } else if (this.token.whitespaceInfo === 0) {

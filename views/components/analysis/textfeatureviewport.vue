@@ -178,19 +178,20 @@
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
                 //console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
-                if (newWordToMarkOnHover.textindexes.length > 0) {
-                    if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
+                
+                if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
 
-                        if (this.wortomarkonhoverold.textindexes.length > 0) {
-                            for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
-                                if (this.wortomarkonhoverold.textindexes[k] - this.indexCorrector >= 0
-                                    && this.wortomarkonhoverold.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
-                                    this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
-                                    this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
-                                }
+                    if (this.wortomarkonhoverold.textindexes.length > 0) {
+                        for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
+                            if (this.wortomarkonhoverold.textindexes[k] - this.indexCorrector >= 0
+                                && this.wortomarkonhoverold.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
+                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
+                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
                             }
                         }
                     }
+                }
+                if (newWordToMarkOnHover.textindexes.length > 0) {
                     for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) { if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
                             && newWordToMarkOnHover.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
                             this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
@@ -487,25 +488,28 @@
                 }
             },
             starthover: function (event) {
-                //correct bb
-                if (event.hoverstarted == "research"){
-                    let bb = event.offsetend;
-                    let rect = this.$refs['column'].getBoundingClientRect();
-                    if (bb.top < rect.top){
-                        bb = JSON.parse(JSON.stringify(event.offsetend));
-                        console.log("cap top");
-                        bb.top = rect.top;
-                        bb.height = bb.bottom - bb.top;
-                    }
-                    if (bb.bottom > rect.bottom){
-                        bb = JSON.parse(JSON.stringify(event.offsetend));
-                        console.log("cap bottom");
-                        bb.bottom = rect.bottom;
-                        bb.height = bb.bottom - bb.top;
-                    }
-                    event.offsetend = bb;
-                }                
-                this.$emit('starthover', event);
+                console.log(this.analysismode);
+                if (this.analysismode === "analighter"){            
+                    //correct bb
+                    if (event.hoverstarted == "research"){
+                        let bb = event.offsetend;
+                        let rect = this.$refs['column'].getBoundingClientRect();
+                        if (bb.top < rect.top){
+                            bb = JSON.parse(JSON.stringify(event.offsetend));
+                            console.log("cap top");
+                            bb.top = rect.top;
+                            bb.height = bb.bottom - bb.top;
+                        }
+                        if (bb.bottom > rect.bottom){
+                            bb = JSON.parse(JSON.stringify(event.offsetend));
+                            console.log("cap bottom");
+                            bb.bottom = rect.bottom;
+                            bb.height = bb.bottom - bb.top;
+                        }
+                        event.offsetend = bb;
+                    }                
+                    this.$emit('starthover', event);
+                }
             },
         },
         components: {
