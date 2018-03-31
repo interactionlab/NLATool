@@ -259,13 +259,12 @@
                 this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
             },
             getAnalighter: function () {
+            
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
+                this.removehoverline([]);
                 this.analysisMode = 'notes';
-            },
-            getResearch: function () {
-                this.analysisMode = 'research';
             },
             changeMarkerMode: function (newClassesToMark) {
                 this.classesToMark = newClassesToMark;
