@@ -39,6 +39,16 @@
                         v-on:click="changeClass('MISC')">
                     <small class="mdc-button">MISC</small>
                 </button>
+                <button v-bind:class="{OTHER_strong: currentClass == 'DATE'}"
+                        class="mdl-button mdl-js-button OTHER"
+                        v-on:click="changeClass('DATE')">
+                    <small class="mdc-button">DATE</small>
+                </button>
+                <button v-bind:class="{OTHER_strong: currentClass == 'NUMBER'}"
+                        class="mdl-button mdl-js-button OTHER"
+                        v-on:click="changeClass('NUMBER')">
+                    <small class="mdc-button">NUMBER</small>
+                </button>
                 <button v-bind:class="{POS: true}"
                         class="mdl-button mdl-js-button"
                         v-on:click="changeClass('O')">

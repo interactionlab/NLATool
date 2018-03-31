@@ -38,6 +38,7 @@
                 isLastTokenToHighlight: false,
                 bracketleft: '',
                 bracketright: '',
+                semanticClassSimplified: '',
             }
         },
         computed: {
@@ -66,9 +67,9 @@
                         }
                     }
                 }
-                htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
+                htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
                 //TODO: Highlighting for 'OTHER'
-                htmlclass[this.token.semanticClass + "_strong"] = this.entityhover;
+                htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhover;
                 htmlclass['notemark'] = this.selected;
                 let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
@@ -112,8 +113,8 @@
                         }
                     }
                     if (!this.isLastTokenToHighlight) {
-                        htmlclass[this.token.semanticClass] = this.classestomark[this.token.semanticClass];
-                        htmlclass[this.token.semanticClass + "_strong"] = this.entityhovergap;
+                        htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
+                        htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhovergap;
                     }
                 }
                 catch
@@ -136,11 +137,23 @@
                 }
 
             }
-            ,
-
         },
-        watch: {},
+        mounted: function(){
+            this.simplifySemanticClass();
+        },
+        watch: {
+            token: function(){
+                this.simplifySemanticClass();    
+            }
+        },
         methods: {
+            simplifySemanticClass: function(){
+                if (this.token.semanticClass === 'DATE' || this.token.semanticClass === 'NUMBER'){
+                    this.semanticClassSimplified = 'OTHER';
+                } else {
+                    this.semanticClassSimplified = this.token.semanticClass;
+                }
+            },
             addBracketLeft: function () {
                 this.bracketleft += '[';
             },
@@ -173,15 +186,15 @@
                         this.$emit('hoverchain', this.token.textIndex);
                     }
                 }
-                if (this.token.semanticClass === "O" || this.token.semanticClass === "NUMBER" || this.token.semanticClass === "DATE") {
+                if (this.semanticClassSimplified === "O") {
                     return;
                 }
-                if (this.classestomark[this.token.semanticClass] === true) {
+                if (this.classestomark[this.semanticClassSimplified] === true) {
                     let hoverdata = {
                         hoverstarted: "text",
                         offsetstart: this.$el.getBoundingClientRect(),
                         startword: this.token,
-                        semanticClass: this.token.semanticClass,
+                        semanticClass: this.semanticClassSimplified,
                         startresearch: undefined,
                         wordtomarkonhover: [],
                         columnindex: this.columnindex

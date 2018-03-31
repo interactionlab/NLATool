@@ -170,7 +170,7 @@
             </button>
         </div>
         <component is="researchresult"
-                   ref="miscresults"
+                   ref="otherresults"
                    v-if="classestomark.OTHER"
                    v-for="(researchresult,index5) in OTHER"
                    v-bind:index="index5"
@@ -320,8 +320,7 @@
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('updateclassestomark', this.classestomark);
-            }
-            ,
+            },
             saveResult2: function (researchdata) {
                 let indexes = {
                     start: [researchdata.sourcequery.source[0].textIndex],
@@ -330,22 +329,19 @@
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, indexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            }
-            ,
+            },
             saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            }
-            ,
+            },
             isElementInViewport: function (el) {
                 let rect = el.getBoundingClientRect();
                 return (
                     rect.top >= this.parentviewport.top &&
                     rect.bottom <= this.parentviewport.bottom
                 );
-            }
-            ,
+            },
         },
         computed: {
             indexCorrector: function () {
@@ -354,59 +350,46 @@
                     tempcorrector = tempcorrector + this.tokenstoshow[i].length;
                 }
                 return tempcorrector;
-            }
-            ,
+            },
             numberOfPersons: function () {
                 if (typeof this["PERSON"] !== 'undefined') {
                     return this["PERSON"].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfLocations: function () {
                 if (typeof this["LOCATION"] !== 'undefined') {
                     return this["LOCATION"].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfOrganizations: function () {
                 if (typeof this['ORGANIZATION'] !== 'undefined') {
                     return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfMisc: function () {
                 if (typeof this['MISC'] !== 'undefined') {
                     return this['MISC'].length;
                 } else {
                     return '';
                 }
-            }
-            ,
+            },
             numberOfOTHER: function () {
                 if (typeof this['OTHER'] !== 'undefined') {
                     return this['OTHER'].length;
                 } else {
                     return '';
                 }
-            }
-            ,
-        }
-        ,
+            },
+        },
         mounted() {
             this.searchGoogleWithResearchedEntities();
-            /* this.researchTokensOfClass('PERSON', 0);
-             this.researchTokensOfClass('LOCATION', 1);
-             this.researchTokensOfClass('ORGANIZATION', 2);
-             this.researchTokensOfClass('MISC', 3);*/
-
-        }
-        ,
+        },
         watch: {
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
@@ -430,12 +413,10 @@
                 deep: true,
                 immediate:
                     true
-            }
-            ,
+            },
             tokenstoshow: function (value) {
                 this.searchGoogleWithResearchedEntities();
-            }
-            ,
+            },
             hoverdata: {
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined') {
@@ -531,6 +512,25 @@
                                 el.scrollIntoView();
                             bb = el.getBoundingClientRect();
                         }
+                    } else if (hoverdata.semanticClass === "OTHER") {
+                        if (typeof this.$refs["otherresults"] !== 'undefined' && this.$refs["otherresults"].length > 0) {
+                            for (let i = 0; i < this.$refs["otherresults"].length; i++) {
+                                let refElement = this.$refs.otherresults[i];
+                                if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
+                                    if (!this.isElementInViewport(refElement.$el))
+                                        refElement.$el.scrollIntoView();
+
+                                    bb = refElement.$el.getBoundingClientRect();
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
+                                }
+                            }
+                        }
+                        if (bb == null){
+                            let el = this.$refs["miscresultsparent"]
+                            if (!this.isElementInViewport(el))
+                                el.scrollIntoView();
+                            bb = el.getBoundingClientRect();
+                        }
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     //console.log(JSON.stringify(data));
@@ -538,8 +538,7 @@
                 }
                 ,
                 deep: true
-            }
-            ,
+            },
         }
         ,
         components: {

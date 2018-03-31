@@ -177,8 +177,6 @@
                 }, deep: true
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
-                //console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
-                
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
 
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
@@ -203,7 +201,6 @@
                     
                     this.wortomarkonhoverold = newWordToMarkOnHover;
                     if (newWordToMarkOnHover.columnindex === this.columnindex) {
-                        //console.log("newWordToMarkOnHover" + newWordToMarkOnHover.textindexes);
                         let index = -1;
                         if (this.numberofcolumns == 1){
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
@@ -245,7 +242,6 @@
             ,
             hoverdata: {
                 handler: function (newHoverData) {
-                    //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
                     let text = this.$refs['text'];
                     let i = 0;
                     let j = 0;
@@ -319,7 +315,6 @@
             }
             ,
             hoveredchain: function (newChain) {
-                //console.log('The new watched Chain: ' + JSON.stringify(newChain));
                 if (this.classestomark.coref) {
                     if (this.oldhoveredchain !== null) {
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
@@ -355,7 +350,6 @@
                     if (!this.corefset) {
                         if (corefmode.coref) {
                             for (let i = 0; i < this.coref.length; i++) {
-                                //console.log('coref ' + i + ' is: ' + JSON.stringify(this.coref[i]));
                                 if (this.coref[i].startIndex >= this.indexCorrector && this.coref[i].endIndex < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                     for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
                                         this.manipulateword(j - this.indexCorrector, 'partofChain', true);
@@ -401,7 +395,6 @@
                 this.$emit('removehoverline', data);
             },
             manipulateword: function (textIndex, prop, value) {
-                //console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             isElementInViewport: function (el) {
@@ -462,13 +455,11 @@
                     let rect = this.$refs['column'].getBoundingClientRect();
                     if (bb.top < rect.top){
                         bb = JSON.parse(JSON.stringify(event.offsetend));
-                        console.log("cap top");
                         bb.top = rect.top;
                         bb.height = bb.bottom - bb.top;
                     }
                     if (bb.bottom > rect.bottom){
                         bb = JSON.parse(JSON.stringify(event.offsetend));
-                        console.log("cap bottom");
                         bb.bottom = rect.bottom;
                         bb.height = bb.bottom - bb.top;
                     }
@@ -488,7 +479,6 @@
                 }
             },
             starthover: function (event) {
-                console.log(this.analysismode);
                 if (this.analysismode === "analighter"){            
                     //correct bb
                     if (event.hoverstarted == "research"){
@@ -496,13 +486,11 @@
                         let rect = this.$refs['column'].getBoundingClientRect();
                         if (bb.top < rect.top){
                             bb = JSON.parse(JSON.stringify(event.offsetend));
-                            console.log("cap top");
                             bb.top = rect.top;
                             bb.height = bb.bottom - bb.top;
                         }
                         if (bb.bottom > rect.bottom){
                             bb = JSON.parse(JSON.stringify(event.offsetend));
-                            console.log("cap bottom");
                             bb.bottom = rect.bottom;
                             bb.height = bb.bottom - bb.top;
                         }

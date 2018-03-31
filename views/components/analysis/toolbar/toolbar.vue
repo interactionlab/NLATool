@@ -35,6 +35,11 @@
                             class="mdl-button mdl-js-button">
                         <small class="mdc-button">MISC</small>
                     </button>
+                    <button v-on:click="changeMarkerMode('OTHER')"
+                            v-bind:class="{OTHER_strong: classestomark.OTHER}"
+                            class="mdl-button mdl-js-button">
+                        <small class="mdc-button">OTHER</small>
+                    </button>
                     <button v-on:click="changeMarkerMode('coref')"
                             v-bind:class="{coref: classestomark.coref}"
                             class="mdl-button mdl-js-button">
