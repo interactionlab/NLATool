@@ -272,7 +272,7 @@ function processSegement(docID, list) {
  */
 function loadWrittenText(socket, upload, uploadIndex) {
     if (corenlp.positiveNlpStatus()) {
-        let text = upload.text;
+        let originalText = upload.text;
         let transactionInformation = {
             querys: [],
             corefInfo: {},
@@ -286,11 +286,12 @@ function loadWrittenText(socket, upload, uploadIndex) {
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
         console.log(Tag + 'Starting analysing text');
-        let parsedResult = wait.for(corenlp.analyse, text);
+        let parsedResult = wait.for(corenlp.analyse, originalText);
         console.log(Tag + 'Finished analysing text');
         let lastTimeCheck = new Date();
         console.log(Tag + 'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
 
+        console.log(JSON.stringify(parsedResult));
         transactionInformation.words = parsedResult.text;
         transactionInformation.corefInfo = parsedResult.coref;
         //Insert Statement to initiate a Document
@@ -306,18 +307,40 @@ function loadWrittenText(socket, upload, uploadIndex) {
         firstTimeCheck = new Date();
 
         let whitespace = 0;
-        let counter = 1;
+        let counter = 0;
+        console.log(JSON.stringify(transactionInformation));
         for (let i = 0; i < transactionInformation.words.length; i++) {
-            for (let j = 1; j <= transactionInformation.words[i].length; j++) {
-                transactionInformation.words[i][j - 1] = stringifyForDB(transactionInformation.words[i][j - 1]);
-                parsedResult.ner[i][j - 1] = stringifyForDB(parsedResult.ner[i][j - 1]);
-                parsedResult.pos[i][j - 1] = stringifyForDB(parsedResult.pos[i][j - 1]);
-                whitespace = parsedResult.offsetBegin[counter] - parsedResult.offsetEnd[counter - 1];
+            for (let j = 0; j < transactionInformation.words[i].length; j++) {
+                
+                if (parsedResult.pos[i][j] === "-LRB-" || parsedResult.pos[i][j] === "-RRB-"){
+                    // special chars
+                    if( transactionInformation.words[i][j] === "-LRB-"){
+                        transactionInformation.words[i][j] = stringifyForDB("(");
+                    } else if( transactionInformation.words[i][j] === "-RRB-"){
+                        transactionInformation.words[i][j] = stringifyForDB(")");
+                    } else if( transactionInformation.words[i][j] === "-LSB-"){
+                        transactionInformation.words[i][j] = stringifyForDB("[");
+                    } else if( transactionInformation.words[i][j] === "-RSB-"){
+                        transactionInformation.words[i][j] = stringifyForDB("]");
+                    } else if( transactionInformation.words[i][j] === "-LCB-"){
+                        transactionInformation.words[i][j] = stringifyForDB("{");
+                    } else if( transactionInformation.words[i][j] === "-RCB-"){
+                        transactionInformation.words[i][j] = stringifyForDB("}");
+                    } else {
+                        transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
+                    }
+                } else {
+                    transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
+                }
+                console.log(JSON.stringify(transactionInformation.words[i]))
+                parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
+                parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
+                whitespace = parsedResult.offsetBegin[counter + 1] - parsedResult.offsetEnd[counter];
                 if(isNaN(whitespace)){
                     whitespace = 0;
                 }
-                parsedResult.offsetBegin[counter - 1] = stringifyForDB(parsedResult.offsetBegin[counter - 1]);
-                parsedResult.offsetEnd[counter - 1] = stringifyForDB(parsedResult.offsetEnd[counter - 1]);
+                parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
+                parsedResult.offsetEnd[counter] = stringifyForDB(parsedResult.offsetEnd[counter]);
 
                 transactionInformation.querys.push(dbAction.createInsertCommand(
                     'word',
@@ -327,10 +350,10 @@ function loadWrittenText(socket, upload, uploadIndex) {
                         'semanticClass',
                         'pos'
                     ], [
-                        transactionInformation.words[i][j - 1],
+                        transactionInformation.words[i][j],
                         0,
-                        parsedResult.ner[i][j - 1],
-                        parsedResult.pos[i][j - 1]
+                        parsedResult.ner[i][j],
+                        parsedResult.pos[i][j]
                     ],
                     null, null));
                 transactionInformation.transControl.getProper[transactionInformation.querys.length - 1] = true;
@@ -340,9 +363,9 @@ function loadWrittenText(socket, upload, uploadIndex) {
                     table: 'textmap',
                     columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
                     values: [-1, -1,
-                        counter-1,
-                        parsedResult.offsetBegin[counter - 1],
-                        parsedResult.offsetEnd[counter - 1],
+                        counter,
+                        parsedResult.offsetBegin[counter],
+                        parsedResult.offsetEnd[counter],
                         stringifyForDB(whitespace)],
                     numberOfColumns: [0, 1],
                     ofResults: [0, transactionInformation.querys.length - 2],
@@ -357,7 +380,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
         console.log(Tag + 'Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
         firstTimeCheck = new Date();
         console.log(Tag + 'Preparing Coref');
-        transactionInformation = saveCoref(transactionInformation, counter);
+        transactionInformation = saveCoref(transactionInformation);
 
         lastTimeCheck = new Date();
         console.log(Tag + 'Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
@@ -462,7 +485,6 @@ router.post('/loadDocument', function (req, res) {
 
 router.post('/loadWrittenText', function (req, res) {
     console.log('Start loading Text');
-    //wait.launchFiber(postLoadWrittenText, req, res, req);
 });
 
 /**
@@ -497,7 +519,7 @@ function getLoadTextRoutine(res, next) {
  * @param res
  * @param next
  */
-function postLoadWrittenText(req, res, next) {
+/*function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;
         if (!/\S/.test(text)) {
@@ -529,14 +551,6 @@ function postLoadWrittenText(req, res, next) {
             let helpVariable = true;
             transactionInformation.transControl.getProper.push(helpVariable);
 
-            //-------------------------------------------------------------------------------------!
-            /* let documentInsertResult = wait.for(dbStub.makeSQLRequest,
-                 dbAction.createInsertCommand('documents', ['name'], [title], null, null));
-             documentInsertResult = JSON.parse(documentInsertResult);*/
-            //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
-            //Inserting Meta Info
-            //TODO: make sure German is selected in database, change the button design first
-            //-------------------------------------------------------------------------------------
             transactionInformation.querys.push('...');
             transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
                 kindOfQuery: 'insert',
@@ -609,7 +623,7 @@ function postLoadWrittenText(req, res, next) {
             console.log('Time setting up transaction with basis text took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
             firstTimeCheck = new Date();
             deltaTime = firstTimeCheck.getTime();
-            transactionInformation = saveCoref(transactionInformation, counter);
+            transactionInformation = saveCoref(transactionInformation);
             lastTimeCheck = new Date();
             console.log('Time setting up transaction with coref took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
             firstTimeCheck = new Date();
@@ -623,9 +637,9 @@ function postLoadWrittenText(req, res, next) {
             res.redirect('/analysis');
         }
     }
-}
+}*/
 
-function saveCoref(input, counter) {
+function saveCoref(input) {
     let queryCounter = input.querys.length - 1;
     //console.log('Checkpoint coref 1:' + queryCounter);
     let representativeIndex = -1;

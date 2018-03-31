@@ -396,21 +396,6 @@ function mapEntitiesToID(researchedEntities) {
         arr[i].textindexes = arr[i].textindexes.sort((a, b) => a - b);
     }
     return arr;
-
-    /*for (let i = 0; i < researchedEntities.length - 1; i++) {
-        mappedEntities.push({
-            kgID: researchedEntities[i].kgID,
-            entities: [researchedEntities[i]],
-            freq: 1
-        });
-        for (let j = i + 1; j < researchedEntities.length; j++) {
-            if (mappedEntities[i].kgID === researchedEntities[j].kgID) {
-                mappedEntities[i].entities.push(researchedEntities[j]);
-                mappedEntities[i].freq++;
-                researchedEntities.splice(j, 1);
-            }
-        }
-    }*/
 }
 
 function getCorefs(docID, start, amount) {
@@ -566,7 +551,7 @@ function stringifyForDB(input) {
  * @param property
  * @param value
  */
-function binaryTokensSearch(tokens, property, value) {
+/*function binaryTokensSearch(tokens, property, value) {
     let left = 0;
     let right = tokens.length - 1;
     let middle = 0;
@@ -586,12 +571,12 @@ function binaryTokensSearch(tokens, property, value) {
         }
     }
     return -1;
-}
+}*/
 
 /**
  * Naive way to filter the words of the set of tokens and stringify them.
  */
-function buildText() {
+/*function buildText() {
     let gap = '';
     let text = '<span class="' + textDB.tokens[0].semanticClass + '">' + textDB.tokens[0].content + '</span>';
     for (let i = 1; i < textDB.tokens.length; i++) {
@@ -613,7 +598,7 @@ function buildText() {
     text = encodeURI(text);
     //console.log(notMedia + Tag + 'Builded Text: ' + text);
     return text;
-}
+}*/
 
 /**
  * Determines the kind and length of a gap between the words for rebuilding a text.
@@ -622,7 +607,7 @@ function buildText() {
  * @param whitespaceInfo
  * @returns {string}
  */
-function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
+/*function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
     //default Setting: 1 space * difference between Offsets
     let gap = '';
     if (whitespaceInfo === -10) {
@@ -633,6 +618,6 @@ function getWordGap(word1OffsetEnd, word2OffsetBegin, whitespaceInfo) {
         }
     }
     return gap;
-}
+}*/
 
 module.exports = router;
