@@ -349,7 +349,7 @@ function getResearchedEntities2(docID) {
 
 function mapEntitiesToID(researchedEntities) {
     let mappedEntities = {};
-    for (let i = 0; i < researchedEntities.length - 1; i++) {
+    for (let i = 0; i < researchedEntities.length; i++) {
         let key = [researchedEntities[i].kgID, researchedEntities[i].semanticClass];
         if (key in mappedEntities) {
             mappedEntities[key].freq += 1
