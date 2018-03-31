@@ -43,7 +43,7 @@
         props: {
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
-            selectedindexes: {type: Object, default: null},
+            selectedtextindexes: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             tokens: {
@@ -166,8 +166,8 @@
                     console.log('Saving on server multi object: ' + JSON.stringify(obj));
                     socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
                 } else {
-                    console.log('Saving on server single object: ' + JSON.stringify(this.selectedindexes));
-                    socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                    console.log('Saving on server single object: ' + JSON.stringify(this.selectedtextindexes));
+                    socket.emit('saveresult', this.docid, this.selectedtextindexes, researchdata.result['@id']);
                 }
                 
                 this.$emit('saveresult', researchdata);
@@ -188,12 +188,12 @@
                 }, deep: true,
                 immediate: true
             },
-            selectedindexes: {
-                handler: function (newSelectedIndexes) {
-                    if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
-                        this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newSelectedIndexes)[0]);
+            selectedtextindexes: {
+                handler: function (newselectedtextindexes) {
+                    if (newselectedtextindexes.start !== -1 && newselectedtextindexes.end !== -1) {
+                        this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newselectedtextindexes)[0]);
                         //console.log('Keywords: ' + JSON.stringify(this.keywords));
-                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newSelectedIndexes);
+                        this.researchedtokens = this.gettokensofselectedtext(this.tokens, newselectedtextindexes);
                         this.selectedtext = this.generateText(this.researchedtokens);
                         console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext, 10);
@@ -207,8 +207,8 @@
                     /*
                     for (let i = 0; i < this.mentions[0].length; i++) {
                         if (newselectedChain === this.mentions[0][i].mentionID) {
-                            this.selectedindexes.start = this.mentions[0][i].startIndex;
-                            this.selectedindexes.end = this.mentions[0][i].endIndex;
+                            this.selectedtextindexes.start = this.mentions[0][i].startIndex;
+                            this.selectedtextindexes.end = this.mentions[0][i].endIndex;
                         }
                     }
                     */

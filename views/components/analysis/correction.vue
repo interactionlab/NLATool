@@ -51,7 +51,7 @@
                    v-bind:researchdatatoedit="researchdatatoedit"
                    v-bind:tokens="tokens"
                    v-bind:contentcontrol="contentcontrol"
-                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:selectedtextindexes="selectedtextindexes"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-bind:selectedchain="selectedchain"
                    v-on:saveresult="saveresult($event)">
@@ -77,7 +77,7 @@
             wordtomarkonhoverdata: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
-            selectedindexes: {type: Object, default: null},
+            selectedtextindexes: {type: Object, default: null},
             docid: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
         },
@@ -90,10 +90,10 @@
         },
         computed: {
             selectedtokens: function () {
-                if (this.selectedindexes.start > -1 && this.selectedindexes.end > -1) {
+                if (this.selectedtextindexes.start > -1 && this.selectedtextindexes.end > -1) {
                     this.researchdatatoedit = null;
                 }
-                return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
+                return this.gettokensofselectedtext(this.tokens, this.selectedtextindexes);
             },
             changing: function () {
                 let toChange = this.selectedtokens.length > 0 || this.researchdatatoedit !== null;

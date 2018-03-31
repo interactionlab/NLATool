@@ -32,7 +32,7 @@
                 <component
                         is="toolbar"
                         v-bind:tokens="vueTokens"
-                        v-bind:selectedindexes="selectedtextindexes"
+                        v-bind:selectedtextindexes="selectedtextindexes"
                         v-bind:classestomark="classesToMark"
                         v-bind:style="{left: columnsizetoolbarpos+ '%'}"
                         v-on:emitanalighter="getAnalighter"
@@ -63,7 +63,7 @@
                                v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
                                v-bind:coref="coref"
-                               v-bind:selectedindexes="selectedtextindexes"
+                               v-bind:selectedtextindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
                                v-bind:hoveredchain="hoveredChain"
                                v-bind:analysismode="analysisMode"
@@ -78,7 +78,8 @@
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
-                               v-on:endselection="selectText($event,1)"
+                               v-on:hoverduringselection="selectText($event,1)"
+                               v-on:endselection="selectText($event,2)"
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
@@ -137,7 +138,9 @@
                 },
                 selectedtextindexes: {
                     start: -1,
-                    end: -1
+                    hover: -1,
+                    end: -1,
+                    done: true
                 },
                 notemodes: {
                     wordnote: true,
@@ -270,22 +273,38 @@
             },
             selectText: function (index, modus) {
                 if (modus === 0) {
-                    this.selectedtextindexes.start = index;
-                    this.selectedtextindexes.end = -1;
+                    this.selectedtextindexes = {
+                            start: index,
+                            hover: index,
+                            end: -1,
+                            done: false
+                        };
                 } else if (modus === 1) {
-                    this.selectedtextindexes.end = index;
-                }
-                if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.end !== -1) {
-                    //console.log(this.selectedtextindexes.start + ' >> ' + this.selectedtextindexes.end - 1);
-                    if (this.selectedtextindexes.start > this.selectedtextindexes.end - 1) {
-                        let tempstart = this.selectedtextindexes.start + 1;
-                        this.selectedtextindexes.start = this.selectedtextindexes.end - 1;
-                        this.selectedtextindexes.end = tempstart;
+                     this.selectedtextindexes = {
+                            start:  this.selectedtextindexes.start,
+                            hover: index,
+                            end: -1,
+                            done: false
+                        };
+                } else if (modus === 2) {
+                    let start = this.selectedtextindexes.start;
+                    let end = index;
+                    if (start > end){
+                        let dummy = end;
+                        end = start;
+                        start = dummy;
                     }
+                    this.selectedtextindexes = {
+                        start:  start,
+                        hover: end,
+                        end: end,
+                        done: true
+                    };
                 }
+                console.log(JSON.stringify(this.selectedtextindexes));
             },
             selectText2: function (newSelectedIndexes) {
-                this.selectedindexes = newSelectedIndexes;
+                this.selectedtextindexes = newSelectedIndexes;
             },
             changeNoteMode: function (newNoteModes) {
                 this.notemodes = newNoteModes;
@@ -474,7 +493,7 @@
                     this.selectedChain = -1;
                     if (this.classesToMark.coref) {
                         if (newSelectedIndexes.start !== -1 && newSelectedIndexes.end !== -1) {
-                            for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
+                            for (let i = newSelectedIndexes.start; i <= newSelectedIndexes.end; i++) {
                                 if (typeof this.tokens[i].coref !== 'undefined') {
                                     if (this.tokens[i].coref[0].representative === -1) {
                                         this.selectedChain = this.tokens[i].coref[0].mentionID;

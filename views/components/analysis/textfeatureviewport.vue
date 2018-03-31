@@ -17,11 +17,12 @@
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
                                v-bind:columnindex="columnindex"
-                               v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
+                               v-bind:selectedtextindexes="selectedtextindexes"
                                v-bind:selectedchain="selectedchain"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
+                               v-on:hoverduringselection="hoverduringselection($event)"
                                v-on:endselection="endselection($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)">
@@ -46,7 +47,7 @@
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
                             v-bind:researchedentities="researchedentities"
-                            v-bind:selectedindexes="selectedindexes"
+                            v-bind:selectedtextindexes="selectedtextindexes"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
@@ -90,7 +91,7 @@
                     return []
                 }
             },
-            selectedindexes: {type: Object, default: null},
+            selectedtextindexes: {type: Object, default: null},
             selectedchain: {type: Number, default: -1},
             hoveredchain: {type: Number, default: -1},
             hoverdata: {
@@ -129,27 +130,51 @@
             }
         },
         watch: {
-            selectedindexes: {
+            selectedtextindexes: {
                 handler: function (newSelectedIndexes) {
-                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.newSelectedIndexes));
-                    for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
-                        if (i - this.indexCorrector >= 0) {
-                            this.manipulateword(i - this.indexCorrector, 'selected', false);
-                            this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
+                    if (this.selectedindexesmarked.hover != -1 || this.selectedindexesmarked.end != -1){
+                        let start =  this.selectedindexesmarked.start;
+                        let end = this.selectedindexesmarked.hover;
+                        if (this.selectedindexesmarked.end != -1){
+                            let end = this.selectedindexesmarked.end;
                         }
-                    }
-                    if (newSelectedIndexes.start > -1 && newSelectedIndexes.end > -1) {
-                        for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
+                        
+                        if (start > end){
+                            let dummy = end;
+                            end = start;
+                            start = dummy;
+                        }
+                        for (let i = start; i <= end; i++) {
                             if (i - this.indexCorrector >= 0) {
-                                this.manipulateword(i - this.indexCorrector, 'selected', true);
-                                if (i < newSelectedIndexes.end - 1) {
-                                    this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
-                                }
+                                this.manipulateword(i - this.indexCorrector, 'selected', false);
+                                this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
                             }
                         }
-                        this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
-                        // console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     }
+                    
+                    
+                    if (newSelectedIndexes.hover != -1 || newSelectedIndexes.end != -1){
+                        let start =  newSelectedIndexes.start;
+                        let end = newSelectedIndexes.hover;
+                        if (newSelectedIndexes.end != -1){
+                            let end = newSelectedIndexes.end;
+                        }
+                        
+                        if (start > end){
+                            let dummy = end;
+                            end = start;
+                            start = dummy;
+                        }
+                        console.log(start + ", " + end);
+                        for (let i = start; i <= end; i++) {
+                            if (i - this.indexCorrector >= 0) {
+                                this.manipulateword(i - this.indexCorrector, 'selected', true);
+                                this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
+                            }
+                        }
+                    }
+                    
+                    this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
                 }, deep: true
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
@@ -373,7 +398,7 @@
                 this.$emit('removehoverline', data);
             },
             manipulateword: function (textIndex, prop, value) {
-                console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
+                //console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
                 this.$refs['text'][textIndex].changeProperty(prop, value);
             },
             isElementInViewport: function (el) {
@@ -413,6 +438,9 @@
             },
             startselection: function (index) {
                 this.$emit('startselection', index);
+            },
+            hoverduringselection: function (index) {
+                this.$emit('hoverduringselection', index);
             },
             endselection: function (index) {
                 this.$emit('endselection', index);

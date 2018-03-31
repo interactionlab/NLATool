@@ -21,7 +21,7 @@
             columnindex: {type: Number, default: -1},
             classestomark: {type: Object, default: null},
             hoveredchain: {type: Number, default: -1},
-            selectedchain: {type: Number, default: -1},
+            selectedtextindexes: {type: Object, default: null}
         },
         data: function () {
             return {
@@ -155,7 +155,6 @@
             },
             endSelection: function (event) {
                 let offsets = event.target.getBoundingClientRect();
-                this.$emit('setoffsetstart', [offsets, this.token, "text"]);
                 this.$emit('endselection', this.token.textIndex);
             },
             stophover: function () {
@@ -163,6 +162,11 @@
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
+                console.log(JSON.stringify(this.selectedtextindexes));
+                if (this.selectedtextindexes.start != -1 && this.selectedtextindexes.done == false){
+                    this.$emit('hoverduringselection', this.token.textIndex);
+                }
+            
                 this.tohover = true;
                 if (this.classestomark.coref) {
                     //console.log('hovering: ' +this.token.textIndex + ' which is part of Chain?:' + this.partofChain);

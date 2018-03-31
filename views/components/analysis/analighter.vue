@@ -7,7 +7,7 @@
                    v-bind:columnindex="columnindex"
                    v-bind:researchedentities="researchedentities"
                    v-bind:tokenstoshow="tokenstoshow"
-                   v-bind:selectedindexes="selectedindexes"
+                   v-bind:selectedtextindexes="selectedtextindexes"
                    v-bind:selectedchain="selectedchain"
                    v-bind:docid="docid"
                    v-bind:classestomark="classestomark"
@@ -38,7 +38,7 @@
         props: {
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
-            selectedindexes: {type: Object, default: null},
+            selectedtextindexes: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             hoverdata: {type: Object, default: null},
             classestomark: {type: Object, default: null},
