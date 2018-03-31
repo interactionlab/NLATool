@@ -117,7 +117,7 @@
             },
             accentuate: function () {
                 this.hover = true;
-                console.log(JSON.stringify( this.researchdata.sourcequery));
+                //console.log(JSON.stringify( this.researchdata.sourcequery));
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,

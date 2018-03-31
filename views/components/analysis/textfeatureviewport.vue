@@ -425,14 +425,10 @@
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
             endhover: function (event) {
-                console.log(JSON.stringify(event));
+                //correct bb
                 if (event.hoverended == "research"){
                     let bb = event.offsetend;
-                    //correct bb
                     let rect = this.$refs['column'].getBoundingClientRect();
-                    console.log("HÄ? " + JSON.stringify(this.$el.scrollTop));
-                    console.log("HÄ? " + JSON.stringify(rect));
-                    console.log("HÄ? " + JSON.stringify(bb));
                     if (bb.top < rect.top){
                         bb = JSON.parse(JSON.stringify(event.offsetend));
                         console.log("cap top");
