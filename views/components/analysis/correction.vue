@@ -5,7 +5,7 @@
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
 
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                    v-on:click="back">
+                    v-on:click="switchtoentities">
                 <i class="material-icons">clear</i>
             </button>
 
@@ -126,8 +126,9 @@
             }
         },
         methods: {
-            back: function () {
-                this.$emit('selectedclass');
+            switchtoentities: function (event) {
+            console.log("switchtoentities");
+                this.$emit('switchtoentities');
             },
             saveresult: function (researchdata) {
                 this.$emit('saveresult', researchdata);

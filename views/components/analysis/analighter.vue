@@ -21,7 +21,7 @@
                    v-on:starthover="starthover($event)"
                    v-on:editresearch="editresearch($event)"
                    v-on:saveresult="saveresult($event)"
-                   v-on:selectclass="selectedclass()"
+                   v-on:switchtoentities="switchtoentities($event)"
         >
 
         </component>
@@ -101,7 +101,7 @@
                 console.log('finished Edit: ' + JSON.stringify(this.researchdatatoupdate));
                 this.updateclassestomark(this.classestomark);
             },
-            selectedclass: function () {
+            switchtoentities: function () {
                 this.classestomark.POS = false;
                 this.showmode = 'entitiesview';
                 this.$emit('removehoverline', []);
