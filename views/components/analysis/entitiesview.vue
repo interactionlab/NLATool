@@ -28,10 +28,13 @@
                    v-bind:mapkey="index"
                    v-bind:docid="docid"
                    v-bind:viewing="true"
+                   v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
+                   v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate LOCATION"
@@ -62,10 +65,13 @@
                    v-bind:mapkey="index2+ PERSON.length"
                    v-bind:docid="docid"
                    v-bind:viewing="true"
+                   v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
+                   v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate ORGANIZATION"
@@ -96,10 +102,13 @@
                    v-bind:mapkey="index3+ PERSON.length+ LOCATION.length"
                    v-bind:docid="docid"
                    v-bind:viewing="true"
+                   v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
+                   v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate MISC"
@@ -130,10 +139,13 @@
                    v-bind:mapkey="index4+ PERSON.length+ LOCATION.length+ ORGANIZATION.length"
                    v-bind:docid="docid"
                    v-bind:viewing="true"
+                   v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
+                   v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="semClassFormate OTHER"
@@ -164,10 +176,13 @@
                    v-bind:mapkey="index5+ PERSON.length+ LOCATION.length+ ORGANIZATION.length+ MISC.length"
                    v-bind:docid="docid"
                    v-bind:viewing="true"
+                   v-bind:indexcorrector="indexCorrector"
+                   v-bind:columnindex="columnindex"
+                   v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.OTHERS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
-                   v-on:saveresult="saveResult($event)"
+                   v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
     </div>
@@ -181,6 +196,11 @@
         props: {
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []
@@ -226,212 +246,92 @@
             starthover: function (event) {
                 this.$emit('starthover', event);
             },
-            initializeEntitiesView: function () {
-                let researchedtokens = [];
-                let tempsourcequery = {};
-                let researchedentities = [];
-                let lastersearchedtoken = -1;
-                let lastentity = -1;
-                for (let i = 0; i < this.tokenstoshow[this.columnindex].length; i++) {
-                    //console.log('Checkpoint 0' + JSON.stringify(this.tokenstoshow[this.columnindex][i]));
-                    if (this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== '0'
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 0
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== 'null'
-                        && this.tokenstoshow[this.columnindex][i].knowledgeGraphID !== null) {
-                        researchedtokens.push(this.tokenstoshow[this.columnindex][i]);
-                        lastersearchedtoken = researchedtokens.length - 1;
-                        if (researchedentities.length === 0) {
-                            tempsourcequery = {
-                                freq: 1,
-                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                querys: [researchedtokens[lastersearchedtoken].content],
-                                source: [researchedtokens[lastersearchedtoken]]
-                            };
-                            researchedentities.push(tempsourcequery);
-                            tempsourcequery = {};
-                        }
-                        lastentity = researchedentities.length - 1;
-                        //if researched token is not part of an entity then put it in researchedentities else add to source to existing entity
-                        if (researchedtokens[lastersearchedtoken].knowledgeGraphID === researchedentities[lastentity].source[0].knowledgeGraphID) {
-                            // console.log('Checkpoint 2.1: '
-                            //     + researchedtokens[lastersearchedtoken].textIndex + '-1 =?'
-                            //     + researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex);
-                            if (researchedtokens[lastersearchedtoken].textIndex - 1
-                                === researchedentities[lastentity].source[researchedentities[lastentity].source.length - 1].textIndex) {
-                                //console.log('Checkpoint 2.2:  Adding to existing entity');
-                                researchedentities[lastentity].freq++;
-                                researchedentities[lastentity].source.push(researchedtokens[lastersearchedtoken]);
-                                researchedentities[lastentity].textindexes.push(researchedtokens[lastersearchedtoken].textIndex);
-                                researchedentities[lastentity].querys[0] += ' ' + researchedtokens[lastersearchedtoken].content;
-                            }
-                        } else {
-                            //console.log('Checkpoint 2.3: new entity');
-                            tempsourcequery = {
-                                freq: 1,
-                                textindexes: [researchedtokens[lastersearchedtoken].textIndex],
-                                querys: [researchedtokens[lastersearchedtoken].content],
-                                source: [researchedtokens[lastersearchedtoken]]
-                            };
-                            researchedentities.push(tempsourcequery);
-                            tempsourcequery = {};
-                        }
-                    }
-                }
-                this.searchGoogleWithResearchedEntities(researchedentities);
-            },
-            researchTokensOfClass: function (semClass, index) {
-                this[semClass] = [];
-                let query = '';
-                let frequency = 0;
-                let searched = false;
-                let sortedtokens = this.filtertokenwithclass(this.tokenstoshow[this.columnindex], semClass);
-                this.sourcequery.push([]);
-                for (let i = 0; i < sortedtokens.length; i++) {
-                    for (let j = 0; j < sortedtokens[i].length; j++) {
-                        for (let k = 0; k < this.sourcequery[index].length; k++) {
-                            if (this.sourcequery[index][k].query.indexOf(sortedtokens[i][j].content) !== -1) {
-                                searched = true;
-                            }
-                        }
-                        if (searched === false) {
-                            frequency++;
-                            query = query + ' ' + sortedtokens[i][j].content;
-                        }
-                        searched = false;
-                    }
-                    if (query !== '') {
-                        let textindexes = [];
-                        for (let k = 0; k < sortedtokens[i].length; k++) {
-                            textindexes.push(sortedtokens[i][k].textIndex);
-                        }
-                        this.searchGoogle(query, 1, semClass, {
-                            freq: frequency,
-                            textindexes: textindexes,
-                            querys: [query],
-                            source: sortedtokens[i]
-                        });
-                    }
-                    query = '';
-                    frequency = 0;
-                }
-            },
-            searchGoogleWithResearchedEntities: function (researchedentities) {
-                let hasID = false;
-                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let dataurl = 'key='+this.googleapikey;
-                for (let i = 0; i < researchedentities.length; i++) {
-                    dataurl += '&ids=' + researchedentities[i].source[0].knowledgeGraphID.split(':')[1];
-                    hasID = true;
-                }
-                if (hasID) {
-                    $.getJSON(service_url + '?callback=?', dataurl, (response) => {
-                    }).done((response) => {
-                        let data = response.itemListElement;
-                        if(response.error !== undefined && response.error.code === 400 ) {
-                            console.log('WARNING: Google Knowledge Graph Search API not activated.');
-                        } else {
-                            //console.log('Response for initial Research: ' + data.length);
-                            for (let i = 0; i < data.length; i++) {
-                                for (let j = 0; j < researchedentities.length; j++) {
-                                    if (data[i].result['@id'] === researchedentities[j].source[0].knowledgeGraphID) {
-                                        data[i]["sourcequery"] = researchedentities[j];
-                                        if (researchedentities[j].source[0].semanticClass !== 'PERSON'
-                                            && researchedentities[j].source[0].semanticClass !== 'LOCATION'
-                                            && researchedentities[j].source[0].semanticClass !== 'ORGANIZATION'
-                                            && researchedentities[j].source[0].semanticClass !== 'MISC') {
-                                            this['OTHER'].push(data[i]);
-                                        } else {
-                                            this[researchedentities[j].source[0].semanticClass].push(data[i]);
-                                        }
-                                    }
-                                }
+            searchGoogleWithResearchedEntities: function () {
+                if (this.researchedentities.length === 0 || this.tokenstoshow === undefined || this.tokenstoshow.length === 0)
+                    return;
 
-                            }
-                        }
-                        /*console.log('Merged Result PERSON: ' + JSON.stringify(this.PERSON));
-                        console.log('Merged Result LOCATION: ' + JSON.stringify(this.LOCATION));
-                        console.log('Merged Result: ORGANIZATION' + JSON.stringify(this.ORGANIZATION));
-                        console.log('Merged Result: MISC' + JSON.stringify(this.MISC));
-                        console.log('Merged Result: OTHER' + JSON.stringify(this.OTHER));*/
-                    }).fail(err => {
-                        console.log('Google initial search failed: ' + err);
-                    });
-                } else {
-                    console.log('There was a token with a SemanticClass to Research but has no research on the DB');
-                }
-            },
-            searchGoogle: function (query, limit, semClass, sourcequery) {
-                if (limit < 1) {
-                    return null;
-                }
+                this['PERSON'].splice(0, this['PERSON'].length)
+                this['LOCATION'].splice(0, this['LOCATION'].length)
+                this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length)
+                this['MISC'].splice(0, this['MISC'].length)
+                this['OTHER'].splice(0, this['OTHER'].length)
+
+                let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let params = {
-                    'query': query,
-                    'limit': limit,
-                    'indent': true,
-                    'key': this.googleapikey,
-                };
-                $.getJSON(service_url + '?callback=?', params, (response) => {
-                }).done((response) => {
-                    let tempResult = {};
-                    if (limit > 1) {
-                        // this[semClass].push(this.rerankWithKeywords());
-                    } else {
-                        if (response !== undefined && response.itemListElement.length > 0) {
-                            let data = response.itemListElement[0];
-                            let found = false;
-                            if (sourcequery !== undefined) {
-                                if (sourcequery.source !== undefined) {
-                                    if (sourcequery.source.length > 0) {
-                                        for (let i = 0; i < this[semClass].length; i++) {
-                                            for (let k = 0; k < sourcequery.source.length; k++) {
-                                                if (sourcequery.source[i].knowledgeGraphID === '0') {
-                                                    tempResult = data;
-                                                    tempResult["sourcequery"] = sourcequery;
-                                                    this.saveResult2(tempResult);
-                                                }
-                                            }
-                                            if (this[semClass][i].result["@id"] === data.result["@id"]) {
-                                                found = true;
-                                                for (let k = 0; k < sourcequery.source.length; k++) {
-                                                    this[semClass][i].sourcequery.textindexes.push(sourcequery.source[k].textIndex);
-                                                }
-                                                this[semClass][i].sourcequery.textindexes.sort();
-                                                this[semClass][i].sourcequery.querys.push.apply(this[semClass][i].sourcequery.querys, sourcequery.querys);
-                                                this[semClass][i].sourcequery.freq += sourcequery.freq;
-                                                this[semClass][i].sourcequery.source.push.apply(this[semClass][i].sourcequery.source, sourcequery.source);
-                                                //console.log(JSON.stringify(this[semClass][i]));
-                                            }
-                                        }
-                                        if (found === false) {
-                                            data["sourcequery"] = sourcequery;
-                                            this[semClass].push(data);
-                                        }
-                                    }
-                                }
-                            }
+                //console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
+
+                for (let i = 0; i < this.researchedentities.length; i++) {
+                    //console.log(JSON.stringify(this.researchedentities[i]))
+                    let found = false;
+                    for (let j = 0; j < this.researchedentities[i].startIndex.length; j++) {
+                        if (this.researchedentities[i].startIndex[j] >= this.indexCorrector
+                            && this.researchedentities[i].endIndex[j] < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
+                            found = true;
+                            //console.log("FOUND: " + this.researchedentities[i].query);
+                            break;
                         }
                     }
-                });
+                    if (found) {
+                        //localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i]);
+                        localresearchedentities.push(this.researchedentities[i]);
+                        let dataurl = 'key=' + this.googleapikey + '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
+
+                        $.getJSON(service_url + '?callback=?', dataurl, (response) => {
+                        }).done((response) => {
+                            let data = response.itemListElement;
+                            //console.log(JSON.stringify(data));
+                            if (response.error !== undefined && response.error.code === 400) {
+                                console.log('WARNING: Google Knowledge Graph Search API not activated.');
+                            } else {
+                                //console.log('Response for initial Research: ' + data.length);
+                                for (let i = 0; i < data.length; i++) {
+                                    for (let j = 0; j < localresearchedentities.length; j++) {
+                                        if (data[i].result['@id'] === localresearchedentities[j].kgID) {
+                                            //console.log('Mapped entity: ' + JSON.stringify(localresearchedentities[j]));
+                                            data[i]["sourcequery"] = localresearchedentities[j];
+
+                                            if (localresearchedentities[j].semanticClass !== 'PERSON'
+                                                && localresearchedentities[j].semanticClass !== 'LOCATION'
+                                                && localresearchedentities[j].semanticClass !== 'ORGANIZATION'
+                                                && localresearchedentities[j].semanticClass !== 'MISC') {
+                                                this['OTHER'].push(data[i]);
+                                            } else {
+                                                this[localresearchedentities[j].semanticClass].push(data[i]);
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                            }
+                        }).fail(err => {
+                            console.log('ERROR: Google initial search failed: ' + err);
+                        });
+
+                    }
+                }
             },
             togglesemanticlass: function (semClass) {
                 this.classestomark[semClass] = !this.classestomark[semClass];
                 this.$emit('updateclassestomark', this.classestomark);
-            },
+            }
+            ,
             saveResult2: function (researchdata) {
                 let indexes = {
-                    start: researchdata.sourcequery.source[0].textIndex,
-                    end: researchdata.sourcequery.source[researchdata.sourcequery.source.length - 1].textIndex + 1
+                    start: [researchdata.sourcequery.source[0].textIndex],
+                    end: [researchdata.sourcequery.source[researchdata.sourcequery.source.length - 1].textIndex + 1]
                 };
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, indexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            },
-            saveResult: function (researchdata) {
+            }
+            ,
+            saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
                 socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
                 this.$emit('saveresult', researchdata);
-            },
+            }
+            ,
             isElementInViewport: function (el) {
                 let rect = el.getBoundingClientRect();
                 return (
@@ -440,62 +340,76 @@
                     rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
                     rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
                 );
-            },
+            }
+            ,
         },
         computed: {
+            indexCorrector: function () {
+                let tempcorrector = 0;
+                for (let i = 0; i < this.columnindex; i++) {
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length;
+                }
+                return tempcorrector;
+            }
+            ,
             numberOfPersons: function () {
                 if (typeof this["PERSON"] !== 'undefined') {
                     return this["PERSON"].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfLocations: function () {
                 if (typeof this["LOCATION"] !== 'undefined') {
                     return this["LOCATION"].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOrganizations: function () {
                 if (typeof this['ORGANIZATION'] !== 'undefined') {
                     return this['ORGANIZATION'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfMisc: function () {
                 if (typeof this['MISC'] !== 'undefined') {
                     return this['MISC'].length;
                 } else {
                     return '';
                 }
-            },
+            }
+            ,
             numberOfOTHER: function () {
                 if (typeof this['OTHER'] !== 'undefined') {
                     return this['OTHER'].length;
                 } else {
                     return '';
                 }
-            },
-        },
+            }
+            ,
+        }
+        ,
         mounted() {
-            if (this.tokenstoshow.length === 0)
-                return;
-            this.initializeEntitiesView();
-            this.researchTokensOfClass('PERSON', 0);
-            this.researchTokensOfClass('LOCATION', 1);
-            this.researchTokensOfClass('ORGANIZATION', 2);
-            this.researchTokensOfClass('MISC', 3);
+            this.searchGoogleWithResearchedEntities();
+            /* this.researchTokensOfClass('PERSON', 0);
+             this.researchTokensOfClass('LOCATION', 1);
+             this.researchTokensOfClass('ORGANIZATION', 2);
+             this.researchTokensOfClass('MISC', 3);*/
 
-        },
+        }
+        ,
         watch: {
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
                     let semClass = '';
                     if (newresearchdatatoupdate !== null) {
                         if (newresearchdatatoupdate.sourcequery !== undefined) {
-                            semClass = newresearchdatatoupdate.sourcequery.source[0].semanticClass;
+                            semClass = newresearchdatatoupdate.sourcequery.semanticClass;
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
                                     console.log('Adding new result to OTHER');
@@ -507,49 +421,50 @@
                             }
                         }
                     }
-                },
+                }
+                ,
                 deep: true,
                 immediate:
                     true
-            },
+            }
+            ,
             tokenstoshow: function (value) {
-                this.initializeEntitiesView();
-                this.researchTokensOfClass('PERSON', 0);
+                this.searchGoogleWithResearchedEntities();
+                /*this.researchTokensOfClass('PERSON', 0);
                 this.researchTokensOfClass('LOCATION', 1);
                 this.researchTokensOfClass('ORGANIZATION', 2);
-                this.researchTokensOfClass('MISC', 3);
-            },
+                this.researchTokensOfClass('MISC', 3);*/
+            }
+            ,
             hoverdata: {
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    // console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
-                    // console.log("entitiesview handler children: " +  JSON.stringify(this.$refs.personresults[0].researchdata));
-
+                    //console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
+                    
                     if (hoverdata.hoverstarted === "research") {
                         return;
                     }
 
-                    let wordtomarkonhoverDUMMY = [];
-                    let newwordid = -1;
-                    if (hoverdata !== 'undefined' && hoverdata.hoverstarted === "text") {
-                        newwordid = hoverdata.startword.textIndex;
-                    } else {
-                        newwordid = hoverdata.textindexes[0];
+                    if (this.columnindex !== hoverdata.columnindex){
+                        return;
                     }
+
+                    let wordtomarkonhoverDUMMY = [];
+                    let newwordid = hoverdata.startword.textIndex;
                     let bb = null;
                     if (hoverdata.semanticClass === 'PERSON') {
                         if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
                                 let refElement = this.$refs.personresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el)) {
+                                    if (!this.isElementInViewport(refElement.$el)) {
                                         refElement.$el.scrollIntoView();
                                     }
 
                                     bb = refElement.$el.getBoundingClientRect();
-                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes
+                                    wordtomarkonhoverDUMMY = refElement.researchdata.sourcequery.textindexes;
                                 }
                             }
                         } else {
@@ -560,7 +475,7 @@
                             for (let i = 0; i < this.$refs["locationresults"].length; i++) {
                                 let refElement = this.$refs.locationresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -575,7 +490,7 @@
                             for (let i = 0; i < this.$refs["organisazionresults"].length; i++) {
                                 let refElement = this.$refs.organisazionresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -590,7 +505,7 @@
                             for (let i = 0; i < this.$refs["miscresults"].length; i++) {
                                 let refElement = this.$refs.miscresults[i];
                                 if (refElement.researchdata.sourcequery.textindexes.indexOf(newwordid) > -1) {
-                                    if (hoverdata.hoverstarted === "text" && !this.isElementInViewport(refElement.$el))
+                                    if (!this.isElementInViewport(refElement.$el))
                                         refElement.$el.scrollIntoView();
 
                                     bb = refElement.$el.getBoundingClientRect();
@@ -602,11 +517,15 @@
                         }
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
+                    //console.log(JSON.stringify(data));
                     this.$emit('endhover', data);
-                },
+                }
+                ,
                 deep: true
-            },
-        },
+            }
+            ,
+        }
+        ,
         components: {
             researchresult,
         }

@@ -5,6 +5,7 @@
                    v-bind:googleapikey="googleapikey"
                    v-bind:tokens="tokens"
                    v-bind:columnindex="columnindex"
+                   v-bind:researchedentities="researchedentities"
                    v-bind:tokenstoshow="tokenstoshow"
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:selectedchain="selectedchain"
@@ -19,7 +20,9 @@
                    v-on:endhover="endhover($event)"
                    v-on:starthover="starthover($event)"
                    v-on:editresearch="editresearch($event)"
-                   v-on:selectresearch="selectedresearch($event)">
+                   v-on:saveresult="saveresult($event)"
+                   v-on:switchtoentities="switchtoentities($event)"
+        >
 
         </component>
     </div>
@@ -42,6 +45,11 @@
             docid: {type: Number, default: -1},
             columnindex: {type: Number, default: 0},
             selectedchain: {type: Number, default: -1},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []
@@ -52,11 +60,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
         },
         data: function () {
             return {
@@ -79,20 +83,27 @@
             editresearch: function (researchData) {
                 this.classestomark.POS = true;
                 this.showmode = 'correction';
-                if(researchData !== undefined) {
+                this.$emit('removehoverline', []);
+                if (researchData !== undefined) {
                     this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
-                } else{
+                } else {
                     this.researchdatatoedit = null;
                 }
                 this.researchdatatoupdate = null;
                 this.$emit('updateclassestomark', this.classestomark);
             },
-            selectedresearch: function (researchData) {
+            saveresult: function (researchData) {
                 this.classestomark.POS = false;
                 this.researchdatatoedit = null;
                 this.showmode = 'entitiesview';
+                this.$emit('removehoverline', []);
                 this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
-                console.log('finished Edit: ' + JSON.stringify(this.researchdatatoupdate));
+                this.updateclassestomark(this.classestomark);
+            },
+            switchtoentities: function () {
+                this.classestomark.POS = false;
+                this.showmode = 'entitiesview';
+                this.$emit('removehoverline', []);
                 this.updateclassestomark(this.classestomark);
             }
         },

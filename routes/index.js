@@ -15,6 +15,7 @@ let Tag = 'Server: index.js: ';
 /**
  * Setup Configuration file Requirements:
  */
+const request = require('request');
 const net = require('net');
 //const server = net.createServer();
 const dbAction = require('../modules/db_actions.js');
@@ -23,8 +24,14 @@ const wait = require('wait.for');
 const jsonAction = require('../modules/json_actions');
 const corenlp = require('../modules/corenlp');
 const io = require('socket.io')(8090);
+const fs = require("fs");
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
+
+var configData = JSON.parse(fs.readFileSync("./modules/config.json"));
+if (configData.googleapikey === undefined || configData.googleapikey === "" || configData.googleapikey === "YOUR_GOOGLE_API_KEY") {
+    console.error("WARNING: No Google API Key specified");
+}
 
 /**
  * Object that holds all specific meta info for this route.
@@ -107,6 +114,153 @@ function initialisingTextUpload(socket, title) {
     socket.emit('resinitupload', documentInsertResult.insertId);
 }
 
+//https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+function encodeQueryData(data) {
+    let ret = [];
+    for (let d in data)
+        ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+    return ret.join('&');
+}
+
+function getLocationInformation(docID, textIndexes, name, upload) {
+    if (name !== null) {
+        let url = 'https://maps.googleapis.com/maps/api/geocode/json?';
+        let params = {
+            address: name,
+            key: configData.googleapikey,
+            format: "jsonp"
+        };
+        url = url + encodeQueryData(params);
+        console.log(url);
+        request({
+            url: url,
+            json: true
+        }, function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                if (body.results !== undefined) {
+                    if (body.results[0] !== undefined) {
+                        if (body.results[0].geometry !== undefined) {
+                            console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
+                            upload['lat'] = body.results[0].geometry.location.lat;
+                            upload['lng'] = body.results[0].geometry.location.lng;
+                            upload['northEastLat'] = body.results[0].geometry.viewport.northeast.lat;
+                            upload['northEastLng'] = body.results[0].geometry.viewport.northeast.lng;
+                            upload['southWestLat'] = body.results[0].geometry.viewport.southwest.lat;
+                            upload['southwestLng'] = body.results[0].geometry.viewport.southwest.lng;
+                            dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
+                                ['docID',
+                                    'query',
+                                    'semanticClass',
+                                    'startIndex',
+                                    'endIndex',
+                                    'kgID',
+                                    'lat', 'lng',
+                                    'northEastLat', 'northEastLng',
+                                    'southWestLat', 'southwestLng'],
+                                [stringifyForDB(upload.docID),
+                                    stringifyForDB(upload.query),
+                                    stringifyForDB(upload.semanticClass),
+                                    stringifyForDB(upload.startIndex),
+                                    stringifyForDB(upload.endIndex),
+                                    stringifyForDB(upload.kgID),
+                                    stringifyForDB(upload.lat),
+                                    stringifyForDB(upload.lng),
+                                    stringifyForDB(upload.northEastLat),
+                                    stringifyForDB(upload.northEastLng),
+                                    stringifyForDB(upload.southWestLat),
+                                    stringifyForDB(upload.southwestLng)],
+                                null, null), function (err, response) {
+                                if (err) {
+                                    console.log(Tag + err);
+                                } else {
+                                    //console.log(Tag + JSON.stringify(response));
+                                }
+                            });
+
+                        } else {
+                            console.log('WARNING: Google Geocoding API not activated.');
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function processSegement(docID, list) {
+    let query = "";
+    let textIndexes = [];
+    let type = list[0].semanticClass;
+    let researchUpload = {};
+    for (let i = 0; i < list.length; i++) {
+        textIndexes.push(list[i].textIndex);
+        if (i !== 0) {
+            query += " ";
+        }
+        query += list[i].content;
+    }
+    console.log(Tag + "Google Query " + textIndexes + ": " + query);
+    researchUpload['docID'] = docID;
+    researchUpload['startIndex'] = textIndexes[0];
+    researchUpload['endIndex'] = textIndexes[textIndexes.length - 1];
+    researchUpload['query'] = query;
+    researchUpload['semanticClass'] = type;
+    let limit = 1;
+    let url = 'https://kgsearch.googleapis.com/v1/entities:search?';
+    let params = {
+        'query': query,
+        'limit': limit,
+        'indent': true,
+        'key': configData.googleapikey,
+    };
+    url = url + encodeQueryData(params);
+    //console.log(url)
+    request({
+        url: url,
+        json: true
+    }, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            let name = null;
+            try {
+                let graphID = body.itemListElement[0].result["@id"];
+                researchUpload['kgID'] = graphID;
+                name = body.itemListElement[0].result["name"];
+                console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
+                if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
+                    getLocationInformation(docID, textIndexes, name, researchUpload);
+                } else {
+                    dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
+                        ['docID',
+                            'query',
+                            'semanticClass',
+                            'startIndex',
+                            'endIndex',
+                            'kgID',],
+                        [stringifyForDB(researchUpload.docID),
+                            stringifyForDB(researchUpload.query),
+                            stringifyForDB(researchUpload.semanticClass),
+                            stringifyForDB(researchUpload.startIndex),
+                            stringifyForDB(researchUpload.endIndex),
+                            stringifyForDB(researchUpload.kgID),
+                        ],
+                        null, null), function (err, response) {
+                        if (err) {
+                            console.log(Tag + err);
+                        } else {
+                            //console.log(Tag + JSON.stringify(response));
+                        }
+                    });
+                }
+            } catch (err) {
+                console.log(Tag + 'the Result for ' + query + ' is undefined: ' + err);
+            }
+        } else {
+            console.log(Tag + 'request to retrieve researched Entities failed: ' + error);
+        }
+    })
+}
+
+
 /**
  * Fiber main function that analyses the text input with corenlp and uploads it
  * to the database. Finally redirecting to the analysis route.
@@ -146,17 +300,20 @@ function loadWrittenText(socket, upload, uploadIndex) {
         console.log(Tag + 'metaInfo uploaded');
         firstTimeCheck = new Date();
 
+
         let whitespace = 0;
         let counter = 1;
         for (let i = 0; i < transactionInformation.words.length; i++) {
             for (let j = 1; j <= transactionInformation.words[i].length; j++) {
-                transactionInformation.words[i][j-1] = stringifyForDB(transactionInformation.words[i][j - 1]);
-                parsedResult.ner[i][j-1] = stringifyForDB(parsedResult.ner[i][j - 1]);
-                parsedResult.pos[i][j-1] = stringifyForDB(parsedResult.pos[i][j - 1]);
-                whitespace = parsedResult.offsetBegin[counter] -  parsedResult.offsetEnd[counter - 1]  ;
-                console.log('whitespace is: ' + whitespace);
-                parsedResult.offsetBegin[counter-1] = stringifyForDB(parsedResult.offsetBegin[counter - 1]);
-                parsedResult.offsetEnd[counter-1] = stringifyForDB(parsedResult.offsetEnd[counter - 1]);
+                transactionInformation.words[i][j - 1] = stringifyForDB(transactionInformation.words[i][j - 1]);
+                parsedResult.ner[i][j - 1] = stringifyForDB(parsedResult.ner[i][j - 1]);
+                parsedResult.pos[i][j - 1] = stringifyForDB(parsedResult.pos[i][j - 1]);
+                whitespace = parsedResult.offsetBegin[counter] - parsedResult.offsetEnd[counter - 1];
+                if(isNaN(whitespace)){
+                    whitespace = 0;
+                }
+                parsedResult.offsetBegin[counter - 1] = stringifyForDB(parsedResult.offsetBegin[counter - 1]);
+                parsedResult.offsetEnd[counter - 1] = stringifyForDB(parsedResult.offsetEnd[counter - 1]);
 
                 transactionInformation.querys.push(dbAction.createInsertCommand(
                     'word',
@@ -179,7 +336,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
                     table: 'textmap',
                     columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo'],
                     values: [-1, -1,
-                        counter,
+                        counter-1,
                         parsedResult.offsetBegin[counter - 1],
                         parsedResult.offsetEnd[counter - 1],
                         stringifyForDB(whitespace)],
@@ -206,12 +363,75 @@ function loadWrittenText(socket, upload, uploadIndex) {
 
         lastTimeCheck = new Date();
         console.log(Tag + 'Time executing transaction took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-        console.log('Finished uploading annotated Text to DB. redirecting to analysis');
+        console.log(Tag + 'Finished uploading annotated Text to DB. redirecting to analysis');
         //Client should do the redirect. Thus Issue #79 must be solved on the client.
         let url = '/analysis/?docID=' + upload.docid;
         socket.emit('redirectToAnalysis', url);
         console.log(Tag + 'delete Upload from stack.');
         allTextUploads.splice(uploadIndex, 1);
+
+
+        let queryObject = {
+            tables: ['textmap', 'word'],
+            columns: [
+                {
+                    tableIndex: 0,
+                    name: 'docID',
+                }, {
+                    tableIndex: 0,
+                    name: 'wordID',
+                }, {
+                    tableIndex: 0,
+                    name: 'textIndex',
+                }, {
+                    tableIndex: 0,
+                    name: 'beginOffSet',
+                }, {
+                    tableIndex: 0,
+                    name: 'EndOffSet',
+                }, {
+                    tableIndex: 0,
+                    name: 'whitespaceInfo',
+                }, {
+                    tableIndex: 1,
+                    name: 'wordID',
+                }, {
+                    tableIndex: 1,
+                    name: 'content',
+                }, {
+                    tableIndex: 1,
+                    name: 'isSpecial',
+                }, {
+                    tableIndex: 1,
+                    name: 'semanticClass',
+                }, {
+                    tableIndex: 1,
+                    name: 'pos',
+                },],
+            joinConditions: [{
+                columnIndexes: [1],
+                valueColumnIndexes: [6],
+                operator: ['='],
+            }],
+            kindOfJoin: ['INNER'],
+            whereConditions: {
+                columns: ['textmap.docID', 'word.semanticClass'],
+                values: [upload.docid, stringifyForDB('O')],
+                operators: ['=', '!='],
+            }
+        };
+        //dbAction.createInnerJoinSelectCommand(queryObject);
+        //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject)));
+        let wordInDB = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, undefined, undefined)));
+        //console.log(JSON.stringify(wordInDB));
+        let last = 0;
+        for (let i = 0; i < wordInDB.length; i++) {
+            //console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
+            if (wordInDB[i].textIndex - wordInDB[last].textIndex !== i - last) {
+                processSegement(upload.docid, wordInDB.slice(last, i));
+                last = i;
+            }
+        }
     } else {
         console.log(Tag + 'Corenlp Status is wrong');
     }

@@ -237,24 +237,6 @@
       "name": "whitespaceInfo",
       "type": "INT",
       "length": "11"
-    },
-    "column7": {
-      "name": "knowledgeGraphID",
-      "type": "VARCHAR",
-      "length": "25",
-      "null": "NULL"
-    },
-    "column8": {
-      "name": "lat",
-      "type": "INT",
-      "length": "11",
-      "null": "NULL"
-    },
-    "column9": {
-      "name": "lng",
-      "type": "INT",
-      "length": "11",
-      "null": "NULL"
     }
   },
   "table6": {
@@ -354,5 +336,85 @@
       "type": "INT",
       "length": "11"
     }
+  },
+  "table9": {
+    "isTable": true,
+    "name": "researchedentities",
+    "column1": {
+      "name": "docID",
+      "type": "INT",
+      "length": "11",
+      "FOREIGN": "documents"
+    },
+    "column2": {
+      "name": "entityID",
+      "type": "INT",
+      "length": "11",
+      "PRIMARY": true,
+      "AUTO_INCREMENT": true
+    },
+    "column3": {
+      "name": "query",
+      "type": "VARCHAR",
+      "length": "200"
+    },
+    "column4": {
+      "name": "semanticClass",
+      "type": "VARCHAR",
+      "length": "20"
+    },
+    "column5": {
+      "name": "startIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column6": {
+      "name": "endIndex",
+      "type": "INT",
+      "length": "11"
+    },
+    "column7": {
+      "name": "kgID",
+      "type": "VARCHAR",
+      "length": "200",
+      "null": "NULL"
+    },
+    "column8": {
+      "name": "lat",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column9": {
+      "name": "lng",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column10": {
+      "name": "northEastLat",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column11": {
+      "name": "northEastLng",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column12": {
+      "name": "southWestLat",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column13": {
+      "name": "southWestLng",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    }
   }
+
 }

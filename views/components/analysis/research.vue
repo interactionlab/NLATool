@@ -24,7 +24,7 @@
                            v-bind:contentcontrol="contentcontrol.PERSONS"
                            v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                            v-on:starthover="starthover($event)"
-                           v-on:saveresult="saveResult($event)">
+                           v-on:saveresult="saveresult($event)">
                 </component>
             </div>
 
@@ -51,11 +51,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             docid: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
         },
@@ -124,7 +120,6 @@
                     'indent': true,
                     'key': this.googleapikey,
                 };
-                console.log(this.googleapikey);
                 $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
                         if (response.error !== undefined){
@@ -160,9 +155,21 @@
                     }
                 );
             },
-            saveResult: function (researchdata) {
+            saveresult: function (researchdata) {
                 let socket = io(this.serverip + ':8080');
-                socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                
+                if (this.researchdatatoedit !== undefined){
+                    let obj = {
+                        start: this.researchdatatoedit.sourcequery.startIndex,
+                        end: this.researchdatatoedit.sourcequery.endIndex
+                    };
+                    console.log('Saving on server multi object: ' + JSON.stringify(obj));
+                    socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
+                } else {
+                    console.log('Saving on server single object: ' + JSON.stringify(this.selectedindexes));
+                    socket.emit('saveresult', this.docid, this.selectedindexes, researchdata.result['@id']);
+                }
+                
                 this.$emit('saveresult', researchdata);
             },
             starthover: function (event) {
@@ -174,7 +181,7 @@
             researchdatatoedit: {
                 handler: function (newData) {
                     if (newData !== undefined && newData !== null) {
-                        this.selectedtext = newData.sourcequery.querys[0];
+                        this.selectedtext = newData.sourcequery.query[0];
                         //console.log('Looking for more Info about: ' + this.selectedtext);
                         this.searchGoogle(this.selectedtext, 10);
                     }

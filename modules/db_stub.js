@@ -548,7 +548,7 @@ makeColumnDescriptionComparableToJson = function (sqlResult, table) {
                 }
             }
         }
-        column = jsonAction.setCharAt(column, column.length - 1, '');
+        column = 'column';
     }
     //console.log(notMedia + Tag + 'Result of makeColumnDescriptionComparable: ' + JSON.stringify(columns));
     return columns;

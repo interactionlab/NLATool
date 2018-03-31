@@ -3,6 +3,12 @@
         <div v-if="changing" class="mdl-grid">
             <p class="mdl-cell mdl-cell--4-col" v-bind:class="currentClass">{{contentToChange}}</p>
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
+
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                    v-on:click="switchtoentities">
+                <i class="material-icons">clear</i>
+            </button>
+
             <div>
                 <p class="mdl-cell mdl-cell--6-col">Make a selection: </p>
                 <button v-bind:class="{PERSON: true}"
@@ -68,11 +74,7 @@
                     return []
                 }
             },
-            wordtomarkonhoverdata: {
-                type: Array, default: function () {
-                    return []
-                }
-            },
+            wordtomarkonhoverdata: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             selectedindexes: {type: Object, default: null},
@@ -85,9 +87,7 @@
                 index: 0,
                 suggestions: false
             }
-
         },
-        watch: {},
         computed: {
             selectedtokens: function () {
                 if (this.selectedindexes.start > -1 && this.selectedindexes.end > -1) {
@@ -95,14 +95,8 @@
                 }
                 return this.gettokensofselectedtext(this.tokens, this.selectedindexes);
             },
-            semclassofselected: function () {
-                // let tokenClass = {};
-                // tokenClass[this.selectedtokens[0].semanticClass] = true;
-                // return tokenClass;
-            },
             changing: function () {
                 let toChange = this.selectedtokens.length > 0 || this.researchdatatoedit !== null;
-                console.log('Changing: ' + toChange);
                 return toChange;
             },
             contentToChange: function () {
@@ -114,7 +108,7 @@
                         }
                         return content;
                     } else {
-                        return this.researchdatatoedit.sourcequery.querys[0];
+                        return this.researchdatatoedit.sourcequery.query[0];
                     }
                 }
             },
@@ -123,7 +117,7 @@
                     if (this.selectedtokens.length === 1) {
                         return this.selectedtokens[0].semanticClass;
                     } else if (this.researchdatatoedit !== null) {
-                        return this.researchdatatoedit.sourcequery.source[0].semanticClass;
+                        return this.researchdatatoedit.sourcequery.semanticClass;
                     } else {
                         return 'To many words with different semantic classes.'
                     }
@@ -131,14 +125,16 @@
             }
         },
         methods: {
+            switchtoentities: function (event) {
+                this.$emit('switchtoentities');
+            },
             saveresult: function (researchdata) {
-                this.$emit('selectresearch', researchdata);
+                this.$emit('saveresult', researchdata);
             },
             changeClass: function (newClass) {
-                //console.log(this.selectedtokens[0].content + " with class " + this.selectedtokens[0].semanticClass+ " is changed to " + newClass);
-                // this.selectedtokens[0].semanticClass = newClass;
-                // let socket = io(this.serverip + ':8080');
-                // socket.emit('changeClass', this.selectedtokens[0], this.docid);
+                this.selectedtokens[0].semanticClass = newClass;
+                let socket = io(this.serverip + ':8080');
+                socket.emit('changeClass', this.selectedtokens[0], this.docid);
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;

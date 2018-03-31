@@ -90,6 +90,7 @@ function getLoadTextRoutine(res, next) {
     }
 }
 
+
 /**
  * Fiber main function that analyses the text input with corenlp and uploads it
  * to the database. Finally redirecting to the analysis route.
@@ -113,7 +114,7 @@ function postLoadWrittenText(req, res, next) {
             let words = parsedResult.text;
             let title = '"' + req.body.title + '"';
 
-            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name'], [title], null, null));
+            let documentInsertResult = wait.for(dbStub.makeSQLRequest, dbAction.createInsertCommand('documents', ['name', 'userID', 'loadingStatus'], [title, 0, 0, 0], null, null));
             documentInsertResult = JSON.parse(documentInsertResult);
             //console.log('DocumentID is: ' + JSON.stringify(documentInsertResult) + ': '+ documentInsertResult.insertId);
             wait.for(sendSQL, dbAction.createInsertCommand(
@@ -148,7 +149,10 @@ function postLoadWrittenText(req, res, next) {
                 }
 
             }
-            corenlp.resetResults();
+            corenlp.resetResults(); 
+
+            
+            dbAction.createUpdateCommand('documents', ['loadingStatus'], [1], ['docID'], [documentInsertResult.insertId])
             res.redirect('/analysis');
         }
     }

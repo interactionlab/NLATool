@@ -4,19 +4,20 @@
              v-on:mouseover="movetoolbar">
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
-                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;">
+                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;" v-on:scroll="onscrolltext">
                 <div class="mdl-grid" id="textWindow" ref="textWindow"
-                     style="height: auto !important; display: flex; max-height: 100%; padding:0; font-family: 'Roboto Mono', monospace;">
+                    
+                     style="height: auto !important; display: flex; max-height: 100%; padding:0;">
 
                     <component is="tex"
                                ref="text"
+                               v-on:scroll="onscrolltext"
                                v-for="(token,i) in tokenstoshow[columnindex]"
                                v-bind:key="token.textIndex"
                                v-bind:token="token"
-                               v-bind:index="token.textIndex+1"
+                               v-bind:columnindex="columnindex"
                                v-bind:selectedindexes="selectedindexes"
                                v-bind:classestomark="classestomark"
-                               v-bind:hoveredchain="hoveredchain"
                                v-bind:selectedchain="selectedchain"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="startselection($event)"
@@ -43,6 +44,8 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
+                            v-bind:researchedentities="researchedentities"
+                            v-bind:selectedindexes="selectedindexes"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
@@ -51,6 +54,7 @@
                             v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
                             v-on:starthover="starthover($event)"
+                            v-on:removehoverline="removehoverline($event)"
                             v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
                 </keep-alive>
@@ -69,6 +73,12 @@
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
             columnindex: {type: Number, default: 0},
+            numberofcolumns: {type: Number, default: 0},
+            researchedentities: {
+                type: Array, default: function () {
+                    return []
+                },
+            },
             tokens: {
                 type: Array, default: function () {
                     return []
@@ -82,18 +92,23 @@
             selectedindexes: {type: Object, default: null},
             selectedchain: {type: Number, default: -1},
             hoveredchain: {type: Number, default: -1},
-            hoverdata: {type: Object, default: null},
-            wordtomarkonhoverdata: {
+            hoverdata: {
                 type: Array, default: function () {
                     return []
                 }
             },
+            wordtomarkonhoverdata: {type: Object, default: null},
             classestomark: {type: Object, default: null},
             notemodes: {type: Object, default: null},
             researchmode: {type: String, default: ""},
             analysismode: {type: String, default: ""},
             docid: {type: Number, default: -1},
             tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            coref: {
                 type: Array, default: function () {
                     return []
                 }
@@ -105,57 +120,102 @@
                 entitytoline: [],
                 selectedindexesmarked: {start: -1, end: -1},
                 highlightedhovered: null,
+                isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
+                oldhoveredchain: null,
+                corefset: false,
+
             }
         },
         watch: {
             selectedindexes: {
                 handler: function (newSelectedIndexes) {
-                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                    //console.log('pre-selectedindexesmarked: ' + JSON.stringify(this.newSelectedIndexes));
                     for (let i = this.selectedindexesmarked.start; i < this.selectedindexesmarked.end; i++) {
-                        this.manipulateword(i - this.indexCorrector, 'selected', false);
-                        this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
+                        if (i - this.indexCorrector >= 0) {
+                            this.manipulateword(i - this.indexCorrector, 'selected', false);
+                            this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
+                        }
                     }
                     if (newSelectedIndexes.start > -1 && newSelectedIndexes.end > -1) {
                         for (let i = newSelectedIndexes.start; i < newSelectedIndexes.end; i++) {
-                            this.manipulateword(i - this.indexCorrector, 'selected', true);
-                            if (i < newSelectedIndexes.end - 1) {
-                                this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
+                            if (i - this.indexCorrector >= 0) {
+                                this.manipulateword(i - this.indexCorrector, 'selected', true);
+                                if (i < newSelectedIndexes.end - 1) {
+                                    this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
+                                }
                             }
                         }
                         this.selectedindexesmarked = JSON.parse(JSON.stringify(newSelectedIndexes));
-                        //console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
+                        // console.log('post-selectedindexesmarked: ' + JSON.stringify(this.selectedindexesmarked));
                     }
                 }, deep: true
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
                 //console.log('new wordtomarkonhover is: ' + JSON.stringify(newWordToMarkOnHover));
                 if (newWordToMarkOnHover.textindexes.length > 0) {
-                    if (this.wortomarkonhoverold !== null) {
+                    if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
+
                         if (this.wortomarkonhoverold.textindexes.length > 0) {
                             for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
-                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
-                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
+                                if (this.wortomarkonhoverold.textindexes[k] - this.indexCorrector >= 0
+                                    && this.wortomarkonhoverold.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
+                                    this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
+                                    this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
+                                }
                             }
                         }
                     }
-                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
-                        this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
-                        this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
-
+                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) { if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
+                            && newWordToMarkOnHover.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
+                            this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
+                            this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
+                        }
                     }
+                    
+                    
+                    
                     this.wortomarkonhoverold = newWordToMarkOnHover;
-                    this.scrolltoword(newWordToMarkOnHover.textindexes[0] - this.indexCorrector);
-                    if (this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector] !== undefined) {
-                        let data = {
-                            hoverended: "text",
-                            offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[0] - this.indexCorrector].$el.getBoundingClientRect()
-                        };
+                    if (newWordToMarkOnHover.columnindex === this.columnindex) {
+                        //console.log("newWordToMarkOnHover" + newWordToMarkOnHover.textindexes);
+                        let index = -1;
+                        if (this.numberofcolumns == 1){
+                            console.log("one one column for hover");
+                            for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
+                                let textIndex = newWordToMarkOnHover.textindexes[k];
+                                if(this.isElementInViewport(this.$refs['text'][textIndex].$el)){
+                                    index = k;
+                                    break;
+                                }
+                            }
+                            if (index == -1){
+                                index = 0;
+                                this.scrolltoword(newWordToMarkOnHover.textindexes[index]);
+                            }
+                        } else {
+                            for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
+                                let dis = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
+                                if (dis >= 0) {
+                                    index = k;
+                                    break;
+                                }
+                            }
+                        }
 
-                        this.$emit('endhover', data);
+                        if (index !== -1) {
+                            if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector] !== undefined) {
+                                let data = {
+                                    hoverended: "text",
+                                    offsetstart: this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
+                                };
+                                this.$emit('endhover', data);
+                            }
+
+                        }
                     }
                 }
-            },
+            }
+            ,
             hoverdata: {
                 handler: function (newHoverData) {
                     //console.log('new Hover Data is: ' + JSON.stringify(newHoverData));
@@ -167,50 +227,129 @@
                         if (this.highlightedhovered !== null) {
                             if (this.highlightedhovered.startword !== null) {
                                 correctedIndex = this.highlightedhovered.startword.textIndex - this.indexCorrector;
-                                while (text[correctedIndex].token.semanticClass
-                                === text[correctedIndex + j].token.semanticClass) {
-                                    this.manipulateword(correctedIndex + j, 'entityhover', false);
-                                    this.manipulateword(correctedIndex + j, 'entityhovergap', false);
-                                    j++;
-                                }
-                                j = 0;
-                                while (text[correctedIndex].token.semanticClass
-                                === text[correctedIndex - j].token.semanticClass) {
-                                    if (correctedIndex - j > 0) {
-                                        this.manipulateword(correctedIndex - j, 'entityhover', false);
-                                        this.manipulateword(correctedIndex - j, 'entityhovergap', false);
+                                if (correctedIndex >= 0) {
+                                    if (text[correctedIndex] === undefined) {
+                                        console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
+                                    }
+                                    while (text[correctedIndex].token.semanticClass
+                                    === text[correctedIndex + j].token.semanticClass) {
+                                        if (text[correctedIndex + j] === undefined) {
+                                            console.log('The word at index+j:' + (correctedIndex + j) + 'in column:' + this.columnindex + ' is undefined');
+                                        }
+                                        this.manipulateword(correctedIndex + j, 'entityhover', false);
+                                        this.manipulateword(correctedIndex + j, 'entityhovergap', false);
                                         j++;
-                                    } else {
-                                        break;
+                                    }
+                                    j = 0;
+                                    while (text[correctedIndex].token.semanticClass
+                                    === text[correctedIndex - j].token.semanticClass) {
+                                        if (correctedIndex - j > 0) {
+                                            if (text[correctedIndex - j] === undefined) {
+                                                console.log('The word at index-j:' + (correctedIndex - j) + 'in column:' + this.columnindex + ' is undefined');
+                                            }
+                                            this.manipulateword(correctedIndex - j, 'entityhover', false);
+                                            this.manipulateword(correctedIndex - j, 'entityhovergap', false);
+                                            j++;
+                                        } else {
+                                            break;
+                                        }
                                     }
                                 }
                             }
                         }
                         correctedIndex = newHoverData.startword.textIndex - this.indexCorrector;
-                        while (text[correctedIndex].token.semanticClass === text[correctedIndex + i].token.semanticClass) {
-                            this.manipulateword(correctedIndex + i, 'entityhover', true);
-                            this.manipulateword(correctedIndex + i, 'entityhovergap', true);
-                            i++;
-                        }
-                        i = 0;
-                        while (text[correctedIndex].token.semanticClass === text[correctedIndex - i].token.semanticClass) {
-                            if (correctedIndex - i > 0) {
-                                this.manipulateword(correctedIndex - i, 'entityhover', true);
-                                this.manipulateword(correctedIndex - i, 'entityhovergap', true);
+                        if (correctedIndex >= 0) {
+                            if (text[correctedIndex] === undefined) {
+                                console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
+                            }
+                            while (text[correctedIndex].token.semanticClass === text[correctedIndex + i].token.semanticClass) {
+                                if (text[correctedIndex + i] === undefined) {
+                                    console.log('The word at index + i:' + (correctedIndex + i) + 'in column:' + this.columnindex + ' is undefined');
+                                }
+                                this.manipulateword(correctedIndex + i, 'entityhover', true);
+                                this.manipulateword(correctedIndex + i, 'entityhovergap', true);
                                 i++;
-                            } else {
-                                break;
+                            }
+                            i = 0;
+                            while (text[correctedIndex].token.semanticClass === text[correctedIndex - i].token.semanticClass) {
+                                if (correctedIndex - i > 0) {
+                                    if (text[correctedIndex - i] === undefined) {
+                                        console.log('The word at index -i:' + (correctedIndex - i) + 'in column:' + this.columnindex + ' is undefined');
+                                    }
+                                    this.manipulateword(correctedIndex - i, 'entityhover', true);
+                                    this.manipulateword(correctedIndex - i, 'entityhovergap', true);
+                                    i++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            this.highlightedhovered = newHoverData;
+                        }
+                    }
+                }
+                ,
+                deep: true,
+            }
+            ,
+            hoveredchain: function (newChain) {
+                //console.log('The new watched Chain: ' + JSON.stringify(newChain));
+                if (this.classestomark.coref) {
+                    if (this.oldhoveredchain !== null) {
+                        for (let i = 0; i < this.oldhoveredchain.length; i++) {
+                            if (this.oldhoveredchain[i].start >= this.indexCorrector
+                                && this.oldhoveredchain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                                for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
+                                    this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', false);
+                                }
                             }
                         }
-                        this.highlightedhovered = newHoverData;
                     }
-                }, deep: true,
-            },
-            selectedchain:function (newChain) {
-                if(this.classestomark.coref){
-                    
+                    if (newChain !== null && newChain.length !== 0) {
+                        let last = 0;
+                        for (let i = 0; i < newChain.length; i++) {
+                            if (newChain[i].start >= this.indexCorrector
+                                && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                                for (let j = newChain[i].start; j < newChain[i].end; j++) {
+                                    last++;
+                                    this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);
+                                    //this.manipulateword(j - this.getIndexCorrector(), 'representative', newChain[i].representative);
+                                }
+                                this.manipulateword(last - 1 - this.indexCorrector, 'isLastTokenToHighlight', true);
+                                last = 0;
+                            }
+                        }
+                    }
+                    this.oldhoveredchain = newChain;
                 }
             }
+            ,
+            classestomark: {
+                handler: function (corefmode) {
+                    if (!this.corefset) {
+                        if (corefmode.coref) {
+                            for (let i = 0; i < this.coref.length; i++) {
+                                //console.log('coref ' + i + ' is: ' + JSON.stringify(this.coref[i]));
+                                if (this.coref[i].startIndex >= this.indexCorrector && this.coref[i].endIndex < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                                    for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
+                                        this.manipulateword(j - this.indexCorrector, 'partofChain', true);
+                                        if (this.coref[i].representative === -1) {
+                                            this.manipulateword(j - this.indexCorrector, 'representative', true);
+                                        }
+                                    }
+                                    this.$refs['text'][this.coref[i].startIndex - this.indexCorrector].addBracketLeft();
+                                    this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();
+                                }
+                            }
+                            this.corefset = true;
+                        }
+                    }
+                }
+                ,
+                deep: true
+            }
+            ,
+        },
+        mounted() {
         },
         computed: {
             indexCorrector: function () {
@@ -222,23 +361,43 @@
             }
         },
         methods: {
-            manipulateword: function (textIndex, prop, value) {
-                //console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
-                this.$refs['text'][textIndex].changeProperty(prop, value);
-            },
-            scrolltoword: function (textIndex) {
-                if (this.allowtexttoscroll(this.$refs['text'][textIndex])) {
-                    this.$refs['text'][textIndex].$el.scrollIntoView();
+            onscrolltext : function(event) {
+                if (this.isRemoveLineOnScrollActive){
+                    this.removehoverline([]);
                 }
             },
-            allowtexttoscroll: function (element) {
-                let rect = element.$el.getBoundingClientRect();
-                return !(
-                    rect.top >= 0 &&
-                    rect.left >= 0 &&
-                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-                    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+            removehoverline : function(data) {
+                this.$emit('removehoverline', data);
+            },
+            manipulateword: function (textIndex, prop, value) {
+                console.log('Changing word at: ' + textIndex + ' Prop: ' + prop + ' Value:' + value);
+                this.$refs['text'][textIndex].changeProperty(prop, value);
+            },
+            isElementInViewport: function (el) {
+                let rect = el.getBoundingClientRect();
+                let rect2 = this.$el.getBoundingClientRect();
+                return (
+                    rect.top >= rect2.top &&
+                    rect.left >= rect2.left &&
+                    rect.bottom <= rect2.bottom &&
+                    rect.right <= rect2.right
                 );
+            },
+            scrolltoword: function (textIndex) {
+                if (textIndex  - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
+                    return;
+                }
+                this.isRemoveLineOnScrollActive = false;
+                this.$refs['text'][textIndex].$el.scrollIntoView();
+                this.isRemoveLineOnScrollActive = true;
+            },
+            allowscroll: function (element) {                
+                let rect = element.$el.getBoundingClientRect();
+                const windowHeight = (window.innerHeight || element.$el.parentElement.parentElement.clientHeight);
+                const windowWidth = (window.innerWidth || element.$el.parentElement.parentElement.clientWidth);
+                const vertInView = (rect.top <= windowHeight) && ((rect.top + rect.height) >= 0);
+                const horInView = (rect.left <= windowWidth) && ((rect.left + rect.width) >= 0);
+                return (!vertInView && !horInView);
             },
             updateclassestomark: function (newClassesToMark) {
                 this.$emit('updateclassestomark', newClassesToMark);
