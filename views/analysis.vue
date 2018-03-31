@@ -57,6 +57,7 @@
                     <component id="textfeatureviewport"
                                is="textfeatureviewport"
                                v-bind:columnindex="columnindex-1"
+                               v-bind:numberofcolumns="numberofcolumns"
                                v-bind:serverip="serverip"
                                v-bind:googleapikey="googleapikey"
                                v-bind:docid="docID"
