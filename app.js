@@ -52,12 +52,10 @@ const vueOptions = {
             meta: [
                 {script: '/javascripts/vue.js'},
                 {script: 'https://code.getmdl.io/1.3.0/material.min.js'},
-                {script: 'https://cdnjs.cloudflare.com/ajax/libs/autosize.js/3.0.16/autosize.min.js'},
                 {style: 'https://storage.googleapis.com/code.getmdl.io/1.3.0/material.indigo-blue.min.css'},
                 {style: 'https://fonts.googleapis.com/icon?family=Material+Icons'},
                 {style: 'https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css'},
                 {style: '/css/style.css'},
-                {style: '/css/debugstyle.css'},
                 {charset: 'UTF-8'}
             ]
         }

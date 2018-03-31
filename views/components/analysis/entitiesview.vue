@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="semClassFormate PERSON"
-             ref="personresultsparent"
-             v-on:click="togglesemanticlass('PERSON')">
+        <div class="mdl-grid semClassFormate PERSON"
+                ref="personresultsparent"
+                v-on:click="togglesemanticlass('PERSON')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
@@ -11,6 +11,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">PERSON ({{numberOfPersons}})</b>
             </button>
+            <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                     v-on:click="addresearch">
                 <i class="material-icons">add_circle</i>
@@ -37,7 +38,7 @@
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
-        <div class="semClassFormate LOCATION"
+        <div class="mdl-grid semClassFormate LOCATION"
              ref="locationresultsparent"
              v-on:click="togglesemanticlass('LOCATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -48,6 +49,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">LOCATION ({{numberOfLocations}})</b>
             </button>
+            <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                     v-on:click="addresearch">
                 <i class="material-icons">add_circle</i>
@@ -74,7 +76,7 @@
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
-        <div class="semClassFormate ORGANIZATION"
+        <div class="mdl-grid semClassFormate ORGANIZATION"
              ref="organisazionresultsparent"
              v-on:click="togglesemanticlass('ORGANIZATION')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -85,6 +87,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">ORGANIZATION ({{numberOfOrganizations}})</b>
             </button>
+            <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                     v-on:click="addresearch">
                 <i class="material-icons">add_circle</i>
@@ -111,7 +114,7 @@
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
-        <div class="semClassFormate MISC"
+        <div class="mdl-grid semClassFormate MISC"
              ref="miscresultsparent"
              v-on:click="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -122,6 +125,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">MISC ({{numberOfMisc}})</b>
             </button>
+            <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                     v-on:click="addresearch">
                 <i class="material-icons">add_circle</i>
@@ -148,7 +152,7 @@
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
-        <div class="semClassFormate OTHER"
+        <div class="mdl-grid semClassFormate OTHER"
              ref="miscresultsparent"
              v-on:click="togglesemanticlass('OTHER')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
@@ -159,6 +163,7 @@
             <button class="mdl-cell mdl-cell--10-col mdl-button mdl-js-button mdl-js-ripple-effect deleteSpaces snapbtn">
                 <b class="mdc-button snapbtn">OTHER ({{numberOfOTHER}})</b>
             </button>
+            <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
                     v-on:click="addresearch">
                 <i class="material-icons">add_circle</i>

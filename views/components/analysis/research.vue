@@ -1,33 +1,33 @@
 <template>
-    <div>
+    <div style="padding:0px;margin:0px;width: 100%;">
         <div class="mdl-textfield mdl-js-textfield mdl-cell mdl-cell--12-col contentColor">
             <!-- shows the clicked word -->
             <input v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
                    v-model="selectedtext"
                    class="mdl-textfield__input"/>
         </div>
-        <div class="mdl-cell mdl-cell--12-col contentColor">
-            <!--Results will be displayed here. -->
-            <div class="mdl-cell mdl-cell--12-col" id="resultfield">
-                <component is="researchresult"
-                           ref="personresults"
-                           v-for="(researchresult,index) in researchresults[0]"
-                           v-bind:serverip="serverip"
-                           v-bind:researchdata="researchresult"
-                           v-bind:googleapikey="googleapikey"
-                           v-bind:key="index"
-                           v-bind:index="index"
-                           v-bind:mapkey="index"
-                           v-bind:docid="docid"
-                           v-bind:viewing="false"
-                           v-bind:contentcontrol="contentcontrol.PERSONS"
-                           v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                           v-on:starthover="starthover($event)"
-                           v-on:saveresult="saveresult($event)">
-                </component>
-            </div>
-
+        <!--Results will be displayed here. -->
+        <div class="mdl-cell mdl-cell--12-col"
+                style="padding:0px;margin:0px;width: 100%"
+                id="resultfield">
+            <component is="researchresult"
+                       ref="personresults"
+                       v-for="(researchresult,index) in researchresults[0]"
+                       v-bind:serverip="serverip"
+                       v-bind:researchdata="researchresult"
+                       v-bind:googleapikey="googleapikey"
+                       v-bind:key="index"
+                       v-bind:index="index"
+                       v-bind:mapkey="index"
+                       v-bind:docid="docid"
+                       v-bind:viewing="false"
+                       v-bind:contentcontrol="contentcontrol.PERSONS"
+                       v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                       v-on:starthover="starthover($event)"
+                       v-on:saveresult="saveresult($event)">
+            </component>
         </div>
+
     </div>
 </template>
 

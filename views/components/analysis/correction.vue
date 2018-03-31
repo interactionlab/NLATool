@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="changing" class="mdl-grid">
+        <div v-if="changing" class="mdl-grid" style="padding:0px;width: 100%;">
             <p class="mdl-cell mdl-cell--4-col" v-bind:class="currentClass">{{contentToChange}}</p>
             <p class="mdl-cell mdl-cell--6-col">Current Class: {{currentClass}}</p>
 
@@ -39,7 +39,7 @@
                 </button>
             </div>
         </div>
-        <div v-else class="mdl-grid">
+        <div v-else class="mdl-grid" style="padding:0px;width: 100%;">
             
             <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
                     style="float: right;"
@@ -125,7 +125,7 @@
                     } else if (this.researchdatatoedit !== null) {
                         return this.researchdatatoedit.sourcequery.semanticClass;
                     } else {
-                        return 'To many words with different semantic classes.'
+                        return 'No semantic class selected.'
                     }
                 }
             }

@@ -6,10 +6,11 @@
               v-on:click="showdetail">
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
-                    <div v-bind:class="generalstyleclass">
+                    <div v-bind:class="generalstyleclass" style="padding: 0.4em;">
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchdata.result !== 'undefined' ">
-                            <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces">
+                            <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces"
+                                    style="width: 100%;">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchdata.result !== 'undefined'">
                                     {{title}}
@@ -30,7 +31,8 @@
                                     <i class="material-icons">public</i>
                                 </button>
                             </div>
-                            <div class="mdl-cell mdl-cell--12-col deleteSpaces">
+                            <div class="mdl-cell mdl-cell--12-col deleteSpaces"
+                                    style="width: 100%;">
                                 <img v-if="(localcontentcontrol.img) & (typeof researchdata.result.image !== 'undefined')"
                                      v-bind:src="researchdata.result.image.contentUrl"
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
@@ -187,22 +189,38 @@
                 return htmlclass;
             },
             title: function () {
+                //console.log(JSON.stringify(this.researchdata.sourcequery.query));
                 let title = '';
-                if (typeof this.researchdata.sourcequery !== 'undefined') {
-                    if (typeof this.researchdata.sourcequery.query !== 'undefined') {
-                        //let t = "";
-                        title = this.researchdata.sourcequery.query[0];
-                        /*for (let i = 0; i < this.researchdata.sourcequery.querys.length; i++) {
-                            if (this.researchdata.sourcequery.querys[i].length > t.length) {
-                                t = this.researchdata.sourcequery.querys[i];
+                if (this.researchdata.sourcequery !== undefined) {
+                    if (this.researchdata.sourcequery.query !== undefined) {    
+                        if (this.researchdata.sourcequery.query.length === 1 && 
+                        this.researchdata.sourcequery.query[0].content  === undefined){
+                            title = this.researchdata.sourcequery.query[0];
+                            if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
+                                title += ' (' + this.researchdata.sourcequery.freq + ') ';
                             }
-                        }
-                        title = title + t;*/
-                        if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
-                            title = title + ' (' + this.researchdata.sourcequery.freq + ') ';
-                        }
+                        }                        
                     } else {
-                        title = title + this.researchdata.sourcequery;
+                        console.log(JSON.stringify(this.researchdata));
+                        for (let i = 0; i < this.researchdata.sourcequery.source.length && i < 2; i++) {
+                            title += this.researchdata.sourcequery.source[i].content;
+                            title += " ";
+                        }
+                        console.log(title);
+                        if (this.researchdata.sourcequery.source.length > 4){
+                            title += "[...] ";
+                        }
+                        let start = this.researchdata.sourcequery.source.length - 1;
+                        console.log(start);
+                        if (start < 2){
+                            console.log("cut");
+                            start = 2;
+                        }
+                        console.log(start);
+                        for (let i = start; i < this.researchdata.sourcequery.source.length; i++) {
+                            title += this.researchdata.sourcequery.source[i].content;
+                            title += " ";
+                        }
                     }
                 }
                 title = title + ' -> ' + this.researchdata.result.name;
