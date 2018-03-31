@@ -136,7 +136,6 @@ function updateTitle(docID, newTitle) {
     docID = dbAction.stringifyForDB(docID);
     newTitle = dbAction.stringifyForDB(newTitle);
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
-    wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('text', ['title'], [newTitle], ['docID'], [docID], ['=']));
 }
 
 function saveResult(docID, indexes, researchresultID) {
@@ -526,10 +525,10 @@ function getWordNotes(docID) {
  */
 function getTextMetaData(docID) {
     textDB.textMetaData = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createSelectCommand('text', ['docID', 'title', 'length', 'author', 'year'], [docID], ['='])));
+        dbAction.createSelectCommand('documents', ['docID', 'name', 'length', 'author', 'year'], [docID], ['='])));
     //console.log(notMedia + Tag + 'Metadata from DB: ' + JSON.stringify(textDB.textMetaData));
-    if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].title.length > 0) {
-        vueData.title = textDB.textMetaData[0].title;
+    if (textDB.textMetaData.length > 0 && textDB.textMetaData[0].name.length > 0) {
+        vueData.title = textDB.textMetaData[0].name;
     } else {
         vueData.title = configData.projecttitle;
     }

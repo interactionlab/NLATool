@@ -109,7 +109,7 @@ io.on('connection', function (socket) {
 function initialisingTextUpload(socket, title) {
     title = stringifyForDB(title);
     let documentInsertResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createInsertCommand('documents', ['name', 'userID'], [title, 0], null, null)));
+        dbAction.createInsertCommand('documents', ['name', 'userID', 'loadingStatus'], [title, 0, 0], null, null)));
     allTextUploads.push({docid: documentInsertResult.insertId, title: title, text: ''});
     socket.emit('resinitupload', documentInsertResult.insertId);
 }
@@ -222,34 +222,38 @@ function processSegement(docID, list) {
         if (!error && response.statusCode === 200) {
             let name = null;
             try {
-                let graphID = body.itemListElement[0].result["@id"];
-                researchUpload['kgID'] = graphID;
-                name = body.itemListElement[0].result["name"];
-                console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
-                if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
-                    getLocationInformation(docID, textIndexes, name, researchUpload);
+                if (body.itemListElement === undefined || body.itemListElement.length < 0){
+                    console.log(Tag + ' no GKG result for ' + query);
                 } else {
-                    dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
-                        ['docID',
-                            'query',
-                            'semanticClass',
-                            'startIndex',
-                            'endIndex',
-                            'kgID',],
-                        [stringifyForDB(researchUpload.docID),
-                            stringifyForDB(researchUpload.query),
-                            stringifyForDB(researchUpload.semanticClass),
-                            stringifyForDB(researchUpload.startIndex),
-                            stringifyForDB(researchUpload.endIndex),
-                            stringifyForDB(researchUpload.kgID),
-                        ],
-                        null, null), function (err, response) {
-                        if (err) {
-                            console.log(Tag + err);
-                        } else {
-                            //console.log(Tag + JSON.stringify(response));
-                        }
-                    });
+                    let graphID = body.itemListElement[0].result["@id"];
+                    researchUpload['kgID'] = graphID;
+                    name = body.itemListElement[0].result["name"];
+                    console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
+                    if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
+                        getLocationInformation(docID, textIndexes, name, researchUpload);
+                    } else {
+                        dbStub.makeSQLRequest(dbAction.createInsertCommand('researchedentities',
+                            ['docID',
+                                'query',
+                                'semanticClass',
+                                'startIndex',
+                                'endIndex',
+                                'kgID',],
+                            [stringifyForDB(researchUpload.docID),
+                                stringifyForDB(researchUpload.query),
+                                stringifyForDB(researchUpload.semanticClass),
+                                stringifyForDB(researchUpload.startIndex),
+                                stringifyForDB(researchUpload.endIndex),
+                                stringifyForDB(researchUpload.kgID),
+                            ],
+                            null, null), function (err, response) {
+                            if (err) {
+                                console.log(Tag + err);
+                            } else {
+                                //console.log(Tag + JSON.stringify(response));
+                            }
+                        });
+                    }
                 }
             } catch (err) {
                 console.log(Tag + 'the Result for ' + query + ' is undefined: ' + err);
@@ -293,13 +297,13 @@ function loadWrittenText(socket, upload, uploadIndex) {
         //transactionInformation.querys.push(dbAction.createInsertCommand('documents', ['name'], [title], null, null));
         let helpVariable = true;
         transactionInformation.transControl.getProper.push(helpVariable);
-        transactionInformation.querys.push(dbAction.createInsertCommand('text',
-            ['docID', 'length', 'title', 'author', 'year', 'lang'],
-            [upload.docid, transactionInformation.words.length, upload.title, '"To Implement"', 2049, '"en"'],
-            null, null));
+        transactionInformation.querys.push(dbAction.createUpdateCommand('documents',
+            ['length', 'author', 'year', 'lang'],
+            [transactionInformation.words.length, '"To Implement"', 2049, '"en"'],
+            ['docID'], [upload.docid], ['=']));
+            
         console.log(Tag + 'metaInfo uploaded');
         firstTimeCheck = new Date();
-
 
         let whitespace = 0;
         let counter = 1;
@@ -432,6 +436,13 @@ function loadWrittenText(socket, upload, uploadIndex) {
                 last = i;
             }
         }
+        
+        
+        wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents',
+            ['loadingStatus'],
+            [1],
+            ['docID'], [upload.docid], ['=']));
+        
     } else {
         console.log(Tag + 'Corenlp Status is wrong');
     }
@@ -544,14 +555,7 @@ function postLoadWrittenText(req, res, next) {
                 toCompare: null,
                 operators: null
             };
-            //-------------------------------------------------------------------------------------!
-            /*wait.for(sendSQL, dbAction.createInsertCommand(
-                'text',
-                ['docID', 'length', 'title', 'lang'],
-                [documentInsertResult.insertId, words.length, title, lang],
-                null, null));*/
-            //-------------------------------------------------------------------------------------
-
+            
             //req.session.docID = documentInsertResult.insertId;
             req.session.lang = language;
             //TODO: check if word + NER Tag exists already

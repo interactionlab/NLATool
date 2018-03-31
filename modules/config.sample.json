@@ -97,7 +97,30 @@
     "column4": {
       "name": "loadingStatus",
       "type": "INT",
-      "length": "3",
+      "length": "3"
+    },
+    "column5": {
+      "name": "length",
+      "type": "INT",
+      "length": "11",
+      "null": "NULL"
+    },
+    "column6": {
+      "name": "author",
+      "type": "VARCHAR",
+      "length": "200",
+      "null": "NULL"
+    },
+    "column7": {
+      "name": "year",
+      "type": "YEAR",
+      "length": "4",
+      "null": "NULL"
+    },
+    "column8": {
+      "name": "lang",
+      "type": "VARCHAR",
+      "length": "11",
       "null": "NULL"
     }
   },
@@ -139,42 +162,6 @@
   },
   "table3": {
     "isTable": true,
-    "name": "text",
-    "column1": {
-      "name": "docID",
-      "type": "INT",
-      "length": "11",
-      "FOREIGN": "documents",
-      "AUTO_INCREMENT": true
-    },
-    "column2": {
-      "name": "length",
-      "type": "INT",
-      "length": "11"
-    },
-    "column3": {
-      "name": "title",
-      "type": "VARCHAR",
-      "length": "200"
-    },
-    "column4": {
-      "name": "author",
-      "type": "VARCHAR",
-      "length": "200"
-    },
-    "column5": {
-      "name": "year",
-      "type": "YEAR",
-      "length": "4"
-    },
-    "column6": {
-      "name": "lang",
-      "type": "VARCHAR",
-      "length": "11"
-    }
-  },
-  "table4": {
-    "isTable": true,
     "name": "word",
     "column1": {
       "name": "wordID",
@@ -203,7 +190,7 @@
       "length": "20"
     }
   },
-  "table5": {
+  "table4": {
     "isTable": true,
     "name": "textmap",
     "column1": {
@@ -239,7 +226,7 @@
       "length": "11"
     }
   },
-  "table6": {
+  "table5": {
     "isTable": true,
     "name": "textnote",
     "column1": {
@@ -259,7 +246,7 @@
       "type": "MEDIUMTEXT"
     }
   },
-  "table7": {
+  "table6": {
     "isTable": true,
     "name": "corefmentions",
     "column1": {
@@ -311,7 +298,7 @@
       "length": "11"
     }
   },
-  "table8": {
+  "table7": {
     "isTable": true,
     "name": "nestedcorefs",
     "column1": {
@@ -337,7 +324,7 @@
       "length": "11"
     }
   },
-  "table9": {
+  "table8": {
     "isTable": true,
     "name": "researchedentities",
     "column1": {
