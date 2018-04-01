@@ -24,18 +24,15 @@
         },
         data: function () {
             return {
-                htmlclass: {},
-                tohover: false,
-                isEntityHovered: false,
                 selected: false,
                 selectedgap: false,
                 entityhover: false,
                 entityhovergap: false,
-                partofhoveredchain: false,
-                partofselectedchain: false,
-                partofChain: false,
-                representative: false,
-                isLastTokenToHighlight: false,
+                iscoref: false,
+                iscorefgrap: false,
+                isrepresentative: false,
+                corefhover: false,
+                corefhovergap: false,
                 bracketleft: '',
                 bracketright: '',
                 semanticClassSimplified: '',
@@ -43,89 +40,57 @@
         },
         computed: {
             toHighlight: function () {
-                let htmlclass = {};
-                if (this.classestomark.coref) {
-                    if (this.partofChain) {
+                let htmlclass = {};                
+                if(this.iscoref) {
+                    if (this.isrepresentative){
+                        htmlclass['cRepresentant'] = this.classestomark.coref;
+                    } else {
                         htmlclass['cReferent'] = this.classestomark.coref;
-                        if (this.representative === true) {
-                            htmlclass['cReferent'] = false;
-                            htmlclass['cRepresentant'] = this.classestomark.coref;
-                        }
-                    }
-                    if (this.partofhoveredchain) {
-                        if (this.representative) {
-                            htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                        } else {
-                            htmlclass['cHoverReferent'] = this.classestomark.coref;
-                        }
-                    }
-                    if (this.partofselectedchain) {
-                        if (this.representative) {
-                            htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                        } else {
-                            htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                        }
                     }
                 }
-                htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
-                //TODO: Highlighting for 'OTHER'
-                htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhover;
-                htmlclass['notemark'] = this.selected;
-                let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
+                
+                if (this.selected){
+                    htmlclass['notemark'] = this.selected;
+                } else if (this.corefhover){
+                    htmlclass['cHoverReferent'] = this.classestomark.coref;
+                } else if (this.entityhover && this.classestomark[this.semanticClassSimplified]){
+                    htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhover;
+                } else {
+                    htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
+                }
+                
+                /*let posSet = ['NN', 'NE', 'NNP', 'NNS', 'NNPS', 'CD'];
                 if (posSet.indexOf(this.token.pos) > -1 && this.token.semanticClass === 'O') {
                     htmlclass['POS'] = this.classestomark['POS'];
                 } else {
-                }
+                }*/
                 return htmlclass
+                
             },
             classToHighlightGap: function () {
                 let htmlclass = {};
-                //Z1: Standard: no highlight: (highlight semanticClass, no coref)
-                //Z2: no highlight semanticClass, highlight Coref, but not this gap
-                //Z3: highlight coref and this gab bc next word not part of coref mention
-                //Z4: highlight gab if next word part of coref mention
-                //Z5: highlight if user marks next word too
-                try {
+                if(this.iscoref) {
+                    if (this.isrepresentative && this.iscorefgrap){
+                        htmlclass['cRepresentant'] = this.classestomark.coref;
+                    } /*else { // NOT NEEDED TO MAKE THE DASHED LINE MORE DESHED LIKE
+                        htmlclass['cReferent'] = this.classestomark.coref;
+                    }*/
+                }
+                
+                if (this.selectedgap){
                     htmlclass['notemark'] = this.selectedgap;
-                    if (this.classestomark.coref) {
-                        if (this.partofChain) {
-                            if (!this.isLastTokenToHighlight) {
-                                htmlclass['cReferent'] = this.classestomark.coref;
-                                if (this.representative === true) {
-                                    htmlclass['cReferent'] = false;
-                                    htmlclass['cRepresentant'] = this.classestomark.coref;
-                                }
-                                if (this.partofhoveredchain) {
-                                    if (this.representative) {
-                                        htmlclass['cHoverRepresentant'] = this.classestomark.coref;
-                                    } else {
-                                        htmlclass['cHoverReferent'] = this.classestomark.coref;
-                                    }
-                                }
-                                if (this.partofselectedchain) {
-                                    if (this.representative) {
-                                        htmlclass['cSelectedRepresentant'] = this.classestomark.coref;
-                                    } else {
-                                        htmlclass['cSelectedReferent'] = this.classestomark.coref;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (!this.isLastTokenToHighlight) {
-                        htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
-                        htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhovergap;
-                    }
+                } else if (this.corefhovergap){
+                    htmlclass['cHoverReferent'] = this.classestomark.coref;
+                } else if (this.entityhovergap) {
+                    htmlclass[this.semanticClassSimplified + "_strong"] = this.entityhovergap;
+                } else if (this.token.needgap) {
+                    htmlclass[this.semanticClassSimplified] = this.classestomark[this.semanticClassSimplified];
                 }
-                catch
-                    (err) {
-                    //console.log('Got out of the array' + err);
-                }
+                
                 return htmlclass;
             }
             ,
             getWordGap2: function () {
-                //console.log(JSON.stringify(this.token));
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
                 } else if (this.token.whitespaceInfo === 0) {
@@ -175,18 +140,15 @@
                 this.$emit('endselection', this.token.textIndex);
             },
             stophover: function () {
-                this.tohover = false;
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
-                //console.log(JSON.stringify(this.selectedtextindexes));
                 if (this.selectedtextindexes.start != -1 && this.selectedtextindexes.done == false){
                     this.$emit('hoverduringselection', this.token.textIndex);
                 }
             
-                this.tohover = true;
                 if (this.classestomark.coref) {
-                    if (this.partofChain) {
+                    if (this.iscoref) {
                         this.$emit('hoverchain', this.token.textIndex);
                     }
                 }

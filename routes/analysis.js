@@ -116,12 +116,25 @@ io.on('connection', function (socket) {
 
 function getMoreTextResponse(socket, input) {
     let firstTimeCheck = new Date();
-    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize);
+    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize+1);
     let lastTimeCheck = new Date();
     console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex + ' took: '
         + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-    //console.log(Tag + 'Content of part: ' + JSON.stringify(tokens));
-    socket.emit('sendMoreText', tokens);
+     
+    for (let i = 0; i < tokens.length - 1; i++){
+        if(tokens[i].semanticClass !== "O" &&
+            tokens[i].semanticClass === tokens[i+1].semanticClass){
+            tokens[i]['needgap'] = true;
+        } else {
+            tokens[i]['needgap'] = false;
+        }
+    }
+    if (tokens.length < input.pagesize){
+        socket.emit('sendMoreText', tokens);
+    } else {
+        socket.emit('sendMoreText', tokens.slice(0,-1));
+    }
+    
 }
 
 /**
@@ -256,7 +269,7 @@ function getAndShowText(req, res) {
         let docID = (req.query.docID || req.session.docID);
         let firstTimeCheck = new Date();
         let deltaTime = firstTimeCheck.getTime();
-        vueData.vueTokens = selectWithInnerJoin(docID, 0, 30);
+        vueData.vueTokens = selectWithInnerJoin(docID, 0, 31);
         vueData.docID = String(docID);
         vueData.notes = getWordNotes(docID);
         getTextMetaData(docID);
@@ -329,7 +342,17 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
-    return tokens;
+    
+    for (let i = 0; i < tokens.length - 1; i++){
+        if(tokens[i].semanticClass !== "O" &&
+            tokens[i].semanticClass === tokens[i+1].semanticClass){
+            tokens[i]['needgap'] = true;
+        } else {
+            tokens[i]['needgap'] = false;
+        }
+    }
+    
+    return tokens.slice(0,-1);
 }
 
 function getResearchedEntities2(docID) {

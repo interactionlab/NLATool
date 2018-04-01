@@ -232,14 +232,12 @@
                     let mentionID = -2;
                     for (let i = 0; i < this.coref.length; i++) {
                         //Representative
-                        //console.log('Start: ' + this.coref[i].startIndex + ' chain:' + chain + ' end: ' + this.coref[i].endIndex);
                         if (this.coref[i].startIndex <= chain && this.coref[i].endIndex >= chain) {
                             if (this.coref[i].representative === -1) {
                                 mentionID = this.coref[i].mentionID;
                             } else {
                                 mentionID = this.coref[i].representative;
                             }
-                            //console.log('hovered Mention by ID: ' + JSON.stringify(this.coref[i]));
                             temphoveredChain.push({
                                 start: this.coref[i].startIndex,
                                 end: this.coref[i].endIndex,
@@ -250,7 +248,6 @@
                     if (mentionID !== -2) {
                         for (let i = 0; i < this.coref.length; i++) {
                             if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
-                                //console.log('is part of Chain: ? ' + JSON.stringify(this.coref[i]));
                                 temphoveredChain.push({
                                     start: this.coref[i].startIndex,
                                     end: this.coref[i].endIndex,
@@ -258,7 +255,7 @@
                             }
                         }
                     } else{
-                        console.log('WARNING: couldnt match a corefmention to the hovered word');
+                        console.log('WARNING: could not match a corefmention to the hovered word');
                     }
                     this.hoveredChain = temphoveredChain;
                 } else {
@@ -310,7 +307,6 @@
                         done: true
                     };
                 }
-                //console.log(JSON.stringify(this.selectedtextindexes));
             },
             selectText2: function (newSelectedIndexes) {
                 this.selectedtextindexes = newSelectedIndexes;
@@ -413,9 +409,6 @@
                 }
             },
             starthover: function (event) {
-                //console.log("Analysis vue starthover: " + JSON.stringify(event));            
-                //console.log("Analysis vue hoverdata: " + JSON.stringify(this.hoverdata));            
-
                 if (this.hoverdata.hoverstarted === event.hoverstarted) {
                     if ((event.hoverstarted === "text"
                             && this.hoverdata.offsetstart !== null && this.hoverdata.offsetstart.x === event.offsetstart.x
@@ -423,7 +416,6 @@
                         (event.hoverstarted === "research"
                             && this.hoverdata.offsetend.x === event.offsetend.x
                             && this.hoverdata.offsetend.y === event.offsetend.y)) {
-                        //console.log("Same hover");
                         return;
                     }
                 }
@@ -437,7 +429,6 @@
                 if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
                 } else if (event.hoverstarted === "research") {
-                    //console.log("Analysis " + event.columnindex);
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
                         hoverstarted: "research",
@@ -448,7 +439,6 @@
                 }
             },
             endhover: function (event) {
-                //console.log("analysis vue endhover:" + JSON.stringify(event));
                 if (event.hoverended === "research") {
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
@@ -462,6 +452,7 @@
                 }
             },
             removehoverline: function (event) {
+                console.lof("removehoverline: " + JSON.stringify(event));  
                 this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {
@@ -472,7 +463,6 @@
                 let endIndex = this.tokens[this.tokens.length - 1].textIndex+1 ;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
-                console.log('requesting next part of text of ' + docID + ' at ' + endIndex);
                 socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {
                     self.setMoreDataFromServer(tokens);
                 });
@@ -546,7 +536,6 @@
                             }
                         }
                     }
-                    //console.log('Watcher got new selected Chain: ' + this.selectedChain);
                 },
                 deep: true
             }

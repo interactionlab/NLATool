@@ -144,9 +144,6 @@
         },
         computed: {
             selectedtokens: function () {
-                if (this.selectedtextindexes.start > -1 && this.selectedtextindexes.end > -1) {
-                    this.researchdatatoedit = null;
-                }
                 return this.gettokensofselectedtext(this.tokens, this.selectedtextindexes);
             },
             changing: function () {
@@ -168,8 +165,6 @@
             },
             currentClass: function () {
                 if (this.changing) {
-                    console.log(JSON.stringify(this.selectedtokens));
-                    console.log(JSON.stringify(this.researchdatatoedit));
                     if (this.selectedtokens !== null
                         && this.selectedtokens[0] !== undefined ) {
                         let semClass = this.selectedtokens[0].semanticClass;

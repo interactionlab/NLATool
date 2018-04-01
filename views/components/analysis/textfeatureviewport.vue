@@ -123,7 +123,6 @@
                 entitytoline: [],
                 parentviewport: {},
                 selectedindexesmarked: {start: -1, end: -1},
-                highlightedhovered: null,
                 isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
@@ -133,6 +132,9 @@
         },
         watch: {
             selectedtextindexes: {
+                /*
+                 * SELECTION OF TEXT WITH THE MOUSE WHILE HOLDING THE MOUSE BUTTON
+                 */
                 handler: function (newSelectedIndexes) {
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1){
@@ -141,16 +143,16 @@
                         if (this.selectedindexesmarked.end !== -1){
                             let end = this.selectedindexesmarked.end;
                         }
-                        
                         if (start > end){
                             let dummy = end;
                             end = start;
                             start = dummy;
                         }
                         for (let i = start; i <= end; i++) {
-                            if (i - this.indexCorrector >= 0) {
-                                this.manipulateword(i - this.indexCorrector, 'selected', false);
-                                this.manipulateword(i - this.indexCorrector, 'selectedgap', false);
+                            let index = i - this.indexCorrector;
+                            if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
+                                this.manipulateword(index, 'selected', false);
+                                this.manipulateword(index, 'selectedgap', false);
                             }
                         }
                     }
@@ -167,9 +169,12 @@
                             start = dummy;
                         }
                         for (let i = start; i <= end; i++) {
-                            if (i - this.indexCorrector >= 0) {
-                                this.manipulateword(i - this.indexCorrector, 'selected', true);
-                                this.manipulateword(i - this.indexCorrector, 'selectedgap', true);
+                            let index = i - this.indexCorrector;
+                            if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
+                                this.manipulateword(index, 'selected', true);
+                                if (i !== end){
+                                    this.manipulateword(index, 'selectedgap', true);
+                                }
                             }
                         }
                     }
@@ -177,28 +182,32 @@
                 }, deep: true
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
+                /*
+                 * HOVER START BY A RESEACH ELEMENT AND STARTED BY A TEXT ELEMENT
+                 */
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
-
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
                         for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
-                            if (this.wortomarkonhoverold.textindexes[k] - this.indexCorrector >= 0
-                                && this.wortomarkonhoverold.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
-                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhover', false);
-                                this.manipulateword(this.wortomarkonhoverold.textindexes[k] - this.indexCorrector, 'entityhovergap', false);
+                            let index = this.wortomarkonhoverold.textindexes[k] - this.indexCorrector; 
+                            if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
+                                this.manipulateword(index, 'entityhover', false);
+                                this.manipulateword(index, 'entityhovergap', false);
                             }
                         }
                     }
                 }
                 if (newWordToMarkOnHover.textindexes.length > 0) {
-                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) { if (newWordToMarkOnHover.textindexes[k] - this.indexCorrector >= 0
-                            && newWordToMarkOnHover.textindexes[k] - this.indexCorrector < this.tokenstoshow[this.columnindex].length) {
-                            this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhover', true);
-                            this.manipulateword(newWordToMarkOnHover.textindexes[k] - this.indexCorrector, 'entityhovergap', true);
+                    for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
+                        let index = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
+                        if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
+                            this.manipulateword(index, 'entityhover', true);
+                            
+                            if (k+1 < newWordToMarkOnHover.textindexes.length
+                                && newWordToMarkOnHover.textindexes[k+1] - this.indexCorrector - 1 == index){
+                                    this.manipulateword(index, 'entityhovergap', true);
+                                }
                         }
                     }
-                    
-                    
-                    
                     this.wortomarkonhoverold = newWordToMarkOnHover;
                     if (newWordToMarkOnHover.columnindex === this.columnindex) {
                         let index = -1;
@@ -234,110 +243,36 @@
                                 };
                                 this.$emit('endhover', data);
                             }
-
                         }
                     }
                 }
-            }
-            ,
-            hoverdata: {
-                handler: function (newHoverData) {
-                    let text = this.$refs['text'];
-                    let i = 0;
-                    let j = 0;
-                    let correctedIndex = 0;
-                    if (newHoverData.startword !== undefined && newHoverData.startword !== null) {
-                        if (this.highlightedhovered !== null) {
-                            if (this.highlightedhovered.startword !== null) {
-                                correctedIndex = this.highlightedhovered.startword.textIndex - this.indexCorrector;
-                                if (correctedIndex >= 0) {
-                                    if (text[correctedIndex] === undefined) {
-                                        console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
-                                    }
-                                    while (text[correctedIndex].token.semanticClass
-                                    === text[correctedIndex + j].token.semanticClass) {
-                                        if (text[correctedIndex + j] === undefined) {
-                                            console.log('The word at index+j:' + (correctedIndex + j) + 'in column:' + this.columnindex + ' is undefined');
-                                        }
-                                        this.manipulateword(correctedIndex + j, 'entityhover', false);
-                                        this.manipulateword(correctedIndex + j, 'entityhovergap', false);
-                                        j++;
-                                    }
-                                    j = 0;
-                                    while (text[correctedIndex].token.semanticClass
-                                    === text[correctedIndex - j].token.semanticClass) {
-                                        if (correctedIndex - j > 0) {
-                                            if (text[correctedIndex - j] === undefined) {
-                                                console.log('The word at index-j:' + (correctedIndex - j) + 'in column:' + this.columnindex + ' is undefined');
-                                            }
-                                            this.manipulateword(correctedIndex - j, 'entityhover', false);
-                                            this.manipulateword(correctedIndex - j, 'entityhovergap', false);
-                                            j++;
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        correctedIndex = newHoverData.startword.textIndex - this.indexCorrector;
-                        if (correctedIndex >= 0) {
-                            if (text[correctedIndex] === undefined) {
-                                console.log('The word at index:' + correctedIndex + 'in column:' + this.columnindex + ' is undefined');
-                            }
-                            while (text[correctedIndex].token.semanticClass === text[correctedIndex + i].token.semanticClass) {
-                                if (text[correctedIndex + i] === undefined) {
-                                    console.log('The word at index + i:' + (correctedIndex + i) + 'in column:' + this.columnindex + ' is undefined');
-                                }
-                                this.manipulateword(correctedIndex + i, 'entityhover', true);
-                                this.manipulateword(correctedIndex + i, 'entityhovergap', true);
-                                i++;
-                            }
-                            i = 0;
-                            while (text[correctedIndex].token.semanticClass === text[correctedIndex - i].token.semanticClass) {
-                                if (correctedIndex - i > 0) {
-                                    if (text[correctedIndex - i] === undefined) {
-                                        console.log('The word at index -i:' + (correctedIndex - i) + 'in column:' + this.columnindex + ' is undefined');
-                                    }
-                                    this.manipulateword(correctedIndex - i, 'entityhover', true);
-                                    this.manipulateword(correctedIndex - i, 'entityhovergap', true);
-                                    i++;
-                                } else {
-                                    break;
-                                }
-                            }
-                            this.highlightedhovered = newHoverData;
-                        }
-                    }
-                }
-                ,
-                deep: true,
-            }
-            ,
+            },
             hoveredchain: function (newChain) {
+                /*
+                 * HOVER FOR COREF WHEN COREF IS ON
+                 */
                 if (this.classestomark.coref) {
                     if (this.oldhoveredchain !== null) {
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
                             if (this.oldhoveredchain[i].start >= this.indexCorrector
                                 && this.oldhoveredchain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
-                                    this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', false);
+                                    this.manipulateword(j - this.indexCorrector, 'corefhover', false);
+                                    this.manipulateword(j - this.indexCorrector, 'corefhovergap', false);
                                 }
                             }
                         }
                     }
                     if (newChain !== null && newChain.length !== 0) {
-                        let last = 0;
                         for (let i = 0; i < newChain.length; i++) {
                             if (newChain[i].start >= this.indexCorrector
                                 && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = newChain[i].start; j < newChain[i].end; j++) {
-                                    last++;
-                                    this.manipulateword(j - this.indexCorrector, 'partofhoveredchain', true);
-                                    //this.manipulateword(j - this.getIndexCorrector(), 'representative', newChain[i].representative);
+                                    this.manipulateword(j - this.indexCorrector, 'corefhover', true);
+                                    if(j !== newChain[i].end-1){
+                                        this.manipulateword(j - this.indexCorrector, 'corefhovergap', true);
+                                    }
                                 }
-                                this.manipulateword(last - 1 - this.indexCorrector, 'isLastTokenToHighlight', true);
-                                last = 0;
                             }
                         }
                     }
@@ -346,16 +281,24 @@
             }
             ,
             classestomark: {
+                /*
+                 * ADD COREF BRACKETS
+                 --MARK ALL WORD OF ALL CLASSES WHICH ARE TURNED ON
+                 */
                 handler: function (corefmode) {
                     if (!this.corefset) {
                         if (corefmode.coref) {
                             for (let i = 0; i < this.coref.length; i++) {
                                 if (this.coref[i].startIndex >= this.indexCorrector && this.coref[i].endIndex < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                     for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
-                                        this.manipulateword(j - this.indexCorrector, 'partofChain', true);
+                                        this.manipulateword(j - this.indexCorrector, 'iscoref', true);
+                                        if(j !== this.coref[i].endIndex-1){
+                                            this.manipulateword(j - this.indexCorrector, 'iscorefgrap', true);
+                                        } 
                                         if (this.coref[i].representative === -1) {
-                                            this.manipulateword(j - this.indexCorrector, 'representative', true);
+                                            this.manipulateword(j - this.indexCorrector, 'isrepresentative', true);
                                         }
+                                                                               
                                     }
                                     this.$refs['text'][this.coref[i].startIndex - this.indexCorrector].addBracketLeft();
                                     this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();

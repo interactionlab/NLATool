@@ -153,7 +153,7 @@
                    v-on:editresearch="editresearch($event)">
         </component>
         <div class="mdl-grid semClassFormate OTHER"
-             ref="miscresultsparent"
+             ref="otherresultsparent"
              v-on:click="togglesemanticlass('OTHER')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.OTHER"
@@ -264,16 +264,13 @@
 
                 let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                //console.log('getting kg Info: ' + JSON.stringify(this.researchedentities));
-
+                
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                    //console.log(JSON.stringify(this.researchedentities[i]))
                     let found = false;
                     for (let j = 0; j < this.researchedentities[i].startIndex.length; j++) {
                         if (this.researchedentities[i].startIndex[j] >= this.indexCorrector
                             && this.researchedentities[i].endIndex[j] < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
                             found = true;
-                            //console.log("FOUND: " + this.researchedentities[i].query);
                             break;
                         }
                     }
@@ -285,15 +282,12 @@
                         $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                         }).done((response) => {
                             let data = response.itemListElement;
-                            //console.log(JSON.stringify(data));
                             if (response.error !== undefined && response.error.code === 400) {
                                 console.log('WARNING: Google Knowledge Graph Search API not activated.');
                             } else {
-                                //console.log('Response for initial Research: ' + data.length);
                                 for (let i = 0; i < data.length; i++) {
                                     for (let j = 0; j < localresearchedentities.length; j++) {
                                         if (data[i].result['@id'] === localresearchedentities[j].kgID) {
-                                            //console.log('Mapped entity: ' + JSON.stringify(localresearchedentities[j]));
                                             data[i]["sourcequery"] = localresearchedentities[j];
 
                                             if (localresearchedentities[j].semanticClass !== 'PERSON'
@@ -399,10 +393,8 @@
                             semClass = newresearchdatatoupdate.sourcequery.semanticClass;
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
-                                    console.log('Adding new result to OTHER');
                                     this['OTHER'].push(newresearchdatatoupdate);
                                 } else {
-                                    console.log('Adding new result to ' + semClass);
                                     this[semClass].push(newresearchdatatoupdate);
                                 }
                             }
@@ -422,7 +414,6 @@
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    //console.log("entitiesview handler hoverdata: " + JSON.stringify(hoverdata));
                     
                     if (hoverdata.hoverstarted === "research") {
                         return;
@@ -526,14 +517,13 @@
                             }
                         }
                         if (bb == null){
-                            let el = this.$refs["miscresultsparent"]
+                            let el = this.$refs["otherresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();
                             bb = el.getBoundingClientRect();
                         }
                     }
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
-                    //console.log(JSON.stringify(data));
                     this.$emit('endhover', data);
                 }
                 ,

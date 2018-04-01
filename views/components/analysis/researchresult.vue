@@ -112,20 +112,18 @@
                     this.localcontentcontrol.map = false;
                     this.localcontentcontrol.information = false;
                 }
-                //console.log('Clicked on result: ' + JSON.stringify(this.localcontentcontrol));
             },
             mouseout: function () {
                 this.hover = false;
             },
             accentuate: function () {
                 this.hover = true;
-                //console.log(JSON.stringify( this.researchdata.sourcequery));
                 let semanticClassSimplified = "OTHER";
                 
-                if (semanticClassSimplified === 'PERSON'
-                    || semanticClassSimplified === 'ORGANIZATION'
-                    || semanticClassSimplified === 'LOCATION'
-                    || semanticClassSimplified === 'MISC')
+                if (this.researchdata.sourcequery.semanticClass === 'PERSON'
+                    || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
+                    || this.researchdata.sourcequery.semanticClass === 'LOCATION'
+                    || this.researchdata.sourcequery.semanticClass === 'MISC')
                     semanticClassSimplified = this.researchdata.sourcequery.semanticClass;
                     
                 let hoverdata = {
@@ -149,7 +147,7 @@
                     let win = window.open(url, '_blank');
                     win.focus();
                 } catch (err) {
-                    //console.log('Showing the source of Article failed: ' + err);
+                    console.log('ERROR: Showing the source of Article failed: ' + err);
                 }
             },
             editResearch: function () {
@@ -163,7 +161,6 @@
             contentcontrol: {
                 handler: function (newControl) {
                     this.localcontentcontrol = JSON.parse(JSON.stringify(newControl));
-                    //console.log('Overwritten localcontentcontrol : ' + JSON.stringify(this.localcontentcontrol));
                 },
                 deep: true
             }
