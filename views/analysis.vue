@@ -8,6 +8,7 @@
                 v-bind:route="'analysis'"
                 v-bind:preventtitleedit="false"
                 v-bind:autochecked="resizing"
+                v-on:newwordnumberinonecolumn="setnewwordnumberinonecolumn($event)"
                 v-on:newcolumnnumber="setnumberofcolumns($event)"
                 v-on:contenttoggle="toogleResearchContent($event)">
         </component>
@@ -195,15 +196,22 @@
                         information: true
                     }
                 },
+                wordnumberinonecolumn: 500,
 
             }
         },
         methods: {
+            setnewwordnumberinonecolumn: function (newwordnumberinonecolumn) {
+                console.log('set new Word limit for columns: ' + newwordnumberinonecolumn + ': ' + this.numberofcolumns);
+                this.wordnumberinonecolumn = parseInt(newwordnumberinonecolumn);
+                this.splitTokens();
+                this.showTokens();
+            },
             updateclassestomark: function (newClassesToMark) {
                 this.classesToMark = newClassesToMark;
                 if (this.hoverdata !== null
                     && this.hoverdata.semanticClass !== undefined
-                    && this.classesToMark[this.hoverdata.semanticClass] == false) {
+                    && this.classesToMark[this.hoverdata.semanticClass] === false) {
                     this.removehoverline([]);
                     this.wordtomarkonhoverdata = {
                         textindexes: [],
@@ -220,7 +228,7 @@
                 this.contentcontrol.MISCS[toToggle] = !this.contentcontrol.MISCS[toToggle];
                 this.contentcontrol.OTHERS[toToggle] = !this.contentcontrol.OTHERS[toToggle];
                 this.contentcontrol.PERSONS['map'] = false;
-                
+
             },
             setTokens: function (newTokens) {
                 this.tokens = newTokens;
@@ -254,7 +262,7 @@
                                 });
                             }
                         }
-                    } else{
+                    } else {
                         console.log('WARNING: could not match a corefmention to the hovered word');
                     }
                     this.hoveredChain = temphoveredChain;
@@ -270,7 +278,7 @@
                 this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
             },
             getAnalighter: function () {
-            
+
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
@@ -280,28 +288,28 @@
             selectText: function (index, modus) {
                 if (modus === 0) {
                     this.selectedtextindexes = {
-                            start: index,
-                            hover: index,
-                            end: -1,
-                            done: false
-                        };
+                        start: index,
+                        hover: index,
+                        end: -1,
+                        done: false
+                    };
                 } else if (modus === 1) {
-                     this.selectedtextindexes = {
-                            start:  this.selectedtextindexes.start,
-                            hover: index,
-                            end: -1,
-                            done: false
-                        };
+                    this.selectedtextindexes = {
+                        start: this.selectedtextindexes.start,
+                        hover: index,
+                        end: -1,
+                        done: false
+                    };
                 } else if (modus === 2) {
                     let start = this.selectedtextindexes.start;
                     let end = index;
-                    if (start > end){
+                    if (start > end) {
                         let dummy = end;
                         end = start;
                         start = dummy;
                     }
                     this.selectedtextindexes = {
-                        start:  start,
+                        start: start,
                         hover: end,
                         end: end,
                         done: true
@@ -359,15 +367,16 @@
                 if (this.numberofcolumns === 1) {
                     tokenssplittedDUMMY.push(this.tokens);
                 } else {
-
-
-                    let wordnumbertofitinonecolumn = 500;
                     let startSlice = 0;
-                    for (let i = 0; i < Math.ceil(this.tokens.length / wordnumbertofitinonecolumn); i++) {
-                        tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + wordnumbertofitinonecolumn));
-                        startSlice = startSlice + wordnumbertofitinonecolumn;
+                    console.log('Number of pages:' + Math.ceil(this.tokens.length / this.wordnumberinonecolumn));
+                    for (let i = 0; i < Math.ceil(this.tokens.length / this.wordnumberinonecolumn); i++) {
+                        tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + this.wordnumberinonecolumn));
+                        console.log('preparing tokens to show2:' + tokenssplittedDUMMY[i].length + ' at: ' + startSlice);
+                        startSlice = startSlice + this.wordnumberinonecolumn;
+
                     }
                 }
+                console.log('preparing tokens to show3:' + tokenssplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;
             },
@@ -452,7 +461,7 @@
                 }
             },
             removehoverline: function (event) {
-                console.lof("removehoverline: " + JSON.stringify(event));  
+                console.log("removehoverline: " + JSON.stringify(event));
                 this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {
@@ -460,7 +469,7 @@
             },
             getMoreText: function (docID, pagesize) {
                 var self = this;
-                let endIndex = this.tokens[this.tokens.length - 1].textIndex+1 ;
+                let endIndex = this.tokens[this.tokens.length - 1].textIndex + 1;
                 let socket = io(this.serverip + ':8080');
                 socket.emit('getMoreText', docID, endIndex, pagesize);
                 socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {

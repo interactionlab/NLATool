@@ -29,6 +29,12 @@
                 </li>
                 <li class="mdl-menu__item"
                     v-if="route === 'analysis'">
+                    <span>View Splits</span>
+                    <input type="number" id="wordnumberinonecolumnInput" min="100" max="5000" step="200"
+                           v-model="wordnumberinonecolumn"/>
+                </li>
+                <li class="mdl-menu__item"
+                    v-if="route === 'analysis'">
                     <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="toggleImg">
                         <input type="checkbox"
                                id="toggleImg"
@@ -89,6 +95,7 @@
         data: function () {
             return {
                 numberofcolumns: 1,
+                wordnumberinonecolumn: 500,
                 editingtitle: false,
                 newTitle: '',
                 img: 'img',
@@ -98,7 +105,7 @@
         },
         methods: {
             redirectTo: function (route) {
-                let url ='/' + route;
+                let url = '/' + route;
                 window.location.replace(url);
             },
             editTitle: function () {
@@ -139,6 +146,15 @@
                     this.$emit('newcolumnnumber', 99);
                 } else {
                     this.$emit('newcolumnnumber', newNumber);
+                }
+            },
+            wordnumberinonecolumn: function (newNumber) {
+                if (newNumber >= 100) {
+                    this.$emit('newwordnumberinonecolumn', newNumber);
+                }
+                else {
+                    this.wordnumberinonecolumn = 100;
+                    this.$emit('newwordnumberinonecolumn', newNumber);
                 }
             }
         },
