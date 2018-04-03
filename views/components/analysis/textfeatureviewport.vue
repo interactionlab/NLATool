@@ -5,9 +5,10 @@
              ref="column">
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
-                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;" v-on:scroll="onscrolltext">
+                 style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;"
+                 v-on:scroll="onscrolltext">
                 <div class="mdl-grid" id="textWindow" ref="textWindow"
-                    
+
                      style="height: auto !important; display: flex; max-height: 100%; padding:0;">
 
                     <component is="tex"
@@ -46,7 +47,7 @@
                             v-bind:researchmode="researchmode"
                             v-bind:selectedchain="selectedchain"
                             v-bind:hoverdata="hoverdata"
-                            v-bind:researchedentities="researchedentities"
+                            v-bind:researchedentities="researchedentities[columnindex + tokenssplittedindextoshow]"
                             v-bind:selectedtextindexes="selectedtextindexes"
                             v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                             v-bind:classestomark="classestomark"
@@ -117,6 +118,7 @@
                 }
             },
             contentcontrol: {type: Object, default: null},
+            tokenssplittedindextoshow: {type: Number, default: 0},
         },
         data: function () {
             return {
@@ -131,19 +133,23 @@
             }
         },
         watch: {
+            tokenssplittedindextoshow:function () {
+                console.log('researched Entities index: '+ (this.columnindex + this.tokenssplittedindextoshow));
+                console.log('sent Entities: '+ this.researchedentities[this.columnindex + this.tokenssplittedindextoshow].length);
+            },
             selectedtextindexes: {
                 /*
                  * SELECTION OF TEXT WITH THE MOUSE WHILE HOLDING THE MOUSE BUTTON
                  */
                 handler: function (newSelectedIndexes) {
                     //unhover old words
-                    if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1){
-                        let start =  this.selectedindexesmarked.start;
+                    if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
+                        let start = this.selectedindexesmarked.start;
                         let end = this.selectedindexesmarked.hover;
-                        if (this.selectedindexesmarked.end !== -1){
+                        if (this.selectedindexesmarked.end !== -1) {
                             let end = this.selectedindexesmarked.end;
                         }
-                        if (start > end){
+                        if (start > end) {
                             let dummy = end;
                             end = start;
                             start = dummy;
@@ -157,13 +163,13 @@
                         }
                     }
                     //hover new words
-                    if (newSelectedIndexes.hover !== -1 || newSelectedIndexes.end !== -1){
-                        let start =  newSelectedIndexes.start;
+                    if (newSelectedIndexes.hover !== -1 || newSelectedIndexes.end !== -1) {
+                        let start = newSelectedIndexes.start;
                         let end = newSelectedIndexes.hover;
-                        if (newSelectedIndexes.end !== -1){
+                        if (newSelectedIndexes.end !== -1) {
                             let end = newSelectedIndexes.end;
                         }
-                        if (start > end){
+                        if (start > end) {
                             let dummy = end;
                             end = start;
                             start = dummy;
@@ -172,7 +178,7 @@
                             let index = i - this.indexCorrector;
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                                 this.manipulateword(index, 'selected', true);
-                                if (i !== end){
+                                if (i !== end) {
                                     this.manipulateword(index, 'selectedgap', true);
                                 }
                             }
@@ -188,7 +194,7 @@
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
                         for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
-                            let index = this.wortomarkonhoverold.textindexes[k] - this.indexCorrector; 
+                            let index = this.wortomarkonhoverold.textindexes[k] - this.indexCorrector;
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                                 this.manipulateword(index, 'entityhover', false);
                                 this.manipulateword(index, 'entityhovergap', false);
@@ -201,25 +207,25 @@
                         let index = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
                         if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                             this.manipulateword(index, 'entityhover', true);
-                            
-                            if (k+1 < newWordToMarkOnHover.textindexes.length
-                                && newWordToMarkOnHover.textindexes[k+1] - this.indexCorrector - 1 == index){
-                                    this.manipulateword(index, 'entityhovergap', true);
-                                }
+
+                            if (k + 1 < newWordToMarkOnHover.textindexes.length
+                                && newWordToMarkOnHover.textindexes[k + 1] - this.indexCorrector - 1 === index) {
+                                this.manipulateword(index, 'entityhovergap', true);
+                            }
                         }
                     }
                     this.wortomarkonhoverold = newWordToMarkOnHover;
                     if (newWordToMarkOnHover.columnindex === this.columnindex) {
                         let index = -1;
-                        if (this.numberofcolumns == 1){
+                        if (this.numberofcolumns === 1) {
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                                 let textIndex = newWordToMarkOnHover.textindexes[k];
-                                if(this.isElementInViewport(this.$refs['text'][textIndex].$el)){
+                                if (this.isElementInViewport(this.$refs['text'][textIndex].$el)) {
                                     index = k;
                                     break;
                                 }
                             }
-                            if (index == -1){
+                            if (index == -1) {
                                 index = 0;
                                 this.scrolltoword(newWordToMarkOnHover.textindexes[index]);
                             }
@@ -235,7 +241,7 @@
 
                         if (index !== -1) {
                             let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
-                        
+
                             if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector] !== undefined) {
                                 let data = {
                                     hoverended: "text",
@@ -269,7 +275,7 @@
                                 && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = newChain[i].start; j < newChain[i].end; j++) {
                                     this.manipulateword(j - this.indexCorrector, 'corefhover', true);
-                                    if(j !== newChain[i].end-1){
+                                    if (j !== newChain[i].end - 1) {
                                         this.manipulateword(j - this.indexCorrector, 'corefhovergap', true);
                                     }
                                 }
@@ -278,8 +284,7 @@
                     }
                     this.oldhoveredchain = newChain;
                 }
-            }
-            ,
+            },
             classestomark: {
                 /*
                  * ADD COREF BRACKETS
@@ -292,13 +297,13 @@
                                 if (this.coref[i].startIndex >= this.indexCorrector && this.coref[i].endIndex < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
                                     for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
                                         this.manipulateword(j - this.indexCorrector, 'iscoref', true);
-                                        if(j !== this.coref[i].endIndex-1){
+                                        if (j !== this.coref[i].endIndex - 1) {
                                             this.manipulateword(j - this.indexCorrector, 'iscorefgrap', true);
-                                        } 
+                                        }
                                         if (this.coref[i].representative === -1) {
                                             this.manipulateword(j - this.indexCorrector, 'isrepresentative', true);
                                         }
-                                                                               
+
                                     }
                                     this.$refs['text'][this.coref[i].startIndex - this.indexCorrector].addBracketLeft();
                                     this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();
@@ -307,11 +312,9 @@
                             this.corefset = true;
                         }
                     }
-                }
-                ,
+                },
                 deep: true
-            }
-            ,
+            },
         },
         mounted() {
             this.calcparentviewport();
@@ -326,15 +329,15 @@
             }
         },
         methods: {
-            calcparentviewport: function(){
+            calcparentviewport: function () {
                 this.parentviewport = this.$refs['column'].getBoundingClientRect();
             },
-            onscrolltext: function(event) {
-                if (this.isRemoveLineOnScrollActive){
+            onscrolltext: function (event) {
+                if (this.isRemoveLineOnScrollActive) {
                     this.removehoverline([]);
                 }
             },
-            removehoverline: function(data) {
+            removehoverline: function (data) {
                 this.$emit('removehoverline', data);
             },
             manipulateword: function (textIndex, prop, value) {
@@ -351,14 +354,14 @@
                 );
             },
             scrolltoword: function (textIndex) {
-                if (textIndex  - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
+                if (textIndex - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
                     return;
                 }
                 this.isRemoveLineOnScrollActive = false;
                 this.$refs['text'][textIndex].$el.scrollIntoView();
                 this.isRemoveLineOnScrollActive = true;
             },
-            allowscroll: function (element) {                
+            allowscroll: function (element) {
                 let rect = element.$el.getBoundingClientRect();
                 const windowHeight = (window.innerHeight || element.$el.parentElement.parentElement.clientHeight);
                 const windowWidth = (window.innerWidth || element.$el.parentElement.parentElement.clientWidth);
@@ -393,21 +396,21 @@
             },
             endhover: function (event) {
                 //correct bb
-                if (event.hoverended == "research"){
+                if (event.hoverended == "research") {
                     let bb = event.offsetend;
                     let rect = this.$refs['column'].getBoundingClientRect();
-                    if (bb.top < rect.top){
+                    if (bb.top < rect.top) {
                         bb = JSON.parse(JSON.stringify(event.offsetend));
                         bb.top = rect.top;
                         bb.height = bb.bottom - bb.top;
                     }
-                    if (bb.bottom > rect.bottom){
+                    if (bb.bottom > rect.bottom) {
                         bb = JSON.parse(JSON.stringify(event.offsetend));
                         bb.bottom = rect.bottom;
                         bb.height = bb.bottom - bb.top;
                     }
                     event.offsetend = bb;
-                }    
+                }
                 this.$emit('endhover', event);
             },
             dynamicSort: function (property) {
@@ -422,23 +425,23 @@
                 }
             },
             starthover: function (event) {
-                if (this.analysismode === "analighter"){            
+                if (this.analysismode === "analighter") {
                     //correct bb
-                    if (event.hoverstarted == "research"){
+                    if (event.hoverstarted == "research") {
                         let bb = event.offsetend;
                         let rect = this.$refs['column'].getBoundingClientRect();
-                        if (bb.top < rect.top){
+                        if (bb.top < rect.top) {
                             bb = JSON.parse(JSON.stringify(event.offsetend));
                             bb.top = rect.top;
                             bb.height = bb.bottom - bb.top;
                         }
-                        if (bb.bottom > rect.bottom){
+                        if (bb.bottom > rect.bottom) {
                             bb = JSON.parse(JSON.stringify(event.offsetend));
                             bb.bottom = rect.bottom;
                             bb.height = bb.bottom - bb.top;
                         }
                         event.offsetend = bb;
-                    }                
+                    }
                     this.$emit('starthover', event);
                 }
             },

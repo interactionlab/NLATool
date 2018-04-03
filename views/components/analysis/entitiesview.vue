@@ -256,24 +256,19 @@
                 if (this.researchedentities.length === 0 || this.tokenstoshow === undefined || this.tokenstoshow.length === 0)
                     return;
 
-                this['PERSON'].splice(0, this['PERSON'].length)
-                this['LOCATION'].splice(0, this['LOCATION'].length)
-                this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length)
-                this['MISC'].splice(0, this['MISC'].length)
-                this['OTHER'].splice(0, this['OTHER'].length)
+                this['PERSON'].splice(0, this['PERSON'].length);
+                this['LOCATION'].splice(0, this['LOCATION'].length);
+                this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length);
+                this['MISC'].splice(0, this['MISC'].length);
+                this['OTHER'].splice(0, this['OTHER'].length);
 
                 let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                
+
+                console.log('received Entities:' + this.researchedentities.length);
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                    let found = false;
-                    for (let j = 0; j < this.researchedentities[i].startIndex.length; j++) {
-                        if (this.researchedentities[i].startIndex[j] >= this.indexCorrector
-                            && this.researchedentities[i].endIndex[j] < this.tokenstoshow[this.columnindex].length + this.indexCorrector) {
-                            found = true;
-                            break;
-                        }
-                    }
+                    let found = true;
+
                     if (found) {
                         //localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i]);
                         localresearchedentities.push(this.researchedentities[i]);

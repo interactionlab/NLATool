@@ -74,7 +74,8 @@
                                v-bind:selectedchain="selectedChain"
                                v-bind:contentcontrol="contentcontrol"
                                v-bind:hoverdata="hoverdata"
-                               v-bind:researchedentities="researchedEntities"
+                               v-bind:researchedentities="entitiessplitted"
+                               v-bind:tokenssplittedindextoshow="tokenssplittedindextoshow"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
@@ -197,6 +198,7 @@
                     }
                 },
                 wordnumberinonecolumn: 500,
+                entitiessplitted: [],
 
             }
         },
@@ -362,20 +364,37 @@
                 }*/
             },
             splitTokens: function () {
-
+                let entitiessplittedDUMMY = [];
+                let partofentitiessplittedDUMMY = [];
                 let tokenssplittedDUMMY = [];
                 if (this.numberofcolumns === 1) {
                     tokenssplittedDUMMY.push(this.tokens);
                 } else {
                     let startSlice = 0;
-                    console.log('Number of pages:' + Math.ceil(this.tokens.length / this.wordnumberinonecolumn));
+                    //console.log('Number of pages:' + Math.ceil(this.tokens.length / this.wordnumberinonecolumn));
                     for (let i = 0; i < Math.ceil(this.tokens.length / this.wordnumberinonecolumn); i++) {
                         tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + this.wordnumberinonecolumn));
-                        console.log('preparing tokens to show2:' + tokenssplittedDUMMY[i].length + ' at: ' + startSlice);
+                        //console.log('preparing tokens to show2:' + JSON.stringify(this.researchedEntities));
+                        for (let j = 0; j < this.researchedEntities.length; j++) {
+                            for (let k = 0; k < this.researchedEntities[j].textindexes.length; k++) {
+                                if (this.researchedEntities[j].textindexes[k] >= startSlice
+                                    && this.researchedEntities[j].textindexes[k] < startSlice + this.wordnumberinonecolumn) {
+                                    partofentitiessplittedDUMMY.push(this.researchedEntities[j]);
+                                    //console.log('added entities ' + i + ': ' + this.researchedEntities[j].textindexes);
+                                    break;
+                                }
+                            }
+                        }
+                        if (partofentitiessplittedDUMMY !== []) {
+                            entitiessplittedDUMMY.push(partofentitiessplittedDUMMY);
+                            console.log('Added entity list to entitiessplittedDUMMY:' + entitiessplittedDUMMY.length);
+                            partofentitiessplittedDUMMY = [];
+                        }
                         startSlice = startSlice + this.wordnumberinonecolumn;
 
                     }
                 }
+                this.entitiessplitted = entitiessplittedDUMMY;
                 console.log('preparing tokens to show3:' + tokenssplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;
