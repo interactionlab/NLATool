@@ -13,7 +13,7 @@
             </button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                    v-on:click="addresearch">
+                    v-on:click.stop="addresearch">
                 <i class="material-icons">add_circle</i>
             </button>
         </div>
@@ -51,7 +51,7 @@
             </button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                    v-on:click="addresearch">
+                    v-on:click.stop="addresearch">
                 <i class="material-icons">add_circle</i>
             </button>
         </div>
@@ -89,7 +89,7 @@
             </button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                    v-on:click="addresearch">
+                    v-on:click.stop="addresearch">
                 <i class="material-icons">add_circle</i>
             </button>
         </div>
@@ -116,7 +116,7 @@
         </component>
         <div class="mdl-grid semClassFormate MISC"
              ref="miscresultsparent"
-             v-on:click="togglesemanticlass('MISC')">
+             v-on:click.stop="togglesemanticlass('MISC')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.MISC"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
@@ -127,7 +127,7 @@
             </button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                    v-on:click="addresearch">
+                    v-on:click.stop="addresearch">
                 <i class="material-icons">add_circle</i>
             </button>
         </div>
@@ -165,7 +165,7 @@
             </button>
             <div class="mdl-layout-spacer"></div>
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces"
-                    v-on:click="addresearch">
+                    v-on:click.stop="addresearch">
                 <i class="material-icons">add_circle</i>
             </button>
         </div>
