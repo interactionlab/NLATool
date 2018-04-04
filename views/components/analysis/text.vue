@@ -12,7 +12,7 @@
             v-bind:class="toHighlight"
             v-if="classestomark.coref">{{bracketright}}</span><span
             class="preAlt"
-            v-bind:class="classToHighlightGap">{{getWordGap2}}</span></span>
+            v-bind:class="classToHighlightGap">{{getWordGap3}}</span></span>
 </template>
 <script>
     export default {
@@ -88,8 +88,7 @@
                 }
                 
                 return htmlclass;
-            }
-            ,
+            },
             getWordGap2: function () {
                 if (this.token.whitespaceInfo > 0) {
                     return new Array(this.token.whitespaceInfo + 1).join(' ');
@@ -97,10 +96,12 @@
                     return '';
                 } else if (this.token.whitespaceInfo === -10) {
                     return ' ';
-                } else {
-                    return '<br>';
+                } else if(this.token.whitespaceInfo === -1){
+                    return '\n';
                 }
-
+            },
+            getWordGap3:function(){
+                return this.token.afterspace;
             }
         },
         mounted: function(){

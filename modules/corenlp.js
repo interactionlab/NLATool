@@ -128,7 +128,8 @@ exports.analyse = function (text, callback) {
         ner: [],
         pos: [],
         offsetBegin: [],
-        offsetEnd: []
+        offsetEnd: [],
+        afters: []
     };
     //console.log('got here0' + text);
     //console.log(nlpStatus.pipeline.getService());
@@ -142,12 +143,14 @@ exports.analyse = function (text, callback) {
             results.ner.push(sentences[i].nerTags());
             results.pos.push(sentences[i].posTags());
             results.text.push(sentences[i].words());
+
             //console.log(results);
             // const tree = CoreNLP.util.Tree.fromSentence(sentences[i]);
             // console.log('the tree: '+tree.dump());
             for (let j = 0; j < sentences[i].tokens().length; j++) {
                 results.offsetBegin.push(sentences[i].tokens()[j].characterOffsetBegin());
                 results.offsetEnd.push(sentences[i].tokens()[j].characterOffsetEnd());
+                results.afters.push(sentences[i].tokens()[j].after());
             }
         }
         //console.log(notMedia + Tag + 'Begin offsets: ' + results.offsetBegin);
