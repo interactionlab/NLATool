@@ -63,6 +63,7 @@
                                v-bind:docid="docID"
                                v-bind:tokens="vueTokens"
                                v-bind:tokenstoshow="tokenstoshow"
+                               v-bind:tokenssplitted="tokenssplitted"
                                v-bind:coref="coref"
                                v-bind:selectedtextindexes="selectedtextindexes"
                                v-bind:classestomark="classesToMark"
@@ -396,7 +397,7 @@
                     }
                 }
                 this.entitiessplitted = entitiessplittedDUMMY;
-                console.log('preparing tokens to show3:' + tokenssplittedDUMMY.length);
+                console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;
             },

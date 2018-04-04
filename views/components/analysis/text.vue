@@ -143,7 +143,7 @@
                 this.$emit('hoverchain', -1);
             },
             hover: function (event) {
-                if (this.selectedtextindexes.start != -1 && this.selectedtextindexes.done == false){
+                if (this.selectedtextindexes.start !== -1 && this.selectedtextindexes.done === false){
                     this.$emit('hoverduringselection', this.token.textIndex);
                 }
             

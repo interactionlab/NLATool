@@ -112,6 +112,11 @@
                     return []
                 }
             },
+            tokenssplitted: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
             coref: {
                 type: Array, default: function () {
                     return []
@@ -144,18 +149,20 @@
                 handler: function (newSelectedIndexes) {
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
+
                         let start = this.selectedindexesmarked.start;
                         let end = this.selectedindexesmarked.hover;
                         if (this.selectedindexesmarked.end !== -1) {
                             let end = this.selectedindexesmarked.end;
                         }
+                        console.log(start);
                         if (start > end) {
                             let dummy = end;
                             end = start;
                             start = dummy;
                         }
                         for (let i = start; i <= end; i++) {
-                            let index = i - this.indexCorrector;
+                            let index = i - this.indexCorrector2;
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                                 this.manipulateword(index, 'selected', false);
                                 this.manipulateword(index, 'selectedgap', false);
@@ -175,7 +182,8 @@
                             start = dummy;
                         }
                         for (let i = start; i <= end; i++) {
-                            let index = i - this.indexCorrector;
+                            let index = i - this.indexCorrector2;
+                            //Assumes that the length of each column is the same.
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                                 this.manipulateword(index, 'selected', true);
                                 if (i !== end) {
@@ -225,7 +233,7 @@
                                     break;
                                 }
                             }
-                            if (index == -1) {
+                            if (index === -1) {
                                 index = 0;
                                 this.scrolltoword(newWordToMarkOnHover.textindexes[index]);
                             }
@@ -326,7 +334,17 @@
                     tempcorrector = tempcorrector + this.tokenstoshow[i].length;
                 }
                 return tempcorrector;
+            },
+            indexCorrector2: function () {
+                let tempcorrector = 0;
+                for (let i = 0; i < this.columnindex + this.tokenssplittedindextoshow; i++) {
+                    console.log('adding to Index Corrector2 '+ i +': ');
+                    console.log(this.tokenssplitted[i].length);
+                    tempcorrector = tempcorrector + this.tokenssplitted[i].length;
+                }
+                return tempcorrector;
             }
+
         },
         methods: {
             calcparentviewport: function () {
@@ -396,7 +414,7 @@
             },
             endhover: function (event) {
                 //correct bb
-                if (event.hoverended == "research") {
+                if (event.hoverended === "research") {
                     let bb = event.offsetend;
                     let rect = this.$refs['column'].getBoundingClientRect();
                     if (bb.top < rect.top) {
@@ -427,7 +445,7 @@
             starthover: function (event) {
                 if (this.analysismode === "analighter") {
                     //correct bb
-                    if (event.hoverstarted == "research") {
+                    if (event.hoverstarted === "research") {
                         let bb = event.offsetend;
                         let rect = this.$refs['column'].getBoundingClientRect();
                         if (bb.top < rect.top) {

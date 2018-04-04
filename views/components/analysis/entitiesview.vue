@@ -266,6 +266,8 @@
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
 
                 console.log('received Entities:' + this.researchedentities.length);
+                console.log('received Entities:' + JSON.stringify(this.researchedentities[0]));
+
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     let found = true;
 
