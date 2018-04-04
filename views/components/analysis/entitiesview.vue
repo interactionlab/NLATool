@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="mdl-grid semClassFormate PERSON"
-                ref="personresultsparent"
-                v-on:click="togglesemanticlass('PERSON')">
+             ref="personresultsparent"
+             v-on:click="togglesemanticlass('PERSON')">
             <button class="mdl-cell mdl-cell--1-col mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon deleteSpaces snapbtn">
                 <i v-if="classestomark.PERSON"
                    class="material-icons snapbtn">keyboard_arrow_down</i>
@@ -262,50 +262,56 @@
                 this['MISC'].splice(0, this['MISC'].length);
                 this['OTHER'].splice(0, this['OTHER'].length);
 
-                let localresearchedentities = [];
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
 
                 console.log('received Entities:' + this.researchedentities.length);
-                console.log('received Entities:' + JSON.stringify(this.researchedentities[0]));
-
+                console.log(JSON.stringify(this.researchedentities));
+                let researched = [];
                 for (let i = 0; i < this.researchedentities.length; i++) {
-                    let found = true;
-
-                    if (found) {
-                        //localresearchedentities[localresearchedentities.length-1].entities.push(this.researchedentities[i]);
-                        localresearchedentities.push(this.researchedentities[i]);
-                        let dataurl = 'key=' + this.googleapikey + '&ids=' + this.researchedentities[i].kgID.replace("kg:", "");
+                    if (researched.indexOf(this.researchedentities[i].kgID) > -1) {
+                    } else {
+                        researched.push(this.researchedentities[i].kgID);
+                        let dataurl = {
+                            key: this.googleapikey,
+                            ids: this.researchedentities[i].kgID.replace("kg:", "")
+                        };
 
                         $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                         }).done((response) => {
-                            let data = response.itemListElement;
+                            console.log("response: " + JSON.stringify(response));
                             if (response.error !== undefined && response.error.code === 400) {
                                 console.log('WARNING: Google Knowledge Graph Search API not activated.');
                             } else {
-                                for (let i = 0; i < data.length; i++) {
-                                    for (let j = 0; j < localresearchedentities.length; j++) {
-                                        if (data[i].result['@id'] === localresearchedentities[j].kgID) {
-                                            data[i]["sourcequery"] = localresearchedentities[j];
-
-                                            if (localresearchedentities[j].semanticClass !== 'PERSON'
-                                                && localresearchedentities[j].semanticClass !== 'LOCATION'
-                                                && localresearchedentities[j].semanticClass !== 'ORGANIZATION'
-                                                && localresearchedentities[j].semanticClass !== 'MISC') {
-                                                this['OTHER'].push(data[i]);
+                                let data = response.itemListElement[0];
+                                if (data !== undefined) {
+                                    for (let j = 0; j < this.researchedentities.length; j++) {
+                                        if (data.result['@id'] === this.researchedentities[j].kgID) {
+                                            if (this.researchedentities[j].semanticClass !== 'PERSON'
+                                                && this.researchedentities[j].semanticClass !== 'LOCATION'
+                                                && this.researchedentities[j].semanticClass !== 'ORGANIZATION'
+                                                && this.researchedentities[j].semanticClass !== 'MISC') {
+                                                let d = JSON.parse(JSON.stringify(data));
+                                                d["sourcequery"] = this.researchedentities[j];
+                                                this['OTHER'].push(d);
                                             } else {
-                                                this[localresearchedentities[j].semanticClass].push(data[i]);
+                                                let d = JSON.parse(JSON.stringify(data));
+                                                d["sourcequery"] = this.researchedentities[j];
+                                                this[this.researchedentities[j].semanticClass].push(d);
+                                                if (data.result['@id'] === "kg:/m/0k53z") {
+                                                    console.log("REST " + this.researchedentities[j].semanticClass);
+                                                }
                                             }
-
                                         }
                                     }
-
+                                } else {
+                                    console.log('WARNING: Google Knowledge Graph results is empty.');
                                 }
                             }
                         }).fail(err => {
-                            console.log('ERROR: Google initial search failed: ' + err);
+                            console.log('ERROR: Google initial search failed: ' + JSON.stringify(err));
                         });
-
                     }
+
                 }
             },
             togglesemanticlass: function (semClass) {
@@ -411,12 +417,12 @@
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
                     }
-                    
+
                     if (hoverdata.hoverstarted === "research") {
                         return;
                     }
 
-                    if (this.columnindex !== hoverdata.columnindex){
+                    if (this.columnindex !== hoverdata.columnindex) {
                         return;
                     }
 
@@ -437,7 +443,7 @@
                                 }
                             }
                         }
-                        if (bb == null){
+                        if (bb == null) {
                             let el = this.$refs["personresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();
@@ -456,7 +462,7 @@
                                 }
                             }
                         }
-                        if (bb == null){
+                        if (bb == null) {
                             let el = this.$refs["locationresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();
@@ -475,7 +481,7 @@
                                 }
                             }
                         }
-                        if (bb == null){
+                        if (bb == null) {
                             let el = this.$refs["organisazionresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();
@@ -494,7 +500,7 @@
                                 }
                             }
                         }
-                        if (bb == null){
+                        if (bb == null) {
                             let el = this.$refs["miscresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();
@@ -513,7 +519,7 @@
                                 }
                             }
                         }
-                        if (bb == null){
+                        if (bb == null) {
                             let el = this.$refs["otherresultsparent"]
                             if (!this.isElementInViewport(el))
                                 el.scrollIntoView();

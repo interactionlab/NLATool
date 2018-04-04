@@ -368,6 +368,7 @@
                 let entitiessplittedDUMMY = [];
                 let partofentitiessplittedDUMMY = [];
                 let tokenssplittedDUMMY = [];
+
                 if (this.numberofcolumns === 1) {
                     entitiessplittedDUMMY.push(this.researchedEntities);
                     tokenssplittedDUMMY.push(this.tokens);
@@ -397,6 +398,7 @@
                     }
                 }
                 this.entitiessplitted = entitiessplittedDUMMY;
+                //console.log(JSON.stringify(this.entitiessplitted));
                 console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;

@@ -131,7 +131,7 @@ function getLocationInformation(docID, textIndexes, name, upload) {
             format: "jsonp"
         };
         url = url + encodeQueryData(params);
-        console.log(url);
+       // console.log(url);
         request({
             url: url,
             json: true
@@ -140,7 +140,7 @@ function getLocationInformation(docID, textIndexes, name, upload) {
                 if (body.results !== undefined) {
                     if (body.results[0] !== undefined) {
                         if (body.results[0].geometry !== undefined) {
-                            console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
+                           // console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
                             upload['lat'] = body.results[0].geometry.location.lat;
                             upload['lng'] = body.results[0].geometry.location.lng;
                             upload['northEastLat'] = body.results[0].geometry.viewport.northeast.lat;
@@ -199,7 +199,7 @@ function processSegement(docID, list) {
         }
         query += list[i].content;
     }
-    console.log(Tag + "Google Query " + textIndexes + ": " + query);
+   // console.log(Tag + "Google Query " + textIndexes + ": " + query);
     researchUpload['docID'] = docID;
     researchUpload['startIndex'] = textIndexes[0];
     researchUpload['endIndex'] = textIndexes[textIndexes.length - 1];
@@ -228,7 +228,7 @@ function processSegement(docID, list) {
                     let graphID = body.itemListElement[0].result["@id"];
                     researchUpload['kgID'] = graphID;
                     name = body.itemListElement[0].result["name"];
-                    console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
+                   // console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
                     if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
                         getLocationInformation(docID, textIndexes, name, researchUpload);
                     } else {
@@ -291,7 +291,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
         let lastTimeCheck = new Date();
         console.log(Tag + 'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
 
-        console.log(JSON.stringify(parsedResult));
+       // console.log(JSON.stringify(parsedResult));
         transactionInformation.words = parsedResult.text;
         transactionInformation.corefInfo = parsedResult.coref;
         //Insert Statement to initiate a Document
@@ -308,7 +308,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
 
         let whitespace = 0;
         let counter = 0;
-        console.log(JSON.stringify(transactionInformation));
+        //console.log(JSON.stringify(transactionInformation));
         for (let i = 0; i < transactionInformation.words.length; i++) {
             for (let j = 0; j < transactionInformation.words[i].length; j++) {
                 
@@ -332,7 +332,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
                 } else {
                     transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
                 }
-                console.log(JSON.stringify(transactionInformation.words[i]))
+               // console.log(JSON.stringify(transactionInformation.words[i]))
                 parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
                 parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
                 whitespace = parsedResult.offsetBegin[counter + 1] - parsedResult.offsetEnd[counter];
@@ -454,7 +454,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
         //console.log(JSON.stringify(wordInDB));
         let last = 0;
         for (let i = 0; i < wordInDB.length; i++) {
-            //console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
+            console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
             if (wordInDB[i].textIndex - wordInDB[last].textIndex !== i - last) {
                 processSegement(upload.docid, wordInDB.slice(last, i));
                 last = i;

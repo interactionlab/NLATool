@@ -224,6 +224,12 @@
       "name": "whitespaceInfo",
       "type": "INT",
       "length": "11"
+    },
+    "column7": {
+      "name": "afterspace",
+      "type": "VARCHAR",
+      "length": "200",
+      "null":"NULL"
     }
   },
   "table5": {
