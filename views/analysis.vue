@@ -368,6 +368,7 @@
                 let partofentitiessplittedDUMMY = [];
                 let tokenssplittedDUMMY = [];
                 if (this.numberofcolumns === 1) {
+                    entitiessplittedDUMMY.push(this.researchedEntities);
                     tokenssplittedDUMMY.push(this.tokens);
                 } else {
                     let startSlice = 0;
