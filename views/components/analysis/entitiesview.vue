@@ -265,7 +265,7 @@
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
 
                 console.log('received Entities:' + this.researchedentities.length);
-                console.log(JSON.stringify(this.researchedentities));
+                //console.log(JSON.stringify(this.researchedentities));
                 let researched = [];
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     if (researched.indexOf(this.researchedentities[i].kgID) > -1) {
@@ -278,7 +278,7 @@
 
                         $.getJSON(service_url + '?callback=?', dataurl, (response) => {
                         }).done((response) => {
-                            console.log("response: " + JSON.stringify(response));
+                            //console.log("response: " + JSON.stringify(response));
                             if (response.error !== undefined && response.error.code === 400) {
                                 console.log('WARNING: Google Knowledge Graph Search API not activated.');
                             } else {

@@ -201,7 +201,7 @@
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
                         for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
-                            let index = this.wortomarkonhoverold.textindexes[k] - this.indexCorrector;
+                            let index = this.wortomarkonhoverold.textindexes[k] - this.indexCorrector2;
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                                 this.manipulateword(index, 'entityhover', false);
                                 this.manipulateword(index, 'entityhovergap', false);
@@ -211,12 +211,12 @@
                 }
                 if (newWordToMarkOnHover.textindexes.length > 0) {
                     for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
-                        let index = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
+                        let index = newWordToMarkOnHover.textindexes[k] - this.indexCorrector2;
                         if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
                             this.manipulateword(index, 'entityhover', true);
 
                             if (k + 1 < newWordToMarkOnHover.textindexes.length
-                                && newWordToMarkOnHover.textindexes[k + 1] - this.indexCorrector - 1 === index) {
+                                && newWordToMarkOnHover.textindexes[k + 1] - this.indexCorrector2 - 1 === index) {
                                 this.manipulateword(index, 'entityhovergap', true);
                             }
                         }
@@ -238,7 +238,7 @@
                             }
                         } else {
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
-                                let dis = newWordToMarkOnHover.textindexes[k] - this.indexCorrector;
+                                let dis = newWordToMarkOnHover.textindexes[k] - this.indexCorrector2;
                                 if (dis >= 0) {
                                     index = k;
                                     break;
@@ -247,9 +247,9 @@
                         }
 
                         if (index !== -1) {
-                            let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector].$el.getBoundingClientRect()
+                            let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2].$el.getBoundingClientRect()
 
-                            if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector] !== undefined) {
+                            if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2] !== undefined) {
                                 let data = {
                                     hoverended: "text",
                                     offsetstart: bb
@@ -267,23 +267,23 @@
                 if (this.classestomark.coref) {
                     if (this.oldhoveredchain !== null) {
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
-                            if (this.oldhoveredchain[i].start >= this.indexCorrector
-                                && this.oldhoveredchain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                            if (this.oldhoveredchain[i].start >= this.indexCorrector2
+                                && this.oldhoveredchain[i].end < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
-                                    this.manipulateword(j - this.indexCorrector, 'corefhover', false);
-                                    this.manipulateword(j - this.indexCorrector, 'corefhovergap', false);
+                                    this.manipulateword(j - this.indexCorrector2, 'corefhover', false);
+                                    this.manipulateword(j - this.indexCorrector2, 'corefhovergap', false);
                                 }
                             }
                         }
                     }
                     if (newChain !== null && newChain.length !== 0) {
                         for (let i = 0; i < newChain.length; i++) {
-                            if (newChain[i].start >= this.indexCorrector
-                                && newChain[i].end < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                            if (newChain[i].start >= this.indexCorrector2
+                                && newChain[i].end < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = newChain[i].start; j < newChain[i].end; j++) {
-                                    this.manipulateword(j - this.indexCorrector, 'corefhover', true);
+                                    this.manipulateword(j - this.indexCorrector2, 'corefhover', true);
                                     if (j !== newChain[i].end - 1) {
-                                        this.manipulateword(j - this.indexCorrector, 'corefhovergap', true);
+                                        this.manipulateword(j - this.indexCorrector2, 'corefhovergap', true);
                                     }
                                 }
                             }
@@ -301,19 +301,19 @@
                     if (!this.corefset) {
                         if (corefmode.coref) {
                             for (let i = 0; i < this.coref.length; i++) {
-                                if (this.coref[i].startIndex >= this.indexCorrector && this.coref[i].endIndex < this.indexCorrector + this.tokenstoshow[this.columnindex].length) {
+                                if (this.coref[i].startIndex >= this.indexCorrector2 && this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
                                     for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
-                                        this.manipulateword(j - this.indexCorrector, 'iscoref', true);
+                                        this.manipulateword(j - this.indexCorrector2, 'iscoref', true);
                                         if (j !== this.coref[i].endIndex - 1) {
-                                            this.manipulateword(j - this.indexCorrector, 'iscorefgrap', true);
+                                            this.manipulateword(j - this.indexCorrector2, 'iscorefgrap', true);
                                         }
                                         if (this.coref[i].representative === -1) {
-                                            this.manipulateword(j - this.indexCorrector, 'isrepresentative', true);
+                                            this.manipulateword(j - this.indexCorrector2, 'isrepresentative', true);
                                         }
 
                                     }
-                                    this.$refs['text'][this.coref[i].startIndex - this.indexCorrector].addBracketLeft();
-                                    this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector].addBracketRight();
+                                    this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
+                                    this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
                                 }
                             }
                             this.corefset = true;

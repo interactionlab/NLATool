@@ -484,7 +484,7 @@
                 }
             },
             removehoverline: function (event) {
-                console.log("removehoverline: " + JSON.stringify(event));
+                //console.log("removehoverline: " + JSON.stringify(event));
                 this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {
