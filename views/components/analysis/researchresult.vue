@@ -236,6 +236,8 @@
                             title += " ";
                         }
                     }
+                } else{
+                    console.log('Research Result doesnt have a sourcequery!');
                 }
                 title = title + ' -> ' + this.researchdata.result.name;
                 return title;
