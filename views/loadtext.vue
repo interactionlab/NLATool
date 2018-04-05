@@ -97,7 +97,7 @@
                 console.log(this.tag + 'Check if there is text to upload.');
                 if (/\S/.test(this.inputtext)) {
                     console.log(this.tag + 'Requesting Upload');
-                    this.socket = io(this.serverip + ':8090');
+                    this.socket = io(this.serverip + ':8091');
                     this.socket.emit('initupload', this.inputtitle);
                     this.socket.on('resinitupload', function (docid) {
                         console.log(this.tag + 'Uploadrequest was accepted with the docID:' + docid);

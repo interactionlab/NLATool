@@ -291,7 +291,7 @@
                                                 && this.researchedentities[j].semanticClass !== 'ORGANIZATION'
                                                 && this.researchedentities[j].semanticClass !== 'MISC') {
                                                 let d = JSON.parse(JSON.stringify(data));
-                                                d["sourcequery"] = this.researchedentities[j];
+                                                d["sourcequery"] = JSON.parse(JSON.stringify(this.researchedentities[j]));
                                                 this['OTHER'].push(d);
                                             } else {
                                                 let d = JSON.parse(JSON.stringify(data));
@@ -403,8 +403,7 @@
                             }
                         }
                     }
-                }
-                ,
+                },
                 deep: true,
                 immediate:
                     true
@@ -532,8 +531,7 @@
                 ,
                 deep: true
             },
-        }
-        ,
+        },
         components: {
             researchresult,
         }

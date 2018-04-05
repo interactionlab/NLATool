@@ -101,6 +101,7 @@
                 }
             },
             getWordGap3:function(){
+                //console.log('Whitespace for ' + this.token.content + ' at ' + this.token.textIndex +':'+ this.token.afterspace +':');
                 return this.token.afterspace;
             }
         },

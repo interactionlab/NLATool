@@ -10,7 +10,7 @@
                         <div class="mdl-grid deleteSpaces"
                              v-if="typeof researchdata.result !== 'undefined' ">
                             <div class="mdl-grid mdl-cell mdl-cell--12-col deleteSpaces"
-                                    style="width: 100%;">
+                                 style="width: 100%;">
                                 <div class="mdl-cell mdl-cell--10-col deleteSpaces"
                                      v-if="typeof researchdata.result !== 'undefined'">
                                     {{title}}
@@ -32,7 +32,7 @@
                                 </button>
                             </div>
                             <div class="mdl-cell mdl-cell--12-col deleteSpaces"
-                                    style="width: 100%;">
+                                 style="width: 100%;">
                                 <img v-if="(localcontentcontrol.img) & (typeof researchdata.result.image !== 'undefined')"
                                      v-bind:src="researchdata.result.image.contentUrl"
                                      style="float: left; max-width: 30%; margin-right: 0.5em; max-height: 12em;     width: auto !important;"/>
@@ -119,13 +119,13 @@
             accentuate: function () {
                 this.hover = true;
                 let semanticClassSimplified = "OTHER";
-                
+
                 if (this.researchdata.sourcequery.semanticClass === 'PERSON'
                     || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
                     || this.researchdata.sourcequery.semanticClass === 'LOCATION'
                     || this.researchdata.sourcequery.semanticClass === 'MISC')
                     semanticClassSimplified = this.researchdata.sourcequery.semanticClass;
-                    
+
                 let hoverdata = {
                     hoverstarted: "research",
                     offsetstart: null,
@@ -167,7 +167,7 @@
         },
         computed: {
             ifShowMap: function () {
-                if (this.researchdata.sourcequery.semanticClass === 'LOCATION'          
+                if (this.researchdata.sourcequery.semanticClass === 'LOCATION'
                     || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
                     || this.researchdata.sourcequery.semanticClass === 'MISC') {
                     return this.localcontentcontrol.map;
@@ -183,10 +183,10 @@
                     && this.wordtomarkonhoverdata.textindexes.length > 0
                     && this.researchdata.sourcequery.textindexes.indexOf(this.wordtomarkonhoverdata.textindexes[0]) > -1) {
 
-                    if (this.researchdata.sourcequery.semanticClass === "PERSON" || 
-                        this.researchdata.sourcequery.semanticClass === "LOCATION" || 
-                        this.researchdata.sourcequery.semanticClass === "MISC" || 
-                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION"){
+                    if (this.researchdata.sourcequery.semanticClass === "PERSON" ||
+                        this.researchdata.sourcequery.semanticClass === "LOCATION" ||
+                        this.researchdata.sourcequery.semanticClass === "MISC" ||
+                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION") {
                         htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = true;
                         htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = false;
                     } else {
@@ -194,10 +194,10 @@
                         htmlclass["OTHER_BORDERED"] = false;
                     }
                 } else {
-                    if (this.researchdata.sourcequery.semanticClass === "PERSON" || 
-                        this.researchdata.sourcequery.semanticClass === "LOCATION" || 
-                        this.researchdata.sourcequery.semanticClass === "MISC" || 
-                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION"){
+                    if (this.researchdata.sourcequery.semanticClass === "PERSON" ||
+                        this.researchdata.sourcequery.semanticClass === "LOCATION" ||
+                        this.researchdata.sourcequery.semanticClass === "MISC" ||
+                        this.researchdata.sourcequery.semanticClass === "ORGANIZATION") {
                         htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED_strong"] = false;
                         htmlclass[this.researchdata.sourcequery.semanticClass + "_BORDERED"] = true;
                     } else {
@@ -211,24 +211,23 @@
             title: function () {
                 let title = '';
                 if (this.researchdata.sourcequery !== undefined) {
-                    if (this.researchdata.sourcequery.query !== undefined) {    
-                        if (this.researchdata.sourcequery.query.length === 1 && 
-                        this.researchdata.sourcequery.query[0].content  === undefined){
+                    if (this.researchdata.sourcequery.query !== undefined) {
+                        if (this.researchdata.sourcequery.query.length !== 0) {
                             title = this.researchdata.sourcequery.query[0];
                             if (typeof this.researchdata.sourcequery.freq !== 'undefined') {
                                 title += ' (' + this.researchdata.sourcequery.freq + ') ';
                             }
-                        }                        
+                        }
                     } else {
                         for (let i = 0; i < this.researchdata.sourcequery.source.length && i < 2; i++) {
                             title += this.researchdata.sourcequery.source[i].content;
                             title += " ";
                         }
-                        if (this.researchdata.sourcequery.source.length > 4){
+                        if (this.researchdata.sourcequery.source.length > 4) {
                             title += "[...] ";
                         }
                         let start = this.researchdata.sourcequery.source.length - 1;
-                        if (start < 2){
+                        if (start < 2) {
                             start = 2;
                         }
                         for (let i = start; i < this.researchdata.sourcequery.source.length; i++) {
@@ -236,6 +235,8 @@
                             title += " ";
                         }
                     }
+                } else {
+                    console.log('Source Query of result ' + this.researchdata.result.name + 'is undefined.');
                 }
                 title = title + ' -> ' + this.researchdata.result.name;
                 return title;
