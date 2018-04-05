@@ -390,18 +390,19 @@
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
                                     let add = true;
-                                    for (let i = 0; i < this.OTHER.length; i++) {
-                                        for (let k = 0; k < this.OTHER[i].sourcequery.entityID.length; k++) {
-                                            if (newresearchdatatoupdate.sourcequery.entityID === this.OTHER[i].sourcequery.entityID[k]) {
-                                                this.OTHER[i].result = newresearchdatatoupdate.result;
-                                                this.OTHER[i].resultScore = newresearchdatatoupdate.resultScore;
+
+                                    for (let i = 0; i < this['OTHER'].length; i++) {
+                                        for (let k = 0; k < this['OTHER'][i].sourcequery.entityID.length; k++) {
+                                            if (newresearchdatatoupdate.sourcequery.entityID === this['OTHER'][i].sourcequery.entityID[k]) {
+                                                this['OTHER'][i].result = newresearchdatatoupdate.result;
+                                                this['OTHER'][i].resultScore = newresearchdatatoupdate.resultScore;
                                                 add = false;
                                                 break;
                                             }
                                         }
                                     }
                                     if(add){
-                                        this.OTHER.push(newresearchdatatoupdate);
+                                        this['OTHER'].push(newresearchdatatoupdate);
                                     }
                                 } else {
                                     let add = true;

@@ -1,24 +1,24 @@
 <template>
     <div>
         <div v-if="changing"
-                class="mdl-grid separate"
-                style="padding:0px;width: 100%;">
+             class="mdl-grid separate"
+             style="padding:0px;width: 100%;">
             <div class="mdl-grid semClassFormate"
-                style="width: 100%;"
-                v-bind:class="currentClass">
+                 style="width: 100%;"
+                 v-bind:class="currentClass">
                 <p class="mdl-cell mdl-cell--10-col deleteSpaces"
-                        style="padding:0.4em;">
+                   style="padding:0.4em;">
                     <b class="mdc-button">{{contentToChange}}</b>
                 </p>
                 <div class="mdl-layout-spacer"></div>
                 <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                    v-on:click="switchtoentities">
-                <i class="material-icons">clear</i>
+                        v-on:click="switchtoentities">
+                    <i class="material-icons">clear</i>
                 </button>
-            </div> 
+            </div>
 
             <div v-if="semanticClass !== 'ERROR'"
-                style="padding:0.4em;width:100%;">
+                 style="padding:0.4em;width:100%;">
                 <button v-bind:class="{PERSON_strong: currentClass == 'PERSON'}"
                         v-on:click="changeClass('PERSON')"
                         class="mdl-button mdl-js-button PERSON">
@@ -76,37 +76,39 @@
                 </button>
             </div>
             <p v-else
-                style="padding:0.4em;">
+               style="padding:0.4em;">
                 The selection contains different semantic classes, discard the classes first.
             <p>
         </div>
         <div v-else class="mdl-grid" style="padding:0px;width: 100%;">
-            
-            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class. <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
-                    style="float: right;"
-                    v-on:click="switchtoentities">
-                <i class="material-icons">clear</i>
-            </button></p>
+
+            <p class="mdl-cell mdl-cell--12-col"> Select a word to correct its semantic class.
+                <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+                        style="float: right;"
+                        v-on:click="switchtoentities">
+                    <i class="material-icons">clear</i>
+                </button>
+            </p>
             <p class="mdl-cell mdl-cell--12-col"><span v-bind:class="{POS:true}">Suggested</span> words are the most
                 likely ones not to be classified. </p>
         </div>
         <component v-if="semanticClass !== 'O' && semanticClass !== 'ERROR'"
-                is="research"
-                class="mdl-cell mdl-cell--12-col"
-                v-bind:serverip="serverip"
-                v-bind:googleapikey="googleapikey"
-                v-bind:docid="docid"
-                v-bind:researchdatatoedit="researchdatatoedit"
-                v-bind:tokens="tokens"
-                v-bind:contentcontrol="contentcontrol"
-                v-bind:selectedtextindexes="selectedtextindexes"
-                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                v-bind:selectedchain="selectedchain"
-                v-bind:semanticclass="semanticClass"
-                v-on:saveresult="saveresult($event)">
+                   is="research"
+                   class="mdl-cell mdl-cell--12-col"
+                   v-bind:serverip="serverip"
+                   v-bind:googleapikey="googleapikey"
+                   v-bind:docid="docid"
+                   v-bind:researchdatatoedit="researchdatatoedit"
+                   v-bind:tokens="tokens"
+                   v-bind:contentcontrol="contentcontrol"
+                   v-bind:selectedtextindexes="selectedtextindexes"
+                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-bind:selectedchain="selectedchain"
+                   v-bind:semanticclass="semanticClass"
+                   v-on:saveresult="saveresult($event)">
         </component>
         <p v-else-if="semanticClass !== 'ERROR'"
-            style="padding:0.4em;">
+           style="padding:0.4em;">
             Select a class first in order to add futher information to the selected word.
         <p>
 
@@ -166,10 +168,10 @@
             currentClass: function () {
                 if (this.changing) {
                     if (this.selectedtokens !== null
-                        && this.selectedtokens[0] !== undefined ) {
+                        && this.selectedtokens[0] !== undefined) {
                         let semClass = this.selectedtokens[0].semanticClass;
-                        for (let i = 1; i < this.selectedtokens.length; i++){
-                            if (this.selectedtokens[i].semanticClass !== semClass){
+                        for (let i = 1; i < this.selectedtokens.length; i++) {
+                            if (this.selectedtokens[i].semanticClass !== semClass) {
                                 semClass = "ERROR";
                             }
                         }
@@ -191,11 +193,22 @@
                 this.$emit('saveresult', researchdata);
             },
             changeClass: function (newClass) {
-                this.selectedtokens[0].semanticClass = newClass;
-                this.semanticClass = newClass;
-                let socket = io(this.serverip + ':8080');
-                socket.emit('changeClass', this.selectedtokens[0], this.docid);
-                return true;
+                if (this.researchdatatoedit !== null && this.researchdatatoedit !== undefined) {
+                    let socket = io(this.serverip + ':8080');
+                    for (let k = 0; k < this.researchdatatoedit.sourcequery.textindexes.length; k++) {
+                        this.tokens[this.researchdatatoedit.sourcequery.textindexes[k]].semanticClass = newClass;
+                        socket.emit('changeClass', this.tokens[this.researchdatatoedit.sourcequery.textindexes[k]], this.docid);
+                        this.researchdatatoedit.sourcequery.semanticClass = newClass;
+                    }
+                    this.semanticClass = newClass;
+                    return true;
+                } else {
+                    this.selectedtokens[0].semanticClass = newClass;
+                    this.semanticClass = newClass;
+                    let socket = io(this.serverip + ':8080');
+                    socket.emit('changeClass', this.selectedtokens[0], this.docid);
+                    return true;
+                }
             },
             toggleSuggestions: function () {
                 this.suggestions = !this.suggestions;
