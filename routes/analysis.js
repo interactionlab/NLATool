@@ -105,6 +105,10 @@ io.on('connection', function (socket) {
         //console.log('saved Result: ');
         wait.launchFiber(saveResult, docID, indexes, researchresultID,);
     });
+    socket.on('addresult', function (docID, entity) {
+        //console.log('saved Result: ');
+        wait.launchFiber(addResult, docID, entity);
+    });
     socket.on('changeClass', function (tokenToEdit, docID) {
         wait.launchFiber(changeClass, tokenToEdit, docID);
     });
@@ -116,25 +120,25 @@ io.on('connection', function (socket) {
 
 function getMoreTextResponse(socket, input) {
     let firstTimeCheck = new Date();
-    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize+1);
+    let tokens = selectWithInnerJoin(input.docID, input.endIndex, input.pagesize + 1);
     let lastTimeCheck = new Date();
     console.log(Tag + ' Sending  part of requested Document: ' + input.docID + ' at ' + input.endIndex + ' took: '
         + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
-     
-    for (let i = 0; i < tokens.length - 1; i++){
-        if(tokens[i].semanticClass !== "O" &&
-            tokens[i].semanticClass === tokens[i+1].semanticClass){
+
+    for (let i = 0; i < tokens.length - 1; i++) {
+        if (tokens[i].semanticClass !== "O" &&
+            tokens[i].semanticClass === tokens[i + 1].semanticClass) {
             tokens[i]['needgap'] = true;
         } else {
             tokens[i]['needgap'] = false;
         }
     }
-    if (tokens.length < input.pagesize){
+    if (tokens.length < input.pagesize) {
         socket.emit('sendMoreText', tokens);
     } else {
-        socket.emit('sendMoreText', tokens.slice(0,-1));
+        socket.emit('sendMoreText', tokens.slice(0, -1));
     }
-    
+
 }
 
 /**
@@ -149,13 +153,38 @@ function updateTitle(docID, newTitle) {
     wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents', ['name'], [newTitle], ['docID'], [docID], ['=']));
 }
 
+function addResult(docID, entity) {
+    console.log(Tag + 'docID: ' + docID + " add entity: " + entity.querys[0]);
+    let firstTimeCheck = new Date();
+    docID = stringifyForDB(docID);
+    let insertResult = null;
+    for (let i = 0; i < entity.textindexes.length; i++) {
+        insertResult = wait.for(dbStub.makeSQLRequest,
+            dbAction.createInsertCommand('researchedentities',
+                ['docID', 'query', 'semanticClass', 'startIndex', 'endIndex', 'kgID'],
+                [
+                    docID,
+                    stringifyForDB(entity.query[i]),
+                    stringifyForDB(entity.semanticClass),
+                    stringifyForDB(entity.startIndex),
+                    stringifyForDB(entity.endIndex),
+                    stringifyForDB(entity.kgID)
+                ]));
+        console.log(Tag + 'added entity for: ' + docID + ' at ' + entity.startIndex + ' to ' + entity.endIndex + ' with a research Result.');
+    }
+    insertResult = JSON.parse(insertResult);
+    console.log(Tag + "insertedResult: " + JSON.stringify(insertResult));
+    let lastTimeCheck = new Date();
+    console.log('Time for transcation took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
+}
+
 function saveResult(docID, indexes, researchresultID) {
     console.log(Tag + 'docID: ' + docID + " add reseach " + researchresultID + " index: " + JSON.stringify(indexes));
     let firstTimeCheck = new Date();
     docID = stringifyForDB(docID);
     researchresultID = stringifyForDB(researchresultID);
     let updateResult = null;
-    for (let i = 0; i < indexes.start.length; i++){
+    for (let i = 0; i < indexes.start.length; i++) {
         updateResult = wait.for(dbStub.makeSQLRequest,
             dbAction.createUpdateCommand('researchedentities',
                 ['kgID'],
@@ -167,16 +196,16 @@ function saveResult(docID, indexes, researchresultID) {
     }
     updateResult = JSON.parse(updateResult);
     console.log(Tag + "updateResult: " + JSON.stringify(updateResult));
-    if (indexes.start.length === 1 && updateResult !== null && updateResult.affectedRows === 0){
-        
+    if (indexes.start.length === 1 && updateResult !== null && updateResult.affectedRows === 0) {
+
         let addedResult = JSON.parse(wait.for(dbStub.makeSQLRequest,
-        dbAction.createInsertCommand('researchedentities',
-            ['docID', 'kgID', 'query', 'startIndex', 'endIndex', 'semanticClass'],
-            [docID, researchresultID, stringifyForDB(indexes.query), stringifyForDB(indexes.start[0]), stringifyForDB(indexes.end[0]), stringifyForDB(indexes.semanticClass)],
-            null, null)));
+            dbAction.createInsertCommand('researchedentities',
+                ['docID', 'kgID', 'query', 'startIndex', 'endIndex', 'semanticClass'],
+                [docID, researchresultID, stringifyForDB(indexes.query), stringifyForDB(indexes.start[0]), stringifyForDB(indexes.end[0]), stringifyForDB(indexes.semanticClass)],
+                null, null)));
         console.log(Tag + "addedResult: " + JSON.stringify(addedResult));
     }
-    
+
     let lastTimeCheck = new Date();
     console.log('Time for transcation took: ' + (lastTimeCheck.getTime() - firstTimeCheck.getTime()) + ' ms');
 }
@@ -314,7 +343,7 @@ function selectWithInnerJoin(docID, start, amount) {
             }, {
                 tableIndex: 0,
                 name: 'afterspace',
-            },{
+            }, {
                 tableIndex: 1,
                 name: 'wordID',
             }, {
@@ -345,17 +374,17 @@ function selectWithInnerJoin(docID, start, amount) {
     //dbAction.createInnerJoinSelectCommand(queryObject);
     //console.log(Tag + 'Response for Inner Join: ' + wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
     tokens = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createInnerJoinSelectCommand(queryObject, start, amount)));
-    
-    for (let i = 0; i < tokens.length - 1; i++){
-        if(tokens[i].semanticClass !== "O" &&
-            tokens[i].semanticClass === tokens[i+1].semanticClass){
+
+    for (let i = 0; i < tokens.length - 1; i++) {
+        if (tokens[i].semanticClass !== "O" &&
+            tokens[i].semanticClass === tokens[i + 1].semanticClass) {
             tokens[i]['needgap'] = true;
         } else {
             tokens[i]['needgap'] = false;
         }
     }
-    
-    return tokens.slice(0,-1);
+
+    return tokens.slice(0, -1);
 }
 
 function getResearchedEntities2(docID) {
@@ -418,12 +447,12 @@ function mapEntitiesToID(researchedEntities) {
     }
 
     //console.log(JSON.stringify(mappedEntities));
-    let arr = Object.keys(mappedEntities).map(function(key){
+    let arr = Object.keys(mappedEntities).map(function (key) {
         return mappedEntities[key];
     });
 
     for (let i = 0; i < arr.length; i++) {
-        for (let k = 0;k < arr[i].startIndex.length; k++) {
+        for (let k = 0; k < arr[i].startIndex.length; k++) {
             for (let j = arr[i].startIndex[k]; j <= arr[i].endIndex[k]; j++) {
                 arr[i].textindexes.push(j);
             }

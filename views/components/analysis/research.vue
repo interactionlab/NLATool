@@ -2,22 +2,22 @@
     <div style="padding:0px;margin:0px;width: 100%;">
         <div style="padding:0.4em;width:100%;">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label"
-                    style="width:100%;">
-                <input id="advancedsearch" 
-                        type="text" 
-                        name="advancedsearch"
-                        class="mdl-textfield__input"
-                        v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
-                        v-model="selectedtext" />
+                 style="width:100%;">
+                <input id="advancedsearch"
+                       type="text"
+                       name="advancedsearch"
+                       class="mdl-textfield__input"
+                       v-on:keydown.enter="searchGoogle(selectedtext,researchlimit)"
+                       v-model="selectedtext"/>
                 <label class="mdl-textfield__label"
-                     for="advancedsearch">For an advanced search ...</label>
+                       for="advancedsearch">For an advanced search ...</label>
             </div>
         </div>
-             
+
         <!--Results will be displayed here. -->
         <div class="mdl-cell mdl-cell--12-col"
-                style="padding:0px;margin:0px;width: 100%"
-                id="resultfield">
+             style="padding:0px;margin:0px;width: 100%"
+             id="resultfield">
             <component is="researchresult"
                        ref="personresults"
                        v-for="(researchresult,index) in researchresults[0]"
@@ -49,7 +49,7 @@
         mixins: [getselectedtext, filtertoken],
         props: {
             serverip: {type: String, default: ""},
-            
+
             googleapikey: {type: String, default: ""},
             selectedtextindexes: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
@@ -128,30 +128,44 @@
                 };
                 $.getJSON(service_url, params, (response) => {
                 }).done((response) => {
-                        if (response.error !== undefined){
-                            console.error("WARNING: Google knowledge graph result error"); 
+                        if (response.error !== undefined) {
+                            console.error("WARNING: Google knowledge graph result error");
                         } else {
-                            //this.rerankWithKeywords(response);
-                            //this.getMapCoordinates();
                             let data = response.itemListElement;
+                            //edit entity
                             if (this.researchdatatoedit !== null) {
                                 if (this.researchdatatoedit.sourcequery !== undefined && this.researchdatatoedit.sourcequery !== null) {
-                                    for (let i = 0; i < data.length; i++) {
+                                    for (var i = 0; i < data.length; i++) {
                                         data[i]["sourcequery"] = this.researchdatatoedit.sourcequery;
+
                                     }
                                 }
-                            } else {
+                            }
+                            //add entity
+                            else {
                                 let textindexes = [];
                                 for (let i = 0; i < this.researchedtokens; i++) {
                                     textindexes.push(this.researchedtokens[i].textIndex);
                                 }
                                 let sourcequery = {
                                     freq: 1,
-                                    querys: [this.selectedtext],
-                                    source: this.researchedtokens,
-                                    textindexes: textindexes
+                                    query: [this.selectedtext],
+                                    textindexes: textindexes,
+                                    docID: this.docid,
                                 };
+                                let semClass = this.researchedtokens[0].semanticClass;
+                                for (let k = 1; k < this.researchedtokens.length; k++) {
+                                    if (this.researchedtokens[k - 1].semanticClass !== this.researchedtokens[k].semanticClass) {
+                                        semClass = 'OTHER';
+                                        break;
+                                    }
+                                }
+                                sourcequery['semanticClass'] = semClass;
+                                sourcequery['textindexes'] = textindexes;
+                                sourcequery['startIndex'] = textindexes[0];
+                                sourcequery['endIndex'] = textindexes[textindexes.length - 1];
                                 for (let i = 0; i < data.length; i++) {
+                                    sourcequery['kgID'] = data[i].result['@id'];
                                     data[i]["sourcequery"] = sourcequery;
                                 }
                             }
@@ -162,11 +176,11 @@
                 );
             },
             saveresult: function (researchdata) {
-                console.log('Saving...' + JSON.stringify(this.researchdatatoedit));
-                                        
+                //console.log('Saving...' + JSON.stringify(this.researchdatatoedit));
+
                 let socket = io(this.serverip + ':8080');
-                
-                if (this.researchdatatoedit !== undefined && this.researchdatatoedit !== null){
+
+                if (this.researchdatatoedit !== undefined && this.researchdatatoedit !== null) {
                     let obj = {
                         start: this.researchdatatoedit.sourcequery.startIndex,
                         end: this.researchdatatoedit.sourcequery.endIndex
@@ -176,24 +190,24 @@
                 } else {
                     let sendObj = {
                         start: [this.selectedtextindexes.start],
-                        end:   [this.selectedtextindexes.end],
+                        end: [this.selectedtextindexes.end],
                         query: this.selectedtext,
                         semanticClass: this.semanticclass,
                     };
                     console.log('Saving on server single object: ' + JSON.stringify(sendObj));
                     socket.emit('saveresult', this.docid, sendObj, researchdata.result['@id']);
                 }
-                
+                console.log('updating view with this result:' + JSON.stringify(researchdata));
                 this.$emit('saveresult', researchdata);
             },
             starthover: function (event) {
                 //this.$emit('starthover', event);
             },
-            handleselectedtextindexes: function(newselectedtextindexes) {
+            handleselectedtextindexes: function (newselectedtextindexes) {
                 if (newselectedtextindexes.start !== -1 && newselectedtextindexes.end !== -1) {
                     //console.log(JSON.stringify(this.gettokensofselectedtext(this.tokens, newselectedtextindexes)));
                     this.keywords = this.limitedfiltertokens(this.tokens, this.gettokensofselectedtext(this.tokens, newselectedtextindexes)[0]);
-                    
+
                     //console.log('Keywords: ' + JSON.stringify(this.keywords));
                     this.researchedtokens = this.gettokensofselectedtext(this.tokens, newselectedtextindexes);
                     this.selectedtext = this.generateTextForSeach(this.researchedtokens);
@@ -203,7 +217,7 @@
             }
         },
         computed: {},
-        mounted: function (){
+        mounted: function () {
             this.handleselectedtextindexes(this.selectedtextindexes);
             this.$nextTick(() => {
                 componentHandler.upgradeDom();
@@ -243,7 +257,7 @@
             },
         },
         created() {
-            
+
         },
         components: {
             researchresult

@@ -265,7 +265,7 @@
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
 
                 console.log('received Entities:' + this.researchedentities.length);
-                //console.log(JSON.stringify(this.researchedentities));
+                console.log(JSON.stringify(this.researchedentities[0]));
                 let researched = [];
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     if (researched.indexOf(this.researchedentities[i].kgID) > -1) {
@@ -396,23 +396,35 @@
                             semClass = newresearchdatatoupdate.sourcequery.semanticClass;
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
+                                    let add = true;
                                     for (let i = 0; i < this.OTHER.length; i++) {
                                         for (let k = 0; k < this.OTHER[i].sourcequery.entityID.length; k++) {
                                             if (newresearchdatatoupdate.sourcequery.entityID === this.OTHER[i].sourcequery.entityID[k]) {
                                                 this.OTHER[i].result = newresearchdatatoupdate.result;
                                                 this.OTHER[i].resultScore = newresearchdatatoupdate.resultScore;
+                                                add = false;
+                                                break;
                                             }
                                         }
                                     }
+                                    if(add){
+                                        this.OTHER.push(newresearchdatatoupdate);
+                                    }
                                 } else {
+                                    let add = true;
                                     for (let i = 0; i < this[semClass].length; i++) {
                                         for (let k = 0; k < this[semClass][i].sourcequery.entityID.length; k++) {
                                             //DONT correct to '==='!!! it will fail.
                                             if (newresearchdatatoupdate.sourcequery.entityID == this[semClass][i].sourcequery.entityID[k]) {
                                                 this[semClass][i].result = newresearchdatatoupdate.result;
                                                 this[semClass][i].resultScore = newresearchdatatoupdate.resultScore;
+                                                add = false;
+                                                break;
                                             }
                                         }
+                                    }
+                                    if(add){
+                                        this[semClass].push(newresearchdatatoupdate);
                                     }
                                 }
                             }
