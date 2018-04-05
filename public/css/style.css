@@ -6,11 +6,6 @@ body{
     -ms-user-select: none;
     user-select: none;
 }
-.breakSpan:after {
-    content:"\A";
-    white-space:pre
-}
-
 @media screen and (min-width: 720px) {
     body {
         font-size: 1em;
