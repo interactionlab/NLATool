@@ -405,7 +405,6 @@
                                         }
                                     }
                                 } else {
-                                    console.log('Adding corrected Entity: ' + semClass + ': ' + this[semClass].length);
                                     for (let i = 0; i < this[semClass].length; i++) {
                                         for (let k = 0; k < this[semClass][i].sourcequery.entityID.length; k++) {
                                             //DONT correct to '==='!!! it will fail.

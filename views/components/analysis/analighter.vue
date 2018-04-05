@@ -23,7 +23,7 @@
                        v-on:starthover="starthover($event)"
                        v-on:editresearch="editresearch($event)"
                        v-on:saveresult="saveresult($event)"
-                       v-on:switchtoentities="switchtoentities($event)">
+                       v-on:switchtoentities="switchtoentities()">
             </component>
         </keep-alive>
     </div>
