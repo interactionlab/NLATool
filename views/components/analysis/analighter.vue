@@ -1,29 +1,31 @@
 <template>
     <div>
-        <component :is="showmode"
-                   v-bind:serverip="serverip"
-                   v-bind:googleapikey="googleapikey"
-                   v-bind:tokens="tokens"
-                   v-bind:columnindex="columnindex"
-                   v-bind:researchedentities="researchedentities"
-                   v-bind:tokenstoshow="tokenstoshow"
-                   v-bind:selectedtextindexes="selectedtextindexes"
-                   v-bind:selectedchain="selectedchain"
-                   v-bind:docid="docid"
-                   v-bind:classestomark="classestomark"
-                   v-bind:contentcontrol="contentcontrol"
-                   v-bind:hoverdata="hoverdata"
-                   v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
-                   v-bind:researchdatatoedit="researchdatatoedit"
-                   v-bind:researchdatatoupdate="researchdatatoupdate"
-                   v-bind:parentviewport="parentviewport"
-                   v-on:updateclassestomark="updateclassestomark($event)"
-                   v-on:endhover="endhover($event)"
-                   v-on:starthover="starthover($event)"
-                   v-on:editresearch="editresearch($event)"
-                   v-on:saveresult="saveresult($event)"
-                   v-on:switchtoentities="switchtoentities($event)">
-        </component>
+        <keep-alive>
+            <component :is="showmode"
+                       v-bind:serverip="serverip"
+                       v-bind:googleapikey="googleapikey"
+                       v-bind:tokens="tokens"
+                       v-bind:columnindex="columnindex"
+                       v-bind:researchedentities="researchedentities"
+                       v-bind:tokenstoshow="tokenstoshow"
+                       v-bind:selectedtextindexes="selectedtextindexes"
+                       v-bind:selectedchain="selectedchain"
+                       v-bind:docid="docid"
+                       v-bind:classestomark="classestomark"
+                       v-bind:contentcontrol="contentcontrol"
+                       v-bind:hoverdata="hoverdata"
+                       v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                       v-bind:researchdatatoedit="researchdatatoedit"
+                       v-bind:researchdatatoupdate="researchdatatoupdate"
+                       v-bind:parentviewport="parentviewport"
+                       v-on:updateclassestomark="updateclassestomark($event)"
+                       v-on:endhover="endhover($event)"
+                       v-on:starthover="starthover($event)"
+                       v-on:editresearch="editresearch($event)"
+                       v-on:saveresult="saveresult($event)"
+                       v-on:switchtoentities="switchtoentities($event)">
+            </component>
+        </keep-alive>
     </div>
 </template>
 <script>

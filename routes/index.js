@@ -219,7 +219,7 @@ function processSegement(docID, list) {
         url: url,
         json: true
     }, function (error, response, body) {
-        console.log('Error Obj at processSegment' + error + response.statusCode);
+        console.log(Tag + 'Response StatusCode at processSegment' + error + response.statusCode);
         if (!error && response.statusCode === 200) {
             let name = null;
             try {
@@ -260,7 +260,7 @@ function processSegement(docID, list) {
                 console.log(Tag + 'the Result for ' + query + ' is undefined: ' + err);
             }
         } else {
-            console.log(Tag + 'request to retrieve researched Entities failed: ' + error);
+            console.log(Tag + 'request to retrieve researched Entities failed: ' + response.statusCode + ': ' + error);
         }
     })
 }

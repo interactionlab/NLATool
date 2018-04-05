@@ -114,7 +114,7 @@
                 let self = this;
                 while (text.length > start) {
                     texttosend = text.slice(start, start + amount);
-                    console.log(this.tag + 'Uploading: ' + texttosend);
+                    //console.log(this.tag + 'Uploading: ' + texttosend);
                     this.socket.emit('uploadtextparts', this.docid, start, texttosend);
                     start += amount;
                 }

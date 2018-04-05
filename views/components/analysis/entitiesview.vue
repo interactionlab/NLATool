@@ -396,9 +396,25 @@
                             semClass = newresearchdatatoupdate.sourcequery.semanticClass;
                             if (semClass !== undefined) {
                                 if (semClass !== 'PERSON' && semClass !== 'LOCATION' && semClass !== 'ORGANIZATION' && semClass !== 'MISC') {
-                                    this['OTHER'].push(newresearchdatatoupdate);
+                                    for (let i = 0; i < this.OTHER.length; i++) {
+                                        for (let k = 0; k < this.OTHER[i].sourcequery.entityID.length; k++) {
+                                            if (newresearchdatatoupdate.sourcequery.entityID === this.OTHER[i].sourcequery.entityID[k]) {
+                                                this.OTHER[i].result = newresearchdatatoupdate.result;
+                                                this.OTHER[i].resultScore = newresearchdatatoupdate.resultScore;
+                                            }
+                                        }
+                                    }
                                 } else {
-                                    this[semClass].push(newresearchdatatoupdate);
+                                    console.log('Adding corrected Entity: ' + semClass + ': ' + this[semClass].length);
+                                    for (let i = 0; i < this[semClass].length; i++) {
+                                        for (let k = 0; k < this[semClass][i].sourcequery.entityID.length; k++) {
+                                            //DONT correct to '==='!!! it will fail.
+                                            if (newresearchdatatoupdate.sourcequery.entityID == this[semClass][i].sourcequery.entityID[k]) {
+                                                this[semClass][i].result = newresearchdatatoupdate.result;
+                                                this[semClass][i].resultScore = newresearchdatatoupdate.resultScore;
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
