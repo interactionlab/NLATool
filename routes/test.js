@@ -83,7 +83,7 @@ function test(req, res, next) {
         values[0] = stringifyForDB(i+300);
         querys.push(dbAction.createInsertCommand('accountData', ['email', 'username'], values, null, null));
     }
-    console.log(JSON.stringify(transControl));
+    //console.log(JSON.stringify(transControl));
     wait.for(dbStub.makeTransaction, querys, transControl);
     vueData.worked = true;
     res.renderVue('test', vueData, vueRenderOptions);

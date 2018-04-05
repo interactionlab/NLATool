@@ -71,7 +71,7 @@ function loginDB(user, pass) {
     
     query = "SELECT * FROM nlatool.accountData WHERE username = '" + user + "' AND password = '"+pass+"' LIMIT 1";
     
-    console.log(query);
+    //console.log(query);
     
     
     let selectresult = wait.for(dbStub.makeSQLRequest, query);

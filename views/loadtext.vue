@@ -106,7 +106,7 @@
                 }
             },
             uploadToServer: function () {
-                console.log(this.tag + 'Uploading Text of ' + this.docid + ' : '+ this.inputtext);
+                console.log(this.tag + 'Uploading Text of ' + this.docid);
                 let text = this.inputtext;
                 let texttosend = '';
                 let start = 0;

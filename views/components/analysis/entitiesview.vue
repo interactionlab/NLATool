@@ -261,11 +261,7 @@
                 this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length);
                 this['MISC'].splice(0, this['MISC'].length);
                 this['OTHER'].splice(0, this['OTHER'].length);
-
                 let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-
-                console.log('received Entities:' + this.researchedentities.length);
-                console.log(JSON.stringify(this.researchedentities[0]));
                 let researched = [];
                 for (let i = 0; i < this.researchedentities.length; i++) {
                     if (researched.indexOf(this.researchedentities[i].kgID) > -1) {
@@ -297,9 +293,6 @@
                                                 let d = JSON.parse(JSON.stringify(data));
                                                 d["sourcequery"] = this.researchedentities[j];
                                                 this[this.researchedentities[j].semanticClass].push(d);
-                                                if (data.result['@id'] === "kg:/m/0k53z") {
-                                                    console.log("REST " + this.researchedentities[j].semanticClass);
-                                                }
                                             }
                                         }
                                     }

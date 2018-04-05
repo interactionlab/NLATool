@@ -205,7 +205,7 @@
         },
         methods: {
             setnewwordnumberinonecolumn: function (newwordnumberinonecolumn) {
-                console.log('set new Word limit for columns: ' + newwordnumberinonecolumn + ': ' + this.numberofcolumns);
+                //console.log('set new Word limit for columns: ' + newwordnumberinonecolumn + ': ' + this.numberofcolumns);
                 this.wordnumberinonecolumn = parseInt(newwordnumberinonecolumn);
                 this.splitTokens();
                 this.showTokens();
@@ -390,7 +390,7 @@
                         }
                         if (partofentitiessplittedDUMMY !== []) {
                             entitiessplittedDUMMY.push(partofentitiessplittedDUMMY);
-                            console.log('Added entity list to entitiessplittedDUMMY:' + entitiessplittedDUMMY.length);
+                            //console.log('Added entity list to entitiessplittedDUMMY:' + entitiessplittedDUMMY.length);
                             partofentitiessplittedDUMMY = [];
                         }
                         startSlice = startSlice + this.wordnumberinonecolumn;
@@ -399,7 +399,7 @@
                 }
                 this.entitiessplitted = entitiessplittedDUMMY;
                 //console.log(JSON.stringify(this.entitiessplitted));
-                console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
+                //console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
                 this.tokenssplitted = tokenssplittedDUMMY;
                 this.pagecount = this.tokenssplitted.length;
             },

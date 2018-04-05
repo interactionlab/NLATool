@@ -138,8 +138,8 @@
         },
         watch: {
             tokenssplittedindextoshow:function () {
-                console.log('researched Entities index: '+ (this.columnindex + this.tokenssplittedindextoshow));
-                console.log('sent Entities: '+ this.researchedentities[this.columnindex + this.tokenssplittedindextoshow].length);
+                //console.log('researched Entities index: '+ (this.columnindex + this.tokenssplittedindextoshow));
+                //console.log('sent Entities: '+ this.researchedentities[this.columnindex + this.tokenssplittedindextoshow].length);
             },
             selectedtextindexes: {
                 /*
@@ -154,7 +154,7 @@
                         if (this.selectedindexesmarked.end !== -1) {
                             let end = this.selectedindexesmarked.end;
                         }
-                        console.log(start);
+                        //console.log(start);
                         if (start > end) {
                             let dummy = end;
                             end = start;
@@ -196,7 +196,7 @@
             },
             wordtomarkonhoverdata: function (newWordToMarkOnHover) {
                 /*
-                 * HOVER START BY A RESEACH ELEMENT AND STARTED BY A TEXT ELEMENT
+                 * HOVER START BY A RESEARCH ELEMENT AND STARTED BY A TEXT ELEMENT
                  */
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
@@ -337,8 +337,6 @@
             indexCorrector2: function () {
                 let tempcorrector = 0;
                 for (let i = 0; i < this.columnindex + this.tokenssplittedindextoshow; i++) {
-                    console.log('adding to Index Corrector2 '+ i +': ');
-                    console.log(this.tokenssplitted[i].length);
                     tempcorrector = tempcorrector + this.tokenssplitted[i].length;
                 }
                 return tempcorrector;
@@ -349,7 +347,7 @@
             calcparentviewport: function () {
                 this.parentviewport = this.$refs['column'].getBoundingClientRect();
             },
-            onscrolltext: function (event) {
+            onscrolltext: function () {
                 if (this.isRemoveLineOnScrollActive) {
                     this.removehoverline([]);
                 }

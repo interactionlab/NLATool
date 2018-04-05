@@ -145,10 +145,8 @@
                             else {
                                 let textindexes = [];
                                 for (let i = 0; i < this.researchedtokens.length; i++) {
-                                    console.log('new Index'+this.researchedtokens[i].textIndex);
                                     textindexes.push(this.researchedtokens[i].textIndex);
                                 }
-                                console.log('new TextIndexes:'+ textindexes);
                                 let sourcequery = {
                                     freq: 1,
                                     query: [this.selectedtext],
@@ -187,7 +185,7 @@
                         start: this.researchdatatoedit.sourcequery.startIndex,
                         end: this.researchdatatoedit.sourcequery.endIndex
                     };
-                    console.log('Saving on server multi object: ' + JSON.stringify(obj));
+                    console.log('Saving on server multi object: ');
                     socket.emit('saveresult', this.docid, obj, researchdata.result['@id']);
                 } else {
                     let sendObj = {
@@ -196,10 +194,9 @@
                         query: this.selectedtext,
                         semanticClass: this.semanticclass,
                     };
-                    console.log('Saving on server single object: ' + JSON.stringify(sendObj));
+                    console.log('Saving on server single object: ');
                     socket.emit('saveresult', this.docid, sendObj, researchdata.result['@id']);
                 }
-                console.log('updating view with this result:' + JSON.stringify(researchdata));
                 this.$emit('saveresult', researchdata);
             },
             starthover: function (event) {

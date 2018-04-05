@@ -219,7 +219,7 @@ function processSegement(docID, list) {
         url: url,
         json: true
     }, function (error, response, body) {
-        console.log(Tag + 'Response StatusCode at processSegment' + error + response.statusCode);
+        //console.log(Tag + 'Response StatusCode at processSegment' + error + response.statusCode);
         if (!error && response.statusCode === 200) {
             let name = null;
             try {

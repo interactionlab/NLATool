@@ -293,7 +293,7 @@ router.post('/clearText', function (req, res) {
  */
 function getAndShowText(req, res) {
     let queryOperators = dbAction.getQueryOperators();
-    console.log(Tag + 'Document Id from Session is: ' + req.session.docID + ' or: ' + req.query.docID);
+    //console.log(Tag + 'Document Id from Session is: ' + req.session.docID + ' or: ' + req.query.docID);
     if (!isNaN(req.session.docID) || !isNaN(req.query.docID)) {
         let docID = (req.query.docID || req.session.docID);
         let firstTimeCheck = new Date();
