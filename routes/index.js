@@ -23,7 +23,7 @@ const dbStub = require('../modules/db_stub.js');
 const wait = require('wait.for');
 const jsonAction = require('../modules/json_actions');
 const corenlp = require('../modules/corenlp');
-const io = require('socket.io')(8090);
+const io = require('socket.io')(8091);
 const fs = require("fs");
 //const session = require('client-sessions');
 //const isReachable = require('is-reachable');
@@ -131,7 +131,7 @@ function getLocationInformation(docID, textIndexes, name, upload) {
             format: "jsonp"
         };
         url = url + encodeQueryData(params);
-       // console.log(url);
+        // console.log(url);
         request({
             url: url,
             json: true
@@ -140,7 +140,7 @@ function getLocationInformation(docID, textIndexes, name, upload) {
                 if (body.results !== undefined) {
                     if (body.results[0] !== undefined) {
                         if (body.results[0].geometry !== undefined) {
-                           // console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
+                            // console.log(Tag + "docID " + docID + " Google Geocoding API Query: " + name + " textids " + textIndexes + " location: " + JSON.stringify(body.results[0].geometry));
                             upload['lat'] = body.results[0].geometry.location.lat;
                             upload['lng'] = body.results[0].geometry.location.lng;
                             upload['northEastLat'] = body.results[0].geometry.viewport.northeast.lat;
@@ -199,7 +199,7 @@ function processSegement(docID, list) {
         }
         query += list[i].content;
     }
-   // console.log(Tag + "Google Query " + textIndexes + ": " + query);
+    // console.log(Tag + "Google Query " + textIndexes + ": " + query);
     researchUpload['docID'] = docID;
     researchUpload['startIndex'] = textIndexes[0];
     researchUpload['endIndex'] = textIndexes[textIndexes.length - 1];
@@ -219,16 +219,17 @@ function processSegement(docID, list) {
         url: url,
         json: true
     }, function (error, response, body) {
+        console.log('Error Obj at processSegment' + error + response.statusCode);
         if (!error && response.statusCode === 200) {
             let name = null;
             try {
-                if (body.itemListElement === undefined || body.itemListElement.length < 0){
+                if (body.itemListElement === undefined || body.itemListElement.length < 0) {
                     console.log(Tag + ' no GKG result for ' + query);
                 } else {
                     let graphID = body.itemListElement[0].result["@id"];
                     researchUpload['kgID'] = graphID;
                     name = body.itemListElement[0].result["name"];
-                   // console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
+                    // console.log(Tag + "docID " + docID + " Google Knowledge-graph Query: " + query + " textids " + textIndexes + " @id: " + graphID + " entry: " + name);
                     if (type === "MISC" || type === "LOCATION" || type === "ORGANIZATION") {
                         getLocationInformation(docID, textIndexes, name, researchUpload);
                     } else {
@@ -291,7 +292,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
         let lastTimeCheck = new Date();
         console.log(Tag + 'Time corenlp analysis took: ' + (lastTimeCheck.getTime() - deltaTime) + ' ms');
 
-       // console.log(JSON.stringify(parsedResult));
+        // console.log(JSON.stringify(parsedResult));
         transactionInformation.words = parsedResult.text;
         transactionInformation.corefInfo = parsedResult.coref;
         //Insert Statement to initiate a Document
@@ -302,7 +303,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
             ['length', 'author', 'year', 'lang'],
             [transactionInformation.words.length, '"To Implement"', 2049, '"en"'],
             ['docID'], [upload.docid], ['=']));
-            
+
         console.log(Tag + 'metaInfo uploaded');
         firstTimeCheck = new Date();
 
@@ -311,20 +312,20 @@ function loadWrittenText(socket, upload, uploadIndex) {
         //console.log(JSON.stringify(transactionInformation));
         for (let i = 0; i < transactionInformation.words.length; i++) {
             for (let j = 0; j < transactionInformation.words[i].length; j++) {
-                
-                if (parsedResult.pos[i][j] === "-LRB-" || parsedResult.pos[i][j] === "-RRB-"){
+
+                if (parsedResult.pos[i][j] === "-LRB-" || parsedResult.pos[i][j] === "-RRB-") {
                     // special chars
-                    if( transactionInformation.words[i][j] === "-LRB-"){
+                    if (transactionInformation.words[i][j] === "-LRB-") {
                         transactionInformation.words[i][j] = stringifyForDB("(");
-                    } else if( transactionInformation.words[i][j] === "-RRB-"){
+                    } else if (transactionInformation.words[i][j] === "-RRB-") {
                         transactionInformation.words[i][j] = stringifyForDB(")");
-                    } else if( transactionInformation.words[i][j] === "-LSB-"){
+                    } else if (transactionInformation.words[i][j] === "-LSB-") {
                         transactionInformation.words[i][j] = stringifyForDB("[");
-                    } else if( transactionInformation.words[i][j] === "-RSB-"){
+                    } else if (transactionInformation.words[i][j] === "-RSB-") {
                         transactionInformation.words[i][j] = stringifyForDB("]");
-                    } else if( transactionInformation.words[i][j] === "-LCB-"){
+                    } else if (transactionInformation.words[i][j] === "-LCB-") {
                         transactionInformation.words[i][j] = stringifyForDB("{");
-                    } else if( transactionInformation.words[i][j] === "-RCB-"){
+                    } else if (transactionInformation.words[i][j] === "-RCB-") {
                         transactionInformation.words[i][j] = stringifyForDB("}");
                     } else {
                         transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
@@ -332,11 +333,11 @@ function loadWrittenText(socket, upload, uploadIndex) {
                 } else {
                     transactionInformation.words[i][j] = stringifyForDB(transactionInformation.words[i][j]);
                 }
-               // console.log(JSON.stringify(transactionInformation.words[i]))
+                // console.log(JSON.stringify(transactionInformation.words[i]))
                 parsedResult.ner[i][j] = stringifyForDB(parsedResult.ner[i][j]);
                 parsedResult.pos[i][j] = stringifyForDB(parsedResult.pos[i][j]);
                 whitespace = parsedResult.offsetBegin[counter + 1] - parsedResult.offsetEnd[counter];
-                if(isNaN(whitespace)){
+                if (isNaN(whitespace)) {
                     whitespace = 0;
                 }
                 parsedResult.offsetBegin[counter] = stringifyForDB(parsedResult.offsetBegin[counter]);
@@ -361,7 +362,7 @@ function loadWrittenText(socket, upload, uploadIndex) {
                 transactionInformation.transControl.useProper[transactionInformation.querys.length - 1] = {
                     kindOfQuery: 'insert',
                     table: 'textmap',
-                    columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo','afterspace'],
+                    columns: ['docID', 'wordID', 'textIndex', 'beginOffSet', 'EndOffSet', 'whitespaceInfo', 'afterspace'],
                     values: [-1, -1,
                         counter,
                         parsedResult.offsetBegin[counter],
@@ -454,19 +455,19 @@ function loadWrittenText(socket, upload, uploadIndex) {
         //console.log(JSON.stringify(wordInDB));
         let last = 0;
         for (let i = 0; i < wordInDB.length; i++) {
-            console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
+            //console.log(i + ': ' + wordInDB[i].textIndex + " " + wordInDB[i].content);
             if (wordInDB[i].textIndex - wordInDB[last].textIndex !== i - last) {
                 processSegement(upload.docid, wordInDB.slice(last, i));
                 last = i;
             }
         }
-        
-        
+
+
         wait.for(dbStub.makeSQLRequest, dbAction.createUpdateCommand('documents',
             ['loadingStatus'],
             [1],
             ['docID'], [upload.docid], ['=']));
-        
+
     } else {
         console.log(Tag + 'Corenlp Status is wrong');
     }
@@ -520,6 +521,7 @@ function getLoadTextRoutine(res, next) {
  * @param res
  * @param next
  */
+
 /*function postLoadWrittenText(req, res, next) {
     if (corenlp.positiveNlpStatus()) {
         let text = req.body.textInput;

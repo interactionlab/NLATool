@@ -1,6 +1,6 @@
 <template>
-    <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;">
-        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;margin: 1em;width:100%; padding:0"
+    <div style="padding:0;height: auto !important; max-height: 100%; overflow: hidden; display: flex;width:100%;padding:1em;margin: 0;">
+        <div class="mdl-grid contentColor mdl-shadow--6dp" style="display: flex;width:100%; padding:0;margin: 0; "
              v-on:mouseover="movetoolbar"
              ref="column">
             <!--left grid for text stuff -->
@@ -8,8 +8,7 @@
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;"
                  v-on:scroll="onscrolltext">
                 <div class="mdl-grid" id="textWindow" ref="textWindow"
-
-                     style="height: auto !important; display: flex; max-height: 100%; padding:0;">
+                     style="height: auto !important; display: contents; max-height: 100%; padding:0;">
 
                     <component is="tex"
                                ref="text"
