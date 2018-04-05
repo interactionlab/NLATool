@@ -144,9 +144,11 @@
                             //add entity
                             else {
                                 let textindexes = [];
-                                for (let i = 0; i < this.researchedtokens; i++) {
+                                for (let i = 0; i < this.researchedtokens.length; i++) {
+                                    console.log('new Index'+this.researchedtokens[i].textIndex);
                                     textindexes.push(this.researchedtokens[i].textIndex);
                                 }
+                                console.log('new TextIndexes:'+ textindexes);
                                 let sourcequery = {
                                     freq: 1,
                                     query: [this.selectedtext],
