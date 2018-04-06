@@ -349,7 +349,7 @@
                                 this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
                             }
                         }
-                        this.$emit('setcoref', false);
+                      this.setcoref = false;
                     }
                 }
             },
