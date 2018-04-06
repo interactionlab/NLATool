@@ -53,10 +53,10 @@
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                     v-for="(columnindex,index) in numberofcolumns"
+                     v-for="columnindex in numberofcolumns"
                      v-bind:style="{width : columnsize2 + '%'}">
                     <component is="textfeatureviewport"
-                               ref="textfeatureviewports"
+                               v-bind:setcoref="setcoref"
                                v-bind:columnindex="columnindex-1"
                                v-bind:numberofcolumns="numberofcolumns"
                                v-bind:serverip="serverip"
@@ -79,6 +79,7 @@
                                v-bind:researchedentities="entitiessplitted"
                                v-bind:tokenssplittedindextoshow="tokenssplittedindextoshow"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                               v-on:setcoref="setCoref($event)"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
@@ -201,10 +202,13 @@
                 },
                 wordnumberinonecolumn: 500,
                 entitiessplitted: [],
-
+                setcoref: true,
             }
         },
         methods: {
+            setCoref: function (value) {
+                this.setcoref = value;
+            },
             setnewwordnumberinonecolumn: function (newwordnumberinonecolumn) {
                 //console.log('set new Word limit for columns: ' + newwordnumberinonecolumn + ': ' + this.numberofcolumns);
                 this.wordnumberinonecolumn = parseInt(newwordnumberinonecolumn);
@@ -335,15 +339,8 @@
                 if (this.numberofcolumns === 1) {
                     this.tokenstoshow = this.tokenssplitted;
                 } else {
-                    console.log('check00');
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
                     this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
-                    for (let k = 0; k < this.numberofcolumns; k++) {
-                        console.log('checkingXXX ' +  this.$refs['textfeatureviewports'][k].setcoref);
-                        this.$refs['textfeatureviewports'][k].setrerendercoref();
-                        console.log("this.classesToMark.coref" + this.classesToMark.coref)
-                        this.$refs['textfeatureviewports'][k].rendercoref(this.classesToMark);
-                    }
 
                 }
             },
@@ -363,6 +360,16 @@
                         this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
                     }
                 }
+                //let ref = 'textfeatureviewports';
+                this.setcoref = true;
+                /*console.log('check00' +this.$refs['textfeatureviewports0'].length);
+                for (let k = 0; k < this.numberofcolumns; k++) {
+                    console.log('checkingXXX ' + k + ': ' + this.$refs[ref + k]);
+                    this.$refs['textfeatureviewports0'].setrerendercoref();
+                    console.log("this.classesToMark.coref" + this.classesToMark.coref);
+                    this.$refs[ref + k].rendercoref(this.classesToMark);
+
+                }*/
             },
             splitNotes: function () {
                 /*for (let i = 0; i < this.tokenssplitted; i++) {

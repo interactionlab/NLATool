@@ -123,6 +123,7 @@
             },
             contentcontrol: {type: Object, default: null},
             tokenssplittedindextoshow: {type: Number, default: 0},
+            setcoref:{type:Boolean, default: false},
         },
         data: function () {
             return {
@@ -132,8 +133,6 @@
                 isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
-                setcoref: true,
-
             }
         },
         watch: {
@@ -326,6 +325,7 @@
         },
         methods: {
             setrerendercoref: function () {
+                console.log('setting rendercoref');
                 this.setcoref = true;
             },
             rendercoref: function (corefmode) {
@@ -349,7 +349,7 @@
                                 this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
                             }
                         }
-                        this.setcoref = false;
+                        this.$emit('setcoref', false);
                     }
                 }
             },
