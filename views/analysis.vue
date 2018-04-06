@@ -56,6 +56,7 @@
                      v-for="columnindex in numberofcolumns"
                      v-bind:style="{width : columnsize2 + '%'}">
                     <component is="textfeatureviewport"
+                               ref="textfeatureviewports"
                                v-bind:columnindex="columnindex-1"
                                v-bind:numberofcolumns="numberofcolumns"
                                v-bind:serverip="serverip"
@@ -334,12 +335,17 @@
                 if (this.numberofcolumns === 1) {
                     this.tokenstoshow = this.tokenssplitted;
                 } else {
+                    if (this.$refs['textfeatureviewports'] !== undefined && this.$refs['textfeatureviewports'].length > 0) {
+                        for(let k = 0; k < this.$refs['textfeatureviewports'].length; k++){
+                            console.log('check '+ k);
+                            this.$refs['textfeatureviewports'].corefset = true;
+                        }
+                    }
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
                     this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
                 }
             },
             changeScope: function (direction) {
-
                 if (direction) {
                     if (this.tokenssplittedindextoshow - 1 >= 0) {
                         this.tokenssplittedindextoshow--;

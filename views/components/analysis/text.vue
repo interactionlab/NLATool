@@ -5,12 +5,12 @@
           v-on:mouseout="stophover"><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
-            v-if="classestomark.coref">{{bracketleft}}</span><span
+            v-if="classestomark.coref && bracketleft !== ''">{{bracketleft}}</span><span
             class="nonPreAlt"
             v-bind:class="toHighlight">{{token.content}}</span><span
             class="nonPreAlt specialBracket"
             v-bind:class="toHighlight"
-            v-if="classestomark.coref">{{bracketright}}</span><span
+            v-if="classestomark.coref && bracketright !== ''">{{bracketright}}</span><span
             class="preAlt"
             v-bind:class="classToHighlightGap">{{getWordGap3}}</span></span>
 </template>

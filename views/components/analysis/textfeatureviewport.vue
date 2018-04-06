@@ -8,7 +8,7 @@
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;"
                  v-on:scroll="onscrolltext">
                 <div class="mdl-grid" id="textWindow" ref="textWindow"
-                     style="height: auto !important; display: contents; max-height: 100%; padding:0;">
+                     style="height: auto !important; display: block; max-height: 100%; padding:0;">
 
                     <component is="tex"
                                ref="text"
