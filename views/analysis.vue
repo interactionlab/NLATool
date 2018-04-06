@@ -53,7 +53,7 @@
             <div class="mdl-grid"
                  style="width:100%;overflow: hidden;height: auto !important;max-height: 100%;flex: 2 1 0px;padding:0em">
                 <div style="height: auto !important;max-height: 100%;display: flex;overflow: hidden;width:100%;"
-                     v-for="columnindex in numberofcolumns"
+                     v-for="(columnindex,index) in numberofcolumns"
                      v-bind:style="{width : columnsize2 + '%'}">
                     <component is="textfeatureviewport"
                                ref="textfeatureviewports"
@@ -335,14 +335,16 @@
                 if (this.numberofcolumns === 1) {
                     this.tokenstoshow = this.tokenssplitted;
                 } else {
-                    if (this.$refs['textfeatureviewports'] !== undefined && this.$refs['textfeatureviewports'].length > 0) {
-                        for(let k = 0; k < this.$refs['textfeatureviewports'].length; k++){
-                            console.log('check '+ k);
-                            this.$refs['textfeatureviewports'].corefset = true;
-                        }
-                    }
+                    console.log('check00');
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
                     this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
+                    for (let k = 0; k < this.numberofcolumns; k++) {
+                        console.log('checkingXXX ' +  this.$refs['textfeatureviewports'][k].setcoref);
+                        this.$refs['textfeatureviewports'][k].setrerendercoref();
+                        console.log("this.classesToMark.coref" + this.classesToMark.coref)
+                        this.$refs['textfeatureviewports'][k].rendercoref(this.classesToMark);
+                    }
+
                 }
             },
             changeScope: function (direction) {

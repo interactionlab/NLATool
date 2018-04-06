@@ -132,7 +132,7 @@
                 isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
-                corefset: false,
+                setcoref: true,
 
             }
         },
@@ -298,27 +298,8 @@
                  --MARK ALL WORD OF ALL CLASSES WHICH ARE TURNED ON
                  */
                 handler: function (corefmode) {
-                    if (!this.corefset) {
-                        if (corefmode.coref) {
-                            for (let i = 0; i < this.coref.length; i++) {
-                                if (this.coref[i].startIndex >= this.indexCorrector2 && this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
-                                    for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
-                                        this.manipulateword(j - this.indexCorrector2, 'iscoref', true);
-                                        if (j !== this.coref[i].endIndex - 1) {
-                                            this.manipulateword(j - this.indexCorrector2, 'iscorefgrap', true);
-                                        }
-                                        if (this.coref[i].representative === -1) {
-                                            this.manipulateword(j - this.indexCorrector2, 'isrepresentative', true);
-                                        }
-
-                                    }
-                                    this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
-                                    this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
-                                }
-                            }
-                            this.corefset = true;
-                        }
-                    }
+                    console.log('Checkpoint coref0:'+ this.setcoref);
+                    this.rendercoref(corefmode);
                 },
                 deep: true
             },
@@ -344,6 +325,34 @@
 
         },
         methods: {
+            setrerendercoref: function () {
+                this.setcoref = true;
+            },
+            rendercoref: function (corefmode) {
+                if (this.setcoref) {
+                    console.log('Checkpoint coref4567:');
+                    if (corefmode.coref) {
+                        console.log('Checkpoint coref1:');
+                        for (let i = 0; i < this.coref.length; i++) {
+                            if (this.coref[i].startIndex >= this.indexCorrector2 && this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
+                                for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
+                                    this.manipulateword(j - this.indexCorrector2, 'iscoref', true);
+                                    if (j !== this.coref[i].endIndex - 1) {
+                                        this.manipulateword(j - this.indexCorrector2, 'iscorefgrap', true);
+                                    }
+                                    if (this.coref[i].representative === -1) {
+                                        this.manipulateword(j - this.indexCorrector2, 'isrepresentative', true);
+                                    }
+
+                                }
+                                this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
+                                this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
+                            }
+                        }
+                        this.setcoref = false;
+                    }
+                }
+            },
             calcparentviewport: function () {
                 this.parentviewport = this.$refs['column'].getBoundingClientRect();
             },
