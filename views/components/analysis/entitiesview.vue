@@ -256,65 +256,30 @@
                 if (this.researchedentities.length === 0 || this.tokenstoshow === undefined || this.tokenstoshow.length === 0)
                     return;
 
+                //console.log(JSON.stringify(this.researchedentities[0]));
                 this['PERSON'].splice(0, this['PERSON'].length);
                 this['LOCATION'].splice(0, this['LOCATION'].length);
                 this['ORGANIZATION'].splice(0, this['ORGANIZATION'].length);
                 this['MISC'].splice(0, this['MISC'].length);
                 this['OTHER'].splice(0, this['OTHER'].length);
-                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
-                let researched = [];
-                for (let i = 0; i < this.researchedentities.length; i++) {
-                    if (this.researchedentities[i] !== undefined) {
-                        if (researched.indexOf(this.researchedentities[i].kgID) > -1) {
+                if (this.researchedentities !== undefined) {
+                    for (let j = 0; j < this.researchedentities.length; j++) {
+                        let data = this.researchedentities[j];
+                        if (this.researchedentities[j] !== undefined) {
+                            if (this.researchedentities[j].sourcequery === undefined) {
+                                console.log('this.researchedentities ' + j + ' is wrong:' + JSON.stringify(this.researchedentities[j]))
+                            }
+                            if (this.researchedentities[j].sourcequery.semanticClass !== 'PERSON'
+                                && this.researchedentities[j].sourcequery.semanticClass !== 'LOCATION'
+                                && this.researchedentities[j].sourcequery.semanticClass !== 'ORGANIZATION'
+                                && this.researchedentities[j].sourcequery.semanticClass !== 'MISC') {
+                                this['OTHER'].push(data);
+                            } else {
+                                this[this.researchedentities[j].sourcequery.semanticClass].push(data);
+                            }
                         } else {
-                            researched.push(this.researchedentities[i].kgID);
-                            let dataurl = {
-                                key: this.googleapikey,
-                                ids: this.researchedentities[i].kgID.replace("kg:", "")
-                            };
-
-                            $.getJSON(service_url + '?callback=?', dataurl, (response) => {
-                            }).done((response) => {
-                                //console.log("response: " + JSON.stringify(response));
-                                if (response.error !== undefined && response.error.code === 400) {
-                                    console.log('WARNING: Google Knowledge Graph Search API not activated.');
-                                } else {
-                                    let data = response.itemListElement[0];
-                                    if (data !== undefined) {
-                                        for (let j = 0; j < this.researchedentities.length; j++) {
-                                            if (this.researchedentities[j] !== undefined) {
-                                                if (data.result['@id'] === this.researchedentities[j].kgID) {
-                                                    if (this.researchedentities[j].semanticClass !== 'PERSON'
-                                                        && this.researchedentities[j].semanticClass !== 'LOCATION'
-                                                        && this.researchedentities[j].semanticClass !== 'ORGANIZATION'
-                                                        && this.researchedentities[j].semanticClass !== 'MISC') {
-                                                        let d = JSON.parse(JSON.stringify(data));
-                                                        d["sourcequery"] = JSON.parse(JSON.stringify(this.researchedentities[j]));
-                                                        this['OTHER'].push(d);
-                                                    } else {
-                                                        let d = JSON.parse(JSON.stringify(data));
-                                                        d["sourcequery"] = this.researchedentities[j];
-                                                        this[this.researchedentities[j].semanticClass].push(d);
-                                                    }
-                                                }
-                                            } else {
-                                                console.log('A researched Entity was undefined: ' + j);
-                                                console.log(JSON.stringify(this.researchedentities));
-                                            }
-                                        }
-                                    } else {
-                                        console.log('WARNING: Google Knowledge Graph results is empty.' + i);
-                                        console.log(JSON.stringify(this.researchedentities[i]));
-                                        console.log(JSON.stringify(response));
-                                    }
-                                }
-                            }).fail(err => {
-                                console.log('ERROR: Google initial search failed: ' + JSON.stringify(err));
-                            });
+                            console.log('A researched Entity was undefined: ' + j);
                         }
-                    } else {
-                        console.log('A researched Entity was undefined: ' + i);
-                        console.log(JSON.stringify(this.researchedentities));
                     }
                 }
             },

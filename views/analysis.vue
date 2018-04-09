@@ -203,6 +203,9 @@
                 wordnumberinonecolumn: 500,
                 entitiessplitted: [],
                 setcoref: true,
+                researchedentitiesResults: [],
+                researchedallentities: false,
+                preparedEntities: 0,
             }
         },
         methods: {
@@ -383,40 +386,46 @@
                 let entitiessplittedDUMMY = [];
                 let partofentitiessplittedDUMMY = [];
                 let tokenssplittedDUMMY = [];
+                //console.log('researchedentitiesResults start: ' + JSON.stringify(this.researchedentitiesResults));
+                if (this.researchedentitiesResults !== undefined && this.researchedallentities) {
+                    if (this.numberofcolumns === 1) {
+                        entitiessplittedDUMMY.push(this.researchedentitiesResults);
+                        tokenssplittedDUMMY.push(this.tokens);
+                    } else {
+                        let startSlice = 0;
+                        //console.log('Number of pages:' + Math.ceil(this.tokens.length / this.wordnumberinonecolumn));
+                        for (let i = 0; i < Math.ceil(this.tokens.length / this.wordnumberinonecolumn); i++) {
+                            tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + this.wordnumberinonecolumn));
+                            console.log('preparing tokens to show2:' + this.researchedentitiesResults.length);
 
-                if (this.numberofcolumns === 1) {
-                    entitiessplittedDUMMY.push(this.researchedEntities);
-                    tokenssplittedDUMMY.push(this.tokens);
-                } else {
-                    let startSlice = 0;
-                    //console.log('Number of pages:' + Math.ceil(this.tokens.length / this.wordnumberinonecolumn));
-                    for (let i = 0; i < Math.ceil(this.tokens.length / this.wordnumberinonecolumn); i++) {
-                        tokenssplittedDUMMY.push(this.tokens.slice(startSlice, startSlice + this.wordnumberinonecolumn));
-                        //console.log('preparing tokens to show2:' + JSON.stringify(this.researchedEntities));
-                        for (let j = 0; j < this.researchedEntities.length; j++) {
-                            for (let k = 0; k < this.researchedEntities[j].textindexes.length; k++) {
-                                if (this.researchedEntities[j].textindexes[k] >= startSlice
-                                    && this.researchedEntities[j].textindexes[k] < startSlice + this.wordnumberinonecolumn) {
-                                    partofentitiessplittedDUMMY.push(this.researchedEntities[j]);
-                                    //console.log('added entities ' + i + ': ' + this.researchedEntities[j].textindexes);
-                                    break;
+                            for (let j = 0; j < this.researchedentitiesResults.length; j++) {
+                                for (let k = 0; k < this.researchedentitiesResults[j].sourcequery.textindexes.length; k++) {
+                                    if (this.researchedentitiesResults[j].sourcequery.textindexes[k] >= startSlice
+                                        && this.researchedentitiesResults[j].sourcequery.textindexes[k] < startSlice + this.wordnumberinonecolumn) {
+                                        partofentitiessplittedDUMMY.push(this.researchedentitiesResults[j]);
+                                        //console.log('added entities ' + i + ': ' + this.researchedEntities[j].textindexes);
+                                        break;
+                                    }
                                 }
                             }
-                        }
-                        if (partofentitiessplittedDUMMY !== []) {
-                            entitiessplittedDUMMY.push(partofentitiessplittedDUMMY);
-                            //console.log('Added entity list to entitiessplittedDUMMY:' + entitiessplittedDUMMY.length);
-                            partofentitiessplittedDUMMY = [];
-                        }
-                        startSlice = startSlice + this.wordnumberinonecolumn;
+                            if (partofentitiessplittedDUMMY !== []) {
+                                entitiessplittedDUMMY.push(partofentitiessplittedDUMMY);
+                                //console.log('Added entity list to entitiessplittedDUMMY:' + entitiessplittedDUMMY.length);
+                                partofentitiessplittedDUMMY = [];
+                            }
+                            startSlice = startSlice + this.wordnumberinonecolumn;
 
+                        }
                     }
+                    this.entitiessplitted = entitiessplittedDUMMY;
+                    //console.log(JSON.stringify('Got here: ' + JSON.stringify(this.entitiessplitted[0])));
+                    //console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
+                    this.tokenssplitted = tokenssplittedDUMMY;
+                    this.pagecount = this.tokenssplitted.length;
+                } else {
+                    console.log('researchedentitiesResults not ready yet: ');
+                    this.searchGoogleWithResearchedEntities();
                 }
-                this.entitiessplitted = entitiessplittedDUMMY;
-                //console.log(JSON.stringify(this.entitiessplitted));
-                //console.log('preparing entities to show3:' + entitiessplittedDUMMY.length);
-                this.tokenssplitted = tokenssplittedDUMMY;
-                this.pagecount = this.tokenssplitted.length;
             },
             computenumberofcolumns: function () {
                 this.numberofcolumns = Math.trunc(this.screenOptions.screenWidth / this.screenOptions.maxColumnWidth);
@@ -458,8 +467,8 @@
             starthover: function (event) {
                 if (this.hoverdata.hoverstarted === event.hoverstarted) {
                     if ((event.hoverstarted === "text"
-                            && this.hoverdata.offsetstart !== null && this.hoverdata.offsetstart.x === event.offsetstart.x
-                            && this.hoverdata.offsetstart.y === event.offsetstart.y) ||
+                        && this.hoverdata.offsetstart !== null && this.hoverdata.offsetstart.x === event.offsetstart.x
+                        && this.hoverdata.offsetstart.y === event.offsetstart.y) ||
                         (event.hoverstarted === "research"
                             && this.hoverdata.offsetend.x === event.offsetend.x
                             && this.hoverdata.offsetend.y === event.offsetend.y)) {
@@ -513,7 +522,66 @@
                 socket.on('sendMoreText', function (tokens, setMoreDataFromServer) {
                     self.setMoreDataFromServer(tokens);
                 });
-            }
+            },
+            searchGoogleWithResearchedEntities: function () {
+                if (this.researchedEntities.length === 0) {
+                    console.log('WARNING: searchGoogleWithResearchedEntities is aborting');
+                    return;
+                }
+                let service_url = 'https://kgsearch.googleapis.com/v1/entities:search';
+                let researched = [];
+
+                if (this.researchedEntities !== undefined && !this.researchedallentities) {
+                    for (let i = 0; i < this.researchedEntities.length; i++) {
+                        if (this.researchedEntities[i] !== undefined) {
+                            if (researched.indexOf(this.researchedEntities[i].kgID) > -1) {
+                                this.preparedEntities++;
+                            } else {
+                                researched.push(this.researchedEntities[i].kgID);
+                                let dataurl = {
+                                    key: this.googleapikey,
+                                    ids: this.researchedEntities[i].kgID.replace("kg:", "")
+                                };
+                                //console.log('Got here0!!!!:' +i +this.researchedEntities[i].kgID );
+                                $.getJSON(service_url + '?callback=?', dataurl, (response) => {
+                                }).done((response) => {
+                                    this.preparedEntities++;
+                                    //console.log("response: " + JSON.stringify(response));
+                                    if (response.error !== undefined && response.error.code === 400) {
+                                        console.log('WARNING: Google Knowledge Graph Search API not activated.');
+                                    } else {
+                                        //console.log('Got here1!!!!:' + i);
+                                        let data = response.itemListElement[0];
+                                        if (data !== undefined) {
+                                            for (let j = 0; j < this.researchedEntities.length; j++) {
+                                                if (this.researchedEntities[j] !== undefined) {
+                                                    if (data.result['@id'] === this.researchedEntities[j].kgID) {
+                                                        let d = JSON.parse(JSON.stringify(data));
+                                                        d["sourcequery"] = JSON.parse(JSON.stringify(this.researchedEntities[j]));
+                                                        this.researchedentitiesResults.push(d);
+                                                    }
+                                                } else {
+                                                    console.log('A researched Entity was undefined: ' + j);
+                                                }
+                                            }
+                                        } else {
+                                            console.log('WARNING: Google Knowledge Graph results is empty.' + i);
+                                        }
+                                    }
+                                }).fail(err => {
+                                    this.preparedEntities++;
+                                    console.log('ERROR: Google initial search failed: ' + JSON.stringify(err));
+                                });
+                            }
+                        } else {
+                            console.log('A researched Entity was undefined: ' + i);
+                            this.preparedEntities++;
+                            //console.log(JSON.stringify(this.researchedEntities));
+                        }
+                    }
+                }
+                //this.splitTokens();
+            },
         },
         mounted() {
             window.addEventListener('resize', this.resize);
@@ -523,13 +591,28 @@
             window.removeAllListeners();
         },
         watch: {
+            preparedEntities: {
+                handler: function (newpreparedEntities) {
+                    console.log('checking: newpreparedEntities ' + newpreparedEntities + '===?' + this.researchedEntities.length);
+                    if (newpreparedEntities === this.researchedEntities.length-1) {
+                        console.log('got here:');
+                        this.researchedallentities = true;
+                        this.resize();
+                    }
+                }
+            },
+            researchedentitiesResults: {
+                handler: function (newData) {
+                    //this.splitTokens();
+                }, deep: true
+            },
             moreData: {
                 handler: function (newData) {
                     if (newData.length > 0) {
                         this.tokens.push.apply(this.tokens, newData);
                         this.getMoreText(this.tokens[0].docID, 500);
                     } else {
-                        this.resize();
+                        this.searchGoogleWithResearchedEntities();
                         this.displayloading = false;
                     }
                 }, deep: true

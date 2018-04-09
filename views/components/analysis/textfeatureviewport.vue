@@ -297,7 +297,7 @@
                  --MARK ALL WORD OF ALL CLASSES WHICH ARE TURNED ON
                  */
                 handler: function (corefmode) {
-                    console.log('Checkpoint coref0:'+ this.setcoref);
+                    //console.log('Checkpoint coref0:'+ this.setcoref);
                     this.rendercoref(corefmode);
                 },
                 deep: true
@@ -330,9 +330,9 @@
             },
             rendercoref: function (corefmode) {
                 if (this.setcoref) {
-                    console.log('Checkpoint coref4567:');
+                    //console.log('Checkpoint coref4567:');
                     if (corefmode.coref) {
-                        console.log('Checkpoint coref1:');
+                      //  console.log('Checkpoint coref1:');
                         for (let i = 0; i < this.coref.length; i++) {
                             if (this.coref[i].startIndex >= this.indexCorrector2 && this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {

@@ -81,30 +81,37 @@
                 this.$emit('starthover', textIndex);
             },
             editresearch: function (researchData) {
-                this.classestomark.POS = true;
+                //this.$emit('removehoverline', []);
+                //this.classestomark.POS = true;
                 this.showmode = 'correction';
-                this.$emit('removehoverline', []);
                 if (researchData !== undefined) {
                     this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
                 } else {
                     this.researchdatatoedit = null;
                 }
                 this.researchdatatoupdate = null;
-                this.$emit('updateclassestomark', this.classestomark);
+                //this.$emit('updateclassestomark', this.classestomark);
             },
             saveresult: function (researchData) {
-                this.classestomark.POS = false;
+                //this.$emit('removehoverline', []);
+                //this.classestomark.POS = false;
                 this.researchdatatoedit = null;
                 this.showmode = 'entitiesview';
-                this.$emit('removehoverline', []);
                 this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
-                this.updateclassestomark(this.classestomark);
+                //this.updateclassestomark(this.classestomark);
             },
             switchtoentities: function () {
-                this.classestomark.POS = false;
+                //this.classestomark.POS = false;
                 this.showmode = 'entitiesview';
-                this.$emit('removehoverline', []);
-                this.updateclassestomark(this.classestomark);
+                //this.$emit('removehoverline', []);
+                //this.updateclassestomark(this.classestomark);
+            }
+        },
+        watch: {
+            showmode: {
+                handler: function (newmode) {
+                    console.log('in column ' + this.columnindex + 'the mode changed to: ' + newmode);
+                }
             }
         },
         components: {
