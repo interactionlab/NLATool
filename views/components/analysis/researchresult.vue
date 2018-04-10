@@ -151,7 +151,7 @@
                 }
             },
             editResearch: function () {
-                this.$emit('editresearch', this.researchdata);
+               // this.$emit('editresearch', this.researchdata);
             },
         },
         components: {
