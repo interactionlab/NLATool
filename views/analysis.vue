@@ -126,6 +126,7 @@
                 moreData: null,
                 displayloading: true,
                 hoverdata: {},
+                lineddata:{},
                 wordtomarkonhoverdata: {},
                 offsetstart: null,
                 offsetend: null,
@@ -462,6 +463,49 @@
                     this.computenumberofcolumns();
                     this.splitTokens();
                     this.setColumnSize2();
+                }
+            },
+            drawline: function(event){
+                //DELETE OLD LINE
+                if (event.hoverended === "research") {
+                    this.wordtomarkonhoverdata = {
+                        textindexes: event.wordtomarkonhover,
+                        hoverstarted: "text",
+                        semanticClass: this.hoverdata.semanticClass,
+                        columnindex: event.columnindex
+                    };
+                    this.offsetend = event.offsetend;
+                } else if (event.hoverended === "text") {
+                    this.offsetstart = event.offsetstart;
+                }
+                //DRAW NEW LINE:
+                if (this.lineddata.hoverstarted === event.hoverstarted) {
+                    if ((event.hoverstarted === "text"
+                        && this.lineddata.offsetstart !== null && this.lineddata.offsetstart.x === event.offsetstart.x
+                        && this.lineddata.offsetstart.y === event.offsetstart.y) ||
+                        (event.hoverstarted === "research"
+                            && this.lineddata.offsetend.x === event.offsetend.x
+                            && this.lineddata.offsetend.y === event.offsetend.y)) {
+                        return;
+                    }
+                }
+                //OTHER STUFF?
+                this.lineddata = event;
+                let classofcolor = event.semanticClass + "_strong";
+
+                this.semanticclass = {};
+                this.semanticclass[classofcolor] = true;
+
+                if (event.hoverstarted === "text") {
+                    this.offsetstart = event.offsetstart;
+                } else if (event.hoverstarted === "research") {
+                    this.wordtomarkonhoverdata = {
+                        textindexes: event.wordtomarkonhover,
+                        hoverstarted: "research",
+                        semanticClass: this.hoverdata.semanticClass,
+                        columnindex: event.columnindex
+                    };
+                    this.offsetend = event.offsetend;
                 }
             },
             starthover: function (event) {
