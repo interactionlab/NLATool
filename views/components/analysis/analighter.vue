@@ -26,12 +26,13 @@
                        v-on:switchtoentities="switchtoentities()">
             </component>
         </keep-alive>
+        <component is="store"></component>
     </div>
 </template>
 <script>
     import correction from './components/analysis/correction.vue';
     import entitiesview from './components/analysis/entitiesview.vue';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
 
         props: {
@@ -116,7 +117,8 @@
         },
         components: {
             correction,
-            entitiesview
+            entitiesview,
+            store
         }
     }
 </script>

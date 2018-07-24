@@ -18,7 +18,7 @@
             }
         },
         mounted() {
-            console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + "current mode: " + this.markermode);
+            //console.log('got here: ' + this.$refs.mark + JSON.stringify(this.tokens) + "current mode: " + this.markermode);
             this.instance = new Mark(this.$refs.mark);
             // this.instance.mark(this.filterPos(this.tokens, 'FM'));
             // this.instance.mark(this.filterClass(this.tokens, 'I-PER'));

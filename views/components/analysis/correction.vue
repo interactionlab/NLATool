@@ -111,14 +111,14 @@
            style="padding:0.4em;">
             Select a class first in order to add futher information to the selected word.
         <p>
-
+        <component is="store"></component>
     </div>
 
 </template>
 <script>
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     import research from './components/analysis/research.vue';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
         mixins: [getselectedtext],
         props: {
@@ -217,6 +217,7 @@
         },
         components: {
             research,
+            store
         }
     }
 </script>

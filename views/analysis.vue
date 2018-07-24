@@ -33,7 +33,6 @@
                 <component
                         is="toolbar"
                         v-bind:tokens="vueTokens"
-                        v-bind:selectedtextindexes="selectedtextindexes"
                         v-bind:classestomark="classesToMark"
                         v-bind:style="{left: columnsizetoolbarpos+ '%'}"
                         v-on:emitanalighter="getAnalighter"
@@ -83,8 +82,8 @@
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
                                v-on:startselection="selectText($event,0)"
-                               v-on:hoverduringselection="selectText($event,1)"
-                               v-on:endselection="selectText($event,2)"
+                               v-on:hoverduringselection="selectText3($event,1)"
+                               v-on:endselection="selectText3($event,2)"
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
@@ -104,6 +103,7 @@
                    v-bind:offsetend="offsetend"
                    v-bind:semanticclass="semanticclass">
         </component>
+        <component is="store"></component>
     </div>
 </template>
 <script>
@@ -119,14 +119,14 @@
     import variablehelper from './components/global/variablehelper.vue';
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
     import linetohover from './components/analysis/linetohover.vue';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
         data: function () {
             return {
                 moreData: null,
                 displayloading: true,
                 hoverdata: {},
-                lineddata:{},
+                lineddata: {},
                 wordtomarkonhoverdata: {},
                 offsetstart: null,
                 offsetend: null,
@@ -245,43 +245,6 @@
             setTokens: function (newTokens) {
                 this.tokens = newTokens;
             },
-            hoverChain: function (chain) {
-                let represantativeFound = false;
-                if (chain !== -1) {
-                    let temphoveredChain = [];
-                    let mentionID = -2;
-                    for (let i = 0; i < this.coref.length; i++) {
-                        //Representative
-                        if (this.coref[i].startIndex <= chain && this.coref[i].endIndex >= chain) {
-                            if (this.coref[i].representative === -1) {
-                                mentionID = this.coref[i].mentionID;
-                            } else {
-                                mentionID = this.coref[i].representative;
-                            }
-                            temphoveredChain.push({
-                                start: this.coref[i].startIndex,
-                                end: this.coref[i].endIndex,
-                            });
-                            break;
-                        }
-                    }
-                    if (mentionID !== -2) {
-                        for (let i = 0; i < this.coref.length; i++) {
-                            if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
-                                temphoveredChain.push({
-                                    start: this.coref[i].startIndex,
-                                    end: this.coref[i].endIndex,
-                                });
-                            }
-                        }
-                    } else {
-                        console.log('WARNING: could not match a corefmention to the hovered word');
-                    }
-                    this.hoveredChain = temphoveredChain;
-                } else {
-                    this.hoveredChain = null;
-                }
-            },
             movetoolbar: function (columnindex) {
                 if (this.columnindexoflasthover === columnindex)
                     return;
@@ -290,7 +253,6 @@
                 this.currentpage = this.columnindexoflasthover + this.tokenssplittedindextoshow + 1;
             },
             getAnalighter: function () {
-
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
@@ -298,6 +260,7 @@
                 this.analysisMode = 'notes';
             },
             selectText: function (index, modus) {
+                //Start Selection
                 if (modus === 0) {
                     this.selectedtextindexes = {
                         start: index,
@@ -305,14 +268,18 @@
                         end: -1,
                         done: false
                     };
-                } else if (modus === 1) {
+                }
+                //Hover During Selection
+                else if (modus === 1) {
                     this.selectedtextindexes = {
                         start: this.selectedtextindexes.start,
                         hover: index,
                         end: -1,
                         done: false
                     };
-                } else if (modus === 2) {
+                }
+                //End Selection
+                else if (modus === 2) {
                     let start = this.selectedtextindexes.start;
                     let end = index;
                     if (start > end) {
@@ -331,13 +298,31 @@
             selectText2: function (newSelectedIndexes) {
                 this.selectedtextindexes = newSelectedIndexes;
             },
+            selectText3: function (selectiondata, modus) {
+                if(typeof selectiondata === 'number'){
+                    this.selectText(selectiondata, modus);
+                    return;
+                }
+                this.selectText(selectiondata.token.textIndex, modus);
+                if (modus === 2) {
+                    //Check if Entity -> prepare highlight entity & drawline
+                    if (this[selectiondata.token.semanticClass] !== undefined && this[selectiondata.token.semanticClass]) {
+                        this.drawline(selectiondata);
+                    }
+                    //Check if Mention of a coref Chain -> prepare highlight chain
+                    //TODO: Refactor hoverChain in general on analysis to sth like getChain
+                    //this.hoverChain(index);
+                    //Case of one Word is already done by this.selectText
+
+
+                }
+            },
             changeNoteMode: function (newNoteModes) {
                 this.notemodes = newNoteModes;
             },
             setColumnSize2: function () {
                 this.columnsize2 = 100.0 / this.numberofcolumns;
                 this.showTokens();
-
             },
             showTokens: function () {
                 if (this.numberofcolumns === 1) {
@@ -345,7 +330,6 @@
                 } else {
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
                     this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
-
                 }
             },
             changeScope: function (direction) {
@@ -465,7 +449,56 @@
                     this.setColumnSize2();
                 }
             },
-            drawline: function(event){
+            hoverChain: function (chain) {
+                /* Given an Index of a Word which represents a coref Mention,
+                this method should find that word in the coref object (list)
+                and all the other mentions in that chain and add them to
+                a new object list that represents all the mentions that should be hovered,
+                aka highlighted.
+                */
+                let represantativeFound = false;
+                if (chain !== -1) {
+                    let temphoveredChain = [];
+                    let mentionID = -2;
+                    //Looking for Chain in corefInformation package
+                    for (let i = 0; i < this.coref.length; i++) {
+                        // When hovered  Chain found...
+                        if (this.coref[i].startIndex <= chain && this.coref[i].endIndex >= chain) {
+                            //Representative or Relative...
+                            if (this.coref[i].representative === -1) {
+                                mentionID = this.coref[i].mentionID;
+                            } else {
+                                mentionID = this.coref[i].representative;
+                            }
+                            //preparing hoveredChain Object, adding start & end Index
+                            temphoveredChain.push({
+                                start: this.coref[i].startIndex,
+                                end: this.coref[i].endIndex,
+                            });
+                            break;
+                        }
+                    }
+                    // if a coref Mention was found...
+                    if (mentionID !== -2) {
+                        // find all other Mentions in the Chain...
+                        for (let i = 0; i < this.coref.length; i++) {
+                            if (this.coref[i].mentionID === mentionID || this.coref[i].representative === mentionID) {
+                                // ...and add the Indexes to the hoveredChain
+                                temphoveredChain.push({
+                                    start: this.coref[i].startIndex,
+                                    end: this.coref[i].endIndex,
+                                });
+                            }
+                        }
+                    } else {
+                        console.log('WARNING: could not match a corefmention to the hovered word');
+                    }
+                    this.hoveredChain = temphoveredChain;
+                } else {
+                    this.hoveredChain = null;
+                }
+            },
+            drawline: function (event) {
                 //DELETE OLD LINE
                 if (event.hoverended === "research") {
                     this.wordtomarkonhoverdata = {
@@ -478,8 +511,10 @@
                 } else if (event.hoverended === "text") {
                     this.offsetstart = event.offsetstart;
                 }
-                //DRAW NEW LINE:
+                //If the startpoint of old line = startpoint of the new line and...
                 if (this.lineddata.hoverstarted === event.hoverstarted) {
+                    // the hover started from hovering over text and the new line is the same
+                    // or from research entity respectivly -> do nothing
                     if ((event.hoverstarted === "text"
                         && this.lineddata.offsetstart !== null && this.lineddata.offsetstart.x === event.offsetstart.x
                         && this.lineddata.offsetstart.y === event.offsetstart.y) ||
@@ -489,16 +524,19 @@
                         return;
                     }
                 }
-                //OTHER STUFF?
+                //DRAW NEW LINE:
+                //prepare control Objects for view (semanticClass, data for creating lines
                 this.lineddata = event;
                 let classofcolor = event.semanticClass + "_strong";
 
                 this.semanticclass = {};
                 this.semanticclass[classofcolor] = true;
-
+                //if hover started from text the remaining words of the entity are easy to find
+                // -> only start offset is needed
                 if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
                 } else if (event.hoverstarted === "research") {
+                    // if it started from a researchentity we need to find it later and prepare for that
                     this.wordtomarkonhoverdata = {
                         textindexes: event.wordtomarkonhover,
                         hoverstarted: "research",
@@ -507,6 +545,7 @@
                     };
                     this.offsetend = event.offsetend;
                 }
+                //Redundancy ?
             },
             starthover: function (event) {
                 if (this.hoverdata.hoverstarted === event.hoverstarted) {
@@ -637,9 +676,9 @@
         watch: {
             preparedEntities: {
                 handler: function (newpreparedEntities) {
-                    console.log('checking: newpreparedEntities ' + newpreparedEntities + '===?' + this.researchedEntities.length);
-                    if (newpreparedEntities === this.researchedEntities.length-1) {
-                        console.log('got here:');
+                    //console.log('checking: newpreparedEntities ' + newpreparedEntities + '===?' + this.researchedEntities.length);
+                    if (newpreparedEntities === this.researchedEntities.length - 1) {
+                        //console.log('got here:');
                         this.researchedallentities = true;
                         this.resize();
                     }
@@ -726,7 +765,8 @@
             variablehelper,
             textfeatureviewport,
             textviewcontrol,
-            linetohover
+            linetohover,
+            store
         }
     }
 </script>

@@ -190,12 +190,13 @@
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
+        <component is="store"></component>
     </div>
 </template>
 <script>
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
         mixins: [filtertokenwithclass],
         props: {
@@ -420,12 +421,11 @@
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined') {
                         console.log("WARNING: entitiesview vue hover data undefined");
+                        //return;?
                     }
-
                     if (hoverdata.hoverstarted === "research") {
                         return;
                     }
-
                     if (this.columnindex !== hoverdata.columnindex) {
                         return;
                     }
@@ -433,6 +433,7 @@
                     let wordtomarkonhoverDUMMY = [];
                     let newwordid = hoverdata.startword.textIndex;
                     let bb = null;
+                    //For each semanticClass, scroll the entity into the view if it is not in the view of the user
                     if (hoverdata.semanticClass === 'PERSON') {
                         if (typeof this.$refs["personresults"] !== 'undefined' && this.$refs["personresults"].length > 0) {
                             for (let i = 0; i < this.$refs["personresults"].length; i++) {
@@ -530,6 +531,7 @@
                             bb = el.getBoundingClientRect();
                         }
                     }
+                    //Reset hover because of changed positions aka renew the line.
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
                 }
@@ -539,6 +541,7 @@
         },
         components: {
             researchresult,
+            store
         }
     }
 </script>

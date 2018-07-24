@@ -75,7 +75,6 @@
     export default {
         mixins: [getselectedtext],
         props: {
-            selectedindexes: { type: Object, default: null },
             classestomark:{ type: Object, default: null }
         },
         data: function () {

@@ -135,11 +135,28 @@
                 this[prop] = value;
             },
             startSelection: function () {
-                this.$emit('startselection', this.token.textIndex);
+                let selectiondata = {
+                    hoverstarted: "text",
+                    offsetstart: this.$el.getBoundingClientRect(),
+                    startword: this.token,
+                    semanticClass: this.semanticClassSimplified,
+                    startresearch: undefined,
+                    wordtomarkonhover: [],
+                    columnindex: this.columnindex
+                };
+                this.$emit('startselection', selectiondata);
             },
             endSelection: function (event) {
-                let offsets = event.target.getBoundingClientRect();
-                this.$emit('endselection', this.token.textIndex);
+                let selectiondata = {
+                    hoverstarted: "text",
+                    offsetstart: this.$el.getBoundingClientRect(),
+                    startword: this.token,
+                    semanticClass: this.semanticClassSimplified,
+                    startresearch: undefined,
+                    wordtomarkonhover: [],
+                    columnindex: this.columnindex
+                };
+                this.$emit('endselection', selectiondata);
             },
             stophover: function () {
                 this.$emit('hoverchain', -1);

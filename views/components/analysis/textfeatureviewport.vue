@@ -63,6 +63,7 @@
                 </keep-alive>
             </div>
         </div>
+        <component is="store"></component>
     </div>
 </template>
 
@@ -70,7 +71,7 @@
     import notes from './components/analysis/notes/notes.vue';
     import analighter from './components/analysis/analighter.vue';
     import tex from './components/analysis/text.vue';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
         props: {
             serverip: {type: String, default: ""},
@@ -137,6 +138,7 @@
         },
         watch: {
             tokenssplittedindextoshow:function () {
+                //debug?
                 //console.log('researched Entities index: '+ (this.columnindex + this.tokenssplittedindextoshow));
                 //console.log('sent Entities: '+ this.researchedentities[this.columnindex + this.tokenssplittedindextoshow].length);
             },
@@ -147,7 +149,6 @@
                 handler: function (newSelectedIndexes) {
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
-
                         let start = this.selectedindexesmarked.start;
                         let end = this.selectedindexesmarked.hover;
                         if (this.selectedindexesmarked.end !== -1) {
@@ -264,10 +265,12 @@
                  * HOVER FOR COREF WHEN COREF IS ON
                  */
                 if (this.classestomark.coref) {
-                    if (this.oldhoveredchain !== null) {
+                    if (this.oldhoveredchain !== null) {  //check for NullPointer
+                        //find all hovered Mentions in (each?) column ...
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
                             if (this.oldhoveredchain[i].start >= this.indexCorrector2
                                 && this.oldhoveredchain[i].end < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
+                                //...and set variables for hover to false for each mention in chain
                                 for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
                                     this.manipulateword(j - this.indexCorrector2, 'corefhover', false);
                                     this.manipulateword(j - this.indexCorrector2, 'corefhovergap', false);
@@ -275,6 +278,8 @@
                             }
                         }
                     }
+                    //Hover new Chain if there is a new one to hover based on the same principle like above
+                    //could maybe export that as a new method for the style in the future
                     if (newChain !== null && newChain.length !== 0) {
                         for (let i = 0; i < newChain.length; i++) {
                             if (newChain[i].start >= this.indexCorrector2
@@ -288,6 +293,8 @@
                             }
                         }
                     }
+                    //the now hovered Chain is now the old one so that it can be unhovered,
+                    // if it becomes unhovered by the user or a new chain is hovered
                     this.oldhoveredchain = newChain;
                 }
             },
@@ -418,6 +425,28 @@
             togglesemanticlass: function (newClassesToMark) {
                 this.$emit('togglesemanticlass', newClassesToMark);
             },
+            starthover: function (event) {
+                if (this.analysismode === "analighter") {
+                    //only if the hover event comes from a research entity otherwise just forward hoverdata
+                    //correct bb
+                    if (event.hoverstarted === "research") {
+                        let bb = event.offsetend;
+                        let rect = this.$refs['column'].getBoundingClientRect();
+                        if (bb.top < rect.top) {
+                            bb = JSON.parse(JSON.stringify(event.offsetend));
+                            bb.top = rect.top;
+                            bb.height = bb.bottom - bb.top;
+                        }
+                        if (bb.bottom > rect.bottom) {
+                            bb = JSON.parse(JSON.stringify(event.offsetend));
+                            bb.bottom = rect.bottom;
+                            bb.height = bb.bottom - bb.top;
+                        }
+                        event.offsetend = bb;
+                    }
+                    this.$emit('starthover', event);
+                }
+            },
             endhover: function (event) {
                 //correct bb
                 if (event.hoverended === "research") {
@@ -448,32 +477,12 @@
                     return result * sortOrder;
                 }
             },
-            starthover: function (event) {
-                if (this.analysismode === "analighter") {
-                    //correct bb
-                    if (event.hoverstarted === "research") {
-                        let bb = event.offsetend;
-                        let rect = this.$refs['column'].getBoundingClientRect();
-                        if (bb.top < rect.top) {
-                            bb = JSON.parse(JSON.stringify(event.offsetend));
-                            bb.top = rect.top;
-                            bb.height = bb.bottom - bb.top;
-                        }
-                        if (bb.bottom > rect.bottom) {
-                            bb = JSON.parse(JSON.stringify(event.offsetend));
-                            bb.bottom = rect.bottom;
-                            bb.height = bb.bottom - bb.top;
-                        }
-                        event.offsetend = bb;
-                    }
-                    this.$emit('starthover', event);
-                }
-            },
         },
         components: {
             tex,
             analighter,
-            notes
+            notes,
+            store
         }
     }
 </script>

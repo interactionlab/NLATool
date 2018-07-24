@@ -35,7 +35,7 @@
                        v-on:saveresult="saveresult($event)">
             </component>
         </div>
-
+        <component is="store"></component>
     </div>
 </template>
 
@@ -43,7 +43,7 @@
     import researchresult from './components/analysis/researchresult.vue';
     import getselectedtext from './mixins/analysis/gettokensofselectedtext.js';
     import filtertoken from './mixins/analysis/filtertoken.js';
-
+    import store from './components/analysis/globalstore.vue';
     export default {
 
         mixins: [getselectedtext, filtertoken],
@@ -259,7 +259,8 @@
 
         },
         components: {
-            researchresult
+            researchresult,
+            store
         }
     }
 </script>
