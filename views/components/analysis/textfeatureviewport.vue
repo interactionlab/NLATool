@@ -72,6 +72,7 @@
     import analighter from './components/analysis/analighter.vue';
     import tex from './components/analysis/text.vue';
     import store from './components/analysis/globalstore.vue';
+
     export default {
         props: {
             serverip: {type: String, default: ""},
@@ -122,9 +123,14 @@
                     return []
                 }
             },
+            corefstatus: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
             contentcontrol: {type: Object, default: null},
             tokenssplittedindextoshow: {type: Number, default: 0},
-            setcoref:{type:Boolean, default: false},
+            setcoref: {type: Boolean, default: false},
         },
         data: function () {
             return {
@@ -137,7 +143,7 @@
             }
         },
         watch: {
-            tokenssplittedindextoshow:function () {
+            tokenssplittedindextoshow: function () {
                 //debug?
                 //console.log('researched Entities index: '+ (this.columnindex + this.tokenssplittedindextoshow));
                 //console.log('sent Entities: '+ this.researchedentities[this.columnindex + this.tokenssplittedindextoshow].length);
@@ -147,6 +153,7 @@
                  * SELECTION OF TEXT WITH THE MOUSE WHILE HOLDING THE MOUSE BUTTON
                  */
                 handler: function (newSelectedIndexes) {
+
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
                         let start = this.selectedindexesmarked.start;
@@ -180,6 +187,7 @@
                             end = start;
                             start = dummy;
                         }
+                        console.log('highlighting seleceted words: ' + JSON.stringify(newSelectedIndexes));
                         for (let i = start; i <= end; i++) {
                             let index = i - this.indexCorrector2;
                             //Assumes that the length of each column is the same.
@@ -337,11 +345,13 @@
             },
             rendercoref: function (corefmode) {
                 if (this.setcoref) {
+                    console.log("corefstatus: " + JSON.stringify(this.corefstatus));
                     //console.log('Checkpoint coref4567:');
                     if (corefmode.coref) {
-                      //  console.log('Checkpoint coref1:');
+                        //  console.log('Checkpoint coref1:');
                         for (let i = 0; i < this.coref.length; i++) {
-                            if (this.coref[i].startIndex >= this.indexCorrector2 && this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
+                            if (this.coref[i].startIndex >= this.indexCorrector2 &&
+                                this.coref[i].endIndex < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
                                 for (let j = this.coref[i].startIndex; j < this.coref[i].endIndex; j++) {
                                     this.manipulateword(j - this.indexCorrector2, 'iscoref', true);
                                     if (j !== this.coref[i].endIndex - 1) {
@@ -352,11 +362,15 @@
                                     }
 
                                 }
-                                this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
-                                this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
+                                if (!this.corefstatus[this.columnindex]) {
+                                    this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
+                                    this.$refs['text'][this.coref[i].endIndex - 1 - this.indexCorrector2].addBracketRight();
+                                }
                             }
+                            this.setcoref = false;
                         }
-                      this.setcoref = false;
+                        //this.corefstatus[this.columnindex] = true;
+                        this.$emit('updatecorefstatus', this.columnindex);
                     }
                 }
             },

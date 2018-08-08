@@ -78,6 +78,8 @@
                                v-bind:researchedentities="entitiessplitted"
                                v-bind:tokenssplittedindextoshow="tokenssplittedindextoshow"
                                v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                               v-bind:corefstatus="corefstatus"
+                               v-on:updatecorefstatus="updatecorefstatus($event)"
                                v-on:setcoref="setCoref($event)"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
@@ -120,6 +122,7 @@
     import textfeatureviewport from './components/analysis/textfeatureviewport.vue';
     import linetohover from './components/analysis/linetohover.vue';
     import store from './components/analysis/globalstore.vue';
+
     export default {
         data: function () {
             return {
@@ -148,6 +151,7 @@
                     end: -1,
                     done: true
                 },
+                clickedmode: false,
                 notemodes: {
                     wordnote: true,
                     globalnote: false
@@ -212,6 +216,15 @@
         methods: {
             setCoref: function (value) {
                 this.setcoref = value;
+            },
+            updatecorefstatus: function (columnindex) {
+                this.corefstatus[columnindex] = true;
+            },
+            resetcorefstatus: function(){
+                console.log('resetted corefstatus: ' + JSON.stringify(this.corefstatus));
+                for(let i = 0; i < this.corefstatus.length;i++){
+                    this.corefstatus[i] = false;
+                }
             },
             setnewwordnumberinonecolumn: function (newwordnumberinonecolumn) {
                 //console.log('set new Word limit for columns: ' + newwordnumberinonecolumn + ': ' + this.numberofcolumns);
@@ -299,22 +312,21 @@
                 this.selectedtextindexes = newSelectedIndexes;
             },
             selectText3: function (selectiondata, modus) {
-                if(typeof selectiondata === 'number'){
+                if (typeof selectiondata === 'number') {
                     this.selectText(selectiondata, modus);
                     return;
                 }
-                this.selectText(selectiondata.token.textIndex, modus);
+                console.log('Hallo ' + selectiondata.startword.textIndex);
+                this.selectText(selectiondata.startword.textIndex, modus);
                 if (modus === 2) {
                     //Check if Entity -> prepare highlight entity & drawline
-                    if (this[selectiondata.token.semanticClass] !== undefined && this[selectiondata.token.semanticClass]) {
+                    if (this[selectiondata.startword.semanticClass] !== undefined && this[selectiondata.startword.semanticClass]) {
                         this.drawline(selectiondata);
                     }
                     //Check if Mention of a coref Chain -> prepare highlight chain
                     //TODO: Refactor hoverChain in general on analysis to sth like getChain
                     //this.hoverChain(index);
                     //Case of one Word is already done by this.selectText
-
-
                 }
             },
             changeNoteMode: function (newNoteModes) {
@@ -327,11 +339,14 @@
             showTokens: function () {
                 if (this.numberofcolumns === 1) {
                     this.tokenstoshow = this.tokenssplitted;
+                    this.resetcorefstatus();
                 } else {
                     let end = this.tokenssplittedindextoshow + this.numberofcolumns;
                     this.tokenstoshow = this.tokenssplitted.slice(this.tokenssplittedindextoshow, end);
+                    this.resetcorefstatus();
                 }
             },
+
             changeScope: function (direction) {
                 if (direction) {
                     if (this.tokenssplittedindextoshow - 1 >= 0) {
@@ -672,6 +687,17 @@
         },
         beforeDestroy() {
             window.removeAllListeners();
+        },
+        computed: {
+            corefstatus:function () {
+                let corefstatus = [];
+                console.log('numberofcolumns: ' +this.numberofcolumns);
+                for (let i = 0; i < this.numberofcolumns; i++) {
+                    corefstatus.push(false);
+                }
+                console.log('computing corefstatus: ' + JSON.stringify(corefstatus));
+                return corefstatus;
+            }
         },
         watch: {
             preparedEntities: {
