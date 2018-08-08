@@ -345,7 +345,7 @@
             },
             rendercoref: function (corefmode) {
                 if (this.setcoref) {
-                    console.log("corefstatus: " + JSON.stringify(this.corefstatus));
+                    //console.log("corefstatus: " + JSON.stringify(this.corefstatus));
                     //console.log('Checkpoint coref4567:');
                     if (corefmode.coref) {
                         //  console.log('Checkpoint coref1:');

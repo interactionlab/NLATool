@@ -220,9 +220,9 @@
             updatecorefstatus: function (columnindex) {
                 this.corefstatus[columnindex] = true;
             },
-            resetcorefstatus: function(){
-                console.log('resetted corefstatus: ' + JSON.stringify(this.corefstatus));
-                for(let i = 0; i < this.corefstatus.length;i++){
+            resetcorefstatus: function () {
+                //console.log('resetted corefstatus: ' + JSON.stringify(this.corefstatus));
+                for (let i = 0; i < this.corefstatus.length; i++) {
                     this.corefstatus[i] = false;
                 }
             },
@@ -689,13 +689,13 @@
             window.removeAllListeners();
         },
         computed: {
-            corefstatus:function () {
+            corefstatus: function () {
                 let corefstatus = [];
-                console.log('numberofcolumns: ' +this.numberofcolumns);
+                // console.log('numberofcolumns: ' +this.numberofcolumns);
                 for (let i = 0; i < this.numberofcolumns; i++) {
                     corefstatus.push(false);
                 }
-                console.log('computing corefstatus: ' + JSON.stringify(corefstatus));
+                //console.log('computing corefstatus: ' + JSON.stringify(corefstatus));
                 return corefstatus;
             }
         },
