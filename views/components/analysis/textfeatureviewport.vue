@@ -360,7 +360,6 @@
                                     if (this.coref[i].representative === -1) {
                                         this.manipulateword(j - this.indexCorrector2, 'isrepresentative', true);
                                     }
-
                                 }
                                 if (!this.corefstatus[this.columnindex]) {
                                     this.$refs['text'][this.coref[i].startIndex - this.indexCorrector2].addBracketLeft();
