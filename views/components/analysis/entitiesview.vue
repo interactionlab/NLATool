@@ -187,6 +187,7 @@
                    v-bind:contentcontrol="contentcontrol.OTHERS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
+                   v-on:allowscroll="allowscroll"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
@@ -241,9 +242,15 @@
                 OTHER: [],
                 researchresults: [],
                 sourcequery: [],
+                offsetfromactiveentity: 0,
+
+
             }
         },
         methods: {
+            allowscroll:function(){
+                this.$emit('allowscroll');
+            },
             addresearch: function () {
                 this.$emit('editresearch');
             },
@@ -251,7 +258,14 @@
                 this.$emit('editresearch', researchData);
             },
             starthover: function (event) {
+                this.hoverdatafromentity = event;
                 this.$emit('starthover', event);
+            },
+            otherentityactive(offset){
+                if(this.offsetend === offset){
+                    return true;
+                }
+                return false;
             },
             searchGoogleWithResearchedEntities: function () {
                 if (this.researchedentities.length === 0 || this.tokenstoshow === undefined || this.tokenstoshow.length === 0)
@@ -354,6 +368,7 @@
                 }
             },
         },
+
         mounted() {
             try {
                 this.searchGoogleWithResearchedEntities();
@@ -362,6 +377,11 @@
             }
         },
         watch: {
+            offsetfromactiveentity: {
+                handler: function(newoffset){
+                    
+                }
+            },
             researchdatatoupdate: {
                 handler: function (newresearchdatatoupdate) {
                     let semClass = '';

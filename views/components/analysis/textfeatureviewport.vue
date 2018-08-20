@@ -57,6 +57,7 @@
                             v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
                             v-on:starthover="starthover($event)"
+                            v-on:allowscroll="allowscroll"
                             v-on:removehoverline="removehoverline($event)"
                             v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
@@ -403,9 +404,11 @@
                 }
                 this.isRemoveLineOnScrollActive = false;
                 this.$refs['text'][textIndex].$el.scrollIntoView();
+            },
+            allowscroll:function(){
                 this.isRemoveLineOnScrollActive = true;
             },
-            allowscroll: function (element) {
+            allowscrollold: function (element) {
                 let rect = element.$el.getBoundingClientRect();
                 const windowHeight = (window.innerHeight || element.$el.parentElement.parentElement.clientHeight);
                 const windowWidth = (window.innerWidth || element.$el.parentElement.parentElement.clientWidth);

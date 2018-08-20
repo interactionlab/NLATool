@@ -1,9 +1,9 @@
 <template> <!--editordocument in 8080-->
     <div class="mdl-layout mdl-js-layout">
         <main class="mdl-layout__content deleteSpaces contentColor separate"
-              v-on:mouseout="mouseout"
-              v-on:mouseover="accentuate"
-              v-on:click="showdetail">
+              v-on:mousedown="accentuate"
+              v-on:mouseup="allowscroll"
+        >
             <div class="mdl-grid deleteSpaces">
                 <div class="mdl-cell mdl-cell--12-col deleteSpaces" style="width:100%">
                     <div v-bind:class="generalstyleclass" style="padding: 0.4em;">
@@ -113,30 +113,34 @@
                     this.localcontentcontrol.information = false;
                 }
             },
-            mouseout: function () {
-                this.hover = false;
+            allowscroll: function () {
+                this.$emit('allowscroll');
             },
             accentuate: function () {
-                this.hover = true;
-                let semanticClassSimplified = "OTHER";
+                this.hover = !this.hover;
 
-                if (this.researchdata.sourcequery.semanticClass === 'PERSON'
-                    || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
-                    || this.researchdata.sourcequery.semanticClass === 'LOCATION'
-                    || this.researchdata.sourcequery.semanticClass === 'MISC')
-                    semanticClassSimplified = this.researchdata.sourcequery.semanticClass;
+                if (this.hover) {
+                    let semanticClassSimplified = "OTHER";
 
-                let hoverdata = {
-                    hoverstarted: "research",
-                    offsetstart: null,
-                    offsetend: this.$el.getBoundingClientRect(),
-                    startword: null,
-                    semanticClass: semanticClassSimplified,
-                    startresearch: undefined,
-                    wordtomarkonhover: this.researchdata.sourcequery.textindexes,
-                    columnindex: this.columnindex
-                };
-                this.$emit('starthover', hoverdata);
+                    if (this.researchdata.sourcequery.semanticClass === 'PERSON'
+                        || this.researchdata.sourcequery.semanticClass === 'ORGANIZATION'
+                        || this.researchdata.sourcequery.semanticClass === 'LOCATION'
+                        || this.researchdata.sourcequery.semanticClass === 'MISC')
+                        semanticClassSimplified = this.researchdata.sourcequery.semanticClass;
+
+                    let hoverdata = {
+                        hoverstarted: "research",
+                        offsetstart: null,
+                        offsetend: this.$el.getBoundingClientRect(),
+                        startword: null,
+                        semanticClass: semanticClassSimplified,
+                        startresearch: undefined,
+                        wordtomarkonhover: this.researchdata.sourcequery.textindexes,
+                        columnindex: this.columnindex
+                    };
+                    this.$emit('starthover', hoverdata);
+                }
+
             },
             saveresult: function () {
                 this.$emit('saveresult', this.researchdata);
@@ -151,7 +155,7 @@
                 }
             },
             editResearch: function () {
-               // this.$emit('editresearch', this.researchdata);
+                // this.$emit('editresearch', this.researchdata);
             },
         },
         components: {
