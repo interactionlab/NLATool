@@ -274,7 +274,7 @@
             },
             selectText: function (index, modus) {
                 //Start Selection
-                console.log('Filing selectedIndexes with: '+index);
+                //console.log('Filling selectedIndexes with: '+index);
                 if (modus === 0) {
                     this.selectedtextindexes = {
                         start: index,
@@ -310,12 +310,12 @@
                 }
             },
             selectText2: function (newSelectedIndexes) {
-                console.log('selectText2: ' + JSON.stringify(newSelectedIndexes));
+                //console.log('selectText2: ' + JSON.stringify(newSelectedIndexes));
                 this.selectedtextindexes = newSelectedIndexes;
             },
             selectText3: function (selectiondata, modus) {
                 //console.log('Hallo ' + JSON.stringify(selectiondata));
-                console.log('Hallo ' + JSON.stringify(selectiondata));
+                //console.log('Hallo ' + JSON.stringify(selectiondata));
                 if (typeof selectiondata === 'number') {
                     this.selectText(selectiondata, modus);
                     return;

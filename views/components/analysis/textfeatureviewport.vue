@@ -154,8 +154,8 @@
                  * SELECTION OF TEXT WITH THE MOUSE WHILE HOLDING THE MOUSE BUTTON
                  */
                 handler: function (newSelectedIndexes) {
-                    console.log(' seleceted words: ' + JSON.stringify(this.selectedindexesmarked));
-                    console.log(' seleceted words: ' + JSON.stringify(newSelectedIndexes));
+                    //console.log(' seleceted words: ' + JSON.stringify(this.selectedindexesmarked));
+                    //console.log(' seleceted words: ' + JSON.stringify(newSelectedIndexes));
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
                         let start = this.selectedindexesmarked.start;
