@@ -83,7 +83,7 @@
                                v-on:setcoref="setCoref($event)"
                                v-on:movetoolbar="movetoolbar($event)"
                                v-on:hoverchain="hoverChain($event)"
-                               v-on:startselection="selectText($event,0)"
+                               v-on:startselection="selectText3($event,0)"
                                v-on:hoverduringselection="selectText3($event,1)"
                                v-on:endselection="selectText3($event,2)"
                                v-on:jumpmarktext="selectText2($event)"
@@ -274,6 +274,7 @@
             },
             selectText: function (index, modus) {
                 //Start Selection
+                console.log('Filing selectedIndexes with: '+index);
                 if (modus === 0) {
                     this.selectedtextindexes = {
                         start: index,
@@ -309,14 +310,16 @@
                 }
             },
             selectText2: function (newSelectedIndexes) {
+                console.log('selectText2: ' + JSON.stringify(newSelectedIndexes));
                 this.selectedtextindexes = newSelectedIndexes;
             },
             selectText3: function (selectiondata, modus) {
+                //console.log('Hallo ' + JSON.stringify(selectiondata));
+                console.log('Hallo ' + JSON.stringify(selectiondata));
                 if (typeof selectiondata === 'number') {
                     this.selectText(selectiondata, modus);
                     return;
                 }
-                console.log('Hallo ' + selectiondata.startword.textIndex);
                 this.selectText(selectiondata.startword.textIndex, modus);
                 if (modus === 2) {
                     //Check if Entity -> prepare highlight entity & drawline

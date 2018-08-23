@@ -154,7 +154,8 @@
                  * SELECTION OF TEXT WITH THE MOUSE WHILE HOLDING THE MOUSE BUTTON
                  */
                 handler: function (newSelectedIndexes) {
-
+                    console.log(' seleceted words: ' + JSON.stringify(this.selectedindexesmarked));
+                    console.log(' seleceted words: ' + JSON.stringify(newSelectedIndexes));
                     //unhover old words
                     if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
                         let start = this.selectedindexesmarked.start;
@@ -188,11 +189,13 @@
                             end = start;
                             start = dummy;
                         }
-                        console.log('highlighting seleceted words: ' + JSON.stringify(newSelectedIndexes));
+                        //console.log('highlighting seleceted words: ' + JSON.stringify(newSelectedIndexes));
                         for (let i = start; i <= end; i++) {
                             let index = i - this.indexCorrector2;
                             //Assumes that the length of each column is the same.
+                            console.log('manipulating index: ' + index);
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
+
                                 this.manipulateword(index, 'selected', true);
                                 if (i !== end) {
                                     this.manipulateword(index, 'selectedgap', true);
