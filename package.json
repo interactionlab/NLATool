@@ -15,7 +15,6 @@
     "babel-polyfill": "^6.26.0",
     "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",
-    "bootstrap": "^3.3.7",
     "client-sessions": "^0.8.0",
     "cookie-parser": "~1.4.3",
     "corenlp": "^1.4.3",
