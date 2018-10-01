@@ -34,6 +34,7 @@
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:activating="handleactivating($event)"
                    v-on:starthover="starthover($event)"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
@@ -198,6 +199,7 @@
     import filtertokenwithclass from './mixins/analysis/filtertoken.js';
     import researchresult from './components/analysis/researchresult.vue';
     import store from './components/analysis/globalstore.vue';
+
     export default {
         mixins: [filtertokenwithclass],
         props: {
@@ -243,12 +245,37 @@
                 researchresults: [],
                 sourcequery: [],
                 offsetfromactiveentity: 0,
-
+                active: null,
 
             }
         },
         methods: {
-            allowscroll:function(){
+            handleactivating: function (key) {
+                //deactivate the old entity
+                //active = Other > Misc > Organization > ... > person
+                if (this.active !== null) {
+                    if (this.active - (this.PERSON.length + this.LOCATION.length + this.ORGANIZATION.length + this.MISC.length) >= 0) {
+                        this.active -= (this.PERSON.length + this.LOCATION.length + this.ORGANIZATION.length + this.MISC.length);
+                        this.manipulateentity('otherresults', this.active, 'active', false);
+                    } else if (this.active - (this.PERSON.length + this.LOCATION.length + this.ORGANIZATION.length) >= 0) {
+                        this.active -= (this.PERSON.length + this.LOCATION.length + this.ORGANIZATION.length);
+                        this.manipulateentity('miscresults', this.active, 'active', false);
+                    } else if (this.active - (this.PERSON.length + this.LOCATION.length) >= 0) {
+                        this.active -= (this.PERSON.length + this.LOCATION.length);
+                        this.manipulateentity('organisazionresults', this.active, 'active', false);
+                    } else if (this.active - (this.PERSON.length) >= 0) {
+                        this.active -= (this.PERSON.length);
+                        this.manipulateentity('locationresults', this.active, 'active', false);
+                    } else if (this.active >= 0) {
+                        this.manipulateentity('personresults', this.active, 'active', false);
+                    }
+                }
+                this.active = key;
+            },
+            manipulateentity: function (semclass, index, prop, value) {
+                this.$refs[semclass][index].changeProperty(prop, value);
+            },
+            allowscroll: function () {
                 this.$emit('allowscroll');
             },
             addresearch: function () {
@@ -261,8 +288,8 @@
                 this.hoverdatafromentity = event;
                 this.$emit('starthover', event);
             },
-            otherentityactive(offset){
-                if(this.offsetend === offset){
+            otherentityactive(offset) {
+                if (this.offsetend === offset) {
                     return true;
                 }
                 return false;
@@ -378,8 +405,8 @@
         },
         watch: {
             offsetfromactiveentity: {
-                handler: function(newoffset){
-                    
+                handler: function (newoffset) {
+
                 }
             },
             researchdatatoupdate: {
@@ -440,7 +467,7 @@
             hoverdata: {
                 handler: function (hoverdata) {
                     if (hoverdata === 'undefined') {
-                        console.log("WARNING: entitiesview vue hover data undefined");
+                        console.log("WARNING: entitiesview vue active data undefined");
                         //return;?
                     }
                     if (hoverdata.hoverstarted === "research") {
@@ -551,7 +578,7 @@
                             bb = el.getBoundingClientRect();
                         }
                     }
-                    //Reset hover because of changed positions aka renew the line.
+                    //Reset active because of changed positions aka renew the line.
                     let data = {hoverended: "research", offsetend: bb, wordtomarkonhover: wordtomarkonhoverDUMMY};
                     this.$emit('endhover', data);
                 }

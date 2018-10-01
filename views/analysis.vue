@@ -55,6 +55,7 @@
                      v-for="columnindex in numberofcolumns"
                      v-bind:style="{width : columnsize2 + '%'}">
                     <component is="textfeatureviewport"
+                               ref="reftextfeatureviewport"
                                v-bind:setcoref="setcoref"
                                v-bind:columnindex="columnindex-1"
                                v-bind:numberofcolumns="numberofcolumns"
@@ -90,7 +91,8 @@
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
                                v-on:removehoverline="removehoverline($event)"
-                               v-on:updateclassestomark="updateclassestomark($event)">
+                               v-on:updateclassestomark="updateclassestomark($event)"
+                               v-on:scrolling="handlescrolling($event)">
                     </component>
                 </div>
             </div>
@@ -133,6 +135,10 @@
                 wordtomarkonhoverdata: {},
                 offsetstart: null,
                 offsetend: null,
+                tempoffsetstart: null,
+                tempoffsetend: null,
+                tempscrolltoptext: 0,
+                tempscrolltopentity: 0,
                 semanticclass: {},
                 analysisMode: 'analighter',
                 researchmode: '',
@@ -147,7 +153,7 @@
                 },
                 selectedtextindexes: {
                     start: -1,
-                    hover: -1,
+                    active: -1,
                     end: -1,
                     done: true
                 },
@@ -211,9 +217,96 @@
                 researchedentitiesResults: [],
                 researchedallentities: false,
                 preparedEntities: 0,
+                scrollTimeout: 0,
+                scrollingacolumn: false,
             }
         },
         methods: {
+            handlescrolling: function (scrollinfo) {
+                if (scrollinfo.scrollingacolumn) {
+                    if (this.offsetstart !== null && this.offsetend !== null) {
+                        this.tempoffsetend = this.offsetend;
+                        this.tempoffsetstart = this.offsetstart;
+                        this.offsetstart = null;
+                        this.offsetend = null;
+                        if (scrollinfo.source !== null && scrollinfo.source == 'textwindow') {
+                            this.tempscrolltoptext = scrollinfo.scrollTop
+                        }else if(scrollinfo.source !== null && scrollinfo.source == 'textviewport'){
+                            this.tempscrolltopentity = scrollinfo.scrollTop
+                        }
+                    }
+                    //this.removehoverline();
+                } else {
+                    let tempoffset = {};
+                    let deltatop = 0;
+                    let columnindex = this.lineddata.columnindex;
+                    //Check if still in viewport & get new boundingrects:
+                    if (scrollinfo.source !== null && scrollinfo.source == 'textwindow') {
+                        this.offsetend = this.tempoffsetend;
+                        if (this.lineddata.wordtomarkonhover.length !== 0) {
+                            //Scroll in text && select origin entitiesview
+                            // -> check if words in wordtomarkonhover are still in view
+                            // -> draw a new line
+                           for (let i = 0; i < this.lineddata.wordtomarkonhover.length; i++) {
+                                if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport(
+                                    this.$refs['reftextfeatureviewport'][columnindex].$refs['text']
+                                        [this.lineddata.wordtomarkonhover[i] - this.$refs['reftextfeatureviewport']
+                                        [columnindex].indexCorrector2].$el)) {
+                                    this.offsetstart =
+                                        this.$refs['reftextfeatureviewport'][columnindex]
+                                            .$refs['text'][this.lineddata.wordtomarkonhover[i]].$el.getBoundingClientRect();
+                                    //this.drawline(this.lineddata);
+                                    break;
+                                }
+                            }
+                        } else {
+                            //Scroll in text && select origin text
+                            // update offsetstart
+                            // -> draw a new line
+                            deltatop = scrollinfo.scrollTop - this.tempscrolltoptext;
+                            tempoffset = {
+                                "x": this.tempoffsetstart.x,
+                                "y": this.tempoffsetstart.y - deltatop,
+                                "width": this.tempoffsetstart.width,
+                                "height": this.tempoffsetstart.height,
+                                "top": this.tempoffsetstart.top - deltatop,
+                                "right": this.tempoffsetstart.right,
+                                "bottom": this.tempoffsetstart.bottom - deltatop,
+                                "left": this.tempoffsetstart.left
+                            };
+                            this.tempscrolltoptext = scrollinfo.scrollTop;
+                            this.tempoffsetstart = tempoffset;
+                            if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetstart)) {
+                                this.offsetstart = this.tempoffsetstart;
+                                //this.drawline(this.lineddata);
+                            }
+
+                        }
+                    } else if (scrollinfo.source !== null && scrollinfo.source == 'textviewport') {
+                        this.offsetstart = this.tempoffsetstart;
+                        //Scroll in entitiesview && select origin in text
+                        // -> no offsetend -> find corresponding entity to word
+                        // -> draw new line
+                        deltatop = scrollinfo.scrollTop - this.tempscrolltopentity;
+                       tempoffset = {
+                            "x": this.tempoffsetend.x,
+                            "y": this.tempoffsetend.y - deltatop,
+                            "width": this.tempoffsetend.width,
+                            "height": this.tempoffsetend.height,
+                            "top": this.tempoffsetend.top - deltatop,
+                            "right": this.tempoffsetend.right,
+                            "bottom": this.tempoffsetend.bottom - deltatop,
+                            "left": this.tempoffsetend.left
+                        };
+                        this.tempscrolltopentity = scrollinfo.scrollTop;
+                        this.tempoffsetend = tempoffset;
+                        if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetend)) {
+                            this.offsetend = this.tempoffsetend;
+                            //this.drawline(this.lineddata);
+                        }
+                    }
+                }
+            },
             setCoref: function (value) {
                 this.setcoref = value;
             },
@@ -278,7 +371,7 @@
                 if (modus === 0) {
                     this.selectedtextindexes = {
                         start: index,
-                        hover: index,
+                        active: index,
                         end: -1,
                         done: false
                     };
@@ -287,7 +380,7 @@
                 else if (modus === 1) {
                     this.selectedtextindexes = {
                         start: this.selectedtextindexes.start,
-                        hover: index,
+                        active: index,
                         end: -1,
                         done: false
                     };
@@ -303,7 +396,7 @@
                     }
                     this.selectedtextindexes = {
                         start: start,
-                        hover: end,
+                        active: end,
                         end: end,
                         done: true
                     };
@@ -517,6 +610,7 @@
                 }
             },
             drawline: function (event) {
+                //Issue 142:
                 //DELETE OLD LINE
                 if (event.hoverended === "research") {
                     this.wordtomarkonhoverdata = {
@@ -526,12 +620,14 @@
                         columnindex: event.columnindex
                     };
                     this.offsetend = event.offsetend;
+                    this.tempoffsetend = this.offsetend;
                 } else if (event.hoverended === "text") {
                     this.offsetstart = event.offsetstart;
+                    this.tempoffsetstart = this.offsetstart;
                 }
                 //If the startpoint of old line = startpoint of the new line and...
                 if (this.lineddata.hoverstarted === event.hoverstarted) {
-                    // the hover started from hovering over text and the new line is the same
+                    // the active started from hovering over text and the new line is the same
                     // or from research entity respectivly -> do nothing
                     if ((event.hoverstarted === "text"
                         && this.lineddata.offsetstart !== null && this.lineddata.offsetstart.x === event.offsetstart.x
@@ -544,15 +640,17 @@
                 }
                 //DRAW NEW LINE:
                 //prepare control Objects for view (semanticClass, data for creating lines
+                //console.log('Getting here ' + JSON.stringify(event));
                 this.lineddata = event;
                 let classofcolor = event.semanticClass + "_strong";
 
                 this.semanticclass = {};
                 this.semanticclass[classofcolor] = true;
-                //if hover started from text the remaining words of the entity are easy to find
+                //if active started from text the remaining words of the entity are easy to find
                 // -> only start offset is needed
                 if (event.hoverstarted === "text") {
                     this.offsetstart = event.offsetstart;
+                    this.tempoffsetstart = this.offsetstart;
                 } else if (event.hoverstarted === "research") {
                     // if it started from a researchentity we need to find it later and prepare for that
                     this.wordtomarkonhoverdata = {
@@ -562,38 +660,13 @@
                         columnindex: event.columnindex
                     };
                     this.offsetend = event.offsetend;
+                    this.tempoffsetend = this.offsetend;
                 }
                 //Redundancy ?
             },
             starthover: function (event) {
-                if (this.hoverdata.hoverstarted === event.hoverstarted) {
-                    if ((event.hoverstarted === "text"
-                        && this.hoverdata.offsetstart !== null && this.hoverdata.offsetstart.x === event.offsetstart.x
-                        && this.hoverdata.offsetstart.y === event.offsetstart.y) ||
-                        (event.hoverstarted === "research"
-                            && this.hoverdata.offsetend.x === event.offsetend.x
-                            && this.hoverdata.offsetend.y === event.offsetend.y)) {
-                        return;
-                    }
-                }
+                this.drawline(event);
                 this.hoverdata = event;
-                let classofcolor = event.semanticClass + "_strong";
-                let whereFrom = event.hoverstarted;
-
-                this.semanticclass = {};
-                this.semanticclass[classofcolor] = true;
-
-                if (event.hoverstarted === "text") {
-                    this.offsetstart = event.offsetstart;
-                } else if (event.hoverstarted === "research") {
-                    this.wordtomarkonhoverdata = {
-                        textindexes: event.wordtomarkonhover,
-                        hoverstarted: "research",
-                        semanticClass: this.hoverdata.semanticClass,
-                        columnindex: event.columnindex
-                    };
-                    this.offsetend = event.offsetend;
-                }
             },
             endhover: function (event) {
                 if (event.hoverended === "research") {
@@ -604,8 +677,10 @@
                         columnindex: event.columnindex
                     };
                     this.offsetend = event.offsetend;
+                    this.tempoffsetend = this.offsetend;
                 } else if (event.hoverended === "text") {
                     this.offsetstart = event.offsetstart;
+                    this.tempoffsetstart = this.offsetstart;
                 }
             },
             removehoverline: function (event) {
@@ -716,7 +791,8 @@
             researchedentitiesResults: {
                 handler: function (newData) {
                     //this.splitTokens();
-                }, deep: true
+                },
+                deep: true
             },
             moreData: {
                 handler: function (newData) {
@@ -727,7 +803,8 @@
                         this.searchGoogleWithResearchedEntities();
                         this.displayloading = false;
                     }
-                }, deep: true
+                },
+                deep: true
             },
             selectedtextindexes: {
                 handler: function (newSelectedIndexes) {

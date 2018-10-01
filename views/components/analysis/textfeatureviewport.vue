@@ -6,8 +6,9 @@
             <!--left grid for text stuff -->
             <div class="mdl-cell mdl-cell--6-col"
                  style="border-right: 1px solid rgba(0,0,0,.1);margin: 0;padding: 8px; width: 50%; overflow-y: auto;"
-                 v-on:scroll="onscrolltext">
-                <div class="mdl-grid" id="textWindow" ref="textWindow"
+                 v-on:scroll="onscrolltext"
+                 ref="textwindow">
+                <div class="mdl-grid" id="textWindow"
                      style="height: auto !important; display: block; max-height: 100%; padding:0;">
 
                     <component is="tex"
@@ -132,6 +133,7 @@
             contentcontrol: {type: Object, default: null},
             tokenssplittedindextoshow: {type: Number, default: 0},
             setcoref: {type: Boolean, default: false},
+            scrolling: false,
         },
         data: function () {
             return {
@@ -141,6 +143,13 @@
                 isRemoveLineOnScrollActive: true,
                 wortomarkonhoverold: null,
                 oldhoveredchain: null,
+                addedtextscrolllistener: false,
+                scrolltimeout: null,
+                scrollinfo: {
+                    scrollingacolumn: false,
+                    scrollTop: 0,
+                    source: null
+                }
             }
         },
         watch: {
@@ -157,9 +166,9 @@
                     //console.log(' seleceted words: ' + JSON.stringify(this.selectedindexesmarked));
                     //console.log(' seleceted words: ' + JSON.stringify(newSelectedIndexes));
                     //unhover old words
-                    if (this.selectedindexesmarked.hover !== -1 || this.selectedindexesmarked.end !== -1) {
+                    if (this.selectedindexesmarked.active !== -1 || this.selectedindexesmarked.end !== -1) {
                         let start = this.selectedindexesmarked.start;
-                        let end = this.selectedindexesmarked.hover;
+                        let end = this.selectedindexesmarked.active;
                         if (this.selectedindexesmarked.end !== -1) {
                             let end = this.selectedindexesmarked.end;
                         }
@@ -177,10 +186,10 @@
                             }
                         }
                     }
-                    //hover new words
-                    if (newSelectedIndexes.hover !== -1 || newSelectedIndexes.end !== -1) {
+                    //active new words
+                    if (newSelectedIndexes.active !== -1 || newSelectedIndexes.end !== -1) {
                         let start = newSelectedIndexes.start;
-                        let end = newSelectedIndexes.hover;
+                        let end = newSelectedIndexes.active;
                         if (newSelectedIndexes.end !== -1) {
                             let end = newSelectedIndexes.end;
                         }
@@ -193,7 +202,6 @@
                         for (let i = start; i <= end; i++) {
                             let index = i - this.indexCorrector2;
                             //Assumes that the length of each column is the same.
-                            console.log('manipulating index: ' + index);
                             if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
 
                                 this.manipulateword(index, 'selected', true);
@@ -210,6 +218,7 @@
                 /*
                  * HOVER START BY A RESEARCH ELEMENT AND STARTED BY A TEXT ELEMENT
                  */
+                //Revert visual changes to words on hover
                 if (this.wortomarkonhoverold !== null && this.wortomarkonhoverold !== undefined) {
                     if (this.wortomarkonhoverold.textindexes.length > 0) {
                         for (let k = 0; k < this.wortomarkonhoverold.textindexes.length; k++) {
@@ -221,7 +230,9 @@
                         }
                     }
                 }
+                //if there are words in textindexes
                 if (newWordToMarkOnHover.textindexes.length > 0) {
+                    //for every textindex correct the index and highlight the word
                     for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                         let index = newWordToMarkOnHover.textindexes[k] - this.indexCorrector2;
                         if (index >= 0 && index < this.tokenstoshow[this.columnindex].length) {
@@ -233,10 +244,14 @@
                             }
                         }
                     }
+                    //update wortomarkonhoverold
                     this.wortomarkonhoverold = newWordToMarkOnHover;
+                    //preparing resources to draw line
+                    //work with the word in the right column
                     if (newWordToMarkOnHover.columnindex === this.columnindex) {
                         let index = -1;
                         if (this.numberofcolumns === 1) {
+                            //check if one of the words is in the viewport otherwise scroll to it.
                             for (let k = 0; k < newWordToMarkOnHover.textindexes.length; k++) {
                                 let textIndex = newWordToMarkOnHover.textindexes[k];
                                 if (this.isElementInViewport(this.$refs['text'][textIndex].$el)) {
@@ -259,7 +274,10 @@
                         }
 
                         if (index !== -1) {
-                            let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2].$el.getBoundingClientRect()
+                            if (!this.isElementInViewport(this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2].$el)) {
+                                this.scrolltoword(newWordToMarkOnHover.textindexes[index] - this.indexCorrector2);
+                            }
+                            let bb = this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2].$el.getBoundingClientRect();
 
                             if (this.$refs['text'][newWordToMarkOnHover.textindexes[index] - this.indexCorrector2] !== undefined) {
                                 let data = {
@@ -282,7 +300,7 @@
                         for (let i = 0; i < this.oldhoveredchain.length; i++) {
                             if (this.oldhoveredchain[i].start >= this.indexCorrector2
                                 && this.oldhoveredchain[i].end < this.indexCorrector2 + this.tokenstoshow[this.columnindex].length) {
-                                //...and set variables for hover to false for each mention in chain
+                                //...and set variables for active to false for each mention in chain
                                 for (let j = this.oldhoveredchain[i].start; j < this.oldhoveredchain[i].end; j++) {
                                     this.manipulateword(j - this.indexCorrector2, 'corefhover', false);
                                     this.manipulateword(j - this.indexCorrector2, 'corefhovergap', false);
@@ -290,7 +308,7 @@
                             }
                         }
                     }
-                    //Hover new Chain if there is a new one to hover based on the same principle like above
+                    //Hover new Chain if there is a new one to active based on the same principle like above
                     //could maybe export that as a new method for the style in the future
                     if (newChain !== null && newChain.length !== 0) {
                         for (let i = 0; i < newChain.length; i++) {
@@ -324,6 +342,35 @@
         },
         mounted() {
             this.calcparentviewport();
+            this.$refs['textwindow'].addEventListener('scroll', (event) => {
+                // Clear our timeout throughout the scroll
+                //console.log('ref textwindow is here?: ' + JSON.stringify(this.$refs['textwindow']));
+                clearTimeout(this.scrollTimeout);
+                this.scrollinfo.scrollingacolumn = true;
+
+                this.$emit('scrolling', this.scrollinfo);
+                // Set a timeout to run after scrolling ends
+                this.scrollTimeout = setTimeout(() => {
+                    this.scrollinfo.scrollingacolumn = false;
+                    this.scrollinfo.scrollTop = this.$refs['textwindow'].scrollTop;
+                    this.scrollinfo.source = 'textwindow';
+                    this.$emit('scrolling', this.scrollinfo);
+                }, 66);
+            }, false);
+
+            this.$refs['textviewport'].addEventListener('scroll', (event) => {
+                // Clear our timeout throughout the scroll
+                clearTimeout(this.scrolltimeout);
+                this.scrollinfo.scrollingacolumn = true;
+                this.$emit('scrolling', this.scrollinfo);
+                // Set a timeout to run after scrolling ends
+                this.scrollTimeout = setTimeout(() => {
+                    this.scrollinfo.scrollingacolumn = false;
+                    this.scrollinfo.scrollTop = this.$refs['textviewport'].scrollTop;
+                    this.scrollinfo.source = 'textviewport';
+                    this.$emit('scrolling', this.scrollinfo);
+                }, 66);
+            }, false);
         },
         computed: {
             indexCorrector: function () {
@@ -341,6 +388,9 @@
                 return tempcorrector;
             }
 
+        },
+        beforeDestroy() {
+            window.removeAllListeners();
         },
         methods: {
             setrerendercoref: function () {
@@ -381,12 +431,31 @@
                 this.parentviewport = this.$refs['column'].getBoundingClientRect();
             },
             onscrolltext: function () {
-                if (this.isRemoveLineOnScrollActive) {
+                //if (!this.addedtextscrolllistener) {
+                /*console.log('ref textWindow is here?: ' + JSON.stringify(this.$refs['textWindow']));
+                this.$refs['textWindow'].addEventListener('scroll', (event) => {
+                    // Clear our timeout throughout the scroll
+                    console.log('ref textWindow is here?: ' + JSON.stringify(this.$refs['textWindow']));
+                    console.log('capturing scroll');
+                    clearTimeout(this.scrollTimeout);
+                    this.scrollingacolumn = true;
+                    this.$emit('scrolling', this.scrollingacolumn);
+                    // Set a timeout to run after scrolling ends
+                    this.scrollTimeout = setTimeout(() => {
+                        console.log('capturing scroll end');
+                        this.scrollingacolumn = false;
+                        this.$emit('scrolling', this.scrollingacolumn);
+                    }, 66);
+                }, false);*/
+                this.addedtextscrolllistener = true;
+                //}
+                //console.log('ref textWindow is here?: ' + JSON.stringify(this.$refs['textwindow']));
+                /*if (this.isRemoveLineOnScrollActive) {
                     this.removehoverline([]);
-                }
+                }*/
             },
             removehoverline: function (data) {
-                this.$emit('removehoverline', data);
+                // this.$emit('removehoverline', data);
             },
             manipulateword: function (textIndex, prop, value) {
                 this.$refs['text'][textIndex].changeProperty(prop, value);
@@ -401,15 +470,24 @@
                     rect.right <= rect2.right
                 );
             },
+            isElementInViewport2: function (rect) {
+                let rect2 = this.$el.getBoundingClientRect();
+                return (
+                    rect.top >= rect2.top &&
+                    rect.left >= rect2.left &&
+                    rect.bottom <= rect2.bottom &&
+                    rect.right <= rect2.right
+                );
+            },
             scrolltoword: function (textIndex) {
                 if (textIndex - this.indexCorrector < 0 || textIndex - this.indexCorrector > this.tokenstoshow[this.columnindex].length) {
                     return;
                 }
-                this.isRemoveLineOnScrollActive = false;
+                //this.isRemoveLineOnScrollActive = false;
                 this.$refs['text'][textIndex].$el.scrollIntoView();
             },
-            allowscroll:function(){
-                this.isRemoveLineOnScrollActive = true;
+            allowscroll: function () {
+                //this.isRemoveLineOnScrollActive = true;
             },
             allowscrollold: function (element) {
                 let rect = element.$el.getBoundingClientRect();
@@ -446,7 +524,7 @@
             },
             starthover: function (event) {
                 if (this.analysismode === "analighter") {
-                    //only if the hover event comes from a research entity otherwise just forward hoverdata
+                    //only if the active event comes from a research entity otherwise just forward hoverdata
                     //correct bb
                     if (event.hoverstarted === "research") {
                         let bb = event.offsetend;
