@@ -391,7 +391,6 @@
         },
         methods: {
             setrerendercoref: function () {
-                console.log('setting rendercoref');
                 this.setcoref = true;
             },
             rendercoref: function (corefmode) {
@@ -452,7 +451,6 @@
                 }*/
             },
             removehoverline: function () {
-                console.log('Getting here1');
                 this.$emit('removehoverline');
             },
             manipulateword: function (textIndex, prop, value) {

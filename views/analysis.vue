@@ -684,7 +684,6 @@
                 }
             },
             removehoverline: function () {
-                console.log('Getting here');
                 this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {
