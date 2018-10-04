@@ -90,7 +90,7 @@
                                v-on:jumpmarktext="selectText2($event)"
                                v-on:starthover="starthover($event)"
                                v-on:endhover="endhover($event)"
-                               v-on:removehoverline="removehoverline($event)"
+                               v-on:removehoverline="removehoverline"
                                v-on:updateclassestomark="updateclassestomark($event)"
                                v-on:scrolling="handlescrolling($event)">
                     </component>
@@ -330,7 +330,7 @@
                 if (this.hoverdata !== null
                     && this.hoverdata.semanticClass !== undefined
                     && this.classesToMark[this.hoverdata.semanticClass] === false) {
-                    this.removehoverline([]);
+                    this.removehoverline();
                     this.wordtomarkonhoverdata = {
                         textindexes: [],
                         hoverstarted: "text",
@@ -362,7 +362,7 @@
                 this.analysisMode = 'analighter';
             },
             getNotes: function () {
-                this.removehoverline([]);
+                this.removehoverline();
                 this.analysisMode = 'notes';
             },
             selectText: function (index, modus) {
@@ -683,8 +683,8 @@
                     this.tempoffsetstart = this.offsetstart;
                 }
             },
-            removehoverline: function (event) {
-                //console.log("removehoverline: " + JSON.stringify(event));
+            removehoverline: function () {
+                console.log('Getting here');
                 this.offsetstart = null;
             },
             setMoreDataFromServer: function (value) {

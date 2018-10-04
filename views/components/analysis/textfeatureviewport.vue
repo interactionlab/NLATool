@@ -59,7 +59,7 @@
                             v-on:jumpmarktext="selectText2($event)"
                             v-on:starthover="starthover($event)"
                             v-on:allowscroll="allowscroll"
-                            v-on:removehoverline="removehoverline($event)"
+                            v-on:removehoverline="removehoverline"
                             v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
                 </keep-alive>
@@ -389,9 +389,6 @@
             }
 
         },
-        beforeDestroy() {
-            window.removeAllListeners();
-        },
         methods: {
             setrerendercoref: function () {
                 console.log('setting rendercoref');
@@ -454,8 +451,9 @@
                     this.removehoverline([]);
                 }*/
             },
-            removehoverline: function (data) {
-                // this.$emit('removehoverline', data);
+            removehoverline: function () {
+                console.log('Getting here1');
+                this.$emit('removehoverline');
             },
             manipulateword: function (textIndex, prop, value) {
                 this.$refs['text'][textIndex].changeProperty(prop, value);

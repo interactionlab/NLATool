@@ -120,7 +120,6 @@
             },
             accentuate: function () {
                 this.active = !this.active;
-                this.$emit('activating' , this.mapkey);
             },
             saveresult: function () {
                 this.$emit('saveresult', this.researchdata);
@@ -170,7 +169,10 @@
                             columnindex: this.columnindex,
                             entitykey: this.key,
                         };
+                        this.$emit('activating' , this.mapkey);
                         this.$emit('starthover', hoverdata);
+                    } else{
+                        this.$emit('deactivating');
                     }
                 }
             }

@@ -21,6 +21,7 @@
                        v-on:updateclassestomark="updateclassestomark($event)"
                        v-on:endhover="endhover($event)"
                        v-on:starthover="starthover($event)"
+                       v-on:removehoverline="removehoverline"
                        v-on:editresearch="editresearch($event)"
                        v-on:saveresult="saveresult($event)"
                        v-on:switchtoentities="switchtoentities()">
@@ -72,6 +73,9 @@
             }
         },
         methods: {
+            removehoverline: function(){
+                this.$emit('removehoverline');
+            },
             updateclassestomark: function (newClassesToMark) {
                 this.$emit('updateclassestomark', newClassesToMark);
             },

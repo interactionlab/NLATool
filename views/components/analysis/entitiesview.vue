@@ -35,6 +35,7 @@
                    v-bind:contentcontrol="contentcontrol.PERSONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:activating="handleactivating($event)"
+                   v-on:deactivating="handledeactivating"
                    v-on:starthover="starthover($event)"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
@@ -73,6 +74,8 @@
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.LOCATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:deactivating="handledeactivating"
+                   v-on:activating="handleactivating($event)"
                    v-on:starthover="starthover($event)"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
@@ -111,6 +114,8 @@
                    v-bind:columnlength="tokenstoshow[columnindex].length"
                    v-bind:contentcontrol="contentcontrol.ORGANIZATIONS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                   v-on:activating="handleactivating($event)"
+                   v-on:deactivating="handledeactivating"
                    v-on:starthover="starthover($event)"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
@@ -150,6 +155,8 @@
                    v-bind:contentcontrol="contentcontrol.MISCS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
+                   v-on:activating="handleactivating($event)"
+                   v-on:deactivating="handledeactivating"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
         </component>
@@ -188,6 +195,8 @@
                    v-bind:contentcontrol="contentcontrol.OTHERS"
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-on:starthover="starthover($event)"
+                   v-on:activating="handleactivating($event)"
+                   v-on:deactivating="handledeactivating"
                    v-on:allowscroll="allowscroll"
                    v-on:saveresult="saveresult($event)"
                    v-on:editresearch="editresearch($event)">
@@ -250,6 +259,10 @@
             }
         },
         methods: {
+            handledeactivating: function(){
+                this.active = null;
+                this.$emit('removehoverline');
+            },
             handleactivating: function (key) {
                 //deactivate the old entity
                 //active = Other > Misc > Organization > ... > person
