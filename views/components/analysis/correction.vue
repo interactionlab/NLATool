@@ -105,6 +105,8 @@
                    v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                    v-bind:selectedchain="selectedchain"
                    v-bind:semanticclass="semanticClass"
+                   v-bind:columnindex="columnindex"
+                   v-bind:tokenstoshow="tokenstoshow"
                    v-on:saveresult="saveresult($event)">
         </component>
         <p v-else-if="semanticClass !== 'ERROR'"
@@ -135,6 +137,12 @@
             selectedtextindexes: {type: Object, default: null},
             docid: {type: Number, default: -1},
             selectedchain: {type: Number, default: -1},
+            columnindex: {type: Number, default: 0},
+            tokenstoshow: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
         },
         data: function () {
             return {

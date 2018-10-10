@@ -1,23 +1,47 @@
 <template>
     <div>
         <keep-alive>
-            <component :is="showmode"
+            <component v-if="showing === 'entitiesview'"
+                    is="entitiesview"
                        v-bind:serverip="serverip"
                        v-bind:googleapikey="googleapikey"
                        v-bind:tokens="tokens"
                        v-bind:columnindex="columnindex"
                        v-bind:researchedentities="researchedentities"
                        v-bind:tokenstoshow="tokenstoshow"
-                       v-bind:selectedtextindexes="selectedtextindexes"
                        v-bind:selectedchain="selectedchain"
                        v-bind:docid="docid"
                        v-bind:classestomark="classestomark"
                        v-bind:contentcontrol="contentcontrol"
                        v-bind:hoverdata="hoverdata"
                        v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                       v-bind:parentviewport="parentviewport"
+                       v-bind:researchdatatoupdate="researchdatatoupdate"
+                       v-bind:selectedindexes="selectedtextindexes"
+                       v-on:updateclassestomark="updateclassestomark($event)"
+                       v-on:endhover="endhover($event)"
+                       v-on:starthover="starthover($event)"
+                       v-on:removehoverline="removehoverline"
+                       v-on:editresearch="editresearch($event)"
+                       v-on:saveresult="saveresult($event)"
+                       v-on:switchtoentities="switchtoentities()">
+            </component>
+            <component v-else
+                       is="correction"
+                       v-bind:serverip="serverip"
+                       v-bind:googleapikey="googleapikey"
+                       v-bind:tokens="tokens"
+                       v-bind:researchedentities="researchedentities"
+                       v-bind:tokenstoshow="tokenstoshow"
+                       v-bind:columnindex="columnindex"
+                       v-bind:selectedtextindexes="selectedtextindexes"
+                       v-bind:selectedchain="selectedchain"
+                       v-bind:docid="docid"
+                       v-bind:classestomark="classestomark"
+                       v-bind:contentcontrol="contentcontrol"
+                       v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
                        v-bind:researchdatatoedit="researchdatatoedit"
                        v-bind:researchdatatoupdate="researchdatatoupdate"
-                       v-bind:parentviewport="parentviewport"
                        v-on:updateclassestomark="updateclassestomark($event)"
                        v-on:endhover="endhover($event)"
                        v-on:starthover="starthover($event)"
@@ -34,6 +58,7 @@
     import correction from './components/analysis/correction.vue';
     import entitiesview from './components/analysis/entitiesview.vue';
     import store from './components/analysis/globalstore.vue';
+
     export default {
 
         props: {
@@ -63,17 +88,32 @@
             },
             wordtomarkonhoverdata: {type: Object, default: null},
             parentviewport: {type: Object, default: null},
+            analighterstatus: {
+                type: Array, default: function () {
+                    return [{column: 0, status: 'entitiesview'}]
+                }
+            }
         },
         data: function () {
             return {
                 researchdatatoedit: null,
                 researchdatatoupdate: {},
-                showmode: 'entitiesview',
-
+                showmode: 'entitiesview'
+            }
+        },
+        computed: {
+            showing: function () {
+                console.log('showing: ' + this.columnindex + ': ' + JSON.stringify(this.analighterstatus));
+                try {
+                    return JSON.parse(JSON.stringify(this.analighterstatus[this.columnindex].status));
+                } catch (e) {
+                    console.log('catching -> entitiesview');
+                    return 'entitiesview'
+                }
             }
         },
         methods: {
-            removehoverline: function(){
+            removehoverline: function () {
                 this.$emit('removehoverline');
             },
             updateclassestomark: function (newClassesToMark) {
@@ -86,29 +126,41 @@
                 this.$emit('starthover', textIndex);
             },
             editresearch: function (researchData) {
-                this.$emit('removehoverline', []);
+                this.$emit('removehoverline');
                 this.classestomark.POS = true;
+
+                /*
                 this.showmode = 'correction';
+                this.showing.mode = 'correction';
+                this.analighterstatus[this.columnindex].status = 'correction';*/
+                this.$emit('updateanalighterstatus', {column: this.columnindex, status: 'correction'});
                 if (researchData !== undefined) {
                     this.researchdatatoedit = JSON.parse(JSON.stringify(researchData));
                 } else {
                     this.researchdatatoedit = null;
                 }
                 this.researchdatatoupdate = null;
+
                 this.$emit('updateclassestomark', this.classestomark);
             },
             saveresult: function (researchData) {
-                this.$emit('removehoverline', []);
+                this.$emit('removehoverline');
                 this.classestomark.POS = false;
                 this.researchdatatoedit = null;
-                this.showmode = 'entitiesview';
+                /* this.showmode = 'entitiesview';
+                 this.showing.mode = 'entitiesview';*/
+                this.$emit('updateanalighterstatus', {column: this.columnindex, status: 'entitiesview'});
+                //this.analighterstatus[this.columnindex].status = 'entitiesview';
                 this.researchdatatoupdate = JSON.parse(JSON.stringify(researchData));
                 this.updateclassestomark(this.classestomark);
             },
             switchtoentities: function () {
                 this.classestomark.POS = false;
-                this.showmode = 'entitiesview';
-                this.$emit('removehoverline', []);
+                /* this.showmode = 'entitiesview';
+                 this.showing.mode = 'entitiesview';*/
+                //this.analighterstatus[this.columnindex].status = 'entitiesview';
+                this.$emit('updateanalighterstatus', {column: this.columnindex, status: 'entitiesview'});
+                this.$emit('removehoverline');
                 this.updateclassestomark(this.classestomark);
             }
         },
@@ -116,6 +168,11 @@
             showmode: {
                 handler: function (newmode) {
                     console.log('in column ' + this.columnindex + 'the mode changed to: ' + newmode);
+                }
+            },
+            columnindex: {
+                handler: function (newcolumn) {
+                    this.showing.column = newcolumn;
                 }
             }
         },

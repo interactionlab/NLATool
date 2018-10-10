@@ -29,8 +29,11 @@
                        v-bind:mapkey="index"
                        v-bind:docid="docid"
                        v-bind:viewing="false"
+                       v-bind:columnindex="columnindex"
                        v-bind:contentcontrol="contentcontrol.PERSONS"
                        v-bind:wordtomarkonhoverdata="wordtomarkonhoverdata"
+                       v-bind:columnlength="tokenstoshow[columnindex].length"
+                       v-bind:indexcorrector="indexCorrector"
                        v-on:starthover="starthover($event)"
                        v-on:saveresult="saveresult($event)">
             </component>
@@ -49,12 +52,17 @@
         mixins: [getselectedtext, filtertoken],
         props: {
             serverip: {type: String, default: ""},
-
+            columnindex: {type: Number, default: 0},
             googleapikey: {type: String, default: ""},
             selectedtextindexes: {type: Object, default: null},
             researchdatatoedit: {type: Object, default: null},
             contentcontrol: {type: Object, default: null},
             tokens: {
+                type: Array, default: function () {
+                    return []
+                }
+            },
+            tokenstoshow: {
                 type: Array, default: function () {
                     return []
                 }
@@ -215,7 +223,15 @@
                 }
             }
         },
-        computed: {},
+        computed: {
+            indexCorrector: function () {
+                let tempcorrector = 0;
+                for (let i = 0; i < this.columnindex; i++) {
+                    tempcorrector = tempcorrector + this.tokenstoshow[i].length;
+                }
+                return tempcorrector;
+            },
+        },
         mounted: function () {
             this.handleselectedtextindexes(this.selectedtextindexes);
             this.$nextTick(() => {

@@ -1,6 +1,6 @@
 <template> <!--editordocument in 8080-->
-    <div class="mdl-layout mdl-js-layout">
-        <main class="mdl-layout__content deleteSpaces contentColor separate"
+    <div class="mdl-layout">
+        <div class="mdl-layout__content deleteSpaces contentColor separate"
               v-on:click="accentuate"
         >
             <div class="mdl-grid deleteSpaces">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 </template>
 
@@ -73,7 +73,6 @@
             index: {type: Number, default: -1},
             mapkey: {type: Number, default: -1},
             docid: {type: Number, default: -1},
-            semclass: {type: String, default: ""},
             contentcontrol: {type: Object, default: null},
             indexcorrector: {type: Number, default: 0},
             columnlength: {type: Number, default: 0},
@@ -134,7 +133,7 @@
                 }
             },
             editResearch: function () {
-                // this.$emit('editresearch', this.researchdata);
+                this.$emit('editresearch', this.researchdata);
             },
         },
         components: {

@@ -231,78 +231,81 @@
                         this.offsetend = null;
                         if (scrollinfo.source !== null && scrollinfo.source == 'textwindow') {
                             this.tempscrolltoptext = scrollinfo.scrollTop
-                        }else if(scrollinfo.source !== null && scrollinfo.source == 'textviewport'){
+                        } else if (scrollinfo.source !== null && scrollinfo.source == 'textviewport') {
                             this.tempscrolltopentity = scrollinfo.scrollTop
                         }
                     }
                     //this.removehoverline();
                 } else {
-                    let tempoffset = {};
-                    let deltatop = 0;
-                    let columnindex = this.lineddata.columnindex;
-                    //Check if still in viewport & get new boundingrects:
-                    if (scrollinfo.source !== null && scrollinfo.source == 'textwindow') {
-                        this.offsetend = this.tempoffsetend;
-                        if (this.lineddata.wordtomarkonhover.length !== 0) {
-                            //Scroll in text && select origin entitiesview
-                            // -> check if words in wordtomarkonhover are still in view
-                            // -> draw a new line
-                           for (let i = 0; i < this.lineddata.wordtomarkonhover.length; i++) {
-                                if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport(
-                                    this.$refs['reftextfeatureviewport'][columnindex].$refs['text']
-                                        [this.lineddata.wordtomarkonhover[i] - this.$refs['reftextfeatureviewport']
-                                        [columnindex].indexCorrector2].$el)) {
-                                    this.offsetstart =
-                                        this.$refs['reftextfeatureviewport'][columnindex]
-                                            .$refs['text'][this.lineddata.wordtomarkonhover[i]].$el.getBoundingClientRect();
-                                    //this.drawline(this.lineddata);
-                                    break;
+                    if (this.tempoffsetend !== undefined && this.tempoffsetend !== null
+                        && this.tempoffsetstart !== undefined && this.tempoffsetstart !== null) {
+                        let tempoffset = {};
+                        let deltatop = 0;
+                        let columnindex = this.lineddata.columnindex;
+                        //Check if still in viewport & get new boundingrects:
+                        if (scrollinfo.source !== null && scrollinfo.source == 'textwindow') {
+                            this.offsetend = this.tempoffsetend;
+                            if (this.lineddata.wordtomarkonhover.length !== 0) {
+                                //Scroll in text && select origin entitiesview
+                                // -> check if words in wordtomarkonhover are still in view
+                                // -> draw a new line
+                                for (let i = 0; i < this.lineddata.wordtomarkonhover.length; i++) {
+                                    if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport(
+                                        this.$refs['reftextfeatureviewport'][columnindex].$refs['text']
+                                            [this.lineddata.wordtomarkonhover[i] - this.$refs['reftextfeatureviewport']
+                                            [columnindex].indexCorrector2].$el)) {
+                                        this.offsetstart =
+                                            this.$refs['reftextfeatureviewport'][columnindex]
+                                                .$refs['text'][this.lineddata.wordtomarkonhover[i]].$el.getBoundingClientRect();
+                                        //this.drawline(this.lineddata);
+                                        break;
+                                    }
                                 }
+                            } else {
+                                //Scroll in text && select origin text
+                                // update offsetstart
+                                // -> draw a new line
+                                deltatop = scrollinfo.scrollTop - this.tempscrolltoptext;
+                                tempoffset = {
+                                    "x": this.tempoffsetstart.x,
+                                    "y": this.tempoffsetstart.y - deltatop,
+                                    "width": this.tempoffsetstart.width,
+                                    "height": this.tempoffsetstart.height,
+                                    "top": this.tempoffsetstart.top - deltatop,
+                                    "right": this.tempoffsetstart.right,
+                                    "bottom": this.tempoffsetstart.bottom - deltatop,
+                                    "left": this.tempoffsetstart.left
+                                };
+                                this.tempscrolltoptext = scrollinfo.scrollTop;
+                                this.tempoffsetstart = tempoffset;
+                                if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetstart)) {
+                                    this.offsetstart = this.tempoffsetstart;
+                                    //this.drawline(this.lineddata);
+                                }
+
                             }
-                        } else {
-                            //Scroll in text && select origin text
-                            // update offsetstart
-                            // -> draw a new line
-                            deltatop = scrollinfo.scrollTop - this.tempscrolltoptext;
+                        } else if (scrollinfo.source !== null && scrollinfo.source == 'textviewport') {
+                            this.offsetstart = this.tempoffsetstart;
+                            //Scroll in entitiesview && select origin in text
+                            // -> no offsetend -> find corresponding entity to word
+                            // -> draw new line
+                            deltatop = scrollinfo.scrollTop - this.tempscrolltopentity;
                             tempoffset = {
-                                "x": this.tempoffsetstart.x,
-                                "y": this.tempoffsetstart.y - deltatop,
-                                "width": this.tempoffsetstart.width,
-                                "height": this.tempoffsetstart.height,
-                                "top": this.tempoffsetstart.top - deltatop,
-                                "right": this.tempoffsetstart.right,
-                                "bottom": this.tempoffsetstart.bottom - deltatop,
-                                "left": this.tempoffsetstart.left
+                                "x": this.tempoffsetend.x,
+                                "y": this.tempoffsetend.y - deltatop,
+                                "width": this.tempoffsetend.width,
+                                "height": this.tempoffsetend.height,
+                                "top": this.tempoffsetend.top - deltatop,
+                                "right": this.tempoffsetend.right,
+                                "bottom": this.tempoffsetend.bottom - deltatop,
+                                "left": this.tempoffsetend.left
                             };
-                            this.tempscrolltoptext = scrollinfo.scrollTop;
-                            this.tempoffsetstart = tempoffset;
-                            if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetstart)) {
-                                this.offsetstart = this.tempoffsetstart;
+                            this.tempscrolltopentity = scrollinfo.scrollTop;
+                            this.tempoffsetend = tempoffset;
+                            if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetend)) {
+                                this.offsetend = this.tempoffsetend;
                                 //this.drawline(this.lineddata);
                             }
-
-                        }
-                    } else if (scrollinfo.source !== null && scrollinfo.source == 'textviewport') {
-                        this.offsetstart = this.tempoffsetstart;
-                        //Scroll in entitiesview && select origin in text
-                        // -> no offsetend -> find corresponding entity to word
-                        // -> draw new line
-                        deltatop = scrollinfo.scrollTop - this.tempscrolltopentity;
-                       tempoffset = {
-                            "x": this.tempoffsetend.x,
-                            "y": this.tempoffsetend.y - deltatop,
-                            "width": this.tempoffsetend.width,
-                            "height": this.tempoffsetend.height,
-                            "top": this.tempoffsetend.top - deltatop,
-                            "right": this.tempoffsetend.right,
-                            "bottom": this.tempoffsetend.bottom - deltatop,
-                            "left": this.tempoffsetend.left
-                        };
-                        this.tempscrolltopentity = scrollinfo.scrollTop;
-                        this.tempoffsetend = tempoffset;
-                        if (this.$refs['reftextfeatureviewport'][columnindex].isElementInViewport2(this.tempoffsetend)) {
-                            this.offsetend = this.tempoffsetend;
-                            //this.drawline(this.lineddata);
                         }
                     }
                 }

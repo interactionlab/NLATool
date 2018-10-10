@@ -53,6 +53,7 @@
                             v-bind:classestomark="classestomark"
                             v-bind:contentcontrol="contentcontrol"
                             v-bind:parentviewport="parentviewport"
+                            v-bind:analighterstatus="analighterstatus"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
                             v-on:entercorrectionmode="entercorrectionmode($event)"
                             v-on:endhover="endhover($event)"
@@ -60,6 +61,7 @@
                             v-on:starthover="starthover($event)"
                             v-on:allowscroll="allowscroll"
                             v-on:removehoverline="removehoverline"
+                            v-on:updateanalighterstatus="updateanalighterstatus($event)"
                             v-on:updateclassestomark="updateclassestomark($event)">
                     </component>
                 </keep-alive>
@@ -149,7 +151,8 @@
                     scrollingacolumn: false,
                     scrollTop: 0,
                     source: null
-                }
+                },
+                analighterstatustoupdate: {column: -1, status: 'entitiesview'}
             }
         },
         watch: {
@@ -386,10 +389,26 @@
                     tempcorrector = tempcorrector + this.tokenssplitted[i].length;
                 }
                 return tempcorrector;
+            },
+            analighterstatus: function () {
+                let status = [];
+                for (let i = 0; i < this.tokenssplitted.length; i++) {
+                    status[i] = {column: i, status: 'entitiesview'};
+                }
+               if (this.analighterstatustoupdate.column > -1) {
+                    status[this.analighterstatustoupdate.column] = {
+                        column: this.analighterstatustoupdate.column,
+                        status: this.analighterstatustoupdate.status
+                    };
+                    this.analighterstatustoupdate.column = -1;
+                }
+                return status;
             }
-
         },
         methods: {
+            updateanalighterstatus: function (newStatus) {
+                this.analighterstatustoupdate = newStatus;
+            },
             setrerendercoref: function () {
                 this.setcoref = true;
             },
