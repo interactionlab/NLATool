@@ -60,7 +60,6 @@
     import store from './components/analysis/globalstore.vue';
 
     export default {
-
         props: {
             serverip: {type: String, default: ""},
             googleapikey: {type: String, default: ""},
