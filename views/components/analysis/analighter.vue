@@ -103,11 +103,9 @@
         },
         computed: {
             showing: function () {
-                console.log('showing: ' + this.columnindex + ': ' + JSON.stringify(this.analighterstatus));
                 try {
                     return JSON.parse(JSON.stringify(this.analighterstatus[this.columnindex].status));
                 } catch (e) {
-                    console.log('catching -> entitiesview');
                     return 'entitiesview'
                 }
             }
