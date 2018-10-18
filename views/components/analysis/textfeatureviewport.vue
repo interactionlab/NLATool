@@ -55,6 +55,7 @@
                             v-bind:parentviewport="parentviewport"
                             v-bind:analighterstatus="analighterstatus"
                             v-on:togglesemanticlass="togglesemanticlass($event)"
+                            v-on:resetselectedindexes="resetselectedindexes"
                             v-on:entercorrectionmode="entercorrectionmode($event)"
                             v-on:endhover="endhover($event)"
                             v-on:jumpmarktext="selectText2($event)"
@@ -406,6 +407,9 @@
             }
         },
         methods: {
+            resetselectedindexes:function(){
+                this.$emit('resetselectedindexes');
+            },
             updateanalighterstatus: function (newStatus) {
                 this.analighterstatustoupdate = newStatus;
             },

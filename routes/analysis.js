@@ -81,7 +81,7 @@ let vueData = {
 io.on('connection', function (socket) {
     socket.on('savewordnote', function (note, docID, indexes) {
         //console.log(notMedia + Tag + 'Save Word Note: ' + note + ' docID: ' + docID + ' Indexes: ' + JSON.stringify(indexes));
-        wait.launchFiber(saveWordNote, note, docID, indexes);
+        wait.launchFiber(saveWordNote, note, docID, indexes, socket);
     });
     socket.on('updatewordnote', function (noteID, note) {
         //console.log(notMedia + Tag + 'update Word Note: ');
@@ -216,7 +216,7 @@ function saveResult(docID, indexes, researchresultID) {
  * @param word
  * @param docID
  */
-function saveWordNote(note, docID, indexes) {
+function saveWordNote(note, docID, indexes, socket) {
     note = stringifyForDB(note);
     docID = stringifyForDB(docID);
     indexes.start = stringifyForDB(indexes.start);
@@ -226,6 +226,11 @@ function saveWordNote(note, docID, indexes) {
             ['docID', 'content', 'textIndex1', 'textIndex2'],
             [docID, note, indexes.start, indexes.end],
             null, null)));
+    let response = JSON.parse(wait.for(dbStub.makeSQLRequest, dbAction.createSelectCommand2('notes', ['noteID'],
+        ['docID', 'content', 'textIndex1', 'textIndex2'],
+        [docID, note, indexes.start, indexes.end], ['=', '=', '=', '='])));
+    console.log('NoteID of new Note: ' + JSON.stringify(response));
+    socket.emit('announcenewnoteid', response);
 }
 
 function changeClass(tokenToEdit, docID) {

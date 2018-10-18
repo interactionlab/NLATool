@@ -23,7 +23,8 @@
                    v-bind:selectedindexes="selectedindexes"
                    v-bind:docid="this.docid"
                    v-bind:tokens="tokens"
-                   v-on:back="back($event)">
+                   v-on:back="back($event)"
+                    v-on:resetselectedindexes="resetselectedindexes">
         </component>
 
     </div>
@@ -47,6 +48,9 @@
             }
         },
         methods: {
+            resetselectedindexes:function(){
+               this.$emit('resetselectedindexes');
+            },
             deletenote:function (noteId) {
                 for(let i = 0; i < this.notes.length; i++){
                     if(this.notes[i].noteID === noteId){
@@ -79,6 +83,7 @@
                     this.notes.splice(i+1, 1);
                 } else if (noteToChange[1] === 1) {
                     //new
+
                     this.notes.splice(this.notes.length, 0, noteToChange[2]);
                 } else if (noteToChange[1] === 2) {
                     //update

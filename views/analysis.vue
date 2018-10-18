@@ -92,7 +92,8 @@
                                v-on:endhover="endhover($event)"
                                v-on:removehoverline="removehoverline"
                                v-on:updateclassestomark="updateclassestomark($event)"
-                               v-on:scrolling="handlescrolling($event)">
+                               v-on:scrolling="handlescrolling($event)"
+                               v-on:resetselectedindexes="resetselectedindexes">
                     </component>
                 </div>
             </div>
@@ -222,6 +223,14 @@
             }
         },
         methods: {
+            resetselectedindexes:function(){
+               this.selectedtextindexes = {
+                   start: -1,
+                   active: -1,
+                   end: -1,
+                   done: true
+               }
+            },
             handlescrolling: function (scrollinfo) {
                 if (scrollinfo.scrollingacolumn) {
                     if (this.offsetstart !== null && this.offsetend !== null) {
@@ -282,6 +291,7 @@
                                     this.offsetstart = this.tempoffsetstart;
                                     //this.drawline(this.lineddata);
                                 }
+
 
                             }
                         } else if (scrollinfo.source !== null && scrollinfo.source == 'textviewport') {

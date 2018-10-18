@@ -256,8 +256,41 @@ exports.createSelectCommand = function (table, columns, valuesToCompare, operato
         //console.log(notMedia + Tag + sql + commandString);
         return commandString;
     }
-
-
+};
+/**
+ * generates String for SQL Command SELECT
+ * If no columns are specified, everything will be selected and returned.
+ * If no table name is specified the sql query is not valid thus the returned value will be null.
+ *
+ * @param columns represents an array or something similar.
+ * @param table
+ * @param valuesToCompare
+ * @param operators
+ * @returns {*}
+ */
+exports.createSelectCommand2 = function (table, columns, columnstocompare, valuesToCompare, operators, start, amount) {
+    let commandString = 'SELECT ';
+    if (table !== null) {
+        if (columns !== null) {
+            commandString = commandString + columns[0];
+            for (let i = 1; i < columns.length; i++) {
+                commandString = commandString + ',' + columns[i];
+            }
+            commandString = commandString + ' FROM ' + json.database.name + ' . ' + table;
+        } else {
+            commandString = commandString + '* FROM ' + json.database.name + ' . ' + table;
+        }
+        commandString = commandString + ' ' + createWhereQuery(columnstocompare, valuesToCompare, operators);
+        //console.log(notMedia + Tag + sql + commandString);
+        if (start !== undefined && amount !== undefined) {
+            commandString = commandString + ' limit ' + start + ' , ' + amount;
+        }
+        return commandString;
+    } else {
+        commandString = commandString + json.database.name;
+        //console.log(notMedia + Tag + sql + commandString);
+        return commandString;
+    }
 };
 exports.createLimitedSelectCommand = function (table, columns, start, amount) {
     let commandString = 'SELECT ';

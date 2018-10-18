@@ -45,7 +45,8 @@
         data: function () {
             return {
                 selectedtext: '',
-                submitit: false
+                submitit: false,
+                noteID: -1,
             }
         },
         methods: {
@@ -59,17 +60,23 @@
                     && this.selectedindexes.end !== -1) {
                     let socket = io(this.serverip+':8080');
                     if (typeof this.wordnotedb === 'undefined') {
+                        var self = this;
                         socket.emit('savewordnote', newnote, this.docid, this.selectedindexes);
+                        socket.on('announcenewnoteid', function (noteID) {
+                            self.noteID = noteID.noteID;
+                        });
                         //TODO: get noteID from DB in callback and correct it while/after render in the background
                         let tempNote = {
                             docID: this.docid,
-                            noteID: -1,
+                            noteID: this.noteID,
                             content: newnote,
                             textIndex1: this.selectedindexes.start,
                             textIndex2: this.selectedindexes.end
                         };
                         this.newnote = '';
-                        this.selectedindexes = {};
+
+                        //this.selectedindexes = {};
+                        this.$emit('resetselectedindexes');
                         this.$emit('back', [-1, 1, tempNote]);
                     } else {
                         socket.emit('updatewordnote', this.wordnotedb.noteID, newnote);
